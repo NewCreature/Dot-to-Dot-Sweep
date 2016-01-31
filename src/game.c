@@ -240,7 +240,7 @@ void dot_game_move_player(void * data)
 		{
 			if(app->game.player.lost_touch)
 			{
-				if(t3f_distance(app->touch_x, app->touch_y, app->game.player.ball.x, app->game.player.ball.y) < app->game.player.ball.r)
+				if(t3f_distance(app->touch_x, app->touch_y, app->game.player.ball.x, app->game.player.ball.y) < DOT_GAME_GRAB_SPOT_SIZE)
 				{
 					app->game.player.lost_touch = false;
 				}
@@ -254,6 +254,7 @@ void dot_game_move_player(void * data)
 		else
 		{
 			app->game.player.lost_touch = true;
+			app->game.state = DOT_GAME_STATE_PAUSE;
 		}
 
 		/* prevent player from moving past the edge */
@@ -408,6 +409,15 @@ void dot_game_logic(void * data)
 			break;
 		}
 
+		case DOT_GAME_STATE_PAUSE:
+		{
+			if(app->touch_id >= 0 && t3f_distance(app->touch_x, app->touch_y, app->game.player.ball.x, app->game.player.ball.y) < DOT_GAME_GRAB_SPOT_SIZE)
+			{
+				app->game.state = DOT_GAME_STATE_PLAY;
+			}
+			break;
+		}
+
 		/* normal game state */
 		default:
 		{
@@ -438,6 +448,12 @@ void dot_game_logic(void * data)
 			}
 			break;
 		}
+	}
+	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
+	{
+		app->state = DOT_STATE_INTRO;
+		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
 }
 
@@ -516,4 +532,9 @@ void dot_game_render(void * data)
 	}
 	al_hold_bitmap_drawing(false);
 	dot_game_render_hud(data);
+	if(app->game.state == DOT_GAME_STATE_PAUSE)
+	{
+		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width, t3f_virtual_display_height, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+		al_draw_filled_circle(app->game.player.ball.x, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y, DOT_GAME_GRAB_SPOT_SIZE, al_map_rgba_f(0.5, 0.5, 0.5, 0.5));
+	}
 }
