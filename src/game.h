@@ -13,6 +13,14 @@ typedef struct
 
 } DOT_BALL;
 
+typedef struct
+{
+
+	DOT_BALL ball;
+	bool lost_touch;
+
+} DOT_PLAYER;
+
 #define DOT_GAME_MAX_LEVELS   10
 #define DOT_GAME_COMBO_TIME  120
 
@@ -34,8 +42,7 @@ typedef struct
 	int combo;
 
 	DOT_BALL ball[DOT_GAME_MAX_BALLS];
-	DOT_BALL player;
-	bool player_lost_touch;
+	DOT_PLAYER player;
 
 } DOT_GAME;
 
