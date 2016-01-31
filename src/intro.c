@@ -34,7 +34,9 @@ void dot_intro_render(void * data)
 		al_draw_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + i % 6], i * 16 + 6, sin((float)(i * 2 + app->tick) / 10.0) * 32 + 64, 0);
 		al_draw_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + i % 6], i * 16 + 6, cos((float)(i * 2 + app->tick) / 10.0) * 32 + DOT_GAME_PLAYFIELD_HEIGHT - 64 - 16 - 1, 0);
 	}
+	al_hold_bitmap_drawing(false);
 	dot_game_render_hud(data);
+	al_hold_bitmap_drawing(true);
 	dot_shadow_text(app->font, t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - 8, 2, 2, ALLEGRO_ALIGN_CENTRE, "Click anywhere to begin...");
 	al_hold_bitmap_drawing(false);
 }
