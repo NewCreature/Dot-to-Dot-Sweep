@@ -1,0 +1,37 @@
+Dot to Dot Sweep Issues
+-----------------------
+
+[ ]Adjust ball size to make game more playable on phones. This will require
+   adjusting the level setup charts as well.
+
+[ ]Add particle effects.
+
+   [ ]Each collected dot should spray particles.
+
+   [ ]Smashing into incorrect colored dot should spray particles.
+
+   [ ]Points received for collecting dots should be shown above collection
+      point.
+
+   [ ]Possibly generate a large spray of particles to indicate certain points
+      thresholds, similar to Quadnet.
+
+[ ]Possibly make level speed multiplier dependent on number of collected balls
+   instead of elapsed time.
+
+[ ]Implement online leaderboards.
+
+[ ]Implement options.
+
+[ ]Possibly add music.
+
+[ ]Refactor code.
+
+   [ ]Add a resources structure and pass that to functions that need to access
+      the resources.
+
+   [ ]Don't pass the APP_INSTANCE around unnecessarily. Gameplay calls should
+      only pass the game data and maybe the resources data.
+
+   [ ]In places that need APP_INSTANCE data, pass an APP_INSTANCE * instead of
+      a void * to reduce code and avoid extra casts.
