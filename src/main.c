@@ -196,12 +196,6 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		}
 	}
 
-	if(!dot_intro_initialize(app))
-	{
-		printf("Failed to create menu!\n");
-		return false;
-	}
-
 	/* load high score */
 	val = al_get_config_value(t3f_config, "Game Data", "High Score");
 	if(val)
@@ -242,6 +236,12 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		{
 			app->upload_scores = true;
 		}
+	}
+
+	if(!dot_intro_initialize(app))
+	{
+		printf("Failed to create menu!\n");
+		return false;
 	}
 
 	app->state = 0;
