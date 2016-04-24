@@ -224,7 +224,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		strcpy(app->user_name, "Anonymous");
 	}
 
-	app->upload_scores = true;
+	app->upload_scores = false;
 	val = al_get_config_value(t3f_config, "Game Data", "Upload Scores");
 	if(val)
 	{
@@ -233,6 +233,17 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 			app->upload_scores = true;
 		}
 	}
+
+	app->music_enabled = false;
+	val = al_get_config_value(t3f_config, "Game Data", "Music Enabled");
+	if(val)
+	{
+		if(!strcasecmp(val, "true"))
+		{
+			app->upload_scores = true;
+		}
+	}
+
 	app->state = 0;
 	return true;
 }

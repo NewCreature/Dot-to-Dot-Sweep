@@ -17,7 +17,7 @@ typedef struct
     ALLEGRO_SAMPLE * sample[DOT_MAX_SAMPLES];
     ALLEGRO_FONT * font[DOT_MAX_FONTS];
     T3F_ATLAS * atlas;
-    T3F_GUI * menu[DOT_MAX_MENUS];
+    bool music_enabled;
 
     /* program state */
     int state;
@@ -38,6 +38,10 @@ typedef struct
     T3NET_LEADERBOARD * leaderboard;
     int leaderboard_tick;
     int leaderboard_spot;
+
+    /* menu data */
+    T3F_GUI * menu[DOT_MAX_MENUS];
+    int current_menu;
 
 } APP_INSTANCE;
 

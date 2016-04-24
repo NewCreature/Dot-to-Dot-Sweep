@@ -1,4 +1,5 @@
 #include "t3f/t3f.h"
+#include "t3f/android.h"
 #include "instance.h"
 #include "game.h"
 #include "text.h"
@@ -30,11 +31,66 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 
 int dot_menu_proc_profile(void * data, int i, void * pp)
 {
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	app->current_menu = DOT_MENU_PROFILE;
 	return 1;
 }
 
 int dot_menu_proc_music(void * data, int i, void * pp)
 {
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	T3F_GUI * gui = (T3F_GUI *)pp;
+
+	app->music_enabled = !app->music_enabled;
+	if(app->music_enabled)
+	{
+		gui->element[i].color = DOT_MENU_COLOR_ENABLED;
+		al_set_config_value(t3f_config, "Game Data", "Music Enabled", "true");
+	}
+	else
+	{
+		gui->element[i].color = DOT_MENU_COLOR_DISABLED;
+		al_set_config_value(t3f_config, "Game Data", "Music Enabled", "false");
+	}
+	return 1;
+}
+
+void dot_menu_proc_profile_name_callback(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	if(strlen(app->user_name) <= 0)
+	{
+		strcpy(app->user_name, "Anonymous");
+	}
+	al_set_config_value(t3f_config, "Game Data", "User Name", app->user_name);
+}
+
+int dot_menu_proc_profile_name(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	t3f_open_edit_box("Enter Name", app->user_name, 256, "CapWords", dot_menu_proc_profile_name_callback, app);
+	return 1;
+}
+
+int dot_menu_proc_profile_upload(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	T3F_GUI * gui = (T3F_GUI *)pp;
+
+	app->upload_scores = !app->upload_scores;
+	if(app->upload_scores)
+	{
+		gui->element[i].color = DOT_MENU_COLOR_ENABLED;
+		al_set_config_value(t3f_config, "Game Data", "Upload Scores", "true");
+	}
+	else
+	{
+		gui->element[i].color = DOT_MENU_COLOR_DISABLED;
+		al_set_config_value(t3f_config, "Game Data", "Upload Scores", "false");
+	}
 	return 1;
 }
 
@@ -51,10 +107,22 @@ bool dot_intro_initialize(void * data)
 		return false;
 	}
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_leaderboard, "Leaderboard", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_play, "Profile", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_play, "Music", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_profile, "Profile", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_music, "Music", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, app->music_enabled ? DOT_MENU_COLOR_ENABLED : DOT_MENU_COLOR_DISABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_play, "Play", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 192, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(app->menu[DOT_MENU_MAIN], (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2, t3f_virtual_display_height);
+
+	app->menu[DOT_MENU_PROFILE] = t3f_create_gui(0, 0);
+	if(!app->menu[DOT_MENU_PROFILE])
+	{
+		return false;
+	}
+	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], NULL, "User Name", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_name, app->user_name, app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_upload, "Upload Scores", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, app->upload_scores ? DOT_MENU_COLOR_ENABLED : DOT_MENU_COLOR_DISABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(app->menu[DOT_MENU_PROFILE], (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2, t3f_virtual_display_height);
+
+	app->current_menu = DOT_MENU_MAIN;
 
 	return true;
 }
@@ -64,10 +132,19 @@ void dot_intro_logic(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	app->tick++;
-	t3f_process_gui(app->menu[DOT_MENU_MAIN], app);
+	t3f_process_gui(app->menu[app->current_menu], app);
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 	{
-		t3f_exit();
+		if(app->current_menu == DOT_MENU_MAIN)
+		{
+			t3f_exit();
+		}
+		else
+		{
+			app->current_menu = DOT_MENU_MAIN;
+		}
+		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
 }
 
@@ -88,6 +165,6 @@ void dot_intro_render(void * data)
 	dot_game_render_hud(data);
 	al_hold_bitmap_drawing(true);
 	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - 16, 4, 4, ALLEGRO_ALIGN_CENTRE, "Dot to Dot Sweep");
-	t3f_render_gui(app->menu[DOT_MENU_MAIN]);
+	t3f_render_gui(app->menu[app->current_menu]);
 	al_hold_bitmap_drawing(false);
 }
