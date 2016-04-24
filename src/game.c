@@ -138,13 +138,20 @@ void dot_game_exit(void * data)
 	app->state = DOT_STATE_INTRO;
 }
 
+static int dot_game_get_combo_score(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	return app->game.ascore * app->game.combo;
+}
+
 /* function to add points to the score
  * used when combo timer reaches 0, level is completed, or player loses */
 void dot_game_accumulate_score(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	app->game.score += app->game.ascore * app->game.combo;
+	app->game.score += dot_game_get_combo_score(data);
 	if(app->game.score > app->game.high_score)
 	{
 		app->game.high_score = app->game.score;
@@ -353,6 +360,8 @@ void dot_game_move_player(void * data)
 						}
 						t3f_play_sample(app->sample[DOT_SAMPLE_LOSE], 1.0, 0.0, 1.0);
 						dot_game_accumulate_score(data);
+						app->game.combo = 0;
+						app->game.ascore = 0;
 						app->game.lives--;
 
 						/* change ball color to match the ball that is hit unless it is black */
@@ -448,6 +457,8 @@ void dot_game_logic(void * data)
 						t3f_touch[app->touch_id].active = false;
 					}
 					dot_game_setup_level(data, app->game.level + 1);
+					app->game.combo = 0;
+					app->game.ascore = 0;
 				}
 				else
 				{
@@ -507,20 +518,19 @@ void dot_game_render_hud(void * data)
 void dot_game_render(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	char buf[16] = {0};
 
 	int i;
 	ALLEGRO_COLOR player_color = t3f_color_white;
 	float rgb = 0.5 - (float)app->game.level / 24.0;
 	float c = (float)app->game.player.ball.timer / (float)DOT_GAME_COMBO_TIME;
-
-	if(app->game.combo == 0)
-	{
-		c = 1.0;
-	}
 	float s = app->game.player.ball.r * 2.0 + 128.0 - c * 128.0;
 	al_clear_to_color(al_map_rgb_f(rgb, rgb, rgb));
 	al_hold_bitmap_drawing(true);
-	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.125, 0.125, 0.125, 0.125), app->game.player.ball.x - s / 2.0, app->game.player.ball.y - s / 2.0, app->game.player.ball.z, s, s, 0);
+	if(app->game.combo)
+	{
+		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.125, 0.125, 0.125, 0.125), app->game.player.ball.x - s / 2.0, app->game.player.ball.y - s / 2.0, app->game.player.ball.z, s, s, 0);
+	}
 	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
 	{
 		if(app->game.ball[i].active)
@@ -544,6 +554,11 @@ void dot_game_render(void * data)
 		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], player_color, 8.0, 8.0, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.z, 0.0, app->game.player.ball.r / (float)(al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2), app->game.player.ball.r / (float)(al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2), 0);
 		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_EYES], player_color, 8.0, 8.0, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.z, app->game.player.ball.a, app->game.player.ball.r / (float)(al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2), app->game.player.ball.r / (float)(al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2), 0);
 		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], al_map_rgba_f(0.5, 0.5, 0.5, 0.5), 8.0, 8.0, app->game.player.ball.x, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y, app->game.player.ball.z, 0.0, app->game.player.ball.r / (float)(al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2), app->game.player.ball.r / (float)(al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2), 0);
+		if(app->game.combo)
+		{
+			sprintf(buf, "%d", dot_game_get_combo_score(data));
+			dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, 2, 2, ALLEGRO_ALIGN_CENTRE, buf);
+		}
 	}
 	al_hold_bitmap_drawing(false);
 	dot_game_render_hud(data);
