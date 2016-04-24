@@ -234,7 +234,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		if(!strcasecmp(val, "true"))
 		{
-			app->upload_scores = true;
+			app->music_enabled = true;
 		}
 	}
 
