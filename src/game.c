@@ -82,7 +82,7 @@ void dot_game_setup_level(void * data, int level)
 	}
 
 	/* add black balls */
-	for(j = i; j < i + app->game.level + 3; j++)
+	for(j = i; j < i + app->game.level + 2; j++)
 	{
 		app->game.ball[j].r = 16.0;
 		app->game.ball[j].x = t3f_drand(&app->rng_state) * ((float)(DOT_GAME_PLAYFIELD_WIDTH) - app->game.ball[j].r * 2.0) + app->game.ball[i].r;
