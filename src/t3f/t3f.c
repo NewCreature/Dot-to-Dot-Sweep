@@ -147,7 +147,7 @@ bool t3f_save_bitmap_f(ALLEGRO_FILE * fp, ALLEGRO_BITMAP * bp)
 {
 	ALLEGRO_FILE * tfp = NULL;;
 	ALLEGRO_PATH * path = NULL;
-	int i, size;
+	int i, size = 0;
 	bool ret = false;
 
 	path = al_get_standard_path(ALLEGRO_TEMP_PATH);
@@ -166,10 +166,7 @@ bool t3f_save_bitmap_f(ALLEGRO_FILE * fp, ALLEGRO_BITMAP * bp)
 					al_fputc(fp, al_fgetc(tfp));
 				}
 				ret = true;
-			}
-			else
-			{
-				al_fwrite32le(fp, 0);
+				al_fclose(tfp);
 			}
 		}
 		al_destroy_path(path);
@@ -665,13 +662,11 @@ int t3f_set_gfx_mode(int w, int h, int flags)
 	int dw, dh;
 	int ret = 1;
 
-	/* Disable full screen window attempt on Mac OS X because it will not give
-	 * the correct results on 10.5 (my deployment target. This should really be
-	 * fixed in Allegro but it is not on their to-do list */
-	#ifndef ALLEGRO_MACOSX
-		bool fsw_supported = true; // is full screen window supported?
+	bool fsw_supported = true;
+	#ifdef ALLEGRO_ANDROID
+		bool no_windowed = true; // is full screen window supported?
 	#else
-		bool fsw_supported = false; // is full screen window supported?
+		bool no_windowed = false;
 	#endif
 
 	/* disable fsw support if the config file says to */
@@ -775,7 +770,7 @@ int t3f_set_gfx_mode(int w, int h, int flags)
 		}
 		cvalue = al_get_config_value(t3f_config, "T3F", "force_fullscreen");
 		cvalue2 = al_get_config_value(t3f_config, "T3F", "force_window");
-		if((flags & T3F_USE_FULLSCREEN || (cvalue && !strcmp(cvalue, "true"))) && !(cvalue2 && !strcmp(cvalue2, "true")))
+		if(((flags & T3F_USE_FULLSCREEN || (cvalue && !strcmp(cvalue, "true"))) && !(cvalue2 && !strcmp(cvalue2, "true"))) || no_windowed)
 		{
 			if(fsw_supported)
 			{
