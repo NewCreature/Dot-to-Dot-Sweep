@@ -3,6 +3,7 @@
 
 #include "t3f/t3f.h"
 #include "t3f/rng.h"
+#include "t3f/gui.h"
 #include "defines.h"
 #include "game.h"
 
@@ -13,8 +14,9 @@ typedef struct
     /* data */
     ALLEGRO_BITMAP * bitmap[DOT_MAX_BITMAPS];
     ALLEGRO_SAMPLE * sample[DOT_MAX_SAMPLES];
-    ALLEGRO_FONT * font;
+    ALLEGRO_FONT * font[DOT_MAX_FONTS];
     T3F_ATLAS * atlas;
+    T3F_GUI * menu;
 
     /* program state */
     int state;

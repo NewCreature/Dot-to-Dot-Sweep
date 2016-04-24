@@ -17,6 +17,10 @@
 #define DOT_SAMPLE_LOSE        2
 #define DOT_SAMPLE_GO          3
 
+#define DOT_MAX_FONTS          4
+#define DOT_FONT_16            0
+#define DOT_FONT_32            1
+
 #define DOT_STATE_INTRO        0
 #define DOT_STATE_GAME         1
 

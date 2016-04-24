@@ -164,11 +164,17 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		return false;
 	}
 
-	printf("break 1\n");
-	app->font = al_load_font("data/fonts/kongtext.ttf", 16, 0);
-	if(!app->font)
+	/* load fonts */
+	app->font[DOT_FONT_16] = al_load_font("data/fonts/kongtext.ttf", 16, 0);
+	if(!app->font[DOT_FONT_16])
 	{
-		printf("Failed to load font!\n");
+		printf("Failed to load font %d!\n", DOT_FONT_16);
+		return false;
+	}
+	app->font[DOT_FONT_32] = al_load_font("data/fonts/kongtext.ttf", 32, 0);
+	if(!app->font[DOT_FONT_32])
+	{
+		printf("Failed to load font %d!\n", DOT_FONT_32);
 		return false;
 	}
 
@@ -183,6 +189,12 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 				t3f_add_bitmap_to_atlas(app->atlas, &app->bitmap[i], T3F_ATLAS_SPRITE);
 			}
 		}
+	}
+
+	if(!dot_intro_initialize(app))
+	{
+		printf("Failed to create menu!\n");
+		return false;
 	}
 
 	/* load high score */
