@@ -1,8 +1,12 @@
 Dot to Dot Sweep Issues
 -----------------------
 
-[ ]Adjust ball size to make game more playable on phones. This will require
+[X]Adjust ball size to make game more playable on phones. This will require
    adjusting the level setup charts as well.
+
+[X]Implement online leaderboards.
+
+[X]Implement options.
 
 [ ]Add particle effects.
 
@@ -10,18 +14,26 @@ Dot to Dot Sweep Issues
 
    [ ]Smashing into incorrect colored dot should spray particles.
 
-   [ ]Points received for collecting dots should be shown above collection
-      point.
-
    [ ]Possibly generate a large spray of particles to indicate certain points
       thresholds, similar to Quadnet.
 
+[ ]Add combo time indicator.
+
+   [ ]I am thinking a translucent circle that diminishes as the timer runs down
+      will do the trick nicely.
+
+[ ]Display received points somehow.
+
+   [ ]Consider using extra space in the HUD area to show how many points are
+      going to be added to the score.
+
+   [ ]Consider having a floating accrued points indicator above player.
+
+      [ ]If we do this, it might be cool to have the points fly over to the
+         score and combine.
+
 [ ]Possibly make level speed multiplier dependent on number of collected balls
    instead of elapsed time.
-
-[ ]Implement online leaderboards.
-
-[ ]Implement options.
 
 [ ]Possibly add music.
 
