@@ -108,11 +108,11 @@ void dot_game_initialize(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
+	t3f_srand(&app->rng_state, time(0));
 	dot_game_setup_level(data, 0);
 	app->game.score = 0;
 	app->game.combo = 0;
 	app->game.lives = 3;
-	t3f_srand(&app->rng_state, time(0));
 	app->state = DOT_STATE_GAME;
 }
 
