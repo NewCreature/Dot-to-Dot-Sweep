@@ -511,9 +511,16 @@ void dot_game_render(void * data)
 	int i;
 	ALLEGRO_COLOR player_color = t3f_color_white;
 	float rgb = 0.5 - (float)app->game.level / 24.0;
+	float c = (float)app->game.player.ball.timer / (float)DOT_GAME_COMBO_TIME;
 
+	if(app->game.combo == 0)
+	{
+		c = 1.0;
+	}
+	float s = app->game.player.ball.r * 2.0 + 128.0 - c * 128.0;
 	al_clear_to_color(al_map_rgb_f(rgb, rgb, rgb));
 	al_hold_bitmap_drawing(true);
+	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.125, 0.125, 0.125, 0.125), app->game.player.ball.x - s / 2.0, app->game.player.ball.y - s / 2.0, app->game.player.ball.z, s, s, 0);
 	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
 	{
 		if(app->game.ball[i].active)

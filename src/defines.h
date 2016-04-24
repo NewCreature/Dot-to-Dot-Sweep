@@ -10,6 +10,7 @@
 #define DOT_BITMAP_BALL_ORANGE 5
 #define DOT_BITMAP_BALL_BLACK  6
 #define DOT_BITMAP_BALL_EYES   8
+#define DOT_BITMAP_COMBO       9
 
 #define DOT_MAX_SAMPLES      256
 #define DOT_SAMPLE_START       0

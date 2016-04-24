@@ -142,6 +142,12 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Failed to load image %d!\n", DOT_BITMAP_BALL_EYES);
 		return false;
 	}
+	t3f_load_resource((void **)&app->bitmap[DOT_BITMAP_COMBO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/combo.png", 0, 0, 0);
+	if(!app->bitmap[DOT_BITMAP_COMBO])
+	{
+		printf("Failed to load image %d!\n", DOT_BITMAP_COMBO);
+		return false;
+	}
 
 	/* load sounds */
 	app->sample[DOT_SAMPLE_START] = al_load_sample("data/sounds/sfx0005.wav");
