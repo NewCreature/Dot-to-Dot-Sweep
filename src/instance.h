@@ -4,6 +4,7 @@
 #include "t3f/t3f.h"
 #include "t3f/rng.h"
 #include "t3f/gui.h"
+#include "t3net/leaderboard.h"
 #include "defines.h"
 #include "game.h"
 
@@ -16,7 +17,7 @@ typedef struct
     ALLEGRO_SAMPLE * sample[DOT_MAX_SAMPLES];
     ALLEGRO_FONT * font[DOT_MAX_FONTS];
     T3F_ATLAS * atlas;
-    T3F_GUI * menu;
+    T3F_GUI * menu[DOT_MAX_MENUS];
 
     /* program state */
     int state;
@@ -30,6 +31,13 @@ typedef struct
 
     /* game state */
     DOT_GAME game;
+
+    /* leaderboard stuff */
+    char user_name[256];
+    bool upload_scores;
+    T3NET_LEADERBOARD * leaderboard;
+    int leaderboard_tick;
+    int leaderboard_spot;
 
 } APP_INSTANCE;
 

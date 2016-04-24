@@ -1,8 +1,7 @@
 #include "t3f/t3f.h"
 #include "instance.h"
 #include "game.h"
-
-void dot_shadow_text(ALLEGRO_FONT * font, ALLEGRO_COLOR color, ALLEGRO_COLOR shadow, float x, float y, float sx, float sy, int flags, const char * text);
+#include "text.h"
 
 int dot_menu_proc_play(void * data, int i, void * pp)
 {
@@ -15,8 +14,17 @@ int dot_menu_proc_play(void * data, int i, void * pp)
 	return 1;
 }
 
-int dot_menu_proc_leaderboards(void * data, int i, void * pp)
+int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 {
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	al_stop_timer(t3f_timer);
+	app->leaderboard = t3net_get_leaderboard(DOT_LEADERBOARD_RETRIEVE_URL, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", 20, 0);
+	if(app->leaderboard)
+	{
+		app->state = DOT_STATE_LEADERBOARD;
+	}
+	al_resume_timer(t3f_timer);
 	return 1;
 }
 
@@ -34,18 +42,19 @@ bool dot_intro_initialize(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	/* create menu */
 	t3f_set_gui_driver(NULL);
-	app->menu = t3f_create_gui(0, 0);
-	if(!app->menu)
+
+	/* create menus */
+	app->menu[DOT_MENU_MAIN] = t3f_create_gui(0, 0);
+	if(!app->menu[DOT_MENU_MAIN])
 	{
 		return false;
 	}
-	t3f_add_gui_text_element(app->menu, dot_menu_proc_play, "Leaderboards", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(app->menu, dot_menu_proc_play, "Profile", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(app->menu, dot_menu_proc_play, "Music", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(app->menu, dot_menu_proc_play, "Play", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 192, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu, (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2, t3f_virtual_display_height);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_leaderboard, "Leaderboard", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_play, "Profile", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_play, "Music", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_play, "Play", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 192, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(app->menu[DOT_MENU_MAIN], (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2, t3f_virtual_display_height);
 
 	return true;
 }
@@ -55,7 +64,7 @@ void dot_intro_logic(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	app->tick++;
-	t3f_process_gui(app->menu, app);
+	t3f_process_gui(app->menu[DOT_MENU_MAIN], app);
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 	{
 		t3f_exit();
@@ -79,7 +88,6 @@ void dot_intro_render(void * data)
 	dot_game_render_hud(data);
 	al_hold_bitmap_drawing(true);
 	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - 16, 4, 4, ALLEGRO_ALIGN_CENTRE, "Dot to Dot Sweep");
-	t3f_render_gui(app->menu);
-//	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), DOT_GAME_PLAYFIELD_WIDTH / 2, t3f_virtual_display_height / 2 + t3f_virtual_display_height / 4 - 16, 4, 4, ALLEGRO_ALIGN_CENTRE, "Play");
+	t3f_render_gui(app->menu[DOT_MENU_MAIN]);
 	al_hold_bitmap_drawing(false);
 }

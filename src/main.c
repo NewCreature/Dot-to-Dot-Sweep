@@ -5,12 +5,7 @@
 #include "instance.h"
 #include "intro.h"
 #include "game.h"
-
-void dot_shadow_text(ALLEGRO_FONT * font, ALLEGRO_COLOR color, ALLEGRO_COLOR shadow, float x, float y, float sx, float sy, int flags, const char * text)
-{
-	al_draw_text(font, shadow, x + sx, y + sy, flags, text);
-	al_draw_text(font, color, x, y, flags, text);
-}
+#include "leaderboard.h"
 
 void app_touch_logic(void * data)
 {
@@ -48,6 +43,11 @@ void app_logic(void * data)
 			dot_intro_logic(data);
 			break;
 		}
+		case DOT_STATE_LEADERBOARD:
+		{
+			dot_leaderboard_logic(data);
+			break;
+		}
 		case DOT_STATE_GAME:
 		{
 			dot_game_logic(data);
@@ -65,6 +65,11 @@ void app_render(void * data)
 		case DOT_STATE_INTRO:
 		{
 			dot_intro_render(data);
+			break;
+		}
+		case DOT_STATE_LEADERBOARD:
+		{
+			dot_leaderboard_render(data);
 			break;
 		}
 		case DOT_STATE_GAME:
@@ -206,6 +211,27 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	else
 	{
 		app->game.high_score = 0;
+	}
+
+	/* load user name */
+	val = al_get_config_value(t3f_config, "Game Data", "User Name");
+	if(val)
+	{
+		strcpy(app->user_name, val);
+	}
+	else
+	{
+		strcpy(app->user_name, "Anonymous");
+	}
+
+	app->upload_scores = true;
+	val = al_get_config_value(t3f_config, "Game Data", "Upload Scores");
+	if(val)
+	{
+		if(!strcasecmp(val, "true"))
+		{
+			app->upload_scores = true;
+		}
 	}
 	app->state = 0;
 	return true;

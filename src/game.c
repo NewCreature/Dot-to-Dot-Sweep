@@ -3,6 +3,7 @@
 #include "t3f/sound.h"
 #include "t3f/rng.h"
 #include "t3f/draw.h"
+#include "t3net/leaderboard.h"
 #include "instance.h"
 #include "game.h"
 
@@ -125,6 +126,13 @@ void dot_game_exit(void * data)
 	/* save high score */
 	sprintf(buf, "%d", app->game.high_score);
 	al_set_config_value(t3f_config, "Game Data", "High Score", buf);
+
+	/* upload score */
+	if(app->upload_scores)
+	{
+		sprintf(buf, "%d", app->game.level + 1);
+		t3net_upload_score(DOT_LEADERBOARD_SUBMIT_URL, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_name, app->game.score, buf);
+	}
 
 	/* go back to intro */
 	app->state = DOT_STATE_INTRO;
