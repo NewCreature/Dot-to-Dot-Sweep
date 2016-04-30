@@ -25,7 +25,6 @@ void dot_game_drop_player(void * data, int type)
 	app->game.player.ball.active = true;
 	app->game.player.ball.timer = 0;
 	app->game.combo = 0;
-	t3f_play_sample(app->sample[DOT_SAMPLE_START], 1.0, 0.0, 1.0);
 
 	/* initialize game state */
 	app->game.state = DOT_GAME_STATE_START;
@@ -98,6 +97,7 @@ void dot_game_setup_level(void * data, int level)
 
 	/* drop the player with a random color */
 	dot_game_drop_player(data, t3f_rand(&app->rng_state) % 6);
+	t3f_play_sample(app->sample[DOT_SAMPLE_START], 1.0, 0.0, 1.0);
 	app->game.player.ball.r = 16.0;
 
 	app->game.timer = 0;
@@ -395,6 +395,7 @@ void dot_game_move_player(void * data)
 				app->game.player.ball.timer = 0;
 				app->game.combo = 0;
 				app->game.ascore = 0;
+				t3f_play_sample(app->sample[DOT_SAMPLE_SCORE], 1.0, 0.0, 1.0);
 			}
 		}
 

@@ -221,6 +221,12 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Failed to load sound %d!\n", DOT_SAMPLE_GO);
 		return false;
 	}
+	app->sample[DOT_SAMPLE_SCORE] = al_load_sample("data/sounds/score_up.wav");
+	if(!app->sample[DOT_SAMPLE_SCORE])
+	{
+		printf("Failed to load sound %d!\n", DOT_SAMPLE_SCORE);
+		return false;
+	}
 
 	/* load fonts */
 	app->font[DOT_FONT_16] = al_load_font("data/fonts/kongtext.ttf", 16, 0);

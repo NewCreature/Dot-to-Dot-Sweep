@@ -21,6 +21,7 @@
 #define DOT_SAMPLE_GRAB        1
 #define DOT_SAMPLE_LOSE        2
 #define DOT_SAMPLE_GO          3
+#define DOT_SAMPLE_SCORE       4
 
 #define DOT_MAX_FONTS          4
 #define DOT_FONT_16            0
