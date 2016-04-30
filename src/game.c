@@ -145,16 +145,71 @@ static int dot_game_get_combo_score(void * data)
 	return app->game.ascore * app->game.combo;
 }
 
+static float dot_spread_effect_particle(int pos, int max, float size)
+{
+	return ((float)(pos + 1) / (float)max) * size - size / 2.0;
+}
+
+static void dot_game_create_score_effect(void * data, float x, float y, int number)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	ALLEGRO_STATE old_state;
+	ALLEGRO_TRANSFORM identity;
+	char buf[16] = {0};
+	int i, j;
+	ALLEGRO_COLOR c;
+	unsigned char r, g, b, a;
+	float ox;
+	float w, h;
+
+	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM);
+	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+	al_identity_transform(&identity);
+	al_use_transform(&identity);
+	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
+	sprintf(buf, "%d", number);
+	al_draw_text(app->font[DOT_FONT_16], t3f_color_white, 0, 0, 0, buf);
+	al_restore_state(&old_state);
+	al_lock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
+	ox = al_get_text_width(app->font[DOT_FONT_16], buf) / 2;
+	w = al_get_text_width(app->font[DOT_FONT_16], buf);
+	h = al_get_font_line_height(app->font[DOT_FONT_16]);
+	for(i = 0; i < w; i++)
+	{
+		for(j = 0; j < h; j++)
+		{
+			c = al_get_pixel(app->bitmap[DOT_BITMAP_SCRATCH], i, j);
+			al_unmap_rgba(c, &r, &g, &b, &a);
+			if(a > 0)
+			{
+				dot_create_particle(&app->particle[app->current_particle], x + (float)i - ox, y + j, 0.0, dot_spread_effect_particle(i, w, strlen(buf) * 2.5), dot_spread_effect_particle(j, h, 4.0), -10.0, 0.0, 3.0, 45, app->bitmap[DOT_BITMAP_PARTICLE], c);
+				app->current_particle++;
+				if(app->current_particle >= DOT_MAX_PARTICLES)
+				{
+					app->current_particle = 0;
+				}
+			}
+		}
+	}
+	al_unlock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+}
+
 /* function to add points to the score
  * used when combo timer reaches 0, level is completed, or player loses */
 void dot_game_accumulate_score(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int c;
 
-	app->game.score += dot_game_get_combo_score(data);
-	if(app->game.score > app->game.high_score)
+	c = dot_game_get_combo_score(data);
+	if(c > 0)
 	{
-		app->game.high_score = app->game.score;
+		app->game.score += c;
+		if(app->game.score > app->game.high_score)
+		{
+			app->game.high_score = app->game.score;
+		}
+		dot_game_create_score_effect(data, app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, c);
 	}
 }
 

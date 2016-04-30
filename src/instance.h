@@ -7,6 +7,7 @@
 #include "t3net/leaderboard.h"
 #include "defines.h"
 #include "game.h"
+#include "particle.h"
 
 /* structure to hold all of our app-specific data */
 typedef struct
@@ -31,6 +32,10 @@ typedef struct
 
     /* game state */
     DOT_GAME game;
+
+    /* particle effects */
+    DOT_PARTICLE particle[DOT_MAX_PARTICLES];
+    int current_particle;
 
     /* leaderboard stuff */
     char user_name[256];

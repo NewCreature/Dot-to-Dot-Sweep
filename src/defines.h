@@ -11,8 +11,10 @@
 #define DOT_BITMAP_BALL_BLACK      6
 #define DOT_BITMAP_BALL_EYES       8
 #define DOT_BITMAP_COMBO           9
-#define DOT_BITMAP_LOGO           10
+#define DOT_BITMAP_PARTICLE       10
+#define DOT_BITMAP_LOGO           16
 #define DOT_BITMAP_ATLAS_BOUNDARY DOT_BITMAP_LOGO
+#define DOT_BITMAP_SCRATCH        17
 
 #define DOT_MAX_SAMPLES      256
 #define DOT_SAMPLE_START       0
@@ -38,6 +40,8 @@
 
 #define DOT_GAME_PLAYFIELD_WIDTH  540
 #define DOT_GAME_PLAYFIELD_HEIGHT 440
+
+#define DOT_MAX_PARTICLES        1024
 
 #define DOT_LEADERBOARD_SUBMIT_URL   "http://www.t3-i.com/t3net2/leaderboards/insert.php"
 #define DOT_LEADERBOARD_RETRIEVE_URL "http://www.t3-i.com/t3net2/leaderboards/query.php"

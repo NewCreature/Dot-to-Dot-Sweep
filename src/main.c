@@ -34,6 +34,7 @@ void app_touch_logic(void * data)
 void app_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int i;
 
 	app_touch_logic(data);
 	switch(app->state)
@@ -54,11 +55,16 @@ void app_logic(void * data)
 			break;
 		}
 	}
+	for(i = 0; i < DOT_MAX_PARTICLES; i++)
+	{
+		dot_particle_logic(&app->particle[i]);
+	}
 }
 
 void app_render(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int i;
 
 	switch(app->state)
 	{
@@ -78,6 +84,12 @@ void app_render(void * data)
 			break;
 		}
 	}
+	al_hold_bitmap_drawing(true);
+	for(i = 0; i < DOT_MAX_PARTICLES; i++)
+	{
+		dot_particle_render(&app->particle[i], app->bitmap[DOT_BITMAP_PARTICLE]);
+	}
+	al_hold_bitmap_drawing(false);
 }
 
 static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn)
@@ -141,8 +153,18 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		return false;
 	}
+	if(!dot_load_bitmap(app, DOT_BITMAP_PARTICLE, "data/graphics/particle.png"))
+	{
+		return false;
+	}
 	if(!dot_load_bitmap(app, DOT_BITMAP_LOGO, "data/graphics/logo.png"))
 	{
+		return false;
+	}
+	app->bitmap[DOT_BITMAP_SCRATCH] = al_create_bitmap(256, 256);
+	if(!app->bitmap[DOT_BITMAP_SCRATCH])
+	{
+		printf("Failed to create effects scratch bitmap!\n");
 		return false;
 	}
 
