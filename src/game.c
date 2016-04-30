@@ -509,7 +509,7 @@ void dot_game_render_hud(void * data)
 	dot_shadow_text(app->font, t3f_color_black, shadow, 480 + 8, 184, 2, 2, 0, buffer); */
 
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], shadow, 16 + 2, 440 + 16 + 2, 0, 48, 48, 0);
-	al_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], 0, 0, 16, 16, 16, 440 + 16, 48, 48, 0);
+	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], t3f_color_white, 16, 440 + 16, 0, 48, 48, 0);
 	al_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_EYES], 8.0, 8.0, 16 + 24, 440 + 16 + 24, 3, 3, ALLEGRO_PI / 2.0, 0);
 	al_hold_bitmap_drawing(false);
 }
@@ -525,6 +525,7 @@ void dot_game_render(void * data)
 	float rgb = 0.5 - (float)app->game.level / 24.0;
 	float c = (float)app->game.player.ball.timer / (float)DOT_GAME_COMBO_TIME;
 	float s = app->game.player.ball.r * 2.0 + 128.0 - c * 128.0;
+	float cx, cy, ecx, ecy;
 	al_clear_to_color(al_map_rgb_f(rgb, rgb, rgb));
 	al_hold_bitmap_drawing(true);
 	if(app->game.combo)
@@ -551,9 +552,13 @@ void dot_game_render(void * data)
 		{
 			player_color = al_map_rgba_f(1.0 * 0.5, 1.0 * 0.5, 1.0 * 0.5, 0.5);
 		}
-		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], player_color, 8.0, 8.0, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.z, 0.0, app->game.player.ball.r / (float)(al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2), app->game.player.ball.r / (float)(al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2), 0);
-		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_EYES], player_color, 8.0, 8.0, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.z, app->game.player.ball.a, app->game.player.ball.r / (float)(al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2), app->game.player.ball.r / (float)(al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2), 0);
-		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], al_map_rgba_f(0.5, 0.5, 0.5, 0.5), 8.0, 8.0, app->game.player.ball.x, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y, app->game.player.ball.z, 0.0, app->game.player.ball.r / (float)(al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2), app->game.player.ball.r / (float)(al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2), 0);
+		cx = (float)(al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2);
+		cy = (float)(al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2);
+		ecx = (float)(al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_EYES]) / 2);
+		ecy = (float)(al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_EYES]) / 2);
+		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], player_color, cx, cy, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.z, 0.0, app->game.player.ball.r / cx, app->game.player.ball.r / cy, 0);
+		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_EYES], player_color, 8.0, 8.0, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.z, app->game.player.ball.a, app->game.player.ball.r / ecx, app->game.player.ball.r / ecy, 0);
+		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], al_map_rgba_f(0.5, 0.5, 0.5, 0.5), 8.0, 8.0, app->game.player.ball.x, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y, app->game.player.ball.z, 0.0, app->game.player.ball.r / cx, app->game.player.ball.r / cy, 0);
 		if(app->game.combo)
 		{
 			sprintf(buf, "%d", dot_game_get_combo_score(data));
