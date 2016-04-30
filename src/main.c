@@ -1,7 +1,7 @@
 #include "t3f/t3f.h"
 #include "t3f/resource.h"
 #include "t3f/music.h"
-#include "t3f/gui.h"
+#include "t3f/view.h"
 #include "instance.h"
 #include "intro.h"
 #include "game.h"
@@ -249,6 +249,9 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Failed to create menu!\n");
 		return false;
 	}
+
+	/* change view focus so 3D effects look right */
+	t3f_set_view_focus(t3f_current_view, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2);
 
 	app->state = 0;
 	return true;
