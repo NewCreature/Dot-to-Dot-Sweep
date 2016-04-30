@@ -17,6 +17,7 @@ typedef struct
     ALLEGRO_BITMAP * bitmap[DOT_MAX_BITMAPS];
     ALLEGRO_SAMPLE * sample[DOT_MAX_SAMPLES];
     ALLEGRO_FONT * font[DOT_MAX_FONTS];
+    ALLEGRO_COLOR color[16];
     T3F_ATLAS * atlas;
     bool music_enabled;
 
@@ -36,6 +37,8 @@ typedef struct
     /* particle effects */
     DOT_PARTICLE particle[DOT_MAX_PARTICLES];
     int current_particle;
+    DOT_PARTICLE * active_particle[DOT_MAX_PARTICLES];
+    int active_particles;
 
     /* leaderboard stuff */
     char user_name[256];

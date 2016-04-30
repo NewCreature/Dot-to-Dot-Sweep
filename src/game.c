@@ -131,7 +131,9 @@ void dot_game_exit(void * data)
 	if(app->upload_scores)
 	{
 		sprintf(buf, "%d", app->game.level + 1);
+		al_stop_timer(t3f_timer);
 		t3net_upload_score(DOT_LEADERBOARD_SUBMIT_URL, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_name, app->game.score, buf);
+		al_resume_timer(t3f_timer);
 	}
 
 	/* go back to intro */
@@ -192,6 +194,26 @@ static void dot_game_create_score_effect(void * data, float x, float y, int numb
 		}
 	}
 	al_unlock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+}
+
+static void dot_game_create_splash_effect(void * data, float x, float y, float r, ALLEGRO_COLOR color)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int i;
+	float ga, gx, gy;
+
+	for(i = 0; i < r * 8.0; i++)
+	{
+		ga = t3f_drand(&app->rng_state) * ALLEGRO_PI * 2.0;
+		gx = cos(ga) * t3f_drand(&app->rng_state) * r * t3f_drand(&app->rng_state);
+		gy = sin(gy) * t3f_drand(&app->rng_state) * r * t3f_drand(&app->rng_state);
+		dot_create_particle(&app->particle[app->current_particle], x + gx, y + gy, 0.0, cos(ga) * t3f_drand(&app->rng_state), sin(ga) * t3f_drand(&app->rng_state), t3f_drand(&app->rng_state) * -5.0 - 5.0, 0.5, 5.0, 30, app->bitmap[DOT_BITMAP_PARTICLE], color);
+		app->current_particle++;
+		if(app->current_particle >= DOT_MAX_PARTICLES)
+		{
+			app->current_particle = 0;
+		}
+	}
 }
 
 /* function to add points to the score
@@ -404,6 +426,7 @@ void dot_game_move_player(void * data)
 								break;
 							}
 						}
+						dot_game_create_splash_effect(data, app->game.ball[i].x, app->game.ball[i].y, app->game.ball[i].r, app->color[app->game.ball[i].type]);
 					}
 
 					/* hitting other color kills you */
@@ -413,6 +436,7 @@ void dot_game_move_player(void * data)
 						{
 							t3f_touch[app->touch_id].active = false;
 						}
+						dot_game_create_splash_effect(data, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.r, app->color[app->game.player.ball.type]);
 						t3f_play_sample(app->sample[DOT_SAMPLE_LOSE], 1.0, 0.0, 1.0);
 						dot_game_accumulate_score(data);
 						app->game.combo = 0;
@@ -428,7 +452,8 @@ void dot_game_move_player(void * data)
 							}
 							else
 							{
-								dot_game_exit(data);
+								app->game.player.ball.active = false;
+								app->game.state = DOT_GAME_STATE_DONE;
 							}
 						}
 						else
@@ -439,7 +464,8 @@ void dot_game_move_player(void * data)
 							}
 							else
 							{
-								dot_game_exit(data);
+								app->game.player.ball.active = false;
+								app->game.state = DOT_GAME_STATE_DONE;
 							}
 						}
 						break;
@@ -456,6 +482,7 @@ void dot_game_logic(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	int colored = 0;
+	int i;
 
 	switch(app->game.state)
 	{
@@ -490,6 +517,22 @@ void dot_game_logic(void * data)
 			break;
 		}
 
+		case DOT_GAME_STATE_DONE:
+		{
+			for(i = 0; i < DOT_MAX_PARTICLES; i++)
+			{
+				if(app->particle[i].active)
+				{
+					break;
+				}
+			}
+			if(i == DOT_MAX_PARTICLES)
+			{
+				dot_game_exit(data);
+			}
+			break;
+		}
+
 		/* normal game state */
 		default:
 		{
@@ -517,7 +560,8 @@ void dot_game_logic(void * data)
 				}
 				else
 				{
-					dot_game_exit(data);
+					app->game.player.ball.active = false;
+					app->game.state = DOT_GAME_STATE_DONE;
 				}
 			}
 			break;

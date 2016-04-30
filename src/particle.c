@@ -21,21 +21,18 @@ void dot_create_particle(DOT_PARTICLE * pp, float x, float y, float z, float vx,
 
 void dot_particle_logic(DOT_PARTICLE * pp)
 {
-	if(pp->active)
+	pp->x += pp->vx;
+	pp->y += pp->vy;
+	pp->z += pp->vz;
+	if(pp->z >= 0.0)
 	{
-		pp->x += pp->vx;
-		pp->y += pp->vy;
-		pp->z += pp->vz;
-		if(pp->z >= 0.0)
-		{
-			pp->life = 1;
-		}
-		pp->vz += pp->gz;
-		pp->life--;
-		if(pp->life <= 0)
-		{
-			pp->active = false;
-		}
+		pp->life = 1;
+	}
+	pp->vz += pp->gz;
+	pp->life--;
+	if(pp->life <= 0)
+	{
+		pp->active = false;
 	}
 }
 
@@ -43,11 +40,9 @@ void dot_particle_render(DOT_PARTICLE * pp, ALLEGRO_BITMAP * particle_bitmap)
 {
 	float r, g, b, a, ca;
 	ALLEGRO_COLOR c;
-	if(pp->active)
-	{
-		al_unmap_rgba_f(pp->color, &r, &g, &b, &a);
-		ca = a * ((float)pp->life / (float)pp->start_life);
-		c = al_map_rgba_f(r * ca, g * ca, b * ca, ca);
-		t3f_draw_scaled_bitmap(particle_bitmap, c, pp->x - al_get_bitmap_width(particle_bitmap) / 2, pp->y - al_get_bitmap_height(particle_bitmap) / 2, pp->z, pp->size, pp->size, 0);
-	}
+
+	al_unmap_rgba_f(pp->color, &r, &g, &b, &a);
+	ca = a * ((float)pp->life / (float)pp->start_life);
+	c = al_map_rgba_f(r * ca, g * ca, b * ca, ca);
+	t3f_draw_scaled_bitmap(particle_bitmap, c, pp->x - al_get_bitmap_width(particle_bitmap) / 2, pp->y - al_get_bitmap_height(particle_bitmap) / 2, pp->z, pp->size, pp->size, 0);
 }

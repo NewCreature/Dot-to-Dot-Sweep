@@ -31,6 +31,17 @@ void app_touch_logic(void * data)
 	}
 }
 
+static int particle_qsort_helper(const void * p1, const void * p2)
+{
+	DOT_PARTICLE ** sp1;
+	DOT_PARTICLE ** sp2;
+
+	sp1 = (DOT_PARTICLE **)p1;
+	sp2 = (DOT_PARTICLE **)p2;
+
+	return (*sp1)->z < (*sp2)->z;
+}
+
 void app_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -55,8 +66,14 @@ void app_logic(void * data)
 			break;
 		}
 	}
+	app->active_particles = 0;
 	for(i = 0; i < DOT_MAX_PARTICLES; i++)
 	{
+		if(app->particle[i].active)
+		{
+			app->active_particle[app->active_particles] = &app->particle[i];
+			app->active_particles++;
+		}
 		dot_particle_logic(&app->particle[i]);
 	}
 }
@@ -85,9 +102,10 @@ void app_render(void * data)
 		}
 	}
 	al_hold_bitmap_drawing(true);
-	for(i = 0; i < DOT_MAX_PARTICLES; i++)
+	qsort(app->active_particle, app->active_particles, sizeof(DOT_PARTICLE *), particle_qsort_helper);
+	for(i = 0; i < app->active_particles; i++)
 	{
-		dot_particle_render(&app->particle[i], app->bitmap[DOT_BITMAP_PARTICLE]);
+		dot_particle_render(app->active_particle[i], app->bitmap[DOT_BITMAP_PARTICLE]);
 	}
 	al_hold_bitmap_drawing(false);
 }
@@ -101,6 +119,16 @@ static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn)
 		return false;
 	}
 	return true;
+}
+
+static ALLEGRO_COLOR dot_get_ball_color(ALLEGRO_BITMAP * bp)
+{
+	ALLEGRO_COLOR c;
+
+	al_lock_bitmap(bp, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
+	c = al_get_pixel(bp, al_get_bitmap_width(bp) / 2, al_get_bitmap_height(bp) / 2);
+	al_unlock_bitmap(bp);
+	return c;
 }
 
 /* initialize our app, load graphics, etc. */
@@ -271,6 +299,12 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 
 	/* change view focus so 3D effects look right */
 	t3f_set_view_focus(t3f_current_view, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2);
+
+	/* create color table */
+	for(i = 0; i < DOT_BITMAP_BALL_BLACK; i++)
+	{
+		app->color[i] = dot_get_ball_color(app->bitmap[i]);
+	}
 
 	app->state = 0;
 	return true;
