@@ -156,15 +156,16 @@ void dot_intro_render(void * data)
 
 	al_clear_to_color(al_map_rgb_f(0.5, 0.5, 0.5));
 	al_hold_bitmap_drawing(true);
-	for(i = 0; i < 540 / 16; i++)
+	al_draw_bitmap(app->bitmap[DOT_BITMAP_LOGO], DOT_GAME_PLAYFIELD_WIDTH / 2 - al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]) / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]) / 2, 0);
+/*	for(i = 0; i < 540 / 16; i++)
 	{
 		al_draw_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + i % 6], i * 16 + 6, sin((float)(i * 2 + app->tick) / 10.0) * 32 + 64, 0);
 		al_draw_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + i % 6], i * 16 + 6, cos((float)(i * 2 + app->tick) / 10.0) * 32 + DOT_GAME_PLAYFIELD_HEIGHT - 64 - 16 - 1, 0);
-	}
+	} */
 	al_hold_bitmap_drawing(false);
 	dot_game_render_hud(data);
 	al_hold_bitmap_drawing(true);
-	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - 16, 4, 4, ALLEGRO_ALIGN_CENTRE, "Dot to Dot Sweep");
+/*	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - 16, 4, 4, ALLEGRO_ALIGN_CENTRE, "Dot to Dot Sweep"); */
 	t3f_render_gui(app->menu[app->current_menu]);
 	al_hold_bitmap_drawing(false);
 }

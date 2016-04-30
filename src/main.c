@@ -80,6 +80,17 @@ void app_render(void * data)
 	}
 }
 
+static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn)
+{
+	t3f_load_resource((void **)&app->bitmap[bitmap], T3F_RESOURCE_TYPE_BITMAP, fn, 0, 0, 0);
+	if(!app->bitmap[bitmap])
+	{
+		printf("Failed to load image %d!\n", bitmap);
+		return false;
+	}
+	return true;
+}
+
 /* initialize our app, load graphics, etc. */
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
@@ -94,58 +105,44 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 
 	/* load images */
-	t3f_load_resource((void **)&app->bitmap[DOT_BITMAP_BALL_RED], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/ball_red.png", 0, 0, 0);
-	if(!app->bitmap[DOT_BITMAP_BALL_RED])
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_RED, "data/graphics/ball_red.png"))
 	{
-		printf("Failed to load image %d!\n", DOT_BITMAP_BALL_RED);
 		return false;
 	}
-	t3f_load_resource((void **)&app->bitmap[DOT_BITMAP_BALL_GREEN], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/ball_green.png", 0, 0, 0);
-	if(!app->bitmap[DOT_BITMAP_BALL_GREEN])
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_GREEN, "data/graphics/ball_green.png"))
 	{
-		printf("Failed to load image %d!\n", DOT_BITMAP_BALL_GREEN);
 		return false;
 	}
-	t3f_load_resource((void **)&app->bitmap[DOT_BITMAP_BALL_BLUE], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/ball_blue.png", 0, 0, 0);
-	if(!app->bitmap[DOT_BITMAP_BALL_BLUE])
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_BLUE, "data/graphics/ball_blue.png"))
 	{
-		printf("Failed to load image %d!\n", DOT_BITMAP_BALL_BLUE);
 		return false;
 	}
-	t3f_load_resource((void **)&app->bitmap[DOT_BITMAP_BALL_PURPLE], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/ball_purple.png", 0, 0, 0);
-	if(!app->bitmap[DOT_BITMAP_BALL_PURPLE])
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_PURPLE, "data/graphics/ball_purple.png"))
 	{
-		printf("Failed to load image %d!\n", DOT_BITMAP_BALL_PURPLE);
 		return false;
 	}
-	t3f_load_resource((void **)&app->bitmap[DOT_BITMAP_BALL_YELLOW], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/ball_yellow.png", 0, 0, 0);
-	if(!app->bitmap[DOT_BITMAP_BALL_YELLOW])
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_YELLOW, "data/graphics/ball_yellow.png"))
 	{
-		printf("Failed to load image %d!\n", DOT_BITMAP_BALL_YELLOW);
 		return false;
 	}
-	t3f_load_resource((void **)&app->bitmap[DOT_BITMAP_BALL_ORANGE], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/ball_orange.png", 0, 0, 0);
-	if(!app->bitmap[DOT_BITMAP_BALL_ORANGE])
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_ORANGE, "data/graphics/ball_orange.png"))
 	{
-		printf("Failed to load image %d!\n", DOT_BITMAP_BALL_ORANGE);
 		return false;
 	}
-	t3f_load_resource((void **)&app->bitmap[DOT_BITMAP_BALL_BLACK], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/ball_black.png", 0, 0, 0);
-	if(!app->bitmap[DOT_BITMAP_BALL_BLACK])
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_BLACK, "data/graphics/ball_black.png"))
 	{
-		printf("Failed to load image %d!\n", DOT_BITMAP_BALL_BLACK);
 		return false;
 	}
-	t3f_load_resource((void **)&app->bitmap[DOT_BITMAP_BALL_EYES], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/ball_eyes.png", 0, 0, 0);
-	if(!app->bitmap[DOT_BITMAP_BALL_EYES])
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_EYES, "data/graphics/ball_eyes.png"))
 	{
-		printf("Failed to load image %d!\n", DOT_BITMAP_BALL_EYES);
 		return false;
 	}
-	t3f_load_resource((void **)&app->bitmap[DOT_BITMAP_COMBO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/combo.png", 0, 0, 0);
-	if(!app->bitmap[DOT_BITMAP_COMBO])
+	if(!dot_load_bitmap(app, DOT_BITMAP_COMBO, "data/graphics/combo.png"))
 	{
-		printf("Failed to load image %d!\n", DOT_BITMAP_COMBO);
+		return false;
+	}
+	if(!dot_load_bitmap(app, DOT_BITMAP_LOGO, "data/graphics/logo.png"))
+	{
 		return false;
 	}
 
@@ -193,7 +190,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->atlas = t3f_create_atlas(1024, 1024);
 	if(app->atlas)
 	{
-		for(i = 0; i < DOT_MAX_BITMAPS; i++)
+		for(i = 0; i < DOT_BITMAP_ATLAS_BOUNDARY; i++)
 		{
 			if(app->bitmap[i])
 			{
