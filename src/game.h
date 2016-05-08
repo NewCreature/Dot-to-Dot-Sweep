@@ -30,6 +30,11 @@ typedef struct
 #define DOT_GAME_STATE_PAUSE   2
 #define DOT_GAME_STATE_DONE    3
 
+#define DOT_GAME_LEVEL_BASE_BALLS       16
+#define DOT_GAME_LEVEL_BALLS_INC         4
+#define DOT_GAME_LEVEL_BASE_BLACK_BALLS  2
+#define DOT_GAME_LEVEL_BLACK_BALLS_INC   1
+
 #define DOT_GAME_GRAB_SPOT_SIZE 24
 
 typedef struct

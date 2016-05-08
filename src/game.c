@@ -52,16 +52,10 @@ void dot_game_setup_level(void * data, int level)
 
 	int i, j;
 	int col = 0;
-	int level_balls[DOT_GAME_MAX_LEVELS] =
-	{
-		16, 20, 24, 28, 32, 36, 40, 44, 48, 52
-	};
-
-	app->game.level = level < 10 ? level : 10;
 
 	/* initialize balls */
 	memset(app->game.ball, 0, sizeof(DOT_BALL) * DOT_GAME_MAX_BALLS);
-	for(i = 0; i < level_balls[app->game.level]; i++)
+	for(i = 0; i < DOT_GAME_LEVEL_BASE_BALLS + app->game.level * DOT_GAME_LEVEL_BALLS_INC && i < DOT_GAME_MAX_BALLS; i++)
 	{
 		app->game.ball[i].r = 16.0;
 		app->game.ball[i].x = t3f_drand(&app->rng_state) * ((float)(DOT_GAME_PLAYFIELD_WIDTH) - app->game.ball[i].r * 2.0) + app->game.ball[i].r;
@@ -81,7 +75,7 @@ void dot_game_setup_level(void * data, int level)
 	}
 
 	/* add black balls */
-	for(j = i; j < i + app->game.level + 2; j++)
+	for(j = i; j < i + DOT_GAME_LEVEL_BASE_BLACK_BALLS + app->game.level * DOT_GAME_LEVEL_BLACK_BALLS_INC && j < DOT_GAME_MAX_BALLS; j++)
 	{
 		app->game.ball[j].r = 16.0;
 		app->game.ball[j].x = t3f_drand(&app->rng_state) * ((float)(DOT_GAME_PLAYFIELD_WIDTH) - app->game.ball[j].r * 2.0) + app->game.ball[i].r;
@@ -549,21 +543,13 @@ void dot_game_logic(void * data)
 			if(colored == 0)
 			{
 				dot_game_accumulate_score(data);
-				if(app->game.level < 9)
+				if(app->touch_id >= 0)
 				{
-					if(app->touch_id >= 0)
-					{
-						t3f_touch[app->touch_id].active = false;
-					}
-					dot_game_setup_level(data, app->game.level + 1);
-					app->game.combo = 0;
-					app->game.ascore = 0;
+					t3f_touch[app->touch_id].active = false;
 				}
-				else
-				{
-					app->game.player.ball.active = false;
-					app->game.state = DOT_GAME_STATE_DONE;
-				}
+				dot_game_setup_level(data, app->game.level + 1);
+				app->game.combo = 0;
+				app->game.ascore = 0;
 			}
 			break;
 		}
@@ -595,18 +581,6 @@ void dot_game_render_hud(void * data)
 	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16 + 160, 440 + 8 + 9, 2, 2, 0, buffer);
 	sprintf(buffer, "  %07d", app->game.high_score);
 	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16 + 160, 440 + 8 + 9 + 24, 2, 2, 0, buffer);
-/*	sprintf(buffer, "Combo");
-	dot_shadow_text(app->font, t3f_color_black, shadow, 480 + 8, 88, 2, 2, 0, buffer);
-	sprintf(buffer, "      %03d", app->game.combo);
-	dot_shadow_text(app->font, t3f_color_black, shadow, 480 + 8, 104, 2, 2, 0, buffer);
-	sprintf(buffer, "Level");
-	dot_shadow_text(app->font, t3f_color_black, shadow, 480 + 8, 128, 2, 2, 0, buffer);
-	sprintf(buffer, "       %02d", app->game.level);
-	dot_shadow_text(app->font, t3f_color_black, shadow, 480 + 8, 144, 2, 2, 0, buffer);
-	sprintf(buffer, "Lives");
-	dot_shadow_text(app->font, t3f_color_black, shadow, 480 + 8, 168, 2, 2, 0, buffer);
-	sprintf(buffer, "       %02d", app->game.lives);
-	dot_shadow_text(app->font, t3f_color_black, shadow, 480 + 8, 184, 2, 2, 0, buffer); */
 
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], shadow, 16 + 2, 440 + 16 + 2, 0, 48, 48, 0);
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], t3f_color_white, 16, 440 + 16, 0, 48, 48, 0);
@@ -626,6 +600,10 @@ void dot_game_render(void * data)
 	float c = (float)app->game.player.ball.timer / (float)DOT_GAME_COMBO_TIME;
 	float s = app->game.player.ball.r * 2.0 + 128.0 - c * 128.0;
 	float cx, cy, ecx, ecy;
+	if(rgb < 0.0)
+	{
+		rgb = 0.0;
+	}
 	al_clear_to_color(al_map_rgb_f(rgb, rgb, rgb));
 	al_hold_bitmap_drawing(true);
 	if(app->game.combo)
