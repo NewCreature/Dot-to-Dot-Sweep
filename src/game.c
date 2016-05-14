@@ -94,6 +94,7 @@ void dot_game_setup_level(void * data, int level)
 	t3f_play_sample(app->sample[DOT_SAMPLE_START], 1.0, 0.0, 1.0);
 	app->game.player.ball.r = 16.0;
 
+	app->game.level = level;
 	app->game.timer = 0;
 }
 
@@ -107,6 +108,10 @@ void dot_game_initialize(void * data)
 	app->game.score = 0;
 	app->game.combo = 0;
 	app->game.lives = 3;
+	if(app->music_enabled)
+	{
+		t3f_play_music("data/music/going_for_it.xm");
+	}
 	app->state = DOT_STATE_GAME;
 }
 
@@ -128,6 +133,11 @@ void dot_game_exit(void * data)
 		al_stop_timer(t3f_timer);
 		t3net_upload_score(DOT_LEADERBOARD_SUBMIT_URL, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_name, app->game.score, buf);
 		al_resume_timer(t3f_timer);
+	}
+
+	if(app->music_enabled)
+	{
+		t3f_stop_music();
 	}
 
 	/* go back to intro */
