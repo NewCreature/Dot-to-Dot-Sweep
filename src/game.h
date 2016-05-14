@@ -18,8 +18,17 @@ typedef struct
 
 	DOT_BALL ball;
 	bool lost_touch;
+	bool want_shield;
 
 } DOT_PLAYER;
+
+typedef struct
+{
+
+	float x, y, r;
+	bool active;
+
+} DOT_SHIELD;
 
 #define DOT_GAME_MAX_LEVELS   10
 #define DOT_GAME_COMBO_TIME  120
@@ -37,7 +46,17 @@ typedef struct
 #define DOT_GAME_LEVEL_BASE_SPEED      1.0
 #define DOT_GAME_LEVEL_TOP_SPEED       2.0
 
+#define DOT_GAME_SHIELD_MAX_SIZE        96
+#define DOT_GAME_BALL_SIZE            16.0
+
+#define DOT_GAME_BG_COLOR al_map_rgb(255, 230, 213)
+
 #define DOT_GAME_GRAB_SPOT_SIZE 24
+
+#define DOT_GAME_TOUCH_START_X DOT_GAME_SHIELD_MAX_SIZE + DOT_GAME_BALL_SIZE * 2
+#define DOT_GAME_TOUCH_START_Y DOT_GAME_SHIELD_MAX_SIZE + DOT_GAME_BALL_SIZE * 2
+#define DOT_GAME_TOUCH_END_X DOT_GAME_PLAYFIELD_WIDTH - DOT_GAME_SHIELD_MAX_SIZE - DOT_GAME_BALL_SIZE * 2
+#define DOT_GAME_TOUCH_END_Y DOT_GAME_PLAYFIELD_HEIGHT - DOT_GAME_SHIELD_MAX_SIZE - DOT_GAME_BALL_SIZE * 2
 
 typedef struct
 {
@@ -54,6 +73,7 @@ typedef struct
 
 	DOT_BALL ball[DOT_GAME_MAX_BALLS];
 	DOT_PLAYER player;
+	DOT_SHIELD shield;
 
 } DOT_GAME;
 

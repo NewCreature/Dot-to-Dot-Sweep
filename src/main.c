@@ -185,11 +185,15 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		return false;
 	}
+	if(!dot_load_bitmap(app, DOT_BITMAP_BG, "data/graphics/bg.png"))
+	{
+		return false;
+	}
 	if(!dot_load_bitmap(app, DOT_BITMAP_LOGO, "data/graphics/logo.png"))
 	{
 		return false;
 	}
-	app->bitmap[DOT_BITMAP_SCRATCH] = al_create_bitmap(256, 256);
+	app->bitmap[DOT_BITMAP_SCRATCH] = al_create_bitmap(512, 512);
 	if(!app->bitmap[DOT_BITMAP_SCRATCH])
 	{
 		printf("Failed to create effects scratch bitmap!\n");

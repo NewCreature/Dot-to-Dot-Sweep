@@ -59,7 +59,7 @@ void dot_game_setup_level(void * data, int level)
 	memset(app->game.ball, 0, sizeof(DOT_BALL) * DOT_GAME_MAX_BALLS);
 	for(i = 0; i < num_balls && i < DOT_GAME_MAX_BALLS; i++)
 	{
-		app->game.ball[i].r = 16.0;
+		app->game.ball[i].r = DOT_GAME_BALL_SIZE;
 		app->game.ball[i].x = t3f_drand(&app->rng_state) * ((float)(DOT_GAME_PLAYFIELD_WIDTH) - app->game.ball[i].r * 2.0) + app->game.ball[i].r;
 		app->game.ball[i].y = t3f_drand(&app->rng_state) * ((float)(DOT_GAME_PLAYFIELD_HEIGHT) - app->game.ball[i].r * 2.0) + app->game.ball[i].r;
 		app->game.ball[i].z = 0;
@@ -79,7 +79,7 @@ void dot_game_setup_level(void * data, int level)
 	/* add black balls */
 	for(j = i; j < i + num_black_balls && j < DOT_GAME_MAX_BALLS; j++)
 	{
-		app->game.ball[j].r = 16.0;
+		app->game.ball[j].r = DOT_GAME_BALL_SIZE;
 		app->game.ball[j].x = t3f_drand(&app->rng_state) * ((float)(DOT_GAME_PLAYFIELD_WIDTH) - app->game.ball[j].r * 2.0) + app->game.ball[i].r;
 		app->game.ball[j].y = t3f_drand(&app->rng_state) * ((float)(DOT_GAME_PLAYFIELD_HEIGHT) - app->game.ball[j].r * 2.0) + app->game.ball[i].r;
 		app->game.ball[j].z = 0;
@@ -111,6 +111,7 @@ void dot_game_initialize(void * data)
 	app->game.score = 0;
 	app->game.combo = 0;
 	app->game.lives = 3;
+	app->game.shield.active = false;
 	if(app->music_enabled)
 	{
 		t3f_play_music("data/music/going_for_it.xm");
@@ -242,6 +243,56 @@ void dot_game_accumulate_score(void * data)
 	}
 }
 
+void dot_game_ball_shield_reaction(void * data, int i)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	float angle;
+	float angle_c, angle_s;
+	float distance;
+
+	angle = atan2(app->game.ball[i].y - app->game.shield.y, app->game.ball[i].x - app->game.shield.x);
+	angle_c = cos(angle);
+	angle_s = sin(angle);
+	distance = app->game.shield.r + app->game.ball[i].r;
+	app->game.ball[i].x = app->game.shield.x + angle_c * distance;
+	app->game.ball[i].y = app->game.shield.y + angle_s * distance;
+	app->game.ball[i].vx = app->game.ball[i].s * angle_c;
+	app->game.ball[i].vy = app->game.ball[i].s * angle_s;
+}
+
+void dot_game_move_ball(void * data, int i)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	float d;
+
+	app->game.ball[i].x += app->game.ball[i].vx * app->game.speed;
+	if(app->game.ball[i].x - app->game.ball[i].r < 0.0)
+	{
+		app->game.ball[i].vx = -app->game.ball[i].vx;
+	}
+	if(app->game.ball[i].x + app->game.ball[i].r >= DOT_GAME_PLAYFIELD_WIDTH)
+	{
+		app->game.ball[i].vx = -app->game.ball[i].vx;
+	}
+	app->game.ball[i].y += app->game.ball[i].vy * app->game.speed;
+	if(app->game.ball[i].y - app->game.ball[i].r < 0.0)
+	{
+		app->game.ball[i].vy = -app->game.ball[i].vy;
+	}
+	if(app->game.ball[i].y + app->game.ball[i].r >= DOT_GAME_PLAYFIELD_HEIGHT)
+	{
+		app->game.ball[i].vy = -app->game.ball[i].vy;
+	}
+	if(app->game.shield.active)
+	{
+		d = t3f_distance(app->game.ball[i].x, app->game.ball[i].y, app->game.shield.x, app->game.shield.y);
+		if(d < app->game.ball[i].r + app->game.shield.r)
+		{
+			dot_game_ball_shield_reaction(data, i);
+		}
+	}
+}
+
 /* return the number of colored balls left */
 int dot_game_move_balls(void * data)
 {
@@ -255,24 +306,7 @@ int dot_game_move_balls(void * data)
 	{
 		if(app->game.ball[i].active)
 		{
-			app->game.ball[i].x += app->game.ball[i].vx * app->game.speed;
-			if(app->game.ball[i].x - app->game.ball[i].r < 0.0)
-			{
-				app->game.ball[i].vx = -app->game.ball[i].vx;
-			}
-			if(app->game.ball[i].x + app->game.ball[i].r >= DOT_GAME_PLAYFIELD_WIDTH)
-			{
-				app->game.ball[i].vx = -app->game.ball[i].vx;
-			}
-			app->game.ball[i].y += app->game.ball[i].vy * app->game.speed;
-			if(app->game.ball[i].y - app->game.ball[i].r < 0.0)
-			{
-				app->game.ball[i].vy = -app->game.ball[i].vy;
-			}
-			if(app->game.ball[i].y + app->game.ball[i].r >= DOT_GAME_PLAYFIELD_HEIGHT)
-			{
-				app->game.ball[i].vy = -app->game.ball[i].vy;
-			}
+			dot_game_move_ball(data, i);
 			if(app->game.ball[i].type != DOT_BITMAP_BALL_BLACK)
 			{
 				colored++;
@@ -307,12 +341,93 @@ static float get_angle_dir(float a1, float a2)
 	}
 }
 
+void dot_game_check_player_collisions(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int i, j;
+
+	/* see if player ball hits any other balls */
+	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
+	{
+		if(app->game.ball[i].active)
+		{
+			if(t3f_distance(app->game.ball[i].x, app->game.ball[i].y, app->game.player.ball.x, app->game.player.ball.y) < app->game.player.ball.r + app->game.ball[i].r)
+			{
+				/* hitting the same color gives you points and increases your combo */
+				if(app->game.ball[i].type == app->game.player.ball.type)
+				{
+					t3f_play_sample(app->sample[DOT_SAMPLE_GRAB], 1.0, 0.0, 1.0);
+					app->game.ball[i].active = false;
+					app->game.ascore += 50;
+					if(app->game.player.ball.timer < DOT_GAME_COMBO_TIME)
+					{
+						app->game.combo++;
+					}
+					app->game.player.ball.timer = 0;
+//						app->game.player.ball.r += 0.5;
+					for(j = 0; j < DOT_GAME_MAX_BALLS; j++)
+					{
+						if(app->game.ball[j].active && app->game.ball[j].type != DOT_BITMAP_BALL_BLACK && app->game.ball[j].type != app->game.player.ball.type)
+						{
+							app->game.ball[j].type = app->game.player.ball.type;
+							break;
+						}
+					}
+					app->game.speed += app->game.speed_inc;
+					dot_game_create_splash_effect(data, app->game.ball[i].x, app->game.ball[i].y, app->game.ball[i].r, app->color[app->game.ball[i].type]);
+				}
+
+				/* hitting other color kills you */
+				else
+				{
+					if(app->touch_id >= 0)
+					{
+						t3f_touch[app->touch_id].active = false;
+					}
+					dot_game_create_splash_effect(data, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.r, app->color[app->game.player.ball.type]);
+					t3f_play_sample(app->sample[DOT_SAMPLE_LOSE], 1.0, 0.0, 1.0);
+					dot_game_accumulate_score(data);
+					app->game.combo = 0;
+					app->game.ascore = 0;
+					app->game.lives--;
+
+					/* change ball color to match the ball that is hit unless it is black */
+					if(app->game.ball[i].type != DOT_BITMAP_BALL_BLACK)
+					{
+						if(app->game.lives > 0)
+						{
+							dot_game_drop_player(data, app->game.ball[i].type);
+						}
+						else
+						{
+							app->game.player.ball.active = false;
+							app->game.state = DOT_GAME_STATE_DONE;
+						}
+					}
+					else
+					{
+						if(app->game.lives > 0)
+						{
+							dot_game_drop_player(data, app->game.player.ball.type);
+						}
+						else
+						{
+							app->game.player.ball.active = false;
+							app->game.state = DOT_GAME_STATE_DONE;
+						}
+					}
+					break;
+				}
+			}
+		}
+	}
+}
+
 /* handle player movement */
 void dot_game_move_player(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	int i, j;
 	float ox, oy, target_angle;
 
 	if(app->game.player.ball.active)
@@ -333,6 +448,14 @@ void dot_game_move_player(void * data)
 			{
 				app->game.player.ball.x = app->touch_x;
 				app->game.player.ball.y = app->touch_y;
+			}
+			if(app->game.player.want_shield)
+			{
+				app->game.shield.x = app->game.player.ball.x;
+				app->game.shield.y = app->game.player.ball.y;
+				app->game.shield.r = app->game.player.ball.r + 1.0;
+				app->game.shield.active = true;
+				app->game.player.want_shield = false;
 			}
 		}
 		else
@@ -390,82 +513,19 @@ void dot_game_move_player(void * data)
 				t3f_play_sample(app->sample[DOT_SAMPLE_SCORE], 1.0, 0.0, 1.0);
 			}
 		}
+	}
+}
 
-		/* see if player ball hits any other balls */
-		for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
+void dot_game_shield_logic(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	if(app->game.shield.active)
+	{
+		app->game.shield.r += 1.5;
+		if(app->game.shield.r >= 96.0)
 		{
-			if(app->game.ball[i].active)
-			{
-				if(t3f_distance(app->game.ball[i].x, app->game.ball[i].y, app->game.player.ball.x, app->game.player.ball.y) < app->game.player.ball.r + app->game.ball[i].r)
-				{
-
-					/* hitting the same color gives you points and increases your combo */
-					if(app->game.ball[i].type == app->game.player.ball.type)
-					{
-						t3f_play_sample(app->sample[DOT_SAMPLE_GRAB], 1.0, 0.0, 1.0);
-						app->game.ball[i].active = false;
-						app->game.ascore += 50;
-						if(app->game.player.ball.timer < DOT_GAME_COMBO_TIME)
-						{
-							app->game.combo++;
-						}
-						app->game.player.ball.timer = 0;
-//						app->game.player.ball.r += 0.5;
-						for(j = 0; j < DOT_GAME_MAX_BALLS; j++)
-						{
-							if(app->game.ball[j].active && app->game.ball[j].type != DOT_BITMAP_BALL_BLACK && app->game.ball[j].type != app->game.player.ball.type)
-							{
-								app->game.ball[j].type = app->game.player.ball.type;
-								break;
-							}
-						}
-						app->game.speed += app->game.speed_inc;
-						dot_game_create_splash_effect(data, app->game.ball[i].x, app->game.ball[i].y, app->game.ball[i].r, app->color[app->game.ball[i].type]);
-					}
-
-					/* hitting other color kills you */
-					else
-					{
-						if(app->touch_id >= 0)
-						{
-							t3f_touch[app->touch_id].active = false;
-						}
-						dot_game_create_splash_effect(data, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.r, app->color[app->game.player.ball.type]);
-						t3f_play_sample(app->sample[DOT_SAMPLE_LOSE], 1.0, 0.0, 1.0);
-						dot_game_accumulate_score(data);
-						app->game.combo = 0;
-						app->game.ascore = 0;
-						app->game.lives--;
-
-						/* change ball color to match the ball that is hit unless it is black */
-						if(app->game.ball[i].type != DOT_BITMAP_BALL_BLACK)
-						{
-							if(app->game.lives > 0)
-							{
-								dot_game_drop_player(data, app->game.ball[i].type);
-							}
-							else
-							{
-								app->game.player.ball.active = false;
-								app->game.state = DOT_GAME_STATE_DONE;
-							}
-						}
-						else
-						{
-							if(app->game.lives > 0)
-							{
-								dot_game_drop_player(data, app->game.player.ball.type);
-							}
-							else
-							{
-								app->game.player.ball.active = false;
-								app->game.state = DOT_GAME_STATE_DONE;
-							}
-						}
-						break;
-					}
-				}
-			}
+			app->game.shield.active = false;
 		}
 	}
 }
@@ -487,14 +547,17 @@ void dot_game_logic(void * data)
 			app->game.state_tick++;
 			if(app->touch_id >= 0)
 			{
-				t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
-				app->game.state = DOT_GAME_STATE_PLAY;
-				app->game.state_tick = 0;
-				app->game.player.lost_touch = false;
-				app->game.player.ball.active = true;
-//				al_set_mouse_xy(t3f_display, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2);
-				t3f_mouse_x = DOT_GAME_PLAYFIELD_WIDTH / 2;
-				t3f_mouse_y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
+				if(app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
+				{
+					t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
+					app->game.state = DOT_GAME_STATE_PLAY;
+					app->game.state_tick = 0;
+					app->game.player.lost_touch = false;
+					app->game.player.ball.active = true;
+					t3f_mouse_x = DOT_GAME_PLAYFIELD_WIDTH / 2;
+					t3f_mouse_y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
+					app->game.player.want_shield = true;
+				}
 			}
 
 			/* handle ball logic */
@@ -530,11 +593,16 @@ void dot_game_logic(void * data)
 		/* normal game state */
 		default:
 		{
-			/* handle ball logic */
-			colored = dot_game_move_balls(data);
+			/* handle shield logic */
+			dot_game_shield_logic(data);
 
 			/* move player */
 			dot_game_move_player(data);
+
+			/* handle ball logic */
+			colored = dot_game_move_balls(data);
+
+			dot_game_check_player_collisions(data);
 
 			/* move on to next level */
 			if(colored == 0)
@@ -585,6 +653,14 @@ void dot_game_render_hud(void * data)
 	al_hold_bitmap_drawing(false);
 }
 
+static ALLEGRO_COLOR dot_darken_color(ALLEGRO_COLOR c1, float amount)
+{
+	float r1, g1, b1, a1;
+
+	al_unmap_rgba_f(c1, &r1, &g1, &b1, &a1);
+	return al_map_rgba_f(r1 * amount, g1 * amount, b1 * amount, a1);
+}
+
 /* main game render function */
 void dot_game_render(void * data)
 {
@@ -593,19 +669,26 @@ void dot_game_render(void * data)
 
 	int i;
 	ALLEGRO_COLOR player_color = t3f_color_white;
-	float rgb = 0.5 - (float)app->game.level / 24.0;
+	float rgb = 0.75 - (float)app->game.level / 24.0;
 	float c = (float)app->game.player.ball.timer / (float)DOT_GAME_COMBO_TIME;
-	float s = app->game.player.ball.r * 2.0 + 128.0 - c * 128.0;
+	float s;
 	float cx, cy, ecx, ecy;
 	if(rgb < 0.0)
 	{
 		rgb = 0.0;
 	}
-	al_clear_to_color(al_map_rgb_f(rgb, rgb, rgb));
+	al_clear_to_color(dot_darken_color(DOT_GAME_BG_COLOR, rgb));
+	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
 	al_hold_bitmap_drawing(true);
 	if(app->game.combo)
 	{
+		s = app->game.player.ball.r * 2.0 + 128.0 - c * 128.0;
 		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.125, 0.125, 0.125, 0.125), app->game.player.ball.x - s / 2.0, app->game.player.ball.y - s / 2.0, app->game.player.ball.z, s, s, 0);
+	}
+	if(app->game.shield.active)
+	{
+		s = app->game.shield.r * 2.0;
+		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.125, 0.125, 0.125, 0.125), app->game.shield.x - s / 2.0, app->game.shield.y - s / 2.0, app->game.player.ball.z, s, s, 0);
 	}
 	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
 	{
@@ -646,5 +729,12 @@ void dot_game_render(void * data)
 	{
 		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width, t3f_virtual_display_height, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_draw_filled_circle(app->game.player.ball.x, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y, DOT_GAME_GRAB_SPOT_SIZE, al_map_rgba_f(0.5, 0.5, 0.5, 0.5));
+	}
+	else if(app->game.state == DOT_GAME_STATE_START)
+	{
+		al_draw_filled_rectangle(DOT_GAME_TOUCH_START_X, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT + DOT_GAME_TOUCH_START_Y, DOT_GAME_TOUCH_END_X, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT + DOT_GAME_TOUCH_END_Y, al_map_rgba_f(0.5, 0.5, 0.5, 0.5));
+		al_hold_bitmap_drawing(true);
+		al_hold_bitmap_drawing(false);
+		dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_16]) / 2, 2, 2, ALLEGRO_ALIGN_CENTRE, "Touch Here");
 	}
 }
