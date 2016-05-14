@@ -688,7 +688,7 @@ void dot_game_render(void * data)
 	if(app->game.shield.active)
 	{
 		s = app->game.shield.r * 2.0;
-		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.125, 0.125, 0.125, 0.125), app->game.shield.x - s / 2.0, app->game.shield.y - s / 2.0, app->game.player.ball.z, s, s, 0);
+		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.125, 0.125, 0.0625, 0.125), app->game.shield.x - s / 2.0, app->game.shield.y - s / 2.0, app->game.player.ball.z, s, s, 0);
 	}
 	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
 	{
