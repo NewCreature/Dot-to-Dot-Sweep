@@ -52,10 +52,12 @@ void dot_game_setup_level(void * data, int level)
 
 	int i, j;
 	int col = 0;
+	int num_balls = DOT_GAME_LEVEL_BASE_BALLS + level * DOT_GAME_LEVEL_BALLS_INC;
+	int num_black_balls = DOT_GAME_LEVEL_BASE_BLACK_BALLS + (level / 2) * DOT_GAME_LEVEL_BLACK_BALLS_INC;
 
 	/* initialize balls */
 	memset(app->game.ball, 0, sizeof(DOT_BALL) * DOT_GAME_MAX_BALLS);
-	for(i = 0; i < DOT_GAME_LEVEL_BASE_BALLS + app->game.level * DOT_GAME_LEVEL_BALLS_INC && i < DOT_GAME_MAX_BALLS; i++)
+	for(i = 0; i < num_balls && i < DOT_GAME_MAX_BALLS; i++)
 	{
 		app->game.ball[i].r = 16.0;
 		app->game.ball[i].x = t3f_drand(&app->rng_state) * ((float)(DOT_GAME_PLAYFIELD_WIDTH) - app->game.ball[i].r * 2.0) + app->game.ball[i].r;
@@ -75,7 +77,7 @@ void dot_game_setup_level(void * data, int level)
 	}
 
 	/* add black balls */
-	for(j = i; j < i + DOT_GAME_LEVEL_BASE_BLACK_BALLS + app->game.level * DOT_GAME_LEVEL_BLACK_BALLS_INC && j < DOT_GAME_MAX_BALLS; j++)
+	for(j = i; j < i + num_black_balls && j < DOT_GAME_MAX_BALLS; j++)
 	{
 		app->game.ball[j].r = 16.0;
 		app->game.ball[j].x = t3f_drand(&app->rng_state) * ((float)(DOT_GAME_PLAYFIELD_WIDTH) - app->game.ball[j].r * 2.0) + app->game.ball[i].r;
@@ -95,7 +97,8 @@ void dot_game_setup_level(void * data, int level)
 	app->game.player.ball.r = 16.0;
 
 	app->game.level = level;
-	app->game.timer = 0;
+	app->game.speed = DOT_GAME_LEVEL_BASE_SPEED;
+	app->game.speed_inc = DOT_GAME_LEVEL_TOP_SPEED / (float)num_balls;
 }
 
 /* start the game from level 0 */
@@ -244,30 +247,15 @@ int dot_game_move_balls(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	float speed = 1.0;
 	int colored = 0;
 	int i;
-
-	/* set the speed of the balls */
-	if(app->game.state == DOT_GAME_STATE_START)
-	{
-		speed = 0.25;
-	}
-	else
-	{
-		speed = 1.0 + (float)app->game.timer / 3600.0;
-		if(speed > 3.0)
-		{
-			speed = 3.0;
-		}
-	}
 
 	/* move the balls */
 	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
 	{
 		if(app->game.ball[i].active)
 		{
-			app->game.ball[i].x += app->game.ball[i].vx * speed;
+			app->game.ball[i].x += app->game.ball[i].vx * app->game.speed;
 			if(app->game.ball[i].x - app->game.ball[i].r < 0.0)
 			{
 				app->game.ball[i].vx = -app->game.ball[i].vx;
@@ -276,7 +264,7 @@ int dot_game_move_balls(void * data)
 			{
 				app->game.ball[i].vx = -app->game.ball[i].vx;
 			}
-			app->game.ball[i].y += app->game.ball[i].vy * speed;
+			app->game.ball[i].y += app->game.ball[i].vy * app->game.speed;
 			if(app->game.ball[i].y - app->game.ball[i].r < 0.0)
 			{
 				app->game.ball[i].vy = -app->game.ball[i].vy;
@@ -422,7 +410,7 @@ void dot_game_move_player(void * data)
 							app->game.combo++;
 						}
 						app->game.player.ball.timer = 0;
-						app->game.player.ball.r += 0.5;
+//						app->game.player.ball.r += 0.5;
 						for(j = 0; j < DOT_GAME_MAX_BALLS; j++)
 						{
 							if(app->game.ball[j].active && app->game.ball[j].type != DOT_BITMAP_BALL_BLACK && app->game.ball[j].type != app->game.player.ball.type)
@@ -431,6 +419,7 @@ void dot_game_move_player(void * data)
 								break;
 							}
 						}
+						app->game.speed += app->game.speed_inc;
 						dot_game_create_splash_effect(data, app->game.ball[i].x, app->game.ball[i].y, app->game.ball[i].r, app->color[app->game.ball[i].type]);
 					}
 
@@ -541,8 +530,6 @@ void dot_game_logic(void * data)
 		/* normal game state */
 		default:
 		{
-			app->game.timer++;
-
 			/* handle ball logic */
 			colored = dot_game_move_balls(data);
 

@@ -34,6 +34,8 @@ typedef struct
 #define DOT_GAME_LEVEL_BALLS_INC         4
 #define DOT_GAME_LEVEL_BASE_BLACK_BALLS  2
 #define DOT_GAME_LEVEL_BLACK_BALLS_INC   1
+#define DOT_GAME_LEVEL_BASE_SPEED      1.0
+#define DOT_GAME_LEVEL_TOP_SPEED       2.0
 
 #define DOT_GAME_GRAB_SPOT_SIZE 24
 
@@ -42,7 +44,7 @@ typedef struct
 
 	int state;
 	int state_tick;
-	int timer;
+	float speed, speed_inc;
 
 	/* player data */
 	int lives;
