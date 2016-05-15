@@ -99,6 +99,7 @@ void dot_game_setup_level(void * data, int level)
 	app->game.level = level;
 	app->game.speed = DOT_GAME_LEVEL_BASE_SPEED;
 	app->game.speed_inc = DOT_GAME_LEVEL_TOP_SPEED / (float)num_balls;
+	app->game.level_start = true;
 }
 
 /* start the game from level 0 */
@@ -116,6 +117,7 @@ void dot_game_initialize(void * data)
 	{
 		t3f_play_music("data/music/going_for_it.xm");
 	}
+	app->game.tick = 0;
 	app->state = DOT_STATE_GAME;
 }
 
@@ -559,6 +561,7 @@ void dot_game_logic(void * data)
 					app->game.player.want_shield = true;
 					app->game.player.touch_offset_x = 0;
 					app->game.player.touch_offset_y = 0;
+					app->game.level_start = false;
 				}
 			}
 
@@ -629,6 +632,7 @@ void dot_game_logic(void * data)
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
+	app->game.tick++;
 }
 
 /* render the HUD */
@@ -740,6 +744,7 @@ void dot_game_render(void * data)
 
 	int i;
 	ALLEGRO_COLOR player_color = t3f_color_white;
+	ALLEGRO_COLOR text_color = t3f_color_white;
 	float rgb = 0.75 - (float)app->game.level / 24.0;
 	float c = (float)app->game.player.ball.timer / (float)DOT_GAME_COMBO_TIME;
 	float s;
@@ -793,12 +798,17 @@ void dot_game_render(void * data)
 	}
 	al_hold_bitmap_drawing(false);
 	dot_game_render_hud(data);
+	if((app->game.tick / 6) % 2)
+	{
+		text_color = al_map_rgba_f(1.0, 1.0, 0.0, 1.0);
+	}
 	if(app->game.state == DOT_GAME_STATE_PAUSE)
 	{
 		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		s = DOT_GAME_GRAB_SPOT_SIZE;
 		dot_create_grab_spot_effect(data);
 		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, 0.0, DOT_GAME_PLAYFIELD_WIDTH, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
+		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_32]) / 2, 2, 2, ALLEGRO_ALIGN_CENTRE, "Paused");
 //		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.125, 0.125, 0.0625, 0.125), app->game.player.ball.x - DOT_GAME_GRAB_SPOT_SIZE, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y - DOT_GAME_GRAB_SPOT_SIZE, 0.0, s * 2, s * 2, 0);
 //		al_draw_filled_circle(app->game.player.ball.x, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y, DOT_GAME_GRAB_SPOT_SIZE, al_map_rgba_f(0.5, 0.5, 0.5, 0.5));
 	}
@@ -808,7 +818,12 @@ void dot_game_render(void * data)
 		dot_create_touch_start_effect(data);
 		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, 0.0, DOT_GAME_PLAYFIELD_WIDTH, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
 		al_hold_bitmap_drawing(true);
-		dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_16]) / 2, 2, 2, ALLEGRO_ALIGN_CENTRE, "Touch Here");
+		if(app->game.level_start)
+		{
+			sprintf(buf, "Level %d", app->game.level + 1);
+			dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_32]) / 2, 4, 4, ALLEGRO_ALIGN_CENTRE, buf);
+		}
+		dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_16]) / 2, 2, 2, ALLEGRO_ALIGN_CENTRE, "Touch Here");
 		al_hold_bitmap_drawing(false);
 	}
 }
