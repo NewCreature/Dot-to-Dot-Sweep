@@ -19,6 +19,7 @@ typedef struct
 	DOT_BALL ball;
 	bool lost_touch;
 	bool want_shield;
+	float touch_offset_x, touch_offset_y;
 
 } DOT_PLAYER;
 
@@ -51,7 +52,7 @@ typedef struct
 
 #define DOT_GAME_BG_COLOR al_map_rgb(255, 230, 213)
 
-#define DOT_GAME_GRAB_SPOT_SIZE 24
+#define DOT_GAME_GRAB_SPOT_SIZE 48
 
 #define DOT_GAME_TOUCH_START_X DOT_GAME_SHIELD_MAX_SIZE + DOT_GAME_BALL_SIZE * 2
 #define DOT_GAME_TOUCH_START_Y DOT_GAME_SHIELD_MAX_SIZE + DOT_GAME_BALL_SIZE * 2

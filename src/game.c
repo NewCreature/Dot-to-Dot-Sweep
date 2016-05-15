@@ -446,8 +446,8 @@ void dot_game_move_player(void * data)
 			}
 			if(!app->game.player.lost_touch)
 			{
-				app->game.player.ball.x = app->touch_x;
-				app->game.player.ball.y = app->touch_y;
+				app->game.player.ball.x = app->touch_x + app->game.player.touch_offset_x;
+				app->game.player.ball.y = app->touch_y + app->game.player.touch_offset_y;
 			}
 			if(app->game.player.want_shield)
 			{
@@ -557,6 +557,8 @@ void dot_game_logic(void * data)
 					t3f_mouse_x = DOT_GAME_PLAYFIELD_WIDTH / 2;
 					t3f_mouse_y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
 					app->game.player.want_shield = true;
+					app->game.player.touch_offset_x = 0;
+					app->game.player.touch_offset_y = 0;
 				}
 			}
 
@@ -569,6 +571,8 @@ void dot_game_logic(void * data)
 		{
 			if(app->touch_id >= 0 && t3f_distance(app->touch_x, app->touch_y, app->game.player.ball.x, app->game.player.ball.y) < DOT_GAME_GRAB_SPOT_SIZE)
 			{
+				app->game.player.touch_offset_x = app->game.player.ball.x - app->touch_x;
+				app->game.player.touch_offset_y = app->game.player.ball.y - app->touch_y;
 				app->game.state = DOT_GAME_STATE_PLAY;
 			}
 			break;
@@ -661,6 +665,26 @@ static ALLEGRO_COLOR dot_darken_color(ALLEGRO_COLOR c1, float amount)
 	return al_map_rgba_f(r1 * amount, g1 * amount, b1 * amount, a1);
 }
 
+static void dot_create_grab_spot_effect(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	ALLEGRO_STATE old_state;
+	ALLEGRO_TRANSFORM identity;
+	float s;
+	float sx = 512.0 / (float)t3f_virtual_display_width;
+
+	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM | ALLEGRO_STATE_BLENDER);
+	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+	al_identity_transform(&identity);
+	al_use_transform(&identity);
+	al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
+	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 1.0));
+	al_set_blender(ALLEGRO_ADD, ALLEGRO_ZERO, ALLEGRO_INVERSE_ALPHA);
+	s = DOT_GAME_GRAB_SPOT_SIZE;
+	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), (float)(app->game.player.ball.x - DOT_GAME_GRAB_SPOT_SIZE) * sx, app->game.player.ball.y - DOT_GAME_GRAB_SPOT_SIZE, 0.0, (s * 2.0) * sx, s * 2, 0);
+	al_restore_state(&old_state);
+}
+
 /* main game render function */
 void dot_game_render(void * data)
 {
@@ -727,8 +751,12 @@ void dot_game_render(void * data)
 	dot_game_render_hud(data);
 	if(app->game.state == DOT_GAME_STATE_PAUSE)
 	{
-		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width, t3f_virtual_display_height, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
-		al_draw_filled_circle(app->game.player.ball.x, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y, DOT_GAME_GRAB_SPOT_SIZE, al_map_rgba_f(0.5, 0.5, 0.5, 0.5));
+		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+		s = DOT_GAME_GRAB_SPOT_SIZE;
+		dot_create_grab_spot_effect(data);
+		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, 0.0, DOT_GAME_PLAYFIELD_WIDTH, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
+//		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.125, 0.125, 0.0625, 0.125), app->game.player.ball.x - DOT_GAME_GRAB_SPOT_SIZE, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y - DOT_GAME_GRAB_SPOT_SIZE, 0.0, s * 2, s * 2, 0);
+//		al_draw_filled_circle(app->game.player.ball.x, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y, DOT_GAME_GRAB_SPOT_SIZE, al_map_rgba_f(0.5, 0.5, 0.5, 0.5));
 	}
 	else if(app->game.state == DOT_GAME_STATE_START)
 	{
