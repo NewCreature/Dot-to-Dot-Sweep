@@ -31,8 +31,12 @@ Dot to Dot Sweep Issues
 
    See above issue.
 
-[ ]Possibly make level speed multiplier dependent on number of collected balls
+[X]Possibly make level speed multiplier dependent on number of collected balls
    instead of elapsed time.
+
+[ ]Fix text shadows to match other graphics.
+
+[ ]Render higher resolution of combo graphic since we scale it up quite a bit.
 
 [ ]Possibly add music.
 
