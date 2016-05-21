@@ -641,6 +641,12 @@ void dot_game_render_hud(void * data)
 
 	char buffer[256] = {0};
 	ALLEGRO_COLOR shadow = al_map_rgba_f(0.0, 0.0, 0.0, 0.25);
+	bool held = al_is_bitmap_drawing_held();
+
+	if(held)
+	{
+		al_hold_bitmap_drawing(false);
+	}
 
 	al_draw_filled_rectangle(0, DOT_GAME_PLAYFIELD_HEIGHT, 540, DOT_GAME_PLAYFIELD_HEIGHT + 80, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 	al_hold_bitmap_drawing(true);
@@ -658,6 +664,7 @@ void dot_game_render_hud(void * data)
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], t3f_color_white, 16, 440 + 16, 0, 48, 48, 0);
 	al_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_EYES], 8.0, 8.0, 16 + 24, 440 + 16 + 24, 3, 3, ALLEGRO_PI / 2.0, 0);
 	al_hold_bitmap_drawing(false);
+	al_hold_bitmap_drawing(held);
 }
 
 static ALLEGRO_COLOR dot_darken_color(ALLEGRO_COLOR c1, float amount)
@@ -675,6 +682,12 @@ static void dot_create_grab_spot_effect(void * data)
 	ALLEGRO_TRANSFORM identity;
 	float s;
 	float sx = 512.0 / (float)t3f_virtual_display_width;
+	bool held = al_is_bitmap_drawing_held();
+
+	if(held)
+	{
+		al_hold_bitmap_drawing(false);
+	}
 
 	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM | ALLEGRO_STATE_BLENDER);
 	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
@@ -686,6 +699,7 @@ static void dot_create_grab_spot_effect(void * data)
 	s = DOT_GAME_GRAB_SPOT_SIZE;
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), (float)(app->game.player.ball.x - DOT_GAME_GRAB_SPOT_SIZE) * sx, app->game.player.ball.y - DOT_GAME_GRAB_SPOT_SIZE, 0.0, (s * 2.0) * sx, s * 2, 0);
 	al_restore_state(&old_state);
+	al_hold_bitmap_drawing(held);
 }
 
 static void dot_create_touch_dots_effect(void * data)
@@ -698,6 +712,10 @@ static void dot_create_touch_dots_effect(void * data)
 	int i;
 	bool held = al_is_bitmap_drawing_held();
 
+	if(held)
+	{
+		al_hold_bitmap_drawing(false);
+	}
 	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM);
 	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
 	al_identity_transform(&identity);
@@ -713,6 +731,7 @@ static void dot_create_touch_dots_effect(void * data)
 	}
 	al_hold_bitmap_drawing(false);
 	al_restore_state(&old_state);
+	al_hold_bitmap_drawing(held);
 }
 
 static void dot_create_touch_start_effect(void * data)
@@ -722,7 +741,12 @@ static void dot_create_touch_start_effect(void * data)
 	ALLEGRO_TRANSFORM identity;
 	float s;
 	float sx = 512.0 / (float)t3f_virtual_display_width;
+	bool held = al_is_bitmap_drawing_held();
 
+	if(held)
+	{
+		al_hold_bitmap_drawing(false);
+	}
 	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM | ALLEGRO_STATE_BLENDER);
 	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
 	al_identity_transform(&identity);
@@ -733,6 +757,7 @@ static void dot_create_touch_start_effect(void * data)
 	s = DOT_GAME_GRAB_SPOT_SIZE;
 	al_draw_filled_rectangle(DOT_GAME_TOUCH_START_X * sx, DOT_GAME_TOUCH_START_Y, DOT_GAME_TOUCH_END_X * sx, DOT_GAME_TOUCH_END_Y, al_map_rgba_f(1.0, 1.0, 1.0, 1.0));
 	al_restore_state(&old_state);
+	al_hold_bitmap_drawing(held);
 }
 
 /* main game render function */
@@ -753,8 +778,8 @@ void dot_game_render(void * data)
 		rgb = 0.0;
 	}
 	al_clear_to_color(dot_darken_color(DOT_GAME_BG_COLOR, rgb));
-	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
 	al_hold_bitmap_drawing(true);
+	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
 	if(app->game.combo)
 	{
 		s = app->game.player.ball.r * 2.0 + 128.0 - c * 128.0;
@@ -772,10 +797,8 @@ void dot_game_render(void * data)
 			t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.ball[i].type], t3f_color_white, app->game.ball[i].x - app->game.ball[i].r, app->game.ball[i].y - app->game.ball[i].r, app->game.ball[i].z, app->game.ball[i].r * 2.0, app->game.ball[i].r * 2.0, 0);
 		}
 	}
-	al_hold_bitmap_drawing(false);
 	dot_create_touch_dots_effect(data);
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, 0.0, DOT_GAME_PLAYFIELD_WIDTH, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
-	al_hold_bitmap_drawing(true);
 	if(app->game.player.ball.active)
 	{
 		if(app->game.state == DOT_GAME_STATE_START)
@@ -795,16 +818,17 @@ void dot_game_render(void * data)
 			dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, buf);
 		}
 	}
-	al_hold_bitmap_drawing(false);
 	dot_game_render_hud(data);
 	if((app->game.tick / 6) % 2)
 	{
 		text_color = al_map_rgba_f(1.0, 1.0, 0.0, 1.0);
 	}
+	al_hold_bitmap_drawing(false);
 	if(app->game.state == DOT_GAME_STATE_PAUSE)
 	{
 		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		s = DOT_GAME_GRAB_SPOT_SIZE;
+		al_hold_bitmap_drawing(true);
 		dot_create_grab_spot_effect(data);
 		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, 0.0, DOT_GAME_PLAYFIELD_WIDTH, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
 		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_32]) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, "Paused");
@@ -814,15 +838,15 @@ void dot_game_render(void * data)
 	else if(app->game.state == DOT_GAME_STATE_START)
 	{
 		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+		al_hold_bitmap_drawing(true);
 		dot_create_touch_start_effect(data);
 		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, 0.0, DOT_GAME_PLAYFIELD_WIDTH, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
-		al_hold_bitmap_drawing(true);
 		if(app->game.level_start)
 		{
 			sprintf(buf, "Level %d", app->game.level + 1);
 			dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_32]) / 2, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_CENTRE, buf);
 		}
 		dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_16]) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, "Touch Here");
-		al_hold_bitmap_drawing(false);
 	}
+	al_hold_bitmap_drawing(false);
 }
