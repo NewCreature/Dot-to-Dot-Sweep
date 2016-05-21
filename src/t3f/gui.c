@@ -47,13 +47,13 @@ static void allegro_render_element(T3F_GUI * pp, int i, bool hover)
 
 	if(hover)
 	{
-		sx = -4;
-		sy = -4;
+		sx = -pp->element[i].sx * 2;
+		sy = -pp->element[i].sy * 2;
 	}
 	else
 	{
-		sx = -2;
-		sy = -2;
+		sx = -pp->element[i].sx;
+		sy = -pp->element[i].sy;
 	}
 
 	switch(pp->element[i].type)
@@ -231,6 +231,8 @@ int t3f_add_gui_text_element(T3F_GUI * pp, int (*proc)(void *, int, void *), cha
 	pp->element[pp->elements].color = color;
 	pp->element[pp->elements].flags = flags;
 	pp->element[pp->elements].description = NULL;
+	pp->element[pp->elements].sx = 2;
+	pp->element[pp->elements].sy = 2;
 	pp->elements++;
 	return 1;
 }
@@ -276,6 +278,17 @@ void t3f_center_gui(T3F_GUI * pp, float oy, float my)
 	height = bottom - top;
 	offset = oy + dheight / 2.0 - height / 2.0;
 	pp->oy = offset - top;
+}
+
+void t3f_set_gui_shadow(T3F_GUI * pp, float x, float y)
+{
+	int i;
+
+	for(i = 0; i < pp->elements; i++)
+	{
+		pp->element[i].sx = x;
+		pp->element[i].sy = y;
+	}
 }
 
 static bool t3f_gui_check_hover_x(T3F_GUI * pp, int i, float x)
