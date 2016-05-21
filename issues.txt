@@ -34,7 +34,9 @@ Dot to Dot Sweep Issues
 [X]Possibly make level speed multiplier dependent on number of collected balls
    instead of elapsed time.
 
-[ ]Fix text shadows to match other graphics.
+[X]Fix text shadows to match other graphics.
+
+[ ]Finalize HUD layout.
 
 [ ]Render higher resolution of combo graphic since we scale it up quite a bit.
 
