@@ -7,6 +7,7 @@
 #include "instance.h"
 #include "game.h"
 #include "text.h"
+#include "color.h"
 
 /* initialize player (done once per turn and at new level) */
 void dot_game_drop_player(void * data, int type)
@@ -665,14 +666,6 @@ void dot_game_render_hud(void * data)
 	al_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_EYES], 8.0, 8.0, 16 + 24, 440 + 16 + 24, 3, 3, ALLEGRO_PI / 2.0, 0);
 	al_hold_bitmap_drawing(false);
 	al_hold_bitmap_drawing(held);
-}
-
-static ALLEGRO_COLOR dot_darken_color(ALLEGRO_COLOR c1, float amount)
-{
-	float r1, g1, b1, a1;
-
-	al_unmap_rgba_f(c1, &r1, &g1, &b1, &a1);
-	return al_map_rgba_f(r1 * amount, g1 * amount, b1 * amount, a1);
 }
 
 static void dot_create_grab_spot_effect(void * data)

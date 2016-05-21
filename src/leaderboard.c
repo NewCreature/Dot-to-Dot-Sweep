@@ -1,6 +1,7 @@
 #include "t3f/t3f.h"
 #include "instance.h"
 #include "text.h"
+#include "color.h"
 
 void dot_leaderboard_logic(void * data)
 {
@@ -22,7 +23,7 @@ void dot_leaderboard_render(void * data)
     int i;
 	char buf[256] = {0};;
 
-    al_clear_to_color(al_map_rgb_f(0.5, 0.5, 0.5));
+    al_clear_to_color(dot_darken_color(DOT_GAME_BG_COLOR, 0.5));
     al_hold_bitmap_drawing(true);
     dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 4, 4 + 0, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, "Name");
     dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 4, 4 + 32, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, "----");
