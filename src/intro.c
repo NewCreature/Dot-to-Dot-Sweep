@@ -111,6 +111,7 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_music, "Music", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, app->music_enabled ? DOT_MENU_COLOR_ENABLED : DOT_MENU_COLOR_DISABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_play, "Play", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 192, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(app->menu[DOT_MENU_MAIN], (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2, t3f_virtual_display_height);
+	t3f_set_gui_shadow(app->menu[DOT_MENU_MAIN], -2, 2);
 
 	app->menu[DOT_MENU_PROFILE] = t3f_create_gui(0, 0);
 	if(!app->menu[DOT_MENU_PROFILE])
@@ -121,6 +122,7 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_name, app->user_name, app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_upload, "Upload Scores", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, app->upload_scores ? DOT_MENU_COLOR_ENABLED : DOT_MENU_COLOR_DISABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(app->menu[DOT_MENU_PROFILE], (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2, t3f_virtual_display_height);
+	t3f_set_gui_shadow(app->menu[DOT_MENU_PROFILE], -2, 2);
 
 	app->current_menu = DOT_MENU_MAIN;
 

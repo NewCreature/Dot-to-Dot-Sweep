@@ -45,6 +45,9 @@
 
 #define DOT_MAX_PARTICLES        1024
 
+#define DOT_SHADOW_OX -2
+#define DOT_SHADOW_OY  2
+
 #define DOT_LEADERBOARD_SUBMIT_URL   "http://www.t3-i.com/t3net2/leaderboards/insert.php"
 #define DOT_LEADERBOARD_RETRIEVE_URL "http://www.t3-i.com/t3net2/leaderboards/query.php"
 #define DOT_LEADERBOARD_VERSION      "1.0"

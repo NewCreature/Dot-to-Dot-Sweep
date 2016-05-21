@@ -6,8 +6,7 @@
 #include "t3net/leaderboard.h"
 #include "instance.h"
 #include "game.h"
-
-void dot_shadow_text(ALLEGRO_FONT * font, ALLEGRO_COLOR color, ALLEGRO_COLOR shadow, float x, float y, float sx, float sy, int flags, const char * text);
+#include "text.h"
 
 /* initialize player (done once per turn and at new level) */
 void dot_game_drop_player(void * data, int type)
@@ -647,15 +646,15 @@ void dot_game_render_hud(void * data)
 	al_hold_bitmap_drawing(true);
 //	al_draw_bitmap(app->bitmap[DOT_BITMAP_HUD], 480.0, 0.0, 0);
 	sprintf(buffer, "Score");
-	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16, 440 + 8 + 9, 2, 2, 0, buffer);
+	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16, 440 + 8 + 9, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buffer);
 	sprintf(buffer, "  %07d", app->game.score);
-	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16, 440 + 8 + 9 + 24, 2, 2, 0, buffer);
+	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16, 440 + 8 + 9 + 24, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buffer);
 	sprintf(buffer, "High");
-	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16 + 160, 440 + 8 + 9, 2, 2, 0, buffer);
+	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16 + 160, 440 + 8 + 9, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buffer);
 	sprintf(buffer, "  %07d", app->game.high_score);
-	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16 + 160, 440 + 8 + 9 + 24, 2, 2, 0, buffer);
+	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16 + 160, 440 + 8 + 9 + 24, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buffer);
 
-	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], shadow, 16 + 2, 440 + 16 + 2, 0, 48, 48, 0);
+	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], shadow, 16 + DOT_SHADOW_OX, 440 + 16 + DOT_SHADOW_OY, 0, 48, 48, 0);
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], t3f_color_white, 16, 440 + 16, 0, 48, 48, 0);
 	al_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_EYES], 8.0, 8.0, 16 + 24, 440 + 16 + 24, 3, 3, ALLEGRO_PI / 2.0, 0);
 	al_hold_bitmap_drawing(false);
@@ -793,7 +792,7 @@ void dot_game_render(void * data)
 		if(app->game.combo)
 		{
 			sprintf(buf, "%d", dot_game_get_combo_score(data));
-			dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, 2, 2, ALLEGRO_ALIGN_CENTRE, buf);
+			dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, buf);
 		}
 	}
 	al_hold_bitmap_drawing(false);
@@ -808,7 +807,7 @@ void dot_game_render(void * data)
 		s = DOT_GAME_GRAB_SPOT_SIZE;
 		dot_create_grab_spot_effect(data);
 		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, 0.0, DOT_GAME_PLAYFIELD_WIDTH, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
-		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_32]) / 2, 2, 2, ALLEGRO_ALIGN_CENTRE, "Paused");
+		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_32]) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, "Paused");
 //		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.125, 0.125, 0.0625, 0.125), app->game.player.ball.x - DOT_GAME_GRAB_SPOT_SIZE, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y - DOT_GAME_GRAB_SPOT_SIZE, 0.0, s * 2, s * 2, 0);
 //		al_draw_filled_circle(app->game.player.ball.x, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y, DOT_GAME_GRAB_SPOT_SIZE, al_map_rgba_f(0.5, 0.5, 0.5, 0.5));
 	}
@@ -821,9 +820,9 @@ void dot_game_render(void * data)
 		if(app->game.level_start)
 		{
 			sprintf(buf, "Level %d", app->game.level + 1);
-			dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_32]) / 2, 4, 4, ALLEGRO_ALIGN_CENTRE, buf);
+			dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_32]) / 2, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_CENTRE, buf);
 		}
-		dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_16]) / 2, 2, 2, ALLEGRO_ALIGN_CENTRE, "Touch Here");
+		dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_16]) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, "Touch Here");
 		al_hold_bitmap_drawing(false);
 	}
 }
