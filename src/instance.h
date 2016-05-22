@@ -51,6 +51,11 @@ typedef struct
     T3F_GUI * menu[DOT_MAX_MENUS];
     int current_menu;
 
+    /* demo recording */
+    ALLEGRO_FILE * demo_file;
+    bool demo_recording;
+    unsigned long demo_seed;
+
 } APP_INSTANCE;
 
 #endif

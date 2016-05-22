@@ -80,7 +80,7 @@ typedef struct
 
 } DOT_GAME;
 
-void dot_game_initialize(void * data);
+void dot_game_initialize(void * data, bool demo_seed);
 void dot_game_logic(void * data);
 void dot_game_render_hud(void * data);
 void dot_game_render(void * data);

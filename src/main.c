@@ -47,7 +47,39 @@ void app_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	int i;
+	short touch_x, touch_y;
 
+	if(app->demo_file)
+	{
+		/* convert touch data to integer for demo operations */
+		touch_x = t3f_touch[0].x;
+		touch_y = t3f_touch[0].y;
+		t3f_touch[0].x = touch_x;
+		t3f_touch[0].y = touch_y;
+
+		/* load touch data from file if we aren't recording */
+		if(!app->demo_recording)
+		{
+			t3f_touch[0].active = al_fgetc(app->demo_file);
+			t3f_touch[0].x = al_fread16le(app->demo_file);
+			t3f_touch[0].y = al_fread16le(app->demo_file);
+			t3f_mouse_x = t3f_touch[0].x;
+			t3f_mouse_y = t3f_touch[0].y;
+			t3f_mouse_button[0] = t3f_touch[0].active;
+			if(al_feof(app->demo_file))
+			{
+				t3f_exit();
+			}
+		}
+
+		/* write touch data to file if we are recording */
+		else
+		{
+			al_fputc(app->demo_file, t3f_touch[0].active);
+			al_fwrite16le(app->demo_file, touch_x);
+			al_fwrite16le(app->demo_file, touch_y);
+		}
+	}
 	app_touch_logic(data);
 	switch(app->state)
 	{
@@ -335,7 +367,92 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 
 	app->state = 0;
+
+	/* see if we want to record a demo */
+	for(i = 1; i < argc; i++)
+	{
+		if(!strcmp(argv[i], "--record_demo"))
+		{
+			if(argc <= i + 1)
+			{
+				printf("Missing argument.\n");
+				return false;
+			}
+			else
+			{
+				app->demo_file = al_fopen(argv[i + 1], "wb");
+				if(!app->demo_file)
+				{
+					printf("Failed to open demo file.\n");
+					return false;
+				}
+				app->demo_recording = true;
+				app->demo_seed = time(0);
+				al_fwrite32le(app->demo_file, app->demo_seed);
+			}
+		}
+		if(!strcmp(argv[i], "--capture_demo"))
+		{
+			if(argc <= i + 1)
+			{
+				printf("Missing argument.\n");
+				return false;
+			}
+			else
+			{
+				app->demo_file = al_fopen(argv[i + 1], "rb");
+				if(!app->demo_file)
+				{
+					printf("Failed to open demo file.\n");
+					return false;
+				}
+				app->demo_seed = al_fread32le(app->demo_file);
+			}
+		}
+	}
+
 	return true;
+}
+
+void app_exit(APP_INSTANCE * app)
+{
+	int i;
+
+	if(app->demo_file)
+	{
+		al_fclose(app->demo_file);
+	}
+	for(i = 0; i < DOT_MAX_BITMAPS; i++)
+	{
+		if(app->bitmap[i])
+		{
+			if(!t3f_destroy_resource(app->bitmap[i]))
+			{
+				al_destroy_bitmap(app->bitmap[i]);
+			}
+		}
+	}
+	for(i = 0; i < DOT_MAX_SAMPLES; i++)
+	{
+		if(app->sample[i])
+		{
+			al_destroy_sample(app->sample[i]);
+		}
+	}
+	for(i = 0; i < DOT_MAX_FONTS; i++)
+	{
+		if(app->font[i])
+		{
+			if(!t3f_destroy_resource(app->font[i]))
+			{
+				al_destroy_font(app->font[i]);
+			}
+		}
+	}
+	if(app->atlas)
+	{
+		t3f_destroy_atlas(app->atlas);
+	}
 }
 
 int main(int argc, char * argv[])
@@ -349,7 +466,8 @@ int main(int argc, char * argv[])
 	}
 	else
 	{
-		printf("Error: could not initialize T3F!\n");
+		printf("Error: could not initialize game!\n");
 	}
+	app_exit(&app);
 	return 0;
 }

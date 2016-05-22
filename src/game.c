@@ -103,11 +103,18 @@ void dot_game_setup_level(void * data, int level)
 }
 
 /* start the game from level 0 */
-void dot_game_initialize(void * data)
+void dot_game_initialize(void * data, bool demo_seed)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	t3f_srand(&app->rng_state, time(0));
+    if(demo_seed)
+    {
+        t3f_srand(&app->rng_state, app->demo_seed);
+    }
+    else
+    {
+        t3f_srand(&app->rng_state, time(0));
+    }
 	dot_game_setup_level(data, 0);
 	app->game.score = 0;
 	app->game.combo = 0;

@@ -9,8 +9,7 @@ int dot_menu_proc_play(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	srand(time(0));
-	dot_game_initialize(data);
+	dot_game_initialize(data, app->demo_file ? true : false);
 	t3f_touch[app->touch_id].active = false;
 
 	return 1;
