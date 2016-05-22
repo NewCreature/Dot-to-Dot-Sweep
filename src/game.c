@@ -140,7 +140,7 @@ void dot_game_exit(void * data)
 	al_set_config_value(t3f_config, "Game Data", "High Score", buf);
 
 	/* upload score */
-	if(app->upload_scores)
+	if(app->upload_scores && !app->demo_file)
 	{
 		sprintf(buf, "%d", app->game.level + 1);
 		al_stop_timer(t3f_timer);

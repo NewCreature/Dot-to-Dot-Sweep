@@ -3,10 +3,57 @@
 #include "t3f/music.h"
 #include "t3f/view.h"
 #include "t3f/draw.h"
+#include "avc/avc.h"
 #include "instance.h"
 #include "intro.h"
 #include "game.h"
 #include "leaderboard.h"
+
+static ALLEGRO_BITMAP * dot_create_scratch_bitmap(int w, int h)
+{
+	ALLEGRO_STATE old_state;
+	ALLEGRO_BITMAP * bp;
+
+	al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS);
+	al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR | ALLEGRO_NO_PRESERVE_TEXTURE);
+	bp = al_create_bitmap(w, h);
+	al_restore_state(&old_state);
+
+	return bp;
+}
+
+static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
+{
+	ALLEGRO_STATE old_state;
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	switch(event->type)
+	{
+		case ALLEGRO_EVENT_DISPLAY_HALT_DRAWING:
+		{
+			al_destroy_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+			t3f_event_handler(event);
+			break;
+		}
+		case ALLEGRO_EVENT_DISPLAY_RESUME_DRAWING:
+		{
+			/* let T3F reload resources before reloading shapes */
+			t3f_event_handler(event);
+			al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS);
+			al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR | ALLEGRO_NO_PRESERVE_TEXTURE);
+			app->bitmap[DOT_BITMAP_SCRATCH] = dot_create_scratch_bitmap(DOT_BITMAP_SCRATCH_WIDTH, DOT_BITMAP_SCRATCH_HEIGHT);
+			al_restore_state(&old_state);
+			break;
+		}
+
+		/* pass the event through to T3F for handling by default */
+		default:
+		{
+			t3f_event_handler(event);
+			break;
+		}
+	}
+}
 
 void app_touch_logic(void * data)
 {
@@ -143,13 +190,16 @@ void app_render(void * data)
 	#ifndef ALLEGRO_ANDROID
 		float ox = 0, oy = 0;
 
-		if(!t3f_mouse_button[0])
+		if(t3f_mouse_y >= t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT)
 		{
-			ox = 12.0;
-			oy = -12.0;
-			t3f_draw_bitmap(app->bitmap[DOT_BITMAP_HAND], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_mouse_x - 118, t3f_mouse_y - 56, 0, 0);
+			if(!t3f_mouse_button[0])
+			{
+				ox = 12.0;
+				oy = -12.0;
+				t3f_draw_bitmap(app->bitmap[DOT_BITMAP_HAND], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_mouse_x - 118, 	t3f_mouse_y - 56, 0, 0);
+			}
+			al_draw_bitmap(app->bitmap[DOT_BITMAP_HAND], t3f_mouse_x - 118 + ox, t3f_mouse_y - 56 + oy, 0);
 		}
-		al_draw_bitmap(app->bitmap[DOT_BITMAP_HAND], t3f_mouse_x - 118 + ox, t3f_mouse_y - 56 + oy, 0);
 	#endif
 	al_hold_bitmap_drawing(false);
 }
@@ -175,6 +225,28 @@ static ALLEGRO_COLOR dot_get_ball_color(ALLEGRO_BITMAP * bp)
 	return c;
 }
 
+bool app_avc_init_proc(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	al_fseek(app->demo_file, ALLEGRO_SEEK_SET, 4);
+	t3f_srand(&app->rng_state, app->demo_seed);
+	app->state = 0;
+	return true;
+}
+
+bool app_avc_logic_proc(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	app_logic(data);
+	if(al_feof(app->demo_file))
+	{
+		return false;
+	}
+	return true;
+}
+
 /* initialize our app, load graphics, etc. */
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
@@ -187,6 +259,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Error initializing T3F\n");
 		return false;
 	}
+	t3f_set_event_handler(dot_event_handler);
 
 	/* load images */
 	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_RED, "data/graphics/ball_red.png"))
@@ -243,7 +316,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 			return false;
 		}
 	#endif
-	app->bitmap[DOT_BITMAP_SCRATCH] = al_create_bitmap(512, 512);
+	app->bitmap[DOT_BITMAP_SCRATCH] = dot_create_scratch_bitmap(DOT_BITMAP_SCRATCH_WIDTH, DOT_BITMAP_SCRATCH_HEIGHT);
 	if(!app->bitmap[DOT_BITMAP_SCRATCH])
 	{
 		printf("Failed to create effects scratch bitmap!\n");
@@ -408,6 +481,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 				}
 				app->demo_seed = al_fread32le(app->demo_file);
 			}
+			avc_start_capture(t3f_display, "myvideo.mp4", app_avc_init_proc, app_avc_logic_proc, app_render, 60, 0, app);
 		}
 	}
 
