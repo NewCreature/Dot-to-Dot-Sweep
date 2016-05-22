@@ -223,7 +223,7 @@ static void dot_game_create_splash_effect(void * data, float x, float y, float r
 	{
 		ga = t3f_drand(&app->rng_state) * ALLEGRO_PI * 2.0;
 		gx = cos(ga) * t3f_drand(&app->rng_state) * r * t3f_drand(&app->rng_state);
-		gy = sin(gy) * t3f_drand(&app->rng_state) * r * t3f_drand(&app->rng_state);
+		gy = sin(ga) * t3f_drand(&app->rng_state) * r * t3f_drand(&app->rng_state);
 		dot_create_particle(&app->particle[app->current_particle], x + gx, y + gy, 0.0, cos(ga) * t3f_drand(&app->rng_state), sin(ga) * t3f_drand(&app->rng_state), t3f_drand(&app->rng_state) * -5.0 - 5.0, 0.5, 5.0, 30, app->bitmap[DOT_BITMAP_PARTICLE], color);
 		app->current_particle++;
 		if(app->current_particle >= DOT_MAX_PARTICLES)
