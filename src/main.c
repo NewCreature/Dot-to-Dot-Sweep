@@ -95,6 +95,7 @@ void app_logic(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	int i;
 	short touch_x, touch_y;
+	bool frame;
 
 	if(app->demo_file)
 	{
@@ -107,21 +108,27 @@ void app_logic(void * data)
 		/* load touch data from file if we aren't recording */
 		if(!app->demo_recording)
 		{
-			t3f_touch[0].active = al_fgetc(app->demo_file);
-			t3f_touch[0].x = al_fread16le(app->demo_file);
-			t3f_touch[0].y = al_fread16le(app->demo_file);
-			t3f_mouse_x = t3f_touch[0].x;
-			t3f_mouse_y = t3f_touch[0].y;
-			t3f_mouse_button[0] = t3f_touch[0].active;
-			if(al_feof(app->demo_file))
+			frame = al_fgetc(app->demo_file);
+			if(frame)
 			{
-				t3f_exit();
+				t3f_touch[0].active = al_fgetc(app->demo_file);
+				t3f_touch[0].x = al_fread16le(app->demo_file);
+				t3f_touch[0].y = al_fread16le(app->demo_file);
+				t3f_mouse_x = t3f_touch[0].x;
+				t3f_mouse_y = t3f_touch[0].y;
+				t3f_mouse_button[0] = t3f_touch[0].active;
+			}
+			else
+			{
+				app->demo_done = true;
+				t3f_exit();;
 			}
 		}
 
 		/* write touch data to file if we are recording */
 		else
 		{
+			al_fputc(app->demo_file, 1);
 			al_fputc(app->demo_file, t3f_touch[0].active);
 			al_fwrite16le(app->demo_file, touch_x);
 			al_fwrite16le(app->demo_file, touch_y);
@@ -229,8 +236,11 @@ bool app_avc_init_proc(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	al_fseek(app->demo_file, ALLEGRO_SEEK_SET, 4);
+	al_fclose(app->demo_file);
+	app->demo_file = al_fopen(app->demo_filename, "rb");
+	al_fread32le(app->demo_file);
 	t3f_srand(&app->rng_state, app->demo_seed);
+	app->demo_done = false;
 	app->state = 0;
 	return true;
 }
@@ -240,7 +250,7 @@ bool app_avc_logic_proc(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	app_logic(data);
-	if(al_feof(app->demo_file))
+	if(app->demo_done)
 	{
 		return false;
 	}
@@ -480,6 +490,8 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 					return false;
 				}
 				app->demo_seed = al_fread32le(app->demo_file);
+				app->demo_done = false;
+				app->demo_filename = argv[i + 1];
 			}
 			avc_start_capture(t3f_display, "myvideo.mp4", app_avc_init_proc, app_avc_logic_proc, app_render, 60, 0, app);
 		}
@@ -494,6 +506,7 @@ void app_exit(APP_INSTANCE * app)
 
 	if(app->demo_file)
 	{
+		al_fputc(app->demo_file, 0);
 		al_fclose(app->demo_file);
 	}
 	for(i = 0; i < DOT_MAX_BITMAPS; i++)

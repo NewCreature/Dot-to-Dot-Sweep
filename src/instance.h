@@ -55,6 +55,8 @@ typedef struct
     ALLEGRO_FILE * demo_file;
     bool demo_recording;
     unsigned long demo_seed;
+    bool demo_done;
+    char * demo_filename;
 
 } APP_INSTANCE;
 
