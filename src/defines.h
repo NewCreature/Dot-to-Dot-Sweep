@@ -14,8 +14,9 @@
 #define DOT_BITMAP_PARTICLE       10
 #define DOT_BITMAP_LOGO           16
 #define DOT_BITMAP_BG             17
+#define DOT_BITMAP_HAND           18
 #define DOT_BITMAP_ATLAS_BOUNDARY DOT_BITMAP_LOGO
-#define DOT_BITMAP_SCRATCH        18
+#define DOT_BITMAP_SCRATCH        19
 
 #define DOT_MAX_SAMPLES      256
 #define DOT_SAMPLE_START       0

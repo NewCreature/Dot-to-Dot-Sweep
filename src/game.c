@@ -556,8 +556,6 @@ void dot_game_logic(void * data)
 					app->game.state_tick = 0;
 					app->game.player.lost_touch = false;
 					app->game.player.ball.active = true;
-					t3f_mouse_x = DOT_GAME_PLAYFIELD_WIDTH / 2;
-					t3f_mouse_y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
 					app->game.player.want_shield = true;
 					app->game.player.touch_offset_x = 0;
 					app->game.player.touch_offset_y = 0;

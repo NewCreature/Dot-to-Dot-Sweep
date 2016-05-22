@@ -2,6 +2,7 @@
 #include "t3f/resource.h"
 #include "t3f/music.h"
 #include "t3f/view.h"
+#include "t3f/draw.h"
 #include "instance.h"
 #include "intro.h"
 #include "game.h"
@@ -107,6 +108,17 @@ void app_render(void * data)
 	{
 		dot_particle_render(app->active_particle[i], app->bitmap[DOT_BITMAP_PARTICLE]);
 	}
+	#ifndef ALLEGRO_ANDROID
+		float ox = 0, oy = 0;
+
+		if(!t3f_mouse_button[0])
+		{
+			ox = 12.0;
+			oy = -12.0;
+			t3f_draw_bitmap(app->bitmap[DOT_BITMAP_HAND], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_mouse_x - 118, t3f_mouse_y - 56, 0, 0);
+		}
+		al_draw_bitmap(app->bitmap[DOT_BITMAP_HAND], t3f_mouse_x - 118 + ox, t3f_mouse_y - 56 + oy, 0);
+	#endif
 	al_hold_bitmap_drawing(false);
 }
 
@@ -193,6 +205,12 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		return false;
 	}
+	#ifndef ALLEGRO_ANDROID
+		if(!dot_load_bitmap(app, DOT_BITMAP_HAND, "data/graphics/hand.png"))
+		{
+			return false;
+		}
+	#endif
 	app->bitmap[DOT_BITMAP_SCRATCH] = al_create_bitmap(512, 512);
 	if(!app->bitmap[DOT_BITMAP_SCRATCH])
 	{
