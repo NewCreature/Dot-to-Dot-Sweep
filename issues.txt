@@ -42,6 +42,8 @@ Dot to Dot Sweep Issues
 
 [ ]Possibly add music.
 
+[ ]Make sure we handle halt and resume correctly for Android.
+
 [ ]Refactor code.
 
    [ ]Add a resources structure and pass that to functions that need to access
