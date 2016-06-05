@@ -4,6 +4,7 @@
 #include "game.h"
 #include "text.h"
 #include "color.h"
+#include "intro.h"
 
 int dot_menu_proc_play(void * data, int i, void * pp)
 {
@@ -53,6 +54,14 @@ int dot_menu_proc_music(void * data, int i, void * pp)
 		gui->element[i].color = DOT_MENU_COLOR_DISABLED;
 		al_set_config_value(t3f_config, "Game Data", "Music Enabled", "false");
 	}
+	return 1;
+}
+
+int dot_menu_proc_credits(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	app->intro_state = DOT_INTRO_STATE_CREDITS;
 	return 1;
 }
 
@@ -134,6 +143,50 @@ void dot_intro_logic(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
+	switch(app->intro_state)
+	{
+		case DOT_INTRO_STATE_LOGO:
+		{
+			if(app->tick >= 900)
+			{
+				app->intro_state = DOT_INTRO_STATE_LOGO_OUT;
+			}
+			break;
+		}
+		case DOT_INTRO_STATE_LOGO_OUT:
+		{
+			app->logo_ox -= 4.0;
+			app->credits_ox -= 4.0;
+			if(app->logo_ox < -t3f_virtual_display_width)
+			{
+				app->credits.state = DOT_CREDITS_STATE_IN;
+				app->intro_state = DOT_INTRO_STATE_CREDITS;
+			}
+			break;
+		}
+		case DOT_INTRO_STATE_CREDITS:
+		{
+			dot_credits_logic(&app->credits);
+			if(app->credits.current_credit >= app->credits.credits)
+			{
+				app->credits.state = DOT_CREDITS_STATE_WAIT;
+				app->intro_state = DOT_INTRO_STATE_CREDITS_OUT;
+			}
+			break;
+		}
+		case DOT_INTRO_STATE_CREDITS_OUT:
+		{
+			app->logo_ox += 4.0;
+			app->credits_ox += 4.0;
+			if(app->logo_ox >= 0.0)
+			{
+				app->credits.current_credit = 0;
+				app->tick = 0;
+				app->intro_state = DOT_INTRO_STATE_LOGO;
+			}
+			break;
+		}
+	}
 	app->tick++;
 	t3f_process_gui(app->menu[app->current_menu], app);
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
@@ -155,22 +208,15 @@ void dot_intro_render(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	int i;
-
 	al_clear_to_color(dot_darken_color(DOT_GAME_BG_COLOR, 0.75));
 	al_hold_bitmap_drawing(true);
 	dot_bg_objects_render(data);
 	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
-	al_draw_bitmap(app->bitmap[DOT_BITMAP_LOGO], DOT_GAME_PLAYFIELD_WIDTH / 2 - al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]) / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]) / 2, 0);
-/*	for(i = 0; i < 540 / 16; i++)
-	{
-		al_draw_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + i % 6], i * 16 + 6, sin((float)(i * 2 + app->tick) / 10.0) * 32 + 64, 0);
-		al_draw_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + i % 6], i * 16 + 6, cos((float)(i * 2 + app->tick) / 10.0) * 32 + DOT_GAME_PLAYFIELD_HEIGHT - 64 - 16 - 1, 0);
-	} */
+	al_draw_bitmap(app->bitmap[DOT_BITMAP_LOGO], DOT_GAME_PLAYFIELD_WIDTH / 2 - al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]) / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]) / 2, 0);
+	dot_credits_render(data, app->credits_ox);
 	al_hold_bitmap_drawing(false);
 	dot_game_render_hud(data);
 	al_hold_bitmap_drawing(true);
-/*	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - 16, 4, 4, ALLEGRO_ALIGN_CENTRE, "Dot to Dot Sweep"); */
 	t3f_render_gui(app->menu[app->current_menu]);
 	al_hold_bitmap_drawing(false);
 }

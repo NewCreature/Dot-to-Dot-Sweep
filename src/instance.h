@@ -9,6 +9,7 @@
 #include "game.h"
 #include "particle.h"
 #include "bg_object.h"
+#include "credits.h"
 
 /* structure to hold all of our app-specific data */
 typedef struct
@@ -52,6 +53,12 @@ typedef struct
     /* menu data */
     T3F_GUI * menu[DOT_MAX_MENUS];
     int current_menu;
+    int intro_state;
+    float logo_ox;
+    float credits_ox;
+
+    /* credits data */
+    DOT_CREDITS credits;
 
     /* demo recording */
     ALLEGRO_FILE * demo_file;
