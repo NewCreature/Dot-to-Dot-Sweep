@@ -188,7 +188,9 @@ static void dot_game_create_score_effect(void * data, float x, float y, int numb
 	al_use_transform(&identity);
 	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
 	sprintf(buf, "%d", number);
+	al_set_clipping_rectangle(0, 0, 512, 512);
 	al_draw_text(app->font[DOT_FONT_16], t3f_color_white, 0, 0, 0, buf);
+	t3f_set_clipping_rectangle(0, 0, 0, 0);
 	al_restore_state(&old_state);
 	al_lock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
 	ox = al_get_text_width(app->font[DOT_FONT_16], buf) / 2;
@@ -694,12 +696,14 @@ static void dot_create_grab_spot_effect(void * data)
 	al_identity_transform(&identity);
 	al_use_transform(&identity);
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
+	al_set_clipping_rectangle(0, 0, 512, 512);
 	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 1.0));
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ZERO, ALLEGRO_INVERSE_ALPHA);
 	s = DOT_GAME_GRAB_SPOT_SIZE;
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), (float)(app->game.player.ball.x - DOT_GAME_GRAB_SPOT_SIZE) * sx, app->game.player.ball.y - DOT_GAME_GRAB_SPOT_SIZE, 0.0, (s * 2.0) * sx, s * 2, 0);
 	al_restore_state(&old_state);
 	al_hold_bitmap_drawing(held);
+	t3f_set_clipping_rectangle(0, 0, 0, 0);
 }
 
 static void dot_create_touch_dots_effect(void * data)
@@ -720,6 +724,7 @@ static void dot_create_touch_dots_effect(void * data)
 	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
 	al_identity_transform(&identity);
 	al_use_transform(&identity);
+	al_set_clipping_rectangle(0, 0, 512, 512);
 	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
 	al_hold_bitmap_drawing(true);
 	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
@@ -732,6 +737,7 @@ static void dot_create_touch_dots_effect(void * data)
 	al_hold_bitmap_drawing(false);
 	al_restore_state(&old_state);
 	al_hold_bitmap_drawing(held);
+	t3f_set_clipping_rectangle(0.0, 0.0, 0.0, 0.0);
 }
 
 static void dot_create_touch_start_effect(void * data)
@@ -752,12 +758,14 @@ static void dot_create_touch_start_effect(void * data)
 	al_identity_transform(&identity);
 	al_use_transform(&identity);
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
+	al_set_clipping_rectangle(0, 0, 512, 512);
 	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 1.0));
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ZERO, ALLEGRO_INVERSE_ALPHA);
 	s = DOT_GAME_GRAB_SPOT_SIZE;
 	al_draw_filled_rectangle(DOT_GAME_TOUCH_START_X * sx, DOT_GAME_TOUCH_START_Y, DOT_GAME_TOUCH_END_X * sx, DOT_GAME_TOUCH_END_Y, al_map_rgba_f(1.0, 1.0, 1.0, 1.0));
 	al_restore_state(&old_state);
 	al_hold_bitmap_drawing(held);
+	t3f_set_clipping_rectangle(0, 0, 0, 0);
 }
 
 /* main game render function */
