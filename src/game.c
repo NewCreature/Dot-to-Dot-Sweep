@@ -820,7 +820,7 @@ void dot_game_render(void * data)
 		ecy = (float)(al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_EYES]) / 2);
 		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], player_color, cx, cy, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.z, 0.0, app->game.player.ball.r / cx, app->game.player.ball.r / cy, 0);
 		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_EYES], player_color, 8.0, 8.0, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.z, app->game.player.ball.a, app->game.player.ball.r / ecx, app->game.player.ball.r / ecy, 0);
-		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], al_map_rgba_f(0.5, 0.5, 0.5, 0.5), cx, cy, app->game.player.ball.x, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y, app->game.player.ball.z, 0.0, app->game.player.ball.r / cx, app->game.player.ball.r / cy, 0);
+/*		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], al_map_rgba_f(0.5, 0.5, 0.5, 0.5), cx, cy, app->game.player.ball.x, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y, app->game.player.ball.z, 0.0, app->game.player.ball.r / cx, app->game.player.ball.r / cy, 0); */
 		if(app->game.combo)
 		{
 			sprintf(buf, "%d", dot_game_get_combo_score(data));
@@ -841,8 +841,6 @@ void dot_game_render(void * data)
 		dot_create_grab_spot_effect(data);
 		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, 0.0, DOT_GAME_PLAYFIELD_WIDTH, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
 		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_32]) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, "Paused");
-//		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.125, 0.125, 0.0625, 0.125), app->game.player.ball.x - DOT_GAME_GRAB_SPOT_SIZE, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y - DOT_GAME_GRAB_SPOT_SIZE, 0.0, s * 2, s * 2, 0);
-//		al_draw_filled_circle(app->game.player.ball.x, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y, DOT_GAME_GRAB_SPOT_SIZE, al_map_rgba_f(0.5, 0.5, 0.5, 0.5));
 	}
 	else if(app->game.state == DOT_GAME_STATE_START)
 	{
