@@ -59,9 +59,10 @@ static void dot_create_bg_object_effect(void * data)
 	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
 	al_identity_transform(&identity);
 	al_use_transform(&identity);
-	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
-	al_hold_bitmap_drawing(true);
-	al_set_clipping_rectangle(0, 0, 512, DOT_GAME_PLAYFIELD_HEIGHT);
+	al_set_clipping_rectangle(0, 0, 512, 512);
+    al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
+    al_set_clipping_rectangle(0, 0, 512, DOT_GAME_PLAYFIELD_HEIGHT);
+    al_hold_bitmap_drawing(true);
 	for(i = 0; i < DOT_MAX_BG_OBJECTS; i++)
 	{
 		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), app->bg_object[i].x * sx, app->bg_object[i].y, app->bg_object[i].z, DOT_GAME_BALL_SIZE * 2.0 * sx, DOT_GAME_BALL_SIZE * 2.0, 0);
