@@ -218,5 +218,6 @@ void dot_intro_render(void * data)
 	dot_game_render_hud(data);
 	al_hold_bitmap_drawing(true);
 	t3f_render_gui(app->menu[app->current_menu]);
+	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT - al_get_font_line_height(app->font[DOT_FONT_16]) * 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, "Copyright (c) 2016 T^3 Software.");
 	al_hold_bitmap_drawing(false);
 }
