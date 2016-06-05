@@ -448,6 +448,8 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		app->color[i] = dot_get_ball_color(app->bitmap[i]);
 	}
 
+	dot_setup_bg_objects(app);
+
 	app->state = 0;
 
 	/* see if we want to record a demo */

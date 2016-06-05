@@ -133,6 +133,7 @@ void dot_intro_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
+	dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
 	app->tick++;
 	t3f_process_gui(app->menu[app->current_menu], app);
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
@@ -158,6 +159,7 @@ void dot_intro_render(void * data)
 
 	al_clear_to_color(dot_darken_color(DOT_GAME_BG_COLOR, 0.75));
 	al_hold_bitmap_drawing(true);
+	dot_bg_objects_render(data);
 	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
 	al_draw_bitmap(app->bitmap[DOT_BITMAP_LOGO], DOT_GAME_PLAYFIELD_WIDTH / 2 - al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]) / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]) / 2, 0);
 /*	for(i = 0; i < 540 / 16; i++)

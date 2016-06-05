@@ -8,6 +8,7 @@
 #include "game.h"
 #include "text.h"
 #include "color.h"
+#include "bg_object.h"
 
 /* initialize player (done once per turn and at new level) */
 void dot_game_drop_player(void * data, int type)
@@ -547,6 +548,7 @@ void dot_game_logic(void * data)
 	int colored = 0;
 	int i;
 
+	dot_bg_objects_logic(data, app->game.speed);
 	switch(app->game.state)
 	{
 
@@ -777,6 +779,7 @@ void dot_game_render(void * data)
 	}
 	al_clear_to_color(dot_darken_color(DOT_GAME_BG_COLOR, rgb));
 	al_hold_bitmap_drawing(true);
+	dot_bg_objects_render(data);
 	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
 	if(app->game.combo)
 	{

@@ -8,6 +8,7 @@
 #include "defines.h"
 #include "game.h"
 #include "particle.h"
+#include "bg_object.h"
 
 /* structure to hold all of our app-specific data */
 typedef struct
@@ -39,6 +40,7 @@ typedef struct
     int current_particle;
     DOT_PARTICLE * active_particle[DOT_MAX_PARTICLES];
     int active_particles;
+    DOT_BG_OBJECT bg_object[DOT_MAX_BG_OBJECTS];
 
     /* leaderboard stuff */
     char user_name[256];

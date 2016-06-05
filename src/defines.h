@@ -44,10 +44,8 @@
 #define DOT_STATE_GAME         1
 #define DOT_STATE_LEADERBOARD  2
 
-#define DOT_GAME_PLAYFIELD_WIDTH  540
-#define DOT_GAME_PLAYFIELD_HEIGHT 440
-
 #define DOT_MAX_PARTICLES        1024
+#define DOT_MAX_BG_OBJECTS        160
 
 #define DOT_SHADOW_OX -2
 #define DOT_SHADOW_OY  2
