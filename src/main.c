@@ -37,7 +37,6 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 		}
 		case ALLEGRO_EVENT_DISPLAY_RESUME_DRAWING:
 		{
-			/* let T3F reload resources before reloading shapes */
 			t3f_event_handler(event);
 			al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS);
 			al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR | ALLEGRO_NO_PRESERVE_TEXTURE);
