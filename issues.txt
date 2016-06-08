@@ -52,6 +52,14 @@ Dot to Dot Sweep Issues
 
    [ ]Need to space everything out so it looks nice.
 
+   [ ]Implement emotion graphics.
+
+      [ ]Character representation on the HUD should react to what's happening
+         in the game.
+
+         [ ]Need to replace emotion graphics with ones that match the size of
+            the in-game graphics.
+
 [ ]Add intro screen music.
 
 [ ]Finish credits.
