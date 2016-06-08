@@ -445,7 +445,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	/* create color table */
 	for(i = 0; i < DOT_BITMAP_BALL_BLACK; i++)
 	{
-		app->color[i] = dot_get_ball_color(app->bitmap[i]);
+		app->dot_color[i] = dot_get_ball_color(app->bitmap[i]);
 	}
 
 	dot_setup_bg_objects(app);

@@ -386,7 +386,7 @@ void dot_game_check_player_collisions(void * data)
 						}
 					}
 					app->game.speed += app->game.speed_inc;
-					dot_game_create_splash_effect(data, app->game.ball[i].x, app->game.ball[i].y, app->game.ball[i].r, app->color[app->game.ball[i].type]);
+					dot_game_create_splash_effect(data, app->game.ball[i].x, app->game.ball[i].y, app->game.ball[i].r, app->dot_color[app->game.ball[i].type]);
 				}
 
 				/* hitting other color kills you */
@@ -396,7 +396,7 @@ void dot_game_check_player_collisions(void * data)
 					{
 						t3f_touch[app->touch_id].active = false;
 					}
-					dot_game_create_splash_effect(data, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.r, app->color[app->game.player.ball.type]);
+					dot_game_create_splash_effect(data, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.r, app->dot_color[app->game.player.ball.type]);
 					t3f_play_sample(app->sample[DOT_SAMPLE_LOSE], 1.0, 0.0, 1.0);
 					dot_game_accumulate_score(data);
 					app->game.combo = 0;
