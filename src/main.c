@@ -451,11 +451,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	dot_setup_bg_objects(app);
 	dot_setup_credits(&app->credits);
 
-	app->logo_ox = 0;
-	app->credits_ox = t3f_virtual_display_width;
-	app->credits.ox = -t3f_virtual_display_width;
-	app->credits.current_credit = 0;
-	app->credits.state = DOT_CREDITS_STATE_WAIT;
+	dot_intro_setup(app);
 	app->state = 0;
 
 	/* see if we want to record a demo */

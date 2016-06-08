@@ -9,6 +9,7 @@
 #include "text.h"
 #include "color.h"
 #include "bg_object.h"
+#include "intro.h"
 
 /* initialize player (done once per turn and at new level) */
 void dot_game_drop_player(void * data, int type)
@@ -155,6 +156,7 @@ void dot_game_exit(void * data)
 	}
 
 	/* go back to intro */
+	dot_intro_setup(data);
 	app->state = DOT_STATE_INTRO;
 }
 
@@ -637,6 +639,7 @@ void dot_game_logic(void * data)
 	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 	{
+		dot_intro_setup(data);
 		app->state = DOT_STATE_INTRO;
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;

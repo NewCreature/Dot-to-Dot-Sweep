@@ -138,6 +138,21 @@ bool dot_intro_initialize(void * data)
 	return true;
 }
 
+/* reset intro screen variables so we start at the title screen and the main menu */
+void dot_intro_setup(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	app->logo_ox = 0;
+	app->intro_state = DOT_INTRO_STATE_LOGO;
+	app->credits_ox = t3f_virtual_display_width;
+	app->credits.ox = -t3f_virtual_display_width;
+	app->credits.current_credit = 0;
+	app->credits.state = DOT_CREDITS_STATE_WAIT;
+	app->current_menu = DOT_MENU_MAIN;
+	app->tick = 0;
+}
+
 void dot_intro_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
