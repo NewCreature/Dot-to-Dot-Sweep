@@ -1,5 +1,5 @@
-appname (0.1) maverick; urgency=low
+dot-to-dot-sweep (1.0) maverick; urgency=low
 
-  * Changes...
+  * Initial release.
 
- -- Author Name <e@mail.com>  BUILD_DATE +0000
+ -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
