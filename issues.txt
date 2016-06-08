@@ -91,9 +91,9 @@ Dot to Dot Sweep Issues
 
 [ ]Write documentation.
 
-   [ ]Need changelog.
+   [X]Need changelog.
 
-   [ ]Need readme.
+   [X]Need readme.
 
    [ ]Need license.
 
