@@ -13,7 +13,7 @@ Dot to Dot Sweep Issues
    [X]I am thinking a translucent circle that diminishes as the timer runs down
       will do the trick nicely.
 
-[ ]Add particle effects.
+[X]Add particle effects.
 
    [X]Each collected dot should spray particles.
 
@@ -25,8 +25,6 @@ Dot to Dot Sweep Issues
       [X]Particles each time score multiplier resets and points are added to
          score.
 
-   [ ]Add small amount of particles around the player for each collected dot.
-
 [X]Display received points somehow.
 
    See above issue.
@@ -36,21 +34,81 @@ Dot to Dot Sweep Issues
 
 [X]Fix text shadows to match other graphics.
 
+[X]Render higher resolution of combo graphic since we scale it up quite a bit.
+
+[X]Make sure we handle halt and resume correctly for Android.
+
+[ ]Implement level colors.
+
+   [ ]There will be 10 different level colors. Every 10 levels the same colors
+      will repeat in darker variations.
+
+   [ ]Colors will probably start with sky blue and transition over to red for
+      the final color.
+
 [ ]Finalize HUD layout.
 
-[ ]Render higher resolution of combo graphic since we scale it up quite a bit.
+   [ ]Need to show number of lives remaining.
 
-[ ]Possibly add music.
+   [ ]Need to space everything out so it looks nice.
 
-[ ]Make sure we handle halt and resume correctly for Android.
+[ ]Add intro screen music.
 
-[ ]Refactor code.
+[ ]Finish credits.
 
-   [ ]Add a resources structure and pass that to functions that need to access
-      the resources.
+[ ]Show leaderboard after each game when upload is enabled. If your score is on
+   the list, it should be highlighted.
 
-   [ ]Don't pass the APP_INSTANCE around unnecessarily. Gameplay calls should
-      only pass the game data and maybe the resources data.
+   [ ]This screen should display a menu to play again or go back to the intro
+      screen.
 
-   [ ]In places that need APP_INSTANCE data, pass an APP_INSTANCE * instead of
-      a void * to reduce code and avoid extra casts.
+[ ]Add cancel/back option to menus where applicable.
+
+[ ]Add in-game privacy statement.
+
+[ ]Make a desktop version.
+
+   [ ]Desktop version should cut out the track pad area. This will require
+      adding a separate state for the desktop menu screen.
+
+   [ ]Use mouse control the game.
+
+   [ ]Pause with Escape key.
+
+      [ ]Need a pause menu so we can quit or resume game like a normal desktop
+         game.
+
+   [ ]Use a variable to toggle desktop mode. This way we can still get mobile
+      mode with a command line switch when we want to record a demo video.
+
+[ ]Write documentation.
+
+   [ ]Need changelog.
+
+   [ ]Need readme.
+
+   [ ]Need license.
+
+[ ]Make demo video.
+
+[ ]Create project page.
+
+   [ ]Add project to database.
+
+   [ ]Upload screenshots.
+
+   [ ]Upload all versions of the game.
+
+   [ ]Upload soundtrack packages.
+
+[ ]Create store listing for Google Play.
+
+   [ ]Create promo graphics.
+
+   [ ]Upload APK.
+
+[ ]Release game.
+
+   [ ]Post announcement on the web site.
+
+   [ ]Post announcement on Facebook.
