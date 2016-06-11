@@ -21,9 +21,10 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	al_stop_timer(t3f_timer);
-	app->leaderboard = t3net_get_leaderboard(DOT_LEADERBOARD_RETRIEVE_URL, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", 20, 0);
+	app->leaderboard = t3net_get_leaderboard(DOT_LEADERBOARD_RETRIEVE_URL, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", 10, 0);
 	if(app->leaderboard)
 	{
+		app->leaderboard_spot = -1;
 		app->state = DOT_STATE_LEADERBOARD;
 	}
 	al_resume_timer(t3f_timer);
