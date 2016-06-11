@@ -74,6 +74,8 @@ Dot to Dot Sweep Issues
 
 [ ]Add in-game privacy statement.
 
+[ ]Add proper cleanup at exit.
+
 [ ]Make a desktop version.
 
    [ ]Desktop version should cut out the track pad area. This will require
