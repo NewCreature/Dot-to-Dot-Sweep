@@ -443,7 +443,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	t3f_set_view_focus(t3f_current_view, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2);
 
 	/* create color tables */
-	for(i = 0; i < DOT_BITMAP_BALL_BLACK; i++)
+	for(i = 0; i <= DOT_BITMAP_BALL_BLACK; i++)
 	{
 		app->dot_color[i] = dot_get_ball_color(app->bitmap[i]);
 	}

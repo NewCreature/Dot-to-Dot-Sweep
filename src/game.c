@@ -633,6 +633,13 @@ void dot_game_logic(void * data)
 			if(colored == 0)
 			{
 				dot_game_accumulate_score(data);
+				for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
+				{
+					if(app->game.ball[i].active && app->game.ball[i].type == 6)
+					{
+						dot_game_create_splash_effect(data, app->game.ball[i].x, app->game.ball[i].y, app->game.ball[i].r, app->dot_color[app->game.ball[i].type]);
+					}
+				}
 				if(app->touch_id >= 0)
 				{
 					t3f_touch[app->touch_id].active = false;
