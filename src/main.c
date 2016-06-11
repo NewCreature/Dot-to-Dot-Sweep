@@ -442,11 +442,21 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	/* change view focus so 3D effects look right */
 	t3f_set_view_focus(t3f_current_view, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2);
 
-	/* create color table */
+	/* create color tables */
 	for(i = 0; i < DOT_BITMAP_BALL_BLACK; i++)
 	{
 		app->dot_color[i] = dot_get_ball_color(app->bitmap[i]);
 	}
+	app->level_color[0] = al_map_rgb(47, 151, 218);
+	app->level_color[1] = al_map_rgb(48, 196, 218);
+	app->level_color[2] = al_map_rgb(48, 218, 192);
+	app->level_color[3] = al_map_rgb(48, 218, 134);
+	app->level_color[4] = al_map_rgb(140, 218, 48);
+	app->level_color[5] = al_map_rgb(198, 218, 48);
+	app->level_color[6] = al_map_rgb(218, 175, 48);
+	app->level_color[7] = al_map_rgb(218, 123, 48);
+	app->level_color[8] = al_map_rgb(218, 48, 48);
+	app->level_color[9] = al_map_rgb(204, 48, 218);
 
 	dot_setup_bg_objects(app);
 	dot_setup_credits(&app->credits);

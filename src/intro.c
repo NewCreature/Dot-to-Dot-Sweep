@@ -223,7 +223,7 @@ void dot_intro_render(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	al_clear_to_color(dot_darken_color(DOT_GAME_BG_COLOR, 0.75));
+	al_clear_to_color(app->level_color[0]);
 	al_hold_bitmap_drawing(true);
 	dot_bg_objects_render(data);
 	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);

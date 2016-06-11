@@ -550,8 +550,15 @@ void dot_game_logic(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	int colored = 0;
-	int i;
+	float rgb = 1.0;
+	int i, m;
 
+	m = app->game.level / 10;
+	for(i = 0; i < m; i++)
+	{
+		rgb *= 0.75;
+	}
+	app->game.bg_color = dot_darken_color(app->level_color[app->game.level % 10], rgb);
 	dot_bg_objects_logic(data, app->game.speed);
 	switch(app->game.state)
 	{
@@ -780,15 +787,10 @@ void dot_game_render(void * data)
 	int i;
 	ALLEGRO_COLOR player_color = t3f_color_white;
 	ALLEGRO_COLOR text_color = t3f_color_white;
-	float rgb = 0.75 - (float)app->game.level / 24.0;
 	float c = (float)app->game.player.ball.timer / (float)DOT_GAME_COMBO_TIME;
 	float s;
 	float cx, cy, ecx, ecy;
-	if(rgb < 0.0)
-	{
-		rgb = 0.0;
-	}
-	al_clear_to_color(dot_darken_color(DOT_GAME_BG_COLOR, rgb));
+	al_clear_to_color(app->game.bg_color);
 	al_hold_bitmap_drawing(true);
 	dot_bg_objects_render(data);
 	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);

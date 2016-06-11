@@ -53,8 +53,6 @@ typedef struct
 #define DOT_GAME_SHIELD_MAX_SIZE        96
 #define DOT_GAME_BALL_SIZE            16.0
 
-#define DOT_GAME_BG_COLOR al_map_rgb(255, 230, 213)
-
 #define DOT_GAME_GRAB_SPOT_SIZE 48
 
 #define DOT_GAME_TOUCH_START_X (DOT_GAME_SHIELD_MAX_SIZE + DOT_GAME_BALL_SIZE * 2)
@@ -68,6 +66,7 @@ typedef struct
 	int state;
 	int state_tick;
 	float speed, speed_inc;
+	ALLEGRO_COLOR bg_color;
 	int tick;
 
 	/* player data */
