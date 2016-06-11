@@ -67,6 +67,8 @@ typedef struct
 	int state_tick;
 	float speed, speed_inc;
 	ALLEGRO_COLOR bg_color;
+	ALLEGRO_COLOR old_bg_color;
+	float bg_color_fade;
 	int tick;
 
 	/* player data */

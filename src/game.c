@@ -122,6 +122,8 @@ void dot_game_initialize(void * data, bool demo_seed)
 	app->game.combo = 0;
 	app->game.lives = 3;
 	app->game.shield.active = false;
+	app->game.old_bg_color = app->level_color[0];
+	app->game.bg_color_fade = 0.0;
 	if(app->music_enabled)
 	{
 		t3f_play_music("data/music/going_for_it.xm");
@@ -553,12 +555,23 @@ void dot_game_logic(void * data)
 	float rgb = 1.0;
 	int i, m;
 
+	/* handle level bg color transition */
+	if(app->game.bg_color_fade < 1.0)
+	{
+		app->game.bg_color_fade += 1.0 / 60.0;
+		if(app->game.bg_color_fade > 1.0)
+		{
+			app->game.bg_color_fade = 1.0;
+		}
+	}
+
+	/* make level colors darker after every 10 levels */
 	m = app->game.level / 10;
 	for(i = 0; i < m; i++)
 	{
 		rgb *= 0.75;
 	}
-	app->game.bg_color = dot_darken_color(app->level_color[app->game.level % 10], rgb);
+	app->game.bg_color = dot_darken_color(dot_transition_color(app->game.old_bg_color, app->level_color[app->game.level % 10], app->game.bg_color_fade), rgb);
 	dot_bg_objects_logic(data, app->game.speed);
 	switch(app->game.state)
 	{
@@ -644,7 +657,9 @@ void dot_game_logic(void * data)
 				{
 					t3f_touch[app->touch_id].active = false;
 				}
+				app->game.old_bg_color = app->game.bg_color;
 				dot_game_setup_level(data, app->game.level + 1);
+				app->game.bg_color_fade = 0.0;
 				app->game.combo = 0;
 				app->game.ascore = 0;
 			}
