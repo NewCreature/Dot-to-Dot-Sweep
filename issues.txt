@@ -38,12 +38,12 @@ Dot to Dot Sweep Issues
 
 [X]Make sure we handle halt and resume correctly for Android.
 
-[ ]Implement level colors.
+[X]Implement level colors.
 
-   [ ]There will be 10 different level colors. Every 10 levels the same colors
+   [X]There will be 10 different level colors. Every 10 levels the same colors
       will repeat in darker variations.
 
-   [ ]Colors will probably start with sky blue and transition over to red for
+   [X]Colors will probably start with sky blue and transition over to red for
       the final color.
 
 [ ]Finalize HUD layout.
