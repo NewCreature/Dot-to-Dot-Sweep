@@ -106,8 +106,8 @@ void dot_credits_render(void * data, float ox)
 	dot_bg_objects_render(data);
 	for(i = 0; i < 540 / 32; i++)
 	{
-		al_draw_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + i % 6], i * 32 + 12 + ox, sin((float)(i * 4 + app->tick) / 10.0) * 32 + 32 + 12, 0);
-		al_draw_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + (i + 3) % 6], i * 32 + 12 + ox, cos((float)(i * 4 + app->tick) / 10.0) * 32 + DOT_GAME_PLAYFIELD_HEIGHT - 32 - 32 - 12 - 1, 0);
+		al_draw_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + i % 6], i * 32 + 18 + ox, sin((float)(i * 4 + app->tick) / 10.0) * 32 + 32 + 12, 0);
+		al_draw_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + (i + 3) % 6], i * 32 + 18 + ox, cos((float)(i * 4 + app->tick) / 10.0) * 32 + DOT_GAME_PLAYFIELD_HEIGHT - 32 - 32 - 12 - 1, 0);
     }
     al_hold_bitmap_drawing(false);
 
