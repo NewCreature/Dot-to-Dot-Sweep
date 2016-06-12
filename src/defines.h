@@ -13,10 +13,14 @@
 #define DOT_BITMAP_COMBO           9
 #define DOT_BITMAP_PARTICLE       10
 #define DOT_BITMAP_LOGO           16
-#define DOT_BITMAP_BG             17
-#define DOT_BITMAP_HAND           18
-#define DOT_BITMAP_ATLAS_BOUNDARY DOT_BITMAP_LOGO
-#define DOT_BITMAP_SCRATCH        19
+#define DOT_BITMAP_EMO_NORMAL     17
+#define DOT_BITMAP_EMO_BLINK      18
+#define DOT_BITMAP_EMO_WOAH       19
+#define DOT_BITMAP_EMO_DEAD       20
+#define DOT_BITMAP_BG             21
+#define DOT_BITMAP_HAND           22
+#define DOT_BITMAP_ATLAS_BOUNDARY DOT_BITMAP_EMO_DEAD
+#define DOT_BITMAP_SCRATCH        23
 
 #define DOT_BITMAP_SCRATCH_WIDTH  512
 #define DOT_BITMAP_SCRATCH_HEIGHT 512

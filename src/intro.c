@@ -158,6 +158,7 @@ void dot_intro_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
+	dot_game_emo_logic(data);
 	dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
 	switch(app->intro_state)
 	{

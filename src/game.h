@@ -40,6 +40,11 @@ typedef struct
 #define DOT_GAME_STATE_PAUSE   2
 #define DOT_GAME_STATE_DONE    3
 
+#define DOT_GAME_EMO_STATE_NORMAL 0
+#define DOT_GAME_EMO_STATE_BLINK  1
+#define DOT_GAME_EMO_STATE_WOAH   2
+#define DOT_GAME_EMO_STATE_DEAD   3
+
 #define DOT_GAME_PLAYFIELD_WIDTH  540
 #define DOT_GAME_PLAYFIELD_HEIGHT 440
 
@@ -77,6 +82,8 @@ typedef struct
 	int ascore, score, high_score;
 	int combo;
 	bool level_start;
+	int emo_state;
+	int emo_tick;
 
 	DOT_BALL ball[DOT_GAME_MAX_BALLS];
 	DOT_PLAYER player;
@@ -85,6 +92,7 @@ typedef struct
 } DOT_GAME;
 
 void dot_game_initialize(void * data, bool demo_seed);
+void dot_game_emo_logic(void * data);
 void dot_game_logic(void * data);
 void dot_game_render_hud(void * data);
 void dot_game_render(void * data);

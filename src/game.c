@@ -406,6 +406,8 @@ void dot_game_check_player_collisions(void * data)
 					app->game.combo = 0;
 					app->game.ascore = 0;
 					app->game.lives--;
+					app->game.emo_tick = 60;
+					app->game.emo_state = DOT_GAME_EMO_STATE_DEAD;
 
 					/* change ball color to match the ball that is hit unless it is black */
 					if(app->game.ball[i].type != DOT_BITMAP_BALL_BLACK)
@@ -522,6 +524,11 @@ void dot_game_move_player(void * data)
 			app->game.player.ball.timer++;
 			if(app->game.player.ball.timer >= DOT_GAME_COMBO_TIME)
 			{
+				if(app->game.combo >= 10)
+				{
+					app->game.emo_tick = 60;
+					app->game.emo_state = DOT_GAME_EMO_STATE_WOAH;
+				}
 				dot_game_accumulate_score(data);
 				app->game.player.ball.timer = 0;
 				app->game.combo = 0;
@@ -542,6 +549,60 @@ void dot_game_shield_logic(void * data)
 		if(app->game.shield.r >= 96.0)
 		{
 			app->game.shield.active = false;
+		}
+	}
+}
+
+static int dot_game_get_emo_blink_time(T3F_RNG_STATE * rp)
+{
+	return 180 + t3f_random(rp, 60);
+}
+
+void dot_game_emo_logic(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	switch(app->game.emo_state)
+	{
+		case DOT_GAME_EMO_STATE_NORMAL:
+		{
+			app->game.emo_tick--;
+			if(app->game.emo_tick <= 0)
+			{
+				app->game.emo_tick = 3;
+				app->game.emo_state = DOT_GAME_EMO_STATE_BLINK;
+			}
+			break;
+		}
+		case DOT_GAME_EMO_STATE_BLINK:
+		{
+			app->game.emo_tick--;
+			if(app->game.emo_tick <= 0)
+			{
+				app->game.emo_tick = dot_game_get_emo_blink_time(&app->rng_state);
+				app->game.emo_state = DOT_GAME_EMO_STATE_NORMAL;
+			}
+			break;
+		}
+		case DOT_GAME_EMO_STATE_WOAH:
+		{
+			app->game.emo_tick--;
+			if(app->game.emo_tick <= 0)
+			{
+				app->game.emo_tick = dot_game_get_emo_blink_time(&app->rng_state);
+				app->game.emo_state = DOT_GAME_EMO_STATE_NORMAL;
+			}
+			break;
+		}
+		case DOT_GAME_EMO_STATE_DEAD:
+		{
+			app->game.emo_tick--;
+			if(app->game.emo_tick <= 0)
+			{
+				app->game.emo_tick = dot_game_get_emo_blink_time(&app->rng_state);
+				app->game.emo_state = DOT_GAME_EMO_STATE_NORMAL;
+			}
+			break;
 		}
 	}
 }
@@ -572,6 +633,8 @@ void dot_game_logic(void * data)
 		rgb *= 0.75;
 	}
 	app->game.bg_color = dot_darken_color(dot_transition_color(app->game.old_bg_color, app->level_color[app->game.level % 10], app->game.bg_color_fade), rgb);
+
+	dot_game_emo_logic(data);
 	dot_bg_objects_logic(data, app->game.speed);
 	switch(app->game.state)
 	{
@@ -704,7 +767,7 @@ void dot_game_render_hud(void * data)
 
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], shadow, 16 + DOT_SHADOW_OX, 440 + 16 + DOT_SHADOW_OY, 0, 48, 48, 0);
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], t3f_color_white, 16, 440 + 16, 0, 48, 48, 0);
-	al_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_EYES], 8.0, 8.0, 16 + 24, 440 + 16 + 24, 3, 3, ALLEGRO_PI / 2.0, 0);
+	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_EMO_NORMAL + app->game.emo_state], t3f_color_white, 16, 440 + 16, 0.0, 48, 48, 0);
 	al_hold_bitmap_drawing(false);
 	al_hold_bitmap_drawing(held);
 }

@@ -311,6 +311,22 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		return false;
 	}
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_NORMAL, "data/graphics/emo_normal.png"))
+	{
+		return false;
+	}
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_BLINK, "data/graphics/emo_blink.png"))
+	{
+		return false;
+	}
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_WOAH, "data/graphics/emo_woah.png"))
+	{
+		return false;
+	}
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_DEAD, "data/graphics/emo_dead.png"))
+	{
+		return false;
+	}
 	if(!dot_load_bitmap(app, DOT_BITMAP_BG, "data/graphics/bg.png"))
 	{
 		return false;
