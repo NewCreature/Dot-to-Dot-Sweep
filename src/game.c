@@ -756,18 +756,24 @@ void dot_game_render_hud(void * data)
 	al_draw_filled_rectangle(0, DOT_GAME_PLAYFIELD_HEIGHT, 540, DOT_GAME_PLAYFIELD_HEIGHT + 80, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 	al_hold_bitmap_drawing(true);
 //	al_draw_bitmap(app->bitmap[DOT_BITMAP_HUD], 480.0, 0.0, 0);
+	/*sprintf(buffer, "Score");
+	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16, 440 + 8 + 9, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buffer); */
 	sprintf(buffer, "Score");
-	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16, 440 + 8 + 9, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buffer);
-	sprintf(buffer, "  %07d", app->game.score);
-	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16, 440 + 8 + 9 + 24, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buffer);
-	sprintf(buffer, "High");
+	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, t3f_virtual_display_width - 8, 440 + 40 - al_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_RIGHT, buffer);
+	sprintf(buffer, "%d", app->game.score);
+	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, t3f_virtual_display_width - 8, 440 + 40, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_RIGHT, buffer);
+	sprintf(buffer, "Lives");
+	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, 8, 440 + 40 - al_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, 0, buffer);
+	sprintf(buffer, "%d", app->game.lives);
+	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, 8, 440 + 40, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, 0, buffer);
+	/*sprintf(buffer, "High");
 	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16 + 160, 440 + 8 + 9, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buffer);
 	sprintf(buffer, "  %07d", app->game.high_score);
-	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16 + 160, 440 + 8 + 9 + 24, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buffer);
+	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16 + 160, 440 + 8 + 9 + 24, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buffer); */
 
-	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], shadow, 16 + DOT_SHADOW_OX, 440 + 16 + DOT_SHADOW_OY, 0, 48, 48, 0);
-	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], t3f_color_white, 16, 440 + 16, 0, 48, 48, 0);
-	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_EMO_NORMAL + app->game.emo_state], t3f_color_white, 16, 440 + 16, 0.0, 48, 48, 0);
+	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], shadow, t3f_virtual_display_width / 2 - 32 + DOT_SHADOW_OX * 2, DOT_GAME_PLAYFIELD_HEIGHT + 40 - 32 + DOT_SHADOW_OY * 2, 0, 64, 64, 0);
+	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], t3f_color_white, t3f_virtual_display_width / 2 - 32, DOT_GAME_PLAYFIELD_HEIGHT + 40 - 32, 0, 64, 64, 0);
+	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_EMO_NORMAL + app->game.emo_state], t3f_color_white, t3f_virtual_display_width / 2 - 32, DOT_GAME_PLAYFIELD_HEIGHT + 40 - 32, 0.0, 64, 64, 0);
 	al_hold_bitmap_drawing(false);
 	al_hold_bitmap_drawing(held);
 }
