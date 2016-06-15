@@ -410,7 +410,6 @@ void dot_game_check_player_collisions(void * data)
 						app->game.combo++;
 					}
 					app->game.player.ball.timer = 0;
-//						app->game.player.ball.r += 0.5;
 					for(j = 0; j < DOT_GAME_MAX_BALLS; j++)
 					{
 						if(app->game.ball[j].active && app->game.ball[j].type != DOT_BITMAP_BALL_BLACK && app->game.ball[j].type != app->game.player.ball.type)
@@ -785,9 +784,6 @@ void dot_game_render_hud(void * data)
 
 	al_draw_filled_rectangle(0, DOT_GAME_PLAYFIELD_HEIGHT, 540, DOT_GAME_PLAYFIELD_HEIGHT + 80, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 	al_hold_bitmap_drawing(true);
-//	al_draw_bitmap(app->bitmap[DOT_BITMAP_HUD], 480.0, 0.0, 0);
-	/*sprintf(buffer, "Score");
-	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16, 440 + 8 + 9, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buffer); */
 	sprintf(buffer, "Score");
 	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, t3f_virtual_display_width - 8, 440 + 40 - al_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_RIGHT, buffer);
 	sprintf(buffer, "%d", app->game.score);
@@ -796,10 +792,6 @@ void dot_game_render_hud(void * data)
 	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, 8, 440 + 40 - al_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, 0, buffer);
 	sprintf(buffer, "%d", app->game.lives);
 	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, 8, 440 + 40, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, 0, buffer);
-	/*sprintf(buffer, "High");
-	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16 + 160, 440 + 8 + 9, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buffer);
-	sprintf(buffer, "  %07d", app->game.high_score);
-	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, shadow, 16 + 48 + 16 + 160, 440 + 8 + 9 + 24, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buffer); */
 
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], shadow, t3f_virtual_display_width / 2 - 32 + DOT_SHADOW_OX * 2, DOT_GAME_PLAYFIELD_HEIGHT + 40 - 32 + DOT_SHADOW_OY * 2, 0, 64, 64, 0);
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], t3f_color_white, t3f_virtual_display_width / 2 - 32, DOT_GAME_PLAYFIELD_HEIGHT + 40 - 32, 0, 64, 64, 0);
@@ -941,7 +933,6 @@ void dot_game_render(void * data)
 			t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], t3f_color_white, cx, cy, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.z, 0.0, app->game.player.ball.r / cx, app->game.player.ball.r / cy, 0);
 			t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_EYES], t3f_color_white, 8.0, 8.0, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.z, app->game.player.ball.a, app->game.player.ball.r / ecx, app->game.player.ball.r / ecy, 0);
 		}
-/*		t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], al_map_rgba_f(0.5, 0.5, 0.5, 0.5), cx, cy, app->game.player.ball.x, 960 - DOT_GAME_PLAYFIELD_HEIGHT + app->game.player.ball.y, app->game.player.ball.z, 0.0, app->game.player.ball.r / cx, app->game.player.ball.r / cy, 0); */
 		if(app->game.combo)
 		{
 			sprintf(buf, "%d", dot_game_get_combo_score(data));
