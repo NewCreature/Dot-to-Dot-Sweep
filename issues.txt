@@ -48,6 +48,12 @@ Dot to Dot Sweep Issues
 
 [X]Add cancel/back option to menus where applicable.
 
+[X]Show leaderboard after each game when upload is enabled. If your score is on
+   the list, it should be highlighted.
+
+   [X]This screen should display a menu to play again or go back to the intro
+      screen.
+
 [ ]Finalize HUD layout.
 
    [ ]Need to show number of lives remaining.
@@ -65,12 +71,6 @@ Dot to Dot Sweep Issues
 [ ]Add intro screen music.
 
 [ ]Finish credits.
-
-[ ]Show leaderboard after each game when upload is enabled. If your score is on
-   the list, it should be highlighted.
-
-   [ ]This screen should display a menu to play again or go back to the intro
-      screen.
 
 [ ]Add in-game privacy statement.
 
