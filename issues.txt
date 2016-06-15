@@ -56,6 +56,14 @@ Dot to Dot Sweep Issues
 
 [X]Add proper cleanup at exit.
 
+[X]Write documentation.
+
+   [X]Need changelog.
+
+   [X]Need readme.
+
+   [X]Need license.
+
 [ ]Finalize HUD layout.
 
    [ ]Need to show number of lives remaining.
@@ -90,14 +98,6 @@ Dot to Dot Sweep Issues
 
    [ ]Use a variable to toggle desktop mode. This way we can still get mobile
       mode with a command line switch when we want to record a demo video.
-
-[ ]Write documentation.
-
-   [X]Need changelog.
-
-   [X]Need readme.
-
-   [ ]Need license.
 
 [ ]Make demo video.
 
