@@ -10,6 +10,7 @@
 #include "color.h"
 #include "bg_object.h"
 #include "intro.h"
+#include "leaderboard.h"
 
 /* initialize player (done once per turn and at new level) */
 void dot_game_drop_player(void * data, int type)
@@ -138,7 +139,7 @@ int dot_get_leaderboard_spot(T3NET_LEADERBOARD * lp, const char * name, unsigned
 
 	for(i = 0; i < lp->entries; i++)
 	{
-		if(!strcmp(lp->entry[i]->name, name) && lp->entry[i]->score == score)
+		if(!strcmp(lp->entry[i]-> name, name) && lp->entry[i]->score == score)
 		{
 			return i;
 		}
@@ -162,12 +163,12 @@ void dot_game_exit(void * data)
 	{
 		sprintf(buf, "%d", app->game.level + 1);
 		al_stop_timer(t3f_timer);
-		if(t3net_upload_score(DOT_LEADERBOARD_SUBMIT_URL, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_name, app->game.score, buf))
+		if(t3net_upload_score(DOT_LEADERBOARD_SUBMIT_URL, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_name, dot_leaderboard_obfuscate_score(app->game.score), buf))
 		{
 			app->leaderboard = t3net_get_leaderboard(DOT_LEADERBOARD_RETRIEVE_URL, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", 10, 0);
 			if(app->leaderboard)
 			{
-				app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, app->game.score);
+				app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, dot_leaderboard_obfuscate_score(app->game.score));
 			}
 		}
 		al_resume_timer(t3f_timer);

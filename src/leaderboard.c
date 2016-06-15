@@ -4,6 +4,16 @@
 #include "color.h"
 #include "intro.h"
 
+unsigned long dot_leaderboard_obfuscate_score(unsigned long score)
+{
+  return score * 'd' + '2' + 'd' + 's';
+}
+
+unsigned long dot_leaderboard_unobfuscate_score(unsigned long score)
+{
+  return (score - 's' - 'd' - '2') / 'd';
+}
+
 void dot_leaderboard_logic(void * data)
 {
     APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -52,7 +62,7 @@ void dot_leaderboard_render(void * data)
         }
         sprintf(buf, " %s", app->leaderboard->entry[i]->name);
         dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 4, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buf);
-        sprintf(buf, "%07lu ", app->leaderboard->entry[i]->score);
+        sprintf(buf, "%07lu ", dot_leaderboard_unobfuscate_score(app->leaderboard->entry[i]->score));
         dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width - 4, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_RIGHT, buf);
         /*dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, app->leaderboard->entry[i]->extra); */
     }
