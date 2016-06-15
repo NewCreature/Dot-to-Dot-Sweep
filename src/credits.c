@@ -41,6 +41,7 @@ void dot_setup_credits(DOT_CREDITS * cp)
 
     dot_add_credit(cp, "Graphics");
     dot_add_credit_name(cp, "Travis Cope");
+    dot_add_credit_name(cp, "Todd Cope");
 
     dot_add_credit(cp, "Sound");
     dot_add_credit_name(cp, "Travis Cope");
