@@ -19,6 +19,7 @@ void dot_leaderboard_logic(void * data)
         t3f_key[ALLEGRO_KEY_BACK] = 0;
     }
     app->tick++;
+    t3f_process_gui(app->menu[app->current_menu], app);
 }
 
 void dot_leaderboard_render(void * data)
@@ -55,6 +56,7 @@ void dot_leaderboard_render(void * data)
         dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width - 4, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_RIGHT, buf);
         /*dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, app->leaderboard->entry[i]->extra); */
     }
-    al_hold_bitmap_drawing(false);
+    t3f_render_gui(app->menu[app->current_menu]);
+  al_hold_bitmap_drawing(false);
 	dot_game_render_hud(data);
 }

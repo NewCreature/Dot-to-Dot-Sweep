@@ -40,6 +40,7 @@
 #define DOT_MENU_MAIN          0
 #define DOT_MENU_LEADERBOARD   1
 #define DOT_MENU_PROFILE       2
+#define DOT_MENU_LEADERBOARD_2 3
 
 #define DOT_MENU_COLOR_ENABLED  t3f_color_white
 #define DOT_MENU_COLOR_DISABLED al_map_rgba_f(0.75, 0.75, 0.75, 1.0)
