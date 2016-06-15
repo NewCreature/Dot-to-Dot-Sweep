@@ -54,6 +54,8 @@ Dot to Dot Sweep Issues
    [X]This screen should display a menu to play again or go back to the intro
       screen.
 
+[X]Add proper cleanup at exit.
+
 [ ]Finalize HUD layout.
 
    [ ]Need to show number of lives remaining.
@@ -73,8 +75,6 @@ Dot to Dot Sweep Issues
 [ ]Finish credits.
 
 [ ]Add in-game privacy statement.
-
-[ ]Add proper cleanup at exit.
 
 [ ]Make a desktop version.
 
