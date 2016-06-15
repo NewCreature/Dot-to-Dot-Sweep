@@ -569,6 +569,17 @@ void app_exit(APP_INSTANCE * app)
 	{
 		t3f_destroy_atlas(app->atlas);
 	}
+	for(i = 0; i < DOT_MAX_MENUS; i++)
+	{
+		if(app->menu[i])
+		{
+			t3f_destroy_gui(app->menu[i]);
+		}
+	}
+	if(app->leaderboard)
+	{
+		t3net_destroy_leaderboard(app->leaderboard);
+	}
 }
 
 int main(int argc, char * argv[])
