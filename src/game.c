@@ -842,7 +842,6 @@ static void dot_create_touch_dots_effect(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	ALLEGRO_STATE old_state;
 	ALLEGRO_TRANSFORM identity;
-	float s;
 	float sx = 512.0 / (float)t3f_virtual_display_width;
 	int i;
 	bool held = al_is_bitmap_drawing_held();
@@ -876,7 +875,6 @@ static void dot_create_touch_start_effect(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	ALLEGRO_STATE old_state;
 	ALLEGRO_TRANSFORM identity;
-	float s;
 	float sx = 512.0 / (float)t3f_virtual_display_width;
 	bool held = al_is_bitmap_drawing_held();
 
@@ -892,7 +890,6 @@ static void dot_create_touch_start_effect(void * data)
 	al_set_clipping_rectangle(0, 0, 512, 512);
 	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 1.0));
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ZERO, ALLEGRO_INVERSE_ALPHA);
-	s = DOT_GAME_GRAB_SPOT_SIZE;
 	al_draw_filled_rectangle(DOT_GAME_TOUCH_START_X * sx, DOT_GAME_TOUCH_START_Y, DOT_GAME_TOUCH_END_X * sx, DOT_GAME_TOUCH_END_Y, al_map_rgba_f(1.0, 1.0, 1.0, 1.0));
 	al_restore_state(&old_state);
 	al_hold_bitmap_drawing(held);
