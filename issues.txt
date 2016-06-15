@@ -66,6 +66,8 @@ Dot to Dot Sweep Issues
 
 [X]Add in-game privacy statement.
 
+[X]Finish credits.
+
 [ ]Finalize HUD layout.
 
    [ ]Need to show number of lives remaining.
@@ -81,8 +83,6 @@ Dot to Dot Sweep Issues
             the in-game graphics.
 
 [ ]Add intro screen music.
-
-[ ]Finish credits.
 
 [ ]Make a desktop version.
 
