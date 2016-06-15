@@ -8,6 +8,7 @@
 #include "intro.h"
 #include "game.h"
 #include "leaderboard.h"
+#include "privacy.h"
 
 static ALLEGRO_BITMAP * dot_create_scratch_bitmap(int w, int h)
 {
@@ -146,6 +147,11 @@ void app_logic(void * data)
 			dot_leaderboard_logic(data);
 			break;
 		}
+		case DOT_STATE_PRIVACY:
+		{
+			dot_privacy_logic(data);
+			break;
+		}
 		case DOT_STATE_GAME:
 		{
 			dot_game_logic(data);
@@ -179,6 +185,11 @@ void app_render(void * data)
 		case DOT_STATE_LEADERBOARD:
 		{
 			dot_leaderboard_render(data);
+			break;
+		}
+		case DOT_STATE_PRIVACY:
+		{
+			dot_privacy_render(data);
 			break;
 		}
 		case DOT_STATE_GAME:

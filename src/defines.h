@@ -48,6 +48,7 @@
 #define DOT_STATE_INTRO        0
 #define DOT_STATE_GAME         1
 #define DOT_STATE_LEADERBOARD  2
+#define DOT_STATE_PRIVACY      3
 
 #define DOT_MAX_PARTICLES        1024
 #define DOT_MAX_BG_OBJECTS        160
