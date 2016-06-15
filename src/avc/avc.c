@@ -11,6 +11,7 @@ static bool avc_encode_video(const char * fn, int fps)
     char sys_command[1024];
     ALLEGRO_PATH * temp_path;
     int freq;
+    int ret;
 
     temp_path = al_get_standard_path(ALLEGRO_TEMP_PATH);
     if(!temp_path)
@@ -19,7 +20,11 @@ static bool avc_encode_video(const char * fn, int fps)
     }
     freq = al_get_mixer_frequency(al_get_default_mixer());
     snprintf(sys_command, 1024, "ffmpeg -y -r %d -f image2 -i %s/avc_%%07d.png -f s16le -ar %d -ac 2 -i %s/avc_audio.raw -vcodec libx264 -pix_fmt yuv420p -acodec mp3 %s", fps, al_path_cstr(temp_path, '/'), freq, al_path_cstr(temp_path, '/'), fn);
-    system(sys_command);
+    ret = system(sys_command);
+    if(ret)
+    {
+      printf("Error code: %d\n", ret);
+    }
     al_destroy_path(temp_path);
 
     return true;
