@@ -46,6 +46,8 @@ Dot to Dot Sweep Issues
    [X]Colors will probably start with sky blue and transition over to red for
       the final color.
 
+[X]Add cancel/back option to menus where applicable.
+
 [ ]Finalize HUD layout.
 
    [ ]Need to show number of lives remaining.
@@ -69,8 +71,6 @@ Dot to Dot Sweep Issues
 
    [ ]This screen should display a menu to play again or go back to the intro
       screen.
-
-[ ]Add cancel/back option to menus where applicable.
 
 [ ]Add in-game privacy statement.
 
