@@ -84,6 +84,10 @@ Dot to Dot Sweep Issues
 
 [ ]Add intro screen music.
 
+[ ]Tweak level colors.
+
+   [ ]Adjust level colors so we don't get levels that hurt the player's eyes.
+
 [ ]Make a desktop version.
 
    [ ]Desktop version should cut out the track pad area. This will require
