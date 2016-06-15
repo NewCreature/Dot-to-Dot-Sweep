@@ -117,6 +117,10 @@ Dot to Dot Sweep Issues
 
    [ ]Upload APK.
 
+[ ]Seed leaderboard.
+
+   [ ]Erase old scores and add low placeholder scores.
+
 [ ]Release game.
 
    [ ]Post announcement on the web site.
