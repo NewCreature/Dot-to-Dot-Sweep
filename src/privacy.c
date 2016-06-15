@@ -1,5 +1,6 @@
 #include "t3f/t3f.h"
 #include "instance.h"
+#include "intro.h"
 #include "text.h"
 
 static const char * privacy_text[] =
