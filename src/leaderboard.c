@@ -68,5 +68,5 @@ void dot_leaderboard_render(void * data)
     }
     t3f_render_gui(app->menu[app->current_menu]);
   al_hold_bitmap_drawing(false);
-	dot_game_render_hud(data);
+	dot_intro_render_split(data);
 }

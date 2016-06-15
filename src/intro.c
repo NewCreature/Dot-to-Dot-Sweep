@@ -283,6 +283,29 @@ void dot_intro_logic(void * data)
 	}
 }
 
+void dot_intro_render_split(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	char buffer[256] = {0};
+	ALLEGRO_COLOR shadow = al_map_rgba_f(0.0, 0.0, 0.0, 0.25);
+	bool held = al_is_bitmap_drawing_held();
+
+	if(held)
+	{
+		al_hold_bitmap_drawing(false);
+	}
+
+	al_draw_filled_rectangle(0, DOT_GAME_PLAYFIELD_HEIGHT, 540, DOT_GAME_PLAYFIELD_HEIGHT + 80, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+	al_hold_bitmap_drawing(true);
+	sprintf(buffer, "High Score");
+	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, t3f_virtual_display_width / 2, 440 + 40 - al_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_CENTRE, buffer);
+	sprintf(buffer, "%d", app->game.high_score);
+	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, t3f_virtual_display_width / 2, 440 + 40, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_CENTRE, buffer);
+	al_hold_bitmap_drawing(false);
+	al_hold_bitmap_drawing(held);
+}
+
 void dot_intro_render(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -294,7 +317,7 @@ void dot_intro_render(void * data)
 	al_draw_bitmap(app->bitmap[DOT_BITMAP_LOGO], DOT_GAME_PLAYFIELD_WIDTH / 2 - al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]) / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]) / 2, 0);
 	dot_credits_render(data, app->credits_ox);
 	al_hold_bitmap_drawing(false);
-	dot_game_render_hud(data);
+	dot_intro_render_split(data);
 	al_hold_bitmap_drawing(true);
 	t3f_render_gui(app->menu[app->current_menu]);
 	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT - al_get_font_line_height(app->font[DOT_FONT_16]) * 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, "Copyright (c) 2016 T^3 Software.");
