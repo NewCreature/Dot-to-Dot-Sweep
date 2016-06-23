@@ -82,6 +82,8 @@ Dot to Dot Sweep Issues
          [X]Need to replace emotion graphics with ones that match the size of
             the in-game graphics.
 
+[ ]Change outline of black dot from white to black.
+
 [ ]Add intro screen music.
 
 [ ]Tweak level colors.
