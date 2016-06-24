@@ -131,6 +131,8 @@ int dot_menu_proc_leaderboard_back(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
+	t3net_destroy_leaderboard(app->leaderboard);
+	app->leaderboard = NULL;
 	dot_intro_setup(data);
 	app->state = DOT_STATE_INTRO;
 	app->current_menu = DOT_MENU_MAIN;
@@ -142,6 +144,8 @@ int dot_menu_proc_leaderboard_main_menu(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
+	t3net_destroy_leaderboard(app->leaderboard);
+	app->leaderboard = NULL;
 	dot_intro_setup(data);
 	app->state = DOT_STATE_INTRO;
 	app->current_menu = DOT_MENU_MAIN;
