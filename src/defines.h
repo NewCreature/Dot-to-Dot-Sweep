@@ -60,7 +60,7 @@
 #define DOT_LEADERBOARD_RETRIEVE_URL "http://www.t3-i.com/t3net2/leaderboards/query.php"
 #define DOT_LEADERBOARD_VERSION      "1.0"
 
-#define DOT_MUSIC_TITLE "data/music/title.xm"
-#define DOT_MUSIC_BGM   "data/music/bgm.xm"
+#define DOT_MUSIC_TITLE "data/music/verge_of_happiness_remix.xm"
+#define DOT_MUSIC_BGM   "data/music/going_for_it.xm"
 
 #endif

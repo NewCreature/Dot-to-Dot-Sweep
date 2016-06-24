@@ -489,7 +489,11 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	dot_setup_credits(&app->credits);
 
 	dot_intro_setup(app);
-	app->state = 0;
+	if(app->music_enabled)
+	{
+		t3f_play_music(DOT_MUSIC_TITLE);
+	}
+	app->state = DOT_STATE_INTRO;
 
 	/* see if we want to record a demo */
 	for(i = 1; i < argc; i++)

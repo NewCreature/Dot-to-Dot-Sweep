@@ -127,7 +127,7 @@ void dot_game_initialize(void * data, bool demo_seed)
 	app->game.bg_color_fade = 0.0;
 	if(app->music_enabled)
 	{
-		t3f_play_music("data/music/going_for_it.xm");
+		t3f_play_music(DOT_MUSIC_BGM);
 	}
 	app->game.tick = 0;
 	app->state = DOT_STATE_GAME;
@@ -174,19 +174,22 @@ void dot_game_exit(void * data)
 		al_resume_timer(t3f_timer);
 	}
 
-	if(app->music_enabled)
-	{
-		t3f_stop_music();
-	}
-
 	/* go back to intro */
 	dot_intro_setup(data);
 	if(!app->leaderboard)
 	{
 		app->state = DOT_STATE_INTRO;
+		if(app->music_enabled)
+		{
+			t3f_play_music(DOT_MUSIC_TITLE);
+		}
 	}
 	else
 	{
+		if(app->music_enabled)
+		{
+			t3f_stop_music();
+		}
 		app->state = DOT_STATE_LEADERBOARD;
 		app->current_menu = DOT_MENU_LEADERBOARD_2;
 	}
@@ -762,6 +765,10 @@ void dot_game_logic(void * data)
 	{
 		dot_intro_setup(data);
 		app->state = DOT_STATE_INTRO;
+		if(app->music_enabled)
+		{
+			t3f_play_music(DOT_MUSIC_TITLE);
+		}
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}

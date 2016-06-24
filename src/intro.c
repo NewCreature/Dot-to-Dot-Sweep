@@ -50,11 +50,15 @@ int dot_menu_proc_music(void * data, int i, void * pp)
 	{
 		gui->element[i].color = DOT_MENU_COLOR_ENABLED;
 		al_set_config_value(t3f_config, "Game Data", "Music Enabled", "true");
+		t3f_play_music(DOT_MUSIC_TITLE);
 	}
 	else
 	{
 		gui->element[i].color = DOT_MENU_COLOR_DISABLED;
 		al_set_config_value(t3f_config, "Game Data", "Music Enabled", "false");
+		al_stop_timer(t3f_timer);
+		t3f_stop_music();
+		al_resume_timer(t3f_timer);
 	}
 	return 1;
 }
@@ -141,6 +145,10 @@ int dot_menu_proc_leaderboard_main_menu(void * data, int i, void * pp)
 	dot_intro_setup(data);
 	app->state = DOT_STATE_INTRO;
 	app->current_menu = DOT_MENU_MAIN;
+	if(app->music_enabled)
+	{
+		t3f_play_music(DOT_MUSIC_TITLE);
+	}
 
 	return 1;
 }
