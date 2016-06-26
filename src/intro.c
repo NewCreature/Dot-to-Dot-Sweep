@@ -68,7 +68,7 @@ int dot_menu_proc_privacy(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	app->current_menu = DOT_MENU_LEADERBOARD;
+	app->current_menu = DOT_MENU_PRIVACY;
 	app->state = DOT_STATE_PRIVACY;
 	return 1;
 }
@@ -141,6 +141,17 @@ int dot_menu_proc_leaderboard_back(void * data, int i, void * pp)
 	return 1;
 }
 
+int dot_menu_proc_privacy_back(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	dot_intro_setup(data);
+	app->state = DOT_STATE_INTRO;
+	app->current_menu = DOT_MENU_MAIN;
+
+	return 1;
+}
+
 int dot_menu_proc_leaderboard_main_menu(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -189,6 +200,15 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_back, "Back", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 192, DOT_MENU_COLOR_ENABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(app->menu[DOT_MENU_PROFILE], (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2, t3f_virtual_display_height);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_PROFILE], -2, 2);
+
+	app->menu[DOT_MENU_PRIVACY] = t3f_create_gui(0, 0);
+	if(!app->menu[DOT_MENU_PRIVACY])
+	{
+		return false;
+	}
+	t3f_add_gui_text_element(app->menu[DOT_MENU_PRIVACY], dot_menu_proc_privacy_back, "Back", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(app->menu[DOT_MENU_PRIVACY], (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2, t3f_virtual_display_height);
+	t3f_set_gui_shadow(app->menu[DOT_MENU_PRIVACY], -2, 2);
 
 	app->menu[DOT_MENU_LEADERBOARD] = t3f_create_gui(0, 0);
 	if(!app->menu[DOT_MENU_LEADERBOARD])
