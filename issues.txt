@@ -84,7 +84,7 @@ Dot to Dot Sweep Issues
 
 [X]Add intro screen music.
 
-[ ]Change outline of black dot from white to black.
+[X]Change outline of black dot from white to black.
 
 [ ]Tweak level colors.
 
