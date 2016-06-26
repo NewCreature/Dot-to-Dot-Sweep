@@ -209,13 +209,10 @@ void app_render(void * data)
 
 		if(t3f_mouse_y >= t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT)
 		{
-			if(!t3f_mouse_button[0])
-			{
-				ox = 12.0;
-				oy = -12.0;
-				t3f_draw_bitmap(app->bitmap[DOT_BITMAP_HAND], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_mouse_x - 118, 	t3f_mouse_y - 56, 0, 0);
-			}
-			al_draw_bitmap(app->bitmap[DOT_BITMAP_HAND], t3f_mouse_x - 118 + ox, t3f_mouse_y - 56 + oy, 0);
+			ox = 12.0;
+			oy = -12.0;
+			t3f_draw_rotated_bitmap(app->bitmap[DOT_BITMAP_HAND], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 92, 24, t3f_mouse_x, t3f_mouse_y, 0, 0, 0);
+			al_draw_rotated_bitmap(t3f_mouse_button[0] ? app->bitmap[DOT_BITMAP_HAND_DOWN] : app->bitmap[DOT_BITMAP_HAND], 92, 24, t3f_mouse_x + ox, t3f_mouse_y + oy, 0, 0);
 		}
 	#endif
 	al_hold_bitmap_drawing(false);
@@ -348,6 +345,10 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	#ifndef ALLEGRO_ANDROID
 		if(!dot_load_bitmap(app, DOT_BITMAP_HAND, "data/graphics/hand.png"))
+		{
+			return false;
+		}
+		if(!dot_load_bitmap(app, DOT_BITMAP_HAND_DOWN, "data/graphics/hand_down.png"))
 		{
 			return false;
 		}
