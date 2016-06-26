@@ -439,6 +439,7 @@ void dot_game_check_player_collisions(void * data)
 					dot_game_accumulate_score(data);
 					app->game.combo = 0;
 					app->game.ascore = 0;
+					app->game.shield.active = false;
 					app->game.lives--;
 					app->game.emo_tick = 60;
 					app->game.emo_state = DOT_GAME_EMO_STATE_DEAD;
@@ -567,6 +568,7 @@ void dot_game_move_player(void * data)
 				app->game.player.ball.timer = 0;
 				app->game.combo = 0;
 				app->game.ascore = 0;
+				app->game.shield.active = false;
 				t3f_play_sample(app->sample[DOT_SAMPLE_SCORE], 1.0, 0.0, 1.0);
 			}
 		}
@@ -759,6 +761,7 @@ void dot_game_logic(void * data)
 				app->game.bg_color_fade = 0.0;
 				app->game.combo = 0;
 				app->game.ascore = 0;
+				app->game.shield.active = false;
 			}
 			break;
 		}
