@@ -21,6 +21,7 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	al_stop_timer(t3f_timer);
+	dot_show_message(data, "Downloading leaderboard...");
 	app->leaderboard = t3net_get_leaderboard(DOT_LEADERBOARD_RETRIEVE_URL, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", 10, 0);
 	if(app->leaderboard)
 	{

@@ -163,8 +163,10 @@ void dot_game_exit(void * data)
 	{
 		sprintf(buf, "%d", app->game.level + 1);
 		al_stop_timer(t3f_timer);
+		dot_show_message(data, "Uploading score...");
 		if(t3net_upload_score(DOT_LEADERBOARD_SUBMIT_URL, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_name, dot_leaderboard_obfuscate_score(app->game.score), buf))
 		{
+			dot_show_message(data, "Downloading leaderboard...");
 			app->leaderboard = t3net_get_leaderboard(DOT_LEADERBOARD_RETRIEVE_URL, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", 10, 0);
 			if(app->leaderboard)
 			{
