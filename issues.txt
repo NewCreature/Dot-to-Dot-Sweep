@@ -86,9 +86,9 @@ Dot to Dot Sweep Issues
 
 [X]Change outline of black dot from white to black.
 
-[ ]Tweak level colors.
+[X]Tweak level colors.
 
-   [ ]Adjust level colors so we don't get levels that hurt the player's eyes.
+   [X]Adjust level colors so we don't get levels that hurt the player's eyes.
 
 [ ]Make a desktop version.
 
