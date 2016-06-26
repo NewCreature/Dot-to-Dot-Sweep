@@ -478,8 +478,8 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->level_color[1] = al_map_rgb(48, 196, 218);
 	app->level_color[2] = al_map_rgb(48, 218, 192);
 	app->level_color[3] = al_map_rgb(48, 218, 134);
-	app->level_color[4] = al_map_rgb(140, 218, 48);
-	app->level_color[5] = al_map_rgb(198, 218, 48);
+	app->level_color[4] = al_map_rgb(147, 186, 33);
+	app->level_color[5] = al_map_rgb(186, 178, 33);
 	app->level_color[6] = al_map_rgb(218, 175, 48);
 	app->level_color[7] = al_map_rgb(218, 123, 48);
 	app->level_color[8] = al_map_rgb(218, 48, 48);
