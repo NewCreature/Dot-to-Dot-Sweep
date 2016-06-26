@@ -10,6 +10,8 @@
 #include "leaderboard.h"
 #include "privacy.h"
 
+static bool dot_show_touch_hand = false;
+
 static ALLEGRO_BITMAP * dot_create_scratch_bitmap(int w, int h)
 {
 	ALLEGRO_STATE old_state;
@@ -207,7 +209,7 @@ void app_render(void * data)
 	#ifndef ALLEGRO_ANDROID
 		float ox = 0, oy = 0;
 
-		if(t3f_mouse_y >= t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT)
+		if(dot_show_touch_hand && t3f_mouse_y >= t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT)
 		{
 			ox = 12.0;
 			oy = -12.0;
@@ -537,6 +539,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 				app->demo_seed = al_fread32le(app->demo_file);
 				app->demo_done = false;
 				app->demo_filename = argv[i + 1];
+				dot_show_touch_hand = true;
 			}
 			avc_start_capture(t3f_display, "myvideo.mp4", app_avc_init_proc, app_avc_logic_proc, app_render, 60, 0, app);
 		}
