@@ -11,6 +11,7 @@
 #include "privacy.h"
 
 static bool dot_show_touch_hand = false;
+static int dot_screenshot_count = 0;
 
 static ALLEGRO_BITMAP * dot_create_scratch_bitmap(int w, int h)
 {
@@ -102,6 +103,8 @@ void app_logic(void * data)
 	if(app->demo_file)
 	{
 		/* convert touch data to integer for demo operations */
+		t3f_touch[0].x = t3f_mouse_x;
+		t3f_touch[0].y = t3f_mouse_y;
 		touch_x = t3f_touch[0].x;
 		touch_y = t3f_touch[0].y;
 		t3f_touch[0].x = touch_x;
@@ -136,6 +139,18 @@ void app_logic(void * data)
 			al_fwrite16le(app->demo_file, touch_y);
 		}
 	}
+
+	/* capture screenshot */
+	if(t3f_key[ALLEGRO_KEY_PRINTSCREEN])
+	{
+		char buf[32];
+
+		sprintf(buf, "screen_%d.png", dot_screenshot_count);
+		al_save_bitmap(buf, al_get_backbuffer(t3f_display));
+		dot_screenshot_count++;
+		t3f_key[ALLEGRO_KEY_PRINTSCREEN] = 0;
+	}
+
 	app_touch_logic(data);
 	switch(app->state)
 	{
