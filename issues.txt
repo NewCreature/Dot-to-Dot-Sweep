@@ -90,38 +90,23 @@ Dot to Dot Sweep Issues
 
    [X]Adjust level colors so we don't get levels that hurt the player's eyes.
 
-[ ]Make a desktop version.
+[X]Create project page.
 
-   [ ]Desktop version should cut out the track pad area. This will require
-      adding a separate state for the desktop menu screen.
+   [X]Add project to database.
 
-   [ ]Use mouse control the game.
+   [X]Upload screenshots.
 
-   [ ]Pause with Escape key.
+   [X]Upload all versions of the game.
 
-      [ ]Need a pause menu so we can quit or resume game like a normal desktop
-         game.
+   [X]Upload soundtrack packages.
 
-   [ ]Use a variable to toggle desktop mode. This way we can still get mobile
-      mode with a command line switch when we want to record a demo video.
+[X]Create store listing for Google Play.
+
+   [X]Create promo graphics.
+
+   [X]Upload APK.
 
 [ ]Make demo video.
-
-[ ]Create project page.
-
-   [ ]Add project to database.
-
-   [ ]Upload screenshots.
-
-   [ ]Upload all versions of the game.
-
-   [ ]Upload soundtrack packages.
-
-[ ]Create store listing for Google Play.
-
-   [ ]Create promo graphics.
-
-   [ ]Upload APK.
 
 [ ]Seed leaderboard.
 
@@ -132,3 +117,18 @@ Dot to Dot Sweep Issues
    [ ]Post announcement on the web site.
 
    [ ]Post announcement on Facebook.
+
+   [ ]Make a desktop version.
+
+      [ ]Desktop version should cut out the track pad area. This will require
+         adding a separate state for the desktop menu screen.
+
+      [ ]Use mouse control the game.
+
+      [ ]Pause with Escape key.
+
+         [ ]Need a pause menu so we can quit or resume game like a normal desktop
+            game.
+
+      [ ]Use a variable to toggle desktop mode. This way we can still get mobile
+         mode with a command line switch when we want to record a demo video.
