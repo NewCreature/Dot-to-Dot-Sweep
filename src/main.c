@@ -103,10 +103,8 @@ void app_logic(void * data)
 	if(app->demo_file)
 	{
 		/* convert touch data to integer for demo operations */
-		t3f_touch[0].x = t3f_mouse_x;
-		t3f_touch[0].y = t3f_mouse_y;
-		touch_x = t3f_touch[0].x;
-		touch_y = t3f_touch[0].y;
+		touch_x = t3f_mouse_x;
+		touch_y = t3f_mouse_y;
 		t3f_touch[0].x = touch_x;
 		t3f_touch[0].y = touch_y;
 
@@ -126,7 +124,7 @@ void app_logic(void * data)
 			else
 			{
 				app->demo_done = true;
-				t3f_exit();;
+				t3f_exit();
 			}
 		}
 
@@ -260,9 +258,13 @@ bool app_avc_init_proc(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	al_fclose(app->demo_file);
 	app->demo_file = al_fopen(app->demo_filename, "rb");
-	al_fread32le(app->demo_file);
+	if(!app->demo_file)
+	{
+		printf("Failed to open demo file.\n");
+		return false;
+	}
+	app->demo_seed = al_fread32le(app->demo_file);
 	t3f_srand(&app->rng_state, app->demo_seed);
 	app->demo_done = false;
 	app->state = 0;
@@ -276,6 +278,8 @@ bool app_avc_logic_proc(void * data)
 	app_logic(data);
 	if(app->demo_done)
 	{
+		al_fclose(app->demo_file);
+		app->demo_file = NULL;
 		return false;
 	}
 	return true;
@@ -536,6 +540,20 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 				al_fwrite32le(app->demo_file, app->demo_seed);
 			}
 		}
+		if(!strcmp(argv[i], "--play_demo"))
+		{
+			if(argc <= i + 1)
+			{
+				printf("Missing argument.\n");
+				return false;
+			}
+			else
+			{
+				app->demo_filename = argv[i + 1];
+				dot_show_touch_hand = true;
+			}
+			app_avc_init_proc(app);
+		}
 		if(!strcmp(argv[i], "--capture_demo"))
 		{
 			if(argc <= i + 1)
@@ -545,18 +563,14 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 			}
 			else
 			{
-				app->demo_file = al_fopen(argv[i + 1], "rb");
-				if(!app->demo_file)
-				{
-					printf("Failed to open demo file.\n");
-					return false;
-				}
-				app->demo_seed = al_fread32le(app->demo_file);
-				app->demo_done = false;
 				app->demo_filename = argv[i + 1];
 				dot_show_touch_hand = true;
 			}
-			avc_start_capture(t3f_display, "myvideo.mp4", app_avc_init_proc, app_avc_logic_proc, app_render, 60, 0, app);
+			if(!avc_start_capture(t3f_display, "myvideo.mp4", app_avc_init_proc, app_avc_logic_proc, app_render, 60, 0, app))
+			{
+				printf("Capture failed!\n");
+				return false;
+			}
 		}
 	}
 
