@@ -535,6 +535,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 					printf("Failed to open demo file.\n");
 					return false;
 				}
+				dot_show_touch_hand = true;
 				app->demo_recording = true;
 				app->demo_seed = time(0);
 				al_fwrite32le(app->demo_file, app->demo_seed);
