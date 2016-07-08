@@ -63,23 +63,33 @@ void app_touch_logic(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	int i;
 
-	app->touch_id = -1;
-	if(app->touch_id < 0)
-	{
-		for(i = 0; i < T3F_MAX_TOUCHES; i++)
+	#ifdef ALLEGRO_ANDROID
+		app->touch_id = -1;
+		if(app->touch_id < 0)
 		{
-			if(t3f_touch[i].active)
+			for(i = 0; i < T3F_MAX_TOUCHES; i++)
 			{
-				app->touch_id = i;
-				break;
+				if(t3f_touch[i].active)
+				{
+					app->touch_id = i;
+					break;
+				}
 			}
 		}
-	}
-	if(app->touch_id >= 0)
-	{
-		app->touch_x = t3f_touch[app->touch_id].x;
-		app->touch_y = t3f_touch[app->touch_id].y - 520;
-	}
+		if(app->touch_id >= 0)
+		{
+			app->touch_x = t3f_touch[app->touch_id].x;
+			app->touch_y = t3f_touch[app->touch_id].y - 520;
+		}
+	#else
+		app->touch_id = -1;
+		if(t3f_mouse_tracking)
+		{
+			app->touch_id = 0;
+		}
+		app->touch_x = t3f_mouse_x;
+		app->touch_y = t3f_mouse_y;
+	#endif
 }
 
 static int particle_qsort_helper(const void * p1, const void * p2)
@@ -292,7 +302,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	const char * val;
 
 	/* initialize T3F */
-	if(!t3f_initialize(T3F_APP_TITLE, 540, 960, 60.0, app_logic, app_render, T3F_DEFAULT, app))
+	if(!t3f_initialize(T3F_APP_TITLE, DOT_DISPLAY_WIDTH, DOT_DISPLAY_HEIGHT, 60.0, app_logic, app_render, T3F_DEFAULT, app))
 	{
 		printf("Error initializing T3F\n");
 		return false;
