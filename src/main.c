@@ -560,18 +560,35 @@ bool app_process_arguments(APP_INSTANCE * app, int argc, char * argv[])
 				return false;
 			}
 		}
+	}
+	return true;
+}
+
+void app_check_mobile_argument(APP_INSTANCE * app, int argc, char * argv[])
+{
+	int i;
+
+	for(i = 1; i < argc; i++)
+	{
 		if(!strcmp(argv[i], "--mobile"))
 		{
 			app->desktop_mode = false;
+			break;
 		}
 	}
-	return true;
 }
 
 /* initialize our app, load graphics, etc. */
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
 	int i;
+
+	/* detect game type */
+	app->desktop_mode = false;
+	#ifndef ALLEGRO_ANDROID
+		app->desktop_mode = true;
+	#endif
+	app_check_mobile_argument(app, argc, argv);
 
 	/* initialize T3F */
 	if(!t3f_initialize(T3F_APP_TITLE, DOT_DISPLAY_WIDTH, DOT_DISPLAY_HEIGHT, 60.0, app_logic, app_render, T3F_DEFAULT, app))
@@ -587,11 +604,6 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		return false;
 	}
 	app_read_config(app);
-
-	app->desktop_mode = false;
-	#ifndef ALLEGRO_ANDROID
-		app->desktop_mode = true;
-	#endif
 
 	if(!dot_intro_initialize(app))
 	{

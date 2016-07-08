@@ -2,11 +2,7 @@
 #define D2D_DEFINES_H
 
 #define DOT_DISPLAY_WIDTH  540
-#ifdef ALLEGRO_ANDROID
-    #define DOT_DISPLAY_HEIGHT 960
-#else
-    #define DOT_DISPLAY_HEIGHT 520
-#endif
+#define DOT_DISPLAY_HEIGHT (app->desktop_mode ? 520 : 960)
 
 #define DOT_MAX_BITMAPS          256
 #define DOT_BITMAP_BALL_RED        0
