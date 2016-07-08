@@ -28,6 +28,7 @@ typedef struct
     int state;
     int tick;
     T3F_RNG_STATE rng_state;
+    bool desktop_mode;
 
     /* input state */
     int touch_id;

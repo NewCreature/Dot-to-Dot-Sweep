@@ -63,7 +63,8 @@ void app_touch_logic(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	int i;
 
-	#ifdef ALLEGRO_ANDROID
+	if(!app->desktop_mode)
+	{
 		app->touch_id = -1;
 		if(app->touch_id < 0)
 		{
@@ -81,7 +82,9 @@ void app_touch_logic(void * data)
 			app->touch_x = t3f_touch[app->touch_id].x;
 			app->touch_y = t3f_touch[app->touch_id].y - 520;
 		}
-	#else
+	}
+	else
+	{
 		app->touch_id = -1;
 		if(t3f_mouse_tracking)
 		{
@@ -89,7 +92,7 @@ void app_touch_logic(void * data)
 		}
 		app->touch_x = t3f_mouse_x;
 		app->touch_y = t3f_mouse_y;
-	#endif
+	}
 }
 
 static int particle_qsort_helper(const void * p1, const void * p2)
@@ -229,7 +232,8 @@ void app_render(void * data)
 	{
 		dot_particle_render(app->active_particle[i], app->bitmap[DOT_BITMAP_PARTICLE]);
 	}
-	#ifndef ALLEGRO_ANDROID
+	if(app->desktop_mode)
+	{
 		float ox = 0, oy = 0;
 
 		if(dot_show_touch_hand && t3f_mouse_y >= t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT)
@@ -239,7 +243,7 @@ void app_render(void * data)
 			t3f_draw_rotated_bitmap(app->bitmap[DOT_BITMAP_HAND], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 92, 24, t3f_mouse_x, t3f_mouse_y, 0, 0, 0);
 			al_draw_rotated_bitmap(t3f_mouse_button[0] ? app->bitmap[DOT_BITMAP_HAND_DOWN] : app->bitmap[DOT_BITMAP_HAND], 92, 24, t3f_mouse_x + ox, t3f_mouse_y + oy, 0, 0);
 		}
-	#endif
+	}
 	al_hold_bitmap_drawing(false);
 }
 
@@ -295,19 +299,9 @@ bool app_avc_logic_proc(void * data)
 	return true;
 }
 
-/* initialize our app, load graphics, etc. */
-bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
+bool app_load_data(APP_INSTANCE * app)
 {
 	int i;
-	const char * val;
-
-	/* initialize T3F */
-	if(!t3f_initialize(T3F_APP_TITLE, DOT_DISPLAY_WIDTH, DOT_DISPLAY_HEIGHT, 60.0, app_logic, app_render, T3F_DEFAULT, app))
-	{
-		printf("Error initializing T3F\n");
-		return false;
-	}
-	t3f_set_event_handler(dot_event_handler);
 
 	/* load images */
 	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_RED, "data/graphics/ball_red.png"))
@@ -374,16 +368,6 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		return false;
 	}
-	#ifndef ALLEGRO_ANDROID
-		if(!dot_load_bitmap(app, DOT_BITMAP_HAND, "data/graphics/hand.png"))
-		{
-			return false;
-		}
-		if(!dot_load_bitmap(app, DOT_BITMAP_HAND_DOWN, "data/graphics/hand_down.png"))
-		{
-			return false;
-		}
-	#endif
 	app->bitmap[DOT_BITMAP_SCRATCH] = dot_create_scratch_bitmap(DOT_BITMAP_SCRATCH_WIDTH, DOT_BITMAP_SCRATCH_HEIGHT);
 	if(!app->bitmap[DOT_BITMAP_SCRATCH])
 	{
@@ -450,6 +434,13 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		}
 	}
 
+	return true;
+}
+
+void app_read_config(APP_INSTANCE * app)
+{
+	const char * val;
+
 	/* load high score */
 	val = al_get_config_value(t3f_config, "Game Data", "High Score");
 	if(val)
@@ -491,6 +482,116 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 			app->music_enabled = true;
 		}
 	}
+}
+
+bool app_process_arguments(APP_INSTANCE * app, int argc, char * argv[])
+{
+	int i;
+
+	/* see if we want to record a demo */
+	for(i = 1; i < argc; i++)
+	{
+		if(!strcmp(argv[i], "--record_demo"))
+		{
+			if(argc <= i + 1)
+			{
+				printf("Missing argument.\n");
+				return false;
+			}
+			else
+			{
+				if(!dot_load_bitmap(app, DOT_BITMAP_HAND, "data/graphics/hand.png"))
+				{
+					return false;
+				}
+				if(!dot_load_bitmap(app, DOT_BITMAP_HAND_DOWN, "data/graphics/hand_down.png"))
+				{
+					return false;
+				}
+				app->demo_file = al_fopen(argv[i + 1], "wb");
+				if(!app->demo_file)
+				{
+					printf("Failed to open demo file.\n");
+					return false;
+				}
+				dot_show_touch_hand = true;
+				app->demo_recording = true;
+				app->demo_seed = time(0);
+				al_fwrite32le(app->demo_file, app->demo_seed);
+			}
+		}
+		if(!strcmp(argv[i], "--play_demo"))
+		{
+			if(argc <= i + 1)
+			{
+				printf("Missing argument.\n");
+				return false;
+			}
+			else
+			{
+				app->demo_filename = argv[i + 1];
+				dot_show_touch_hand = true;
+			}
+			app_avc_init_proc(app);
+		}
+		if(!strcmp(argv[i], "--capture_demo"))
+		{
+			if(argc <= i + 1)
+			{
+				printf("Missing argument.\n");
+				return false;
+			}
+			else
+			{
+				if(!dot_load_bitmap(app, DOT_BITMAP_HAND, "data/graphics/hand.png"))
+				{
+					return false;
+				}
+				if(!dot_load_bitmap(app, DOT_BITMAP_HAND_DOWN, "data/graphics/hand_down.png"))
+				{
+					return false;
+				}
+				app->demo_filename = argv[i + 1];
+				dot_show_touch_hand = true;
+			}
+			if(!avc_start_capture(t3f_display, "myvideo.mp4", app_avc_init_proc, app_avc_logic_proc, app_render, 60, 0, app))
+			{
+				printf("Capture failed!\n");
+				return false;
+			}
+		}
+		if(!strcmp(argv[i], "--mobile"))
+		{
+			app->desktop_mode = false;
+		}
+	}
+	return true;
+}
+
+/* initialize our app, load graphics, etc. */
+bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
+{
+	int i;
+
+	/* initialize T3F */
+	if(!t3f_initialize(T3F_APP_TITLE, DOT_DISPLAY_WIDTH, DOT_DISPLAY_HEIGHT, 60.0, app_logic, app_render, T3F_DEFAULT, app))
+	{
+		printf("Error initializing T3F\n");
+		return false;
+	}
+	t3f_set_event_handler(dot_event_handler);
+
+	if(!app_load_data(app))
+	{
+		printf("Failed to load data!\n");
+		return false;
+	}
+	app_read_config(app);
+
+	app->desktop_mode = false;
+	#ifndef ALLEGRO_ANDROID
+		app->desktop_mode = true;
+	#endif
 
 	if(!dot_intro_initialize(app))
 	{
@@ -527,64 +628,11 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	app->state = DOT_STATE_INTRO;
 
-	/* see if we want to record a demo */
-	for(i = 1; i < argc; i++)
+	if(!app_process_arguments(app, argc, argv))
 	{
-		if(!strcmp(argv[i], "--record_demo"))
-		{
-			if(argc <= i + 1)
-			{
-				printf("Missing argument.\n");
-				return false;
-			}
-			else
-			{
-				app->demo_file = al_fopen(argv[i + 1], "wb");
-				if(!app->demo_file)
-				{
-					printf("Failed to open demo file.\n");
-					return false;
-				}
-				dot_show_touch_hand = true;
-				app->demo_recording = true;
-				app->demo_seed = time(0);
-				al_fwrite32le(app->demo_file, app->demo_seed);
-			}
-		}
-		if(!strcmp(argv[i], "--play_demo"))
-		{
-			if(argc <= i + 1)
-			{
-				printf("Missing argument.\n");
-				return false;
-			}
-			else
-			{
-				app->demo_filename = argv[i + 1];
-				dot_show_touch_hand = true;
-			}
-			app_avc_init_proc(app);
-		}
-		if(!strcmp(argv[i], "--capture_demo"))
-		{
-			if(argc <= i + 1)
-			{
-				printf("Missing argument.\n");
-				return false;
-			}
-			else
-			{
-				app->demo_filename = argv[i + 1];
-				dot_show_touch_hand = true;
-			}
-			if(!avc_start_capture(t3f_display, "myvideo.mp4", app_avc_init_proc, app_avc_logic_proc, app_render, 60, 0, app))
-			{
-				printf("Capture failed!\n");
-				return false;
-			}
-		}
+		printf("Failed to process command line arguments!\n");
+		return false;
 	}
-
 	return true;
 }
 
