@@ -120,6 +120,8 @@ Dot to Dot Sweep Issues
 
 [ ]Add color blind mode.
 
+[ ]Show profile menu on first launch.
+
 [ ]Make a desktop version.
 
    [X]Desktop version should cut out the track pad area. This will require
