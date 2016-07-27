@@ -469,6 +469,7 @@ void dot_game_check_player_collisions(void * data)
 							app->game.state = DOT_GAME_STATE_DONE;
 						}
 					}
+					al_show_mouse_cursor(t3f_display);
 					break;
 				}
 			}
@@ -515,6 +516,7 @@ void dot_game_move_player(void * data)
 		{
 			app->game.player.lost_touch = true;
 			app->game.state = DOT_GAME_STATE_PAUSE;
+			al_show_mouse_cursor(t3f_display);
 		}
 
 		/* prevent player from moving past the edge */
@@ -708,6 +710,7 @@ void dot_game_logic(void * data)
 				app->game.player.touch_offset_x = app->game.player.ball.x - app->touch_x;
 				app->game.player.touch_offset_y = app->game.player.ball.y - app->touch_y;
 				app->game.state = DOT_GAME_STATE_PLAY;
+				al_hide_mouse_cursor(t3f_display);
 			}
 			break;
 		}
@@ -757,6 +760,7 @@ void dot_game_logic(void * data)
 				{
 					t3f_touch[app->touch_id].active = false;
 				}
+				al_show_mouse_cursor(t3f_display);
 				app->game.old_bg_color = app->game.bg_color;
 				dot_game_setup_level(data, app->game.level + 1);
 				app->game.bg_color_fade = 0.0;
