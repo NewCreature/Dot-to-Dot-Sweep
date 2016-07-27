@@ -120,6 +120,9 @@ Dot to Dot Sweep Issues
 
 [ ]Add color blind mode.
 
+   [ ]Probably just add an indicator that shows which dots you can currently
+      collect.
+
 [ ]Show profile menu on first launch.
 
 [ ]Make a desktop version.
