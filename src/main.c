@@ -87,6 +87,11 @@ void app_touch_logic(void * data)
 	else
 	{
 		app->touch_id = -1;
+		if(t3f_mouse_button[1] && app->game.state == DOT_GAME_STATE_PLAY)
+		{
+			app->game.state = DOT_GAME_STATE_PAUSE;
+			al_show_mouse_cursor(t3f_display);
+		}
 		if(app->state == DOT_STATE_GAME && (app->game.state == DOT_GAME_STATE_PAUSE || app->game.state == DOT_GAME_STATE_START))
 		{
 			need_click = true;
