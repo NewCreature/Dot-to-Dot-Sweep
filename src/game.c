@@ -201,7 +201,7 @@ static int dot_game_get_combo_score(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	return app->game.ascore * app->game.combo;
+	return DOT_GAME_BASE_POINTS * app->game.combo + DOT_GAME_COMBO_POINTS * (app->game.combo - 1);
 }
 
 static float dot_spread_effect_particle(int pos, int max, float size)
@@ -409,7 +409,7 @@ void dot_game_check_player_collisions(void * data)
 				{
 					t3f_play_sample(app->sample[DOT_SAMPLE_GRAB], 1.0, 0.0, 1.0);
 					app->game.ball[i].active = false;
-					app->game.ascore += 50;
+					app->game.ascore += 1000;
 					if(app->game.player.ball.timer < DOT_GAME_COMBO_TIME)
 					{
 						app->game.combo++;
