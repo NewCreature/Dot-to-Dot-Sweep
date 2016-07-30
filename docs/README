@@ -48,7 +48,7 @@ them.
 Each time you collect a dot, another dot on the board will change to the
 color of your character. Running into a dot that doesn't match your character's
 color will cause you to lose a life. Additionally, there are black dots that
-cannot be collected and must be avoided. Once all of the non-black colored balls
+cannot be collected and must be avoided. Once all of the non-black colored dots
 are collected, the level ends and you move on to the next one.
 
 When you collect a dot, you have a couple of seconds to collect the next dot
