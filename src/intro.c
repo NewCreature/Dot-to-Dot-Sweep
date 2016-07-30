@@ -96,7 +96,15 @@ int dot_menu_proc_profile_name(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	t3f_open_edit_box("Enter Name", app->user_name, 256, "CapWords", dot_menu_proc_profile_name_callback, app);
+	if(app->desktop_mode)
+	{
+		app->entering_name = true;
+		dot_enter_text(app->user_name, 256);
+	}
+	else
+	{
+		t3f_open_edit_box("Enter Name", app->user_name, 256, "CapWords", dot_menu_proc_profile_name_callback, app);
+	}
 	return 1;
 }
 
@@ -252,7 +260,20 @@ void dot_intro_setup(void * data)
 void dot_intro_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int r;
 
+	if(app->entering_name)
+	{
+		r = dot_text_entry_logic();
+		if(r != 0)
+		{
+			app->entering_name = false;
+		}
+		if(r == 1)
+		{
+			al_set_config_value(t3f_config, "Game Data", "User Name", app->user_name);
+		}
+	}
 	dot_game_emo_logic(data);
 	dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
 	switch(app->intro_state)
@@ -300,7 +321,10 @@ void dot_intro_logic(void * data)
 		}
 	}
 	app->tick++;
-	t3f_process_gui(app->menu[app->current_menu], app);
+	if(!app->entering_name)
+	{
+		t3f_process_gui(app->menu[app->current_menu], app);
+	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 	{
 		if(app->current_menu == DOT_MENU_MAIN)
@@ -353,6 +377,13 @@ void dot_intro_render(void * data)
 	dot_intro_render_split(data);
 	al_hold_bitmap_drawing(true);
 	t3f_render_gui(app->menu[app->current_menu]);
+	if(app->entering_name)
+	{
+		if((app->tick / 15) % 2)
+		{
+			dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), app->menu[DOT_MENU_PROFILE]->ox + app->menu[DOT_MENU_PROFILE]->element[1].ox + al_get_text_width(app->menu[DOT_MENU_PROFILE]->element[1].aux_data, app->menu[DOT_MENU_PROFILE]->element[1].data) / 2, app->menu[DOT_MENU_PROFILE]->oy + app->menu[DOT_MENU_PROFILE]->element[1].oy, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, "_");
+		}
+	}
 	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT - al_get_font_line_height(app->font[DOT_FONT_16]) * 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, "Copyright (c) 2016 T^3 Software.");
 	al_hold_bitmap_drawing(false);
 }
