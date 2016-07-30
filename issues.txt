@@ -136,17 +136,15 @@ Dot to Dot Sweep Issues
       [X]Only use ALLEGRO_ANDROID to autodetect the mobile version. Make other
          logic use the desktop/mobile variable.
 
-   [ ]Use mouse control the game.
+   [X]Use mouse control the game.
 
-      [ ]Need to wait for click before starting game.
+      [X]Need to wait for click before starting game.
 
-      [ ]Need to wait for click to unpause game.
+      [X]Need to wait for click to unpause game.
 
-      [ ]Right-click to pause.
+      [X]Right-click to pause.
 
-      [ ]Pause when mouse leaves play area.
-
-   [ ]Pause with Escape key.
+      [X]Pause when mouse leaves play area.
 
    [ ]Put intro menu off screen and transition from title to menu when mouse
       clicked (transition should be quick). Pressing escape will transition
