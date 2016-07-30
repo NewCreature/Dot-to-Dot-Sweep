@@ -61,6 +61,7 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 void app_touch_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	bool need_click = false;
 	int i;
 
 	if(!app->desktop_mode)
@@ -86,7 +87,11 @@ void app_touch_logic(void * data)
 	else
 	{
 		app->touch_id = -1;
-		if(t3f_mouse_tracking)
+		if(app->state == DOT_STATE_GAME && (app->game.state == DOT_GAME_STATE_PAUSE || app->game.state == DOT_GAME_STATE_START))
+		{
+			need_click = true;
+		}
+		if(t3f_mouse_tracking && (!need_click || t3f_mouse_button[0]))
 		{
 			app->touch_id = 0;
 		}
