@@ -146,8 +146,8 @@ Dot to Dot Sweep Issues
 
       [X]Pause when mouse leaves play area.
 
+   [X]Add ability to enter profile name.
+
    [ ]Put intro menu off screen and transition from title to menu when mouse
       clicked (transition should be quick). Pressing escape will transition
       back to the title screen.
-
-   [ ]Add ability to enter profile name.
