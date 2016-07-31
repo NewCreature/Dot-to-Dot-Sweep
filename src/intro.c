@@ -180,8 +180,20 @@ int dot_menu_proc_leaderboard_main_menu(void * data, int i, void * pp)
 bool dot_intro_initialize(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	float top, bottom;
 
 	t3f_set_gui_driver(NULL);
+
+	if(app->desktop_mode)
+	{
+		top = 0;
+		bottom = DOT_GAME_PLAYFIELD_HEIGHT;
+	}
+	else
+	{
+		top = (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2;
+		bottom = t3f_virtual_display_height;
+	}
 
 	/* create menus */
 	app->menu[DOT_MENU_MAIN] = t3f_create_gui(0, 0);
@@ -194,7 +206,7 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_music, "Music", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, app->music_enabled ? DOT_MENU_COLOR_ENABLED : DOT_MENU_COLOR_DISABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_privacy, "Privacy", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 192, DOT_MENU_COLOR_ENABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_play, "Play", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 256, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_MAIN], (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2, t3f_virtual_display_height);
+	t3f_center_gui(app->menu[DOT_MENU_MAIN], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_MAIN], -2, 2);
 
 	app->menu[DOT_MENU_PROFILE] = t3f_create_gui(0, 0);
@@ -206,7 +218,7 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_name, app->user_name, app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_upload, "Upload Scores", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, app->upload_scores ? DOT_MENU_COLOR_ENABLED : DOT_MENU_COLOR_DISABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_back, "Back", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 192, DOT_MENU_COLOR_ENABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_PROFILE], (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2, t3f_virtual_display_height);
+	t3f_center_gui(app->menu[DOT_MENU_PROFILE], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_PROFILE], -2, 2);
 
 	app->menu[DOT_MENU_PRIVACY] = t3f_create_gui(0, 0);
@@ -215,7 +227,7 @@ bool dot_intro_initialize(void * data)
 		return false;
 	}
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PRIVACY], dot_menu_proc_privacy_back, "Back", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_PRIVACY], (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2, t3f_virtual_display_height);
+	t3f_center_gui(app->menu[DOT_MENU_PRIVACY], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_PRIVACY], -2, 2);
 
 	app->menu[DOT_MENU_LEADERBOARD] = t3f_create_gui(0, 0);
@@ -224,7 +236,7 @@ bool dot_intro_initialize(void * data)
 		return false;
 	}
 	t3f_add_gui_text_element(app->menu[DOT_MENU_LEADERBOARD], dot_menu_proc_leaderboard_back, "Back", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_LEADERBOARD], (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2, t3f_virtual_display_height);
+	t3f_center_gui(app->menu[DOT_MENU_LEADERBOARD], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_LEADERBOARD], -2, 2);
 
 	app->menu[DOT_MENU_LEADERBOARD_2] = t3f_create_gui(0, 0);
@@ -234,7 +246,7 @@ bool dot_intro_initialize(void * data)
 	}
 	t3f_add_gui_text_element(app->menu[DOT_MENU_LEADERBOARD_2], dot_menu_proc_play, "Play Again", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_LEADERBOARD_2], dot_menu_proc_leaderboard_main_menu, "Main Menu", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_LEADERBOARD_2], (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2, t3f_virtual_display_height);
+	t3f_center_gui(app->menu[DOT_MENU_LEADERBOARD_2], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_LEADERBOARD_2], -2, 2);
 
 	app->current_menu = DOT_MENU_MAIN;
@@ -321,19 +333,49 @@ void dot_intro_logic(void * data)
 		}
 	}
 	app->tick++;
-	if(!app->entering_name)
+	if(!app->entering_name && app->menu_showing)
 	{
 		t3f_process_gui(app->menu[app->current_menu], app);
 	}
+	if(!app->menu_showing)
+	{
+		if(t3f_mouse_button[0])
+		{
+			app->menu_showing = true;
+			t3f_mouse_button[0] = false;
+		}
+	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 	{
-		if(app->current_menu == DOT_MENU_MAIN)
+		if(app->desktop_mode)
 		{
-			t3f_exit();
+			if(app->menu_showing)
+			{
+				if(app->current_menu == DOT_MENU_MAIN)
+				{
+					dot_intro_setup(data);
+					app->menu_showing = false;
+				}
+				else
+				{
+					app->current_menu = DOT_MENU_MAIN;
+				}
+			}
+			else
+			{
+				t3f_exit();
+			}
 		}
 		else
 		{
-			app->current_menu = DOT_MENU_MAIN;
+			if(app->current_menu == DOT_MENU_MAIN)
+			{
+				t3f_exit();
+			}
+			else
+			{
+				app->current_menu = DOT_MENU_MAIN;
+			}
 		}
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
@@ -371,19 +413,25 @@ void dot_intro_render(void * data)
 	al_hold_bitmap_drawing(true);
 	dot_bg_objects_render(data);
 	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
-	al_draw_bitmap(app->bitmap[DOT_BITMAP_LOGO], DOT_GAME_PLAYFIELD_WIDTH / 2 - al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]) / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]) / 2, 0);
-	dot_credits_render(data, app->credits_ox);
+	if(!app->desktop_mode || !app->menu_showing)
+	{
+		al_draw_bitmap(app->bitmap[DOT_BITMAP_LOGO], DOT_GAME_PLAYFIELD_WIDTH / 2 - al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]) / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]) / 2, 0);
+		dot_credits_render(data, app->credits_ox);
+		dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT - al_get_font_line_height(app->font[DOT_FONT_16]) * 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, "Copyright (c) 2016 T^3 Software.");
+	}
 	al_hold_bitmap_drawing(false);
 	dot_intro_render_split(data);
-	al_hold_bitmap_drawing(true);
-	t3f_render_gui(app->menu[app->current_menu]);
-	if(app->entering_name)
+	if(app->menu_showing)
 	{
-		if((app->tick / 15) % 2)
+		al_hold_bitmap_drawing(true);
+		t3f_render_gui(app->menu[app->current_menu]);
+		if(app->entering_name)
 		{
-			dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), app->menu[DOT_MENU_PROFILE]->ox + app->menu[DOT_MENU_PROFILE]->element[1].ox + al_get_text_width(app->menu[DOT_MENU_PROFILE]->element[1].aux_data, app->menu[DOT_MENU_PROFILE]->element[1].data) / 2, app->menu[DOT_MENU_PROFILE]->oy + app->menu[DOT_MENU_PROFILE]->element[1].oy, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, "_");
+			if((app->tick / 15) % 2)
+			{
+				dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), app->menu[DOT_MENU_PROFILE]->ox + app->menu[DOT_MENU_PROFILE]->element[1].ox + al_get_text_width(app->menu[DOT_MENU_PROFILE]->element[1].aux_data, app->menu[DOT_MENU_PROFILE]->element[1].data) / 2, app->menu[DOT_MENU_PROFILE]->oy + app->menu[DOT_MENU_PROFILE]->element[1].oy, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, "_");
+			}
 		}
+		al_hold_bitmap_drawing(false);
 	}
-	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT - al_get_font_line_height(app->font[DOT_FONT_16]) * 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, "Copyright (c) 2016 T^3 Software.");
-	al_hold_bitmap_drawing(false);
 }

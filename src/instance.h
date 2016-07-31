@@ -59,6 +59,7 @@ typedef struct
     int intro_state;
     float logo_ox;
     float credits_ox;
+    bool menu_showing;
 
     /* credits data */
     DOT_CREDITS credits;

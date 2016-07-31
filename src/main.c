@@ -652,6 +652,10 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		t3f_play_music(DOT_MUSIC_TITLE);
 	}
+	if(!app->desktop_mode)
+	{
+		app->menu_showing = true;
+	}
 	app->state = DOT_STATE_INTRO;
 
 	if(!app_process_arguments(app, argc, argv))
