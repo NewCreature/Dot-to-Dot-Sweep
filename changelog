@@ -1,5 +1,16 @@
+dot-to-dot-sweep (1.1) maverick; urgency=low
+
+  * Implement desktop mode.
+  * Rebalance scoring to ensure a better balance between cautious and aggressive
+    play styles. Playing it safe and making it through more levels is now a
+    viable way of competing for a high score.
+  * Add visual aid to collectible dots to make the game more playable by people
+    with color blindness.
+
+ -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
+
 dot-to-dot-sweep (1.0) maverick; urgency=low
 
   * Initial release.
 
- -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
+ -- Todd Cope <todd@t3-i.com>  Thu, 30 Jun 2016 20:24:00 +0000
