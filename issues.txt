@@ -123,8 +123,6 @@ Dot to Dot Sweep Issues
    [X]Probably just add an indicator that shows which dots you can currently
       collect.
 
-[ ]Show profile menu on first launch.
-
 [ ]Make a desktop version.
 
    [X]Desktop version should cut out the track pad area. This will require
@@ -133,21 +131,27 @@ Dot to Dot Sweep Issues
    [X]Use a variable to toggle desktop mode. This way we can still get mobile
       mode with a command line switch when we want to record a demo video.
 
-      [X]Only use ALLEGRO_ANDROID to autodetect the mobile version. Make other
-         logic use the desktop/mobile variable.
+   [X]Only use ALLEGRO_ANDROID to autodetect the mobile version. Make other
+      logic use the desktop/mobile variable.
 
    [X]Use mouse control the game.
 
-      [X]Need to wait for click before starting game.
+   [X]Need to wait for click before starting game.
 
-      [X]Need to wait for click to unpause game.
+   [X]Need to wait for click to unpause game.
 
-      [X]Right-click to pause.
+   [X]Right-click to pause.
 
-      [X]Pause when mouse leaves play area.
+   [X]Pause when mouse leaves play area.
 
    [X]Add ability to enter profile name.
 
-   [ ]Put intro menu off screen and transition from title to menu when mouse
+   [X]Put intro menu off screen and transition from title to menu when mouse
       clicked (transition should be quick). Pressing escape will transition
       back to the title screen.
+
+   [ ]Click to dismiss leaderboard since we can't show the menu.
+
+      [ ]Go to retry menu if we are in the post-game leaderboard screen.
+
+[ ]Show profile menu on first launch.
