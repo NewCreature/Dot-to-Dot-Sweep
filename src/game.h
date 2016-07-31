@@ -9,6 +9,7 @@ typedef struct
 	float r;
 	int type;
 	int timer;
+	int target_tick;
 	bool active;
 
 } DOT_BALL;
@@ -35,6 +36,7 @@ typedef struct
 #define DOT_GAME_COMBO_TIME   120
 #define DOT_GAME_BASE_POINTS 1000
 #define DOT_GAME_COMBO_POINTS 250
+#define DOT_GAME_TARGET_TICKS  30
 
 #define DOT_GAME_MAX_BALLS   256
 #define DOT_GAME_STATE_START   0

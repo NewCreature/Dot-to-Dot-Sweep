@@ -370,6 +370,10 @@ bool app_load_data(APP_INSTANCE * app)
 	{
 		return false;
 	}
+	if(!dot_load_bitmap(app, DOT_BITMAP_TARGET, "data/graphics/target.png"))
+	{
+		return false;
+	}
 	if(!dot_load_bitmap(app, DOT_BITMAP_BG, "data/graphics/bg.png"))
 	{
 		return false;

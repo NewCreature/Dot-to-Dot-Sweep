@@ -12,6 +12,20 @@
 #include "intro.h"
 #include "leaderboard.h"
 
+static void dot_game_target_balls(void * data, int type)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int i;
+
+	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
+	{
+		if(app->game.ball[i].type == type)
+		{
+			app->game.ball[i].target_tick = DOT_GAME_TARGET_TICKS;
+		}
+	}
+}
+
 /* initialize player (done once per turn and at new level) */
 void dot_game_drop_player(void * data, int type)
 {
@@ -98,6 +112,7 @@ void dot_game_setup_level(void * data, int level)
 	dot_game_drop_player(data, t3f_rand(&app->rng_state) % 6);
 	t3f_play_sample(app->sample[DOT_SAMPLE_START], 1.0, 0.0, 1.0);
 	app->game.player.ball.r = 16.0;
+	dot_game_target_balls(data, app->game.player.ball.type);
 
 	app->game.level = level;
 	app->game.speed = DOT_GAME_LEVEL_BASE_SPEED;
@@ -362,6 +377,10 @@ int dot_game_move_balls(void * data)
 			{
 				colored++;
 			}
+			if(app->game.ball[i].target_tick > 0)
+			{
+				app->game.ball[i].target_tick--;
+			}
 		}
 	}
 	return colored;
@@ -420,6 +439,7 @@ void dot_game_check_player_collisions(void * data)
 						if(app->game.ball[j].active && app->game.ball[j].type != DOT_BITMAP_BALL_BLACK && app->game.ball[j].type != app->game.player.ball.type)
 						{
 							app->game.ball[j].type = app->game.player.ball.type;
+							app->game.ball[j].target_tick = DOT_GAME_TARGET_TICKS;
 							break;
 						}
 					}
@@ -450,6 +470,7 @@ void dot_game_check_player_collisions(void * data)
 						if(app->game.lives > 0)
 						{
 							dot_game_drop_player(data, app->game.ball[i].type);
+							dot_game_target_balls(data, app->game.player.ball.type);
 						}
 						else
 						{
@@ -921,7 +942,7 @@ void dot_game_render(void * data)
 	int i;
 	ALLEGRO_COLOR text_color = t3f_color_white;
 	float c = (float)app->game.player.ball.timer / (float)DOT_GAME_COMBO_TIME;
-	float s;
+	float s, r, a;
 	float cx, cy, ecx, ecy;
 	float touch_effect_y = 0;
 	float level_y = 8;
@@ -954,6 +975,18 @@ void dot_game_render(void * data)
 		if(app->game.ball[i].active)
 		{
 			t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.ball[i].type], t3f_color_white, app->game.ball[i].x - app->game.ball[i].r, app->game.ball[i].y - app->game.ball[i].r, app->game.ball[i].z, app->game.ball[i].r * 2.0, app->game.ball[i].r * 2.0, 0);
+		}
+	}
+	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
+	{
+		if(app->game.ball[i].active)
+		{
+			if(app->game.ball[i].type == app->game.player.ball.type)
+			{
+				r = 32.0 + app->game.ball[i].target_tick * 2;
+				a = 1.0 - app->game.ball[i].target_tick / (float)DOT_GAME_TARGET_TICKS;
+				t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_TARGET], al_map_rgba_f(a, a, a, a), app->game.ball[i].x - r, app->game.ball[i].y - r, app->game.ball[i].z, r * 2.0, r * 2.0, 0);
+			}
 		}
 	}
 	if(!app->desktop_mode)
