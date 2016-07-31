@@ -118,9 +118,9 @@ Dot to Dot Sweep Issues
 
    [X]Post announcement on Facebook.
 
-[ ]Add color blind mode.
+[X]Add color blind mode.
 
-   [ ]Probably just add an indicator that shows which dots you can currently
+   [X]Probably just add an indicator that shows which dots you can currently
       collect.
 
 [ ]Show profile menu on first launch.
