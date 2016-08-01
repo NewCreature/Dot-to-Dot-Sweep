@@ -12,6 +12,7 @@ int dot_menu_proc_play(void * data, int i, void * pp)
 
 	dot_game_initialize(data, app->demo_file ? true : false);
 	t3f_touch[app->touch_id].active = false;
+	t3f_mouse_button[0] = false;
 
 	return 1;
 }
@@ -164,8 +165,11 @@ int dot_menu_proc_leaderboard_main_menu(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	t3net_destroy_leaderboard(app->leaderboard);
-	app->leaderboard = NULL;
+	if(app->leaderboard)
+	{
+		t3net_destroy_leaderboard(app->leaderboard);
+		app->leaderboard = NULL;
+	}
 	dot_intro_setup(data);
 	app->state = DOT_STATE_INTRO;
 	app->current_menu = DOT_MENU_MAIN;
