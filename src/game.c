@@ -295,17 +295,16 @@ static void dot_game_create_splash_effect(void * data, float x, float y, float r
 void dot_game_accumulate_score(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	int c;
 
-	c = dot_game_get_combo_score(data);
-	if(c > 0)
+	if(app->game.ascore > 0)
 	{
-		app->game.score += c;
+		app->game.score += app->game.ascore;
 		if(app->game.score > app->game.high_score)
 		{
 			app->game.high_score = app->game.score;
 		}
-		dot_game_create_score_effect(data, app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, c);
+		dot_game_create_score_effect(data, app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, app->game.ascore);
+		app->game.ascore = 0;
 	}
 }
 
@@ -428,11 +427,11 @@ void dot_game_check_player_collisions(void * data)
 				{
 					t3f_play_sample(app->sample[DOT_SAMPLE_GRAB], 1.0, 0.0, 1.0);
 					app->game.ball[i].active = false;
-					app->game.ascore += 1000;
 					if(app->game.player.ball.timer < DOT_GAME_COMBO_TIME)
 					{
 						app->game.combo++;
 					}
+					app->game.ascore = dot_game_get_combo_score(data);
 					app->game.player.ball.timer = 0;
 					for(j = 0; j < DOT_GAME_MAX_BALLS; j++)
 					{
@@ -458,7 +457,6 @@ void dot_game_check_player_collisions(void * data)
 					t3f_play_sample(app->sample[DOT_SAMPLE_LOSE], 1.0, 0.0, 1.0);
 					dot_game_accumulate_score(data);
 					app->game.combo = 0;
-					app->game.ascore = 0;
 					app->game.shield.active = false;
 					app->game.lives--;
 					app->game.emo_tick = 60;
@@ -590,7 +588,6 @@ void dot_game_move_player(void * data)
 				dot_game_accumulate_score(data);
 				app->game.player.ball.timer = 0;
 				app->game.combo = 0;
-				app->game.ascore = 0;
 				app->game.shield.active = false;
 				t3f_play_sample(app->sample[DOT_SAMPLE_SCORE], 1.0, 0.0, 1.0);
 			}
@@ -786,7 +783,6 @@ void dot_game_logic(void * data)
 				dot_game_setup_level(data, app->game.level + 1);
 				app->game.bg_color_fade = 0.0;
 				app->game.combo = 0;
-				app->game.ascore = 0;
 				app->game.shield.active = false;
 			}
 			break;
@@ -1007,7 +1003,7 @@ void dot_game_render(void * data)
 		}
 		if(app->game.combo)
 		{
-			sprintf(buf, "%d", dot_game_get_combo_score(data));
+			sprintf(buf, "%d", app->game.ascore);
 			dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, buf);
 		}
 	}
