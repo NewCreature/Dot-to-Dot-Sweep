@@ -17,19 +17,38 @@ unsigned long dot_leaderboard_unobfuscate_score(unsigned long score)
 void dot_leaderboard_logic(void * data)
 {
     APP_INSTANCE * app = (APP_INSTANCE *)data;
+    bool m = false;
 
-    dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
-    if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
+    if(app->current_menu == DOT_MENU_LEADERBOARD && t3f_mouse_button[0])
     {
-        t3net_destroy_leaderboard(app->leaderboard);
-        app->leaderboard = NULL;
-        app->state = DOT_STATE_INTRO;
-        dot_intro_setup(data);
+        m = true;
+    }
+    dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
+    if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || m)
+    {
+        if(app->current_menu == DOT_MENU_LEADERBOARD_2)
+        {
+            dot_menu_proc_leaderboard_main_menu(data, 0, NULL);
+        }
+        else
+        {
+            dot_menu_proc_leaderboard_back(data, 0, NULL);
+        }
         t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
         t3f_key[ALLEGRO_KEY_BACK] = 0;
+        t3f_mouse_button[0] = false;
+    }
+    else if(app->current_menu == DOT_MENU_LEADERBOARD_2 && t3f_mouse_button[0])
+    {
+        dot_menu_proc_leaderboard_back(data, 0, NULL);
+        app->current_menu = DOT_MENU_LEADERBOARD_2;
+        t3f_mouse_button[0] = false;
     }
     app->tick++;
-    t3f_process_gui(app->menu[app->current_menu], app);
+    if(!app->desktop_mode)
+    {
+        t3f_process_gui(app->menu[app->current_menu], app);
+    }
 }
 
 void dot_leaderboard_render(void * data)
@@ -59,7 +78,10 @@ void dot_leaderboard_render(void * data)
         sprintf(buf, "%lu ", dot_leaderboard_unobfuscate_score(app->leaderboard->entry[i]->score));
         dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width - 4, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_RIGHT, buf);
     }
-    t3f_render_gui(app->menu[app->current_menu]);
+    if(!app->desktop_mode)
+    {
+        t3f_render_gui(app->menu[app->current_menu]);
+    }
     al_hold_bitmap_drawing(false);
 	dot_intro_render_split(data);
 }

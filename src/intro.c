@@ -358,6 +358,10 @@ void dot_intro_logic(void * data)
 				}
 				else
 				{
+					if(app->current_menu == DOT_MENU_LEADERBOARD_2)
+					{
+						t3f_play_music(DOT_MUSIC_TITLE);
+					}
 					app->current_menu = DOT_MENU_MAIN;
 				}
 			}
