@@ -150,8 +150,8 @@ Dot to Dot Sweep Issues
       clicked (transition should be quick). Pressing escape will transition
       back to the title screen.
 
-   [ ]Click to dismiss leaderboard since we can't show the menu.
+   [X]Click to dismiss leaderboard since we can't show the menu.
 
-      [ ]Go to retry menu if we are in the post-game leaderboard screen.
+      [X]Go to retry menu if we are in the post-game leaderboard screen.
 
 [ ]Show profile menu on first launch.
