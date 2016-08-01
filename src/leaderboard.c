@@ -60,6 +60,6 @@ void dot_leaderboard_render(void * data)
         dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width - 4, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_RIGHT, buf);
     }
     t3f_render_gui(app->menu[app->current_menu]);
-  al_hold_bitmap_drawing(false);
+    al_hold_bitmap_drawing(false);
 	dot_intro_render_split(data);
 }
