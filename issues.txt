@@ -155,3 +155,23 @@ Dot to Dot Sweep Issues
       [X]Go to retry menu if we are in the post-game leaderboard screen.
 
 [X]Show profile menu on first launch.
+
+[ ]Release v1.1
+
+   [ ]Build 32- and 64-bit Debian packages.
+
+      [ ]Make sure Debian descriptions are properly formatted.
+
+   [ ]Build Windows package.
+
+      [ ]Docs need to be renamed to license.txt, history.txt, and readme.txt.
+
+         [ ]We should have this done automatically by the build script.
+
+   [ ]Build Mac package.
+
+   [ ]Upload packages.
+
+   [ ]Add files to database.
+
+   [ ]Post news item.
