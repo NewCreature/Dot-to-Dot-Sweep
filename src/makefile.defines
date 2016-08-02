@@ -88,6 +88,12 @@ ANDROID_PLATFORM_LIBS = -lcurl
 DEBIAN_APP_NAME = $(subst _,-,$(APP_NAME))
 DEBIAN_SECTION = games
 DEBIAN_DEPENDS = libc6
-DEBIAN_MAINTAINER = Your\ Name\ \<user\@email.com\>
-DEBIAN_DESCRIPTION = Short\ decription\ of\ your\ app.
-DEBIAN_LONG_DESCRIPTION = Long\ description\ of\ your\ app.
+DEBIAN_MAINTAINER = Todd\ Cope\ \<user\@email.com\>
+DEBIAN_DESCRIPTION = Color\ matching\ arcade\ action.
+DEBIAN_LONG_DESCRIPTION = Dot\ to\ Dot\ Sweep\ is\ an\ arcade-style\ color\
+matching\ game.\ Collect\ dots\ that\ match\ your\ color\ while\ avoiding\ all\
+other dots.\ The\ game\ is\ inspired\ by\ classic\ arcade\ games\ and\ takes\
+cues\ from\ modern\ games.\ The\ simple\ gameplay\ mechanics\ coupled\ with\
+increasingly\ difficult\ levels\ allows\ players\ of\ all\ skill\ levels\ to\
+enjoy\ playing.\ Try\ to\ beat\ your\ personal\ best\ score\ or,\ optionally,\
+compete\ for\ the\ top\ spot\ on\ the\ worldwide\ leaderboard.
