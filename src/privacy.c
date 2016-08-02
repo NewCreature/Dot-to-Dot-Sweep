@@ -35,26 +35,24 @@ static const char * privacy_text[] =
 void dot_privacy_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	bool m = false;
 
 	dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
-	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
+	if(app->desktop_mode && t3f_mouse_button[0])
 	{
-		app->state = DOT_STATE_INTRO;
+		m = true;
+	}
+	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || m)
+	{
+		dot_menu_proc_privacy_back(data, 0, NULL);
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
+		t3f_mouse_button[0] = false;
 	}
 	app->tick++;
 	if(!app->desktop_mode)
 	{
 		t3f_process_gui(app->menu[app->current_menu], app);
-	}
-	else
-	{
-		if(t3f_mouse_button[0])
-		{
-			dot_menu_proc_privacy_back(data, 0, NULL);
-			t3f_mouse_button[0] = false;
-		}
 	}
 }
 
