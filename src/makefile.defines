@@ -58,10 +58,10 @@ LINUX_STATIC_DEPEND_LIBS = -lcurl
 ##############################
 # MinGW cross-compiler stuff #
 ##############################
-#MINGW_CROSS_CFLAGS =
+MINGW_CROSS_CFLAGS = -DCURL_STATICLIB
 #MINGW_CROSS_PLATFORM_OBJECTS =
 #MINGW_CROSS_PLATFORM_LIBS =
-MINGW_CROSS_DEPEND_LIBS = -lcurldll
+MINGW_CROSS_DEPEND_LIBS = -lcurl -lwldap32
 #MINGW_CROSS_PLATFORM_TARGET =
 
 ###############
@@ -70,7 +70,7 @@ MINGW_CROSS_DEPEND_LIBS = -lcurldll
 #MINGW_CFLAGS =
 #MINGW_PLATFORM_OBJECTS =
 #MINGW_PLATFORM_LIBS =
-MINGW_DEPEND_LIBS = -lcurldll
+MINGW_DEPEND_LIBS = -lcurl -lwldap32
 #MINGW_PLATFORM_TARGET =
 
 #################

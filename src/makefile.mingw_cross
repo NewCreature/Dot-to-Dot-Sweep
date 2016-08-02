@@ -6,7 +6,7 @@ PLATFORM_LIBS = -lallegro_dialog$(LIB_SUFFIX) $(MINGW_CROSS_PLATFORM_LIBS)
 DEPEND_LIBS = $(MINGW_CROSS_DEPEND_LIBS) -luuid -lkernel32 -lwinmm -lpsapi\
               -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32\
               -ladvapi32 -lws2_32 -lshlwapi -lvorbisfile -lvorbis -logg -ldumb\
-              -lfreetype -lpng -lz -ld3d9 -lstdc++
+              -lfreetype -lpng -lz -ld3d9 -ldsound -lstdc++
 DEL_COMMAND = rm -f
 DEL_FOLDER_COMMAND = rm -rf
 SED_COMMAND = sed -i
