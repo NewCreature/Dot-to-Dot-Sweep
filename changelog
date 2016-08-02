@@ -6,6 +6,8 @@ dot-to-dot-sweep (1.1) maverick; urgency=low
     viable way of competing for a high score.
   * Add visual aid to collectible dots to make the game more playable by people
     with color blindness.
+  * Add setup wizard to simplify and clarify settings.
+  * Run setup wizard the first time the game is opened.
 
  -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
 
