@@ -30,6 +30,7 @@ typedef struct
     T3F_RNG_STATE rng_state;
     bool desktop_mode;
     bool entering_name;
+    bool first_run;
 
     /* input state */
     int touch_id;

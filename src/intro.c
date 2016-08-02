@@ -34,34 +34,49 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 	return 1;
 }
 
-int dot_menu_proc_profile(void * data, int i, void * pp)
+int dot_menu_proc_setup(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	app->current_menu = DOT_MENU_PROFILE;
+	app->current_menu = DOT_MENU_UPLOAD_SCORES;
 	return 1;
 }
 
-int dot_menu_proc_music(void * data, int i, void * pp)
+static void dot_update_first_run(void)
+{
+	al_set_config_value(t3f_config, "Game Data", "Setup Done", "true");
+	al_save_config_file(al_path_cstr(t3f_config_path, '/'), t3f_config);
+}
+
+int dot_menu_proc_music_yes(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	T3F_GUI * gui = (T3F_GUI *)pp;
 
-	app->music_enabled = !app->music_enabled;
-	if(app->music_enabled)
+	app->music_enabled = true;
+	al_set_config_value(t3f_config, "Game Data", "Music Enabled", "true");
+	if(t3f_get_music_state() != T3F_MUSIC_STATE_PLAYING)
 	{
-		gui->element[i].color = DOT_MENU_COLOR_ENABLED;
-		al_set_config_value(t3f_config, "Game Data", "Music Enabled", "true");
 		t3f_play_music(DOT_MUSIC_TITLE);
 	}
-	else
+	app->current_menu = DOT_MENU_MAIN;
+	dot_update_first_run();
+	return 1;
+}
+
+int dot_menu_proc_music_no(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	app->music_enabled = false;
+	al_set_config_value(t3f_config, "Game Data", "Music Enabled", "false");
+	if(t3f_get_music_state() == T3F_MUSIC_STATE_PLAYING)
 	{
-		gui->element[i].color = DOT_MENU_COLOR_DISABLED;
-		al_set_config_value(t3f_config, "Game Data", "Music Enabled", "false");
 		al_stop_timer(t3f_timer);
 		t3f_stop_music();
 		al_resume_timer(t3f_timer);
 	}
+	app->current_menu = DOT_MENU_MAIN;
+	dot_update_first_run();
 	return 1;
 }
 
@@ -91,6 +106,7 @@ void dot_menu_proc_profile_name_callback(void * data)
 		strcpy(app->user_name, "Anonymous");
 	}
 	al_set_config_value(t3f_config, "Game Data", "User Name", app->user_name);
+	al_save_config_file(al_path_cstr(t3f_config_path, '/'), t3f_config);
 }
 
 int dot_menu_proc_profile_name(void * data, int i, void * pp)
@@ -109,22 +125,33 @@ int dot_menu_proc_profile_name(void * data, int i, void * pp)
 	return 1;
 }
 
-int dot_menu_proc_profile_upload(void * data, int i, void * pp)
+int dot_menu_proc_profile_okay(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	T3F_GUI * gui = (T3F_GUI *)pp;
 
-	app->upload_scores = !app->upload_scores;
-	if(app->upload_scores)
-	{
-		gui->element[i].color = DOT_MENU_COLOR_ENABLED;
-		al_set_config_value(t3f_config, "Game Data", "Upload Scores", "true");
-	}
-	else
-	{
-		gui->element[i].color = DOT_MENU_COLOR_DISABLED;
-		al_set_config_value(t3f_config, "Game Data", "Upload Scores", "false");
-	}
+	app->current_menu = DOT_MENU_MUSIC;
+	return 1;
+}
+
+int dot_menu_proc_upload_yes(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	app->upload_scores = true;
+	al_set_config_value(t3f_config, "Game Data", "Upload Scores", "true");
+	al_save_config_file(al_path_cstr(t3f_config_path, '/'), t3f_config);
+	app->current_menu = DOT_MENU_PROFILE;
+	return 1;
+}
+
+int dot_menu_proc_upload_no(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	app->upload_scores = false;
+	al_set_config_value(t3f_config, "Game Data", "Upload Scores", "false");
+	al_save_config_file(al_path_cstr(t3f_config_path, '/'), t3f_config);
+	app->current_menu = DOT_MENU_MUSIC;
 	return 1;
 }
 
@@ -206,24 +233,11 @@ bool dot_intro_initialize(void * data)
 		return false;
 	}
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_leaderboard, "Leaderboard", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_profile, "Profile", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_music, "Music", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, app->music_enabled ? DOT_MENU_COLOR_ENABLED : DOT_MENU_COLOR_DISABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_privacy, "Privacy", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 192, DOT_MENU_COLOR_ENABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_play, "Play", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 256, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_setup, "Setup", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_privacy, "Privacy", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, DOT_MENU_COLOR_ENABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_play, "Play", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 192, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(app->menu[DOT_MENU_MAIN], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_MAIN], -2, 2);
-
-	app->menu[DOT_MENU_PROFILE] = t3f_create_gui(0, 0);
-	if(!app->menu[DOT_MENU_PROFILE])
-	{
-		return false;
-	}
-	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], NULL, "User Name", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_name, app->user_name, app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_upload, "Upload Scores", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, app->upload_scores ? DOT_MENU_COLOR_ENABLED : DOT_MENU_COLOR_DISABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_back, "Back", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 192, DOT_MENU_COLOR_ENABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_PROFILE], top, bottom);
-	t3f_set_gui_shadow(app->menu[DOT_MENU_PROFILE], -2, 2);
 
 	app->menu[DOT_MENU_PRIVACY] = t3f_create_gui(0, 0);
 	if(!app->menu[DOT_MENU_PRIVACY])
@@ -248,10 +262,44 @@ bool dot_intro_initialize(void * data)
 	{
 		return false;
 	}
-	t3f_add_gui_text_element(app->menu[DOT_MENU_LEADERBOARD_2], dot_menu_proc_play, "Play Again", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(app->menu[DOT_MENU_LEADERBOARD_2], dot_menu_proc_leaderboard_main_menu, "Main Menu", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_LEADERBOARD_2], NULL, "Play Again?", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_LEADERBOARD_2], dot_menu_proc_play, "Yes", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_LEADERBOARD_2], dot_menu_proc_leaderboard_main_menu, "No", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(app->menu[DOT_MENU_LEADERBOARD_2], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_LEADERBOARD_2], -2, 2);
+
+	app->menu[DOT_MENU_UPLOAD_SCORES] = t3f_create_gui(0, 0);
+	if(!app->menu[DOT_MENU_UPLOAD_SCORES])
+	{
+		return false;
+	}
+	t3f_add_gui_text_element(app->menu[DOT_MENU_UPLOAD_SCORES], NULL, "Upload Scores?", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_UPLOAD_SCORES], dot_menu_proc_upload_yes, "Yes", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_UPLOAD_SCORES], dot_menu_proc_upload_no, "No", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(app->menu[DOT_MENU_UPLOAD_SCORES], top, bottom);
+	t3f_set_gui_shadow(app->menu[DOT_MENU_UPLOAD_SCORES], -2, 2);
+
+	app->menu[DOT_MENU_PROFILE] = t3f_create_gui(0, 0);
+	if(!app->menu[DOT_MENU_PROFILE])
+	{
+		return false;
+	}
+	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], NULL, "User Name", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_name, app->user_name, app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_okay, "Okay", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(app->menu[DOT_MENU_PROFILE], top, bottom);
+	t3f_set_gui_shadow(app->menu[DOT_MENU_PROFILE], -2, 2);
+
+	app->menu[DOT_MENU_MUSIC] = t3f_create_gui(0, 0);
+	if(!app->menu[DOT_MENU_MUSIC])
+	{
+		return false;
+	}
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MUSIC], NULL, "Enable Music?", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MUSIC], dot_menu_proc_music_yes, "Yes", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MUSIC], dot_menu_proc_music_no, "No", app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(app->menu[DOT_MENU_MUSIC], top, bottom);
+	t3f_set_gui_shadow(app->menu[DOT_MENU_MUSIC], -2, 2);
 
 	app->current_menu = DOT_MENU_MAIN;
 

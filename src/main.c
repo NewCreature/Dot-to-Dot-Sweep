@@ -455,6 +455,17 @@ void app_read_config(APP_INSTANCE * app)
 {
 	const char * val;
 
+	/* see if we need to run setup */
+	app->first_run = true;
+	val = al_get_config_value(t3f_config, "Game Data", "Setup Done");
+	if(val)
+	{
+		if(!strcasecmp(val, "true"))
+		{
+			app->first_run = false;
+		}
+	}
+
 	/* load high score */
 	val = al_get_config_value(t3f_config, "Game Data", "High Score");
 	if(val)
@@ -655,6 +666,10 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	if(!app->desktop_mode)
 	{
 		app->menu_showing = true;
+	}
+	if(app->first_run)
+	{
+		app->current_menu = DOT_MENU_UPLOAD_SCORES;
 	}
 	app->state = DOT_STATE_INTRO;
 

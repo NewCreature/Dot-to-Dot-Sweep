@@ -41,12 +41,14 @@
 #define DOT_FONT_16            0
 #define DOT_FONT_32            1
 
-#define DOT_MAX_MENUS          5
+#define DOT_MAX_MENUS          7
 #define DOT_MENU_MAIN          0
 #define DOT_MENU_LEADERBOARD   1
-#define DOT_MENU_PROFILE       2
-#define DOT_MENU_LEADERBOARD_2 3
-#define DOT_MENU_PRIVACY       4
+#define DOT_MENU_LEADERBOARD_2 2
+#define DOT_MENU_PRIVACY       3
+#define DOT_MENU_UPLOAD_SCORES 4
+#define DOT_MENU_PROFILE       5
+#define DOT_MENU_MUSIC         6
 
 #define DOT_MENU_COLOR_ENABLED  t3f_color_white
 #define DOT_MENU_COLOR_DISABLED al_map_rgba_f(0.75, 0.75, 0.75, 1.0)
