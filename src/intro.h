@@ -11,6 +11,7 @@
 int dot_menu_proc_play(void * data, int i, void * pp);
 int dot_menu_proc_leaderboard_main_menu(void * data, int i, void * pp);
 int dot_menu_proc_leaderboard_back(void * data, int i, void * pp);
+int dot_menu_proc_privacy_back(void * data, int i, void * pp);
 
 bool dot_intro_initialize(void * data);
 void dot_intro_setup(void * data);

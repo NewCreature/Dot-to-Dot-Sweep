@@ -86,14 +86,7 @@ int dot_menu_proc_privacy(void * data, int i, void * pp)
 
 	app->current_menu = DOT_MENU_PRIVACY;
 	app->state = DOT_STATE_PRIVACY;
-	return 1;
-}
-
-int dot_menu_proc_credits(void * data, int i, void * pp)
-{
-	APP_INSTANCE * app = (APP_INSTANCE *)data;
-
-	app->intro_state = DOT_INTRO_STATE_CREDITS;
+	t3f_mouse_button[0] = false;
 	return 1;
 }
 

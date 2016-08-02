@@ -9,7 +9,7 @@ static const char * privacy_text[] =
 	"",
 	"",
 	"Information We Collect:",
-  "",
+	"",
 	" We collect only enough",
 	" information to process your",
 	" request. With regards to this",
@@ -18,7 +18,7 @@ static const char * privacy_text[] =
 	" leaderboards (includes your",
 	" profile name and score",
 	" information).",
-  "",
+	"",
 	"",
 	"What We Do with Your",
 	"Information:",
@@ -29,45 +29,59 @@ static const char * privacy_text[] =
 	" personal information you don't",
 	" want to share in your screen",
 	" name.",
-  NULL
+	NULL
 };
 
 void dot_privacy_logic(void * data)
 {
-  APP_INSTANCE * app = (APP_INSTANCE *)data;
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-  dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
-  if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
-  {
-      app->state = DOT_STATE_INTRO;
-      t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-      t3f_key[ALLEGRO_KEY_BACK] = 0;
-  }
-  app->tick++;
-  t3f_process_gui(app->menu[app->current_menu], app);
+	dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
+	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
+	{
+		app->state = DOT_STATE_INTRO;
+		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+		t3f_key[ALLEGRO_KEY_BACK] = 0;
+	}
+	app->tick++;
+	if(!app->desktop_mode)
+	{
+		t3f_process_gui(app->menu[app->current_menu], app);
+	}
+	else
+	{
+		if(t3f_mouse_button[0])
+		{
+			dot_menu_proc_privacy_back(data, 0, NULL);
+			t3f_mouse_button[0] = false;
+		}
+	}
 }
 
 void dot_privacy_render(void * data)
 {
-  APP_INSTANCE * app = (APP_INSTANCE *)data;
-  int i;
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int i;
 
-  al_clear_to_color(app->level_color[0]);
-  al_hold_bitmap_drawing(true);
-  dot_bg_objects_render(data);
-  al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
-  for(i = 0; i < 128; i++)
-  {
-    if(privacy_text[i])
-    {
-      dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 8, i * 16, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, privacy_text[i]);
-    }
-    else
-    {
-      break;
-    }
-  }
-  t3f_render_gui(app->menu[app->current_menu]);
-  al_hold_bitmap_drawing(false);
-  dot_intro_render_split(data);
+	al_clear_to_color(app->level_color[0]);
+	al_hold_bitmap_drawing(true);
+	dot_bg_objects_render(data);
+	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
+	for(i = 0; i < 128; i++)
+	{
+		if(privacy_text[i])
+		{
+			dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 8, i * 16, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, privacy_text[i]);
+		}
+		else
+		{
+			break;
+		}
+	}
+	if(!app->desktop_mode)
+	{
+		t3f_render_gui(app->menu[app->current_menu]);
+	}
+	al_hold_bitmap_drawing(false);
+	dot_intro_render_split(data);
 }
