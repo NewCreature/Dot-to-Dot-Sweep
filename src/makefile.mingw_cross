@@ -53,5 +53,5 @@ else
 endif
 
 windows_zip: $(APP_EXE_NAME)
-	@cd ../bin; zip -9 -r ../$(APP_NAME)-$(APP_VERSION)-windows.zip *; cd ..; cp -a docs win32; cd win32/docs; mv changelog history.txt; mv README readme.txt; mv copyright license.txt; cd ..; zip -9 -r ../$(APP_NAME)-$(APP_VERSION)-windows.zip docs rm -rf docs
+	@cd ../bin; zip -9 -r ../$(APP_NAME)-$(APP_VERSION)-windows.zip *; cd ..; cp -a docs win32; cd win32/docs; mv changelog history.txt; mv README readme.txt; mv copyright license.txt; cd ..; zip -9 -r ../$(APP_NAME)-$(APP_VERSION)-windows.zip docs; rm -rf docs
 	@echo Windows package created!
