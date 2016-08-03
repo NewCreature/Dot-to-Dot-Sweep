@@ -160,18 +160,36 @@ Dot to Dot Sweep Issues
 
    [ ]Build 32- and 64-bit Debian packages.
 
-      [ ]Make sure Debian descriptions are properly formatted.
+      [X]Make sure Debian descriptions are properly formatted.
+
+      [ ]Make sure we specify all dependencies.
 
    [ ]Build Windows package.
 
-      [ ]Docs need to be renamed to license.txt, history.txt, and readme.txt.
+      [X]Docs need to be renamed to license.txt, history.txt, and readme.txt.
 
-         [ ]We should have this done automatically by the build script.
+         [X]We should have this done automatically by the build script.
 
-   [ ]Build Mac package.
+      [ ]See about setting the window icon.
+
+   [X]Build Mac package.
+
+   [ ]Build source package.
+
+      [ ]Write build.txt instructions.
+
+      [ ]Make sure all folders are packaged.
 
    [ ]Upload packages.
 
    [ ]Add files to database.
 
    [ ]Post news item.
+
+[ ]Push framework changes back to T3F master.
+
+   [ ]Build scripts need to be updated.
+
+      [ ]Make sure to import changes from makefile.defines.
+
+   [ ]Copy template back to T3F master in case we made any changes.
