@@ -156,40 +156,38 @@ Dot to Dot Sweep Issues
 
 [X]Show profile menu on first launch.
 
-[ ]Release v1.1
+[X]Release v1.1
 
-   [ ]Build 32- and 64-bit Debian packages.
+   [X]Build 32- and 64-bit Debian packages.
 
       [X]Make sure Debian descriptions are properly formatted.
 
-      [ ]Make sure we specify all dependencies.
+      [X]Make sure we specify all dependencies.
 
-   [ ]Build Windows package.
+   [X]Build Windows package.
 
       [X]Docs need to be renamed to license.txt, history.txt, and readme.txt.
 
          [X]We should have this done automatically by the build script.
 
-      [ ]See about setting the window icon.
-
    [X]Build Mac package.
 
-   [ ]Build source package.
+   [X]Build source package.
 
-      [ ]Write build.txt instructions.
+      [X]Write build.txt instructions.
 
-      [ ]Make sure all folders are packaged.
+      [X]Make sure all folders are packaged.
 
-   [ ]Upload packages.
+   [X]Upload packages.
 
-   [ ]Add files to database.
+   [X]Add files to database.
 
-   [ ]Post news item.
+   [X]Post news item.
 
-[ ]Push framework changes back to T3F master.
+[X]Push framework changes back to T3F master.
 
-   [ ]Build scripts need to be updated.
+   [X]Build scripts need to be updated.
 
-      [ ]Make sure to import changes from makefile.defines.
+      [X]Make sure to import changes from makefile.defines.
 
-   [ ]Copy template back to T3F master in case we made any changes.
+   [X]Copy template back to T3F master in case we made any changes.
