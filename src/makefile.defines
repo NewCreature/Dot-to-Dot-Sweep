@@ -10,8 +10,8 @@ include makefile.include
 APP_COMPANY = t3-i
 APP_NAME = dot-to-dot-sweep
 APP_TITLE = Dot\ to\ Dot\ Sweep
-APP_VERSION = 1.1
-APP_RELEASE = 10
+APP_VERSION = 1.1.1
+APP_RELEASE = 11
 APP_PUBLISHER = T\^3\ Software
 APP_COPYRIGHT = Copyright\ (C)\ 2016\ T\^3\ Software
 APP_ANDROID_PACKAGE = com.t3i.dottodotsweep
@@ -20,6 +20,7 @@ APP_OBJECTS = t3net/t3net.o t3net/leaderboard.o avc/avc.o main.o game.o intro.o 
 #APP_LIBS =
 #APP_CFLAGS =
 #APP_EXTRA_TARGET =
+APP_PACKAGE_DIR = ../packages
 app_clean:
 #	@
 

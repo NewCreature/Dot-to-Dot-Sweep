@@ -96,7 +96,7 @@ void app_touch_logic(void * data)
 		{
 			need_click = true;
 		}
-		if(t3f_mouse_tracking && (!need_click || t3f_mouse_button[0]))
+		if(!t3f_mouse_hidden && (!need_click || t3f_mouse_button[0]))
 		{
 			app->touch_id = 0;
 		}
