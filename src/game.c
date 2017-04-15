@@ -858,6 +858,7 @@ void dot_game_logic(void * data)
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 	{
 		dot_intro_setup(data);
+		al_show_mouse_cursor(t3f_display);
 		app->state = DOT_STATE_INTRO;
 		if(app->music_enabled)
 		{
