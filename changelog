@@ -1,3 +1,9 @@
+dot-to-dot-sweep (1.1.1) maverick; urgency=low
+
+  * Optimize score particle effects to eliminate in-game framerate stuttering.
+
+ -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
+
 dot-to-dot-sweep (1.1) maverick; urgency=low
 
   * Implement desktop mode.
@@ -9,7 +15,7 @@ dot-to-dot-sweep (1.1) maverick; urgency=low
   * Add setup wizard to simplify and clarify settings.
   * Run setup wizard the first time the game is opened.
 
- -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
+ -- Todd Cope <todd@t3-i.com>  Wed, 03 Aug 2016 18:34:00 +0000
 
 dot-to-dot-sweep (1.0) maverick; urgency=low
 
