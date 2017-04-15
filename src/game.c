@@ -130,6 +130,29 @@ static void dot_game_add_particle_list_item(DOT_PARTICLE_LIST * lp, float x, flo
 	}
 }
 
+static void dot_game_clear_bitmap(ALLEGRO_BITMAP * bp)
+{
+	ALLEGRO_STATE old_state;
+	ALLEGRO_TRANSFORM identity;
+	ALLEGRO_COLOR c;
+	int i, j;
+
+	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM);
+	al_set_target_bitmap(bp);
+	al_identity_transform(&identity);
+	al_use_transform(&identity);
+	al_lock_bitmap(bp, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_WRITEONLY);
+	for(i = 0; i < al_get_bitmap_height(bp); i++)
+	{
+		for(j = 0; j < al_get_bitmap_width(bp); j++)
+		{
+			al_put_pixel(i, j, al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
+		}
+	}
+	al_unlock_bitmap(bp);
+	al_restore_state(&old_state);
+}
+
 void dot_game_create_particle_lists(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -140,18 +163,19 @@ void dot_game_create_particle_lists(void * data)
 	unsigned char r, g, b, a;
 	char buf[16] = {0};
 
-	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM);
-	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
-	al_identity_transform(&identity);
-	al_use_transform(&identity);
 	for(i = 0; i < 10; i++)
 	{
 		app->number_particle_list[i].items = 0;
 		sprintf(buf, "%d", i);
-		al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
+		al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM);
+		al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+		al_identity_transform(&identity);
+		al_use_transform(&identity);
+		dot_game_clear_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
 		al_set_clipping_rectangle(0, 0, 512, 512);
 		al_draw_text(app->font[DOT_FONT_16], t3f_color_white, 0, 0, 0, buf);
 		t3f_set_clipping_rectangle(0, 0, 0, 0);
+		al_restore_state(&old_state);
 		al_lock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
 		w = al_get_text_width(app->font[DOT_FONT_16], buf);
 		h = al_get_font_line_height(app->font[DOT_FONT_16]);
@@ -169,7 +193,6 @@ void dot_game_create_particle_lists(void * data)
 		}
 		al_unlock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
 	}
-	al_restore_state(&old_state);
 }
 
 /* start the game from level 0 */
