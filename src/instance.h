@@ -46,6 +46,7 @@ typedef struct
     DOT_PARTICLE * active_particle[DOT_MAX_PARTICLES];
     int active_particles;
     DOT_BG_OBJECT bg_object[DOT_MAX_BG_OBJECTS];
+    DOT_PARTICLE_LIST number_particle_list[10];
 
     /* leaderboard stuff */
     char user_name[256];

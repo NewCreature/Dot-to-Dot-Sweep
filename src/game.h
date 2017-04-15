@@ -32,6 +32,24 @@ typedef struct
 
 } DOT_SHIELD;
 
+typedef struct
+{
+
+	int x, y;
+
+} DOT_PARTICLE_LIST_ITEM;
+
+#define DOT_MAX_PARTICLE_LIST_ITEMS 256
+
+/* store a list of particle positions to generate particles from */
+typedef struct
+{
+
+	DOT_PARTICLE_LIST_ITEM item[DOT_MAX_PARTICLE_LIST_ITEMS];
+	int items;
+
+} DOT_PARTICLE_LIST;
+
 #define DOT_GAME_MAX_LEVELS    10
 #define DOT_GAME_COMBO_TIME   120
 #define DOT_GAME_BASE_POINTS 1000

@@ -120,6 +120,58 @@ void dot_game_setup_level(void * data, int level)
 	app->game.level_start = true;
 }
 
+static void dot_game_add_particle_list_item(DOT_PARTICLE_LIST * lp, float x, float y)
+{
+	if(lp->items < DOT_MAX_PARTICLE_LIST_ITEMS)
+	{
+		lp->item[lp->items].x = x;
+		lp->item[lp->items].y = y;
+		lp->items++;
+	}
+}
+
+void dot_game_create_particle_lists(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	ALLEGRO_STATE old_state;
+	ALLEGRO_TRANSFORM identity;
+	ALLEGRO_COLOR c;
+	int i, j, k, w, h;
+	unsigned char r, g, b, a;
+	char buf[16] = {0};
+
+	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM);
+	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+	al_identity_transform(&identity);
+	al_use_transform(&identity);
+	for(i = 0; i < 10; i++)
+	{
+		app->number_particle_list[i].items = 0;
+		sprintf(buf, "%d", i);
+		al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
+		al_set_clipping_rectangle(0, 0, 512, 512);
+		al_draw_text(app->font[DOT_FONT_16], t3f_color_white, 0, 0, 0, buf);
+		t3f_set_clipping_rectangle(0, 0, 0, 0);
+		al_lock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
+		w = al_get_text_width(app->font[DOT_FONT_16], buf);
+		h = al_get_font_line_height(app->font[DOT_FONT_16]);
+		for(j = 0; j < w; j++)
+		{
+			for(k = 0; k < h; k++)
+			{
+				c = al_get_pixel(app->bitmap[DOT_BITMAP_SCRATCH], j, k);
+				al_unmap_rgba(c, &r, &g, &b, &a);
+				if(a > 0)
+				{
+					dot_game_add_particle_list_item(&app->number_particle_list[i], j, k);
+				}
+			}
+		}
+		al_unlock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+	}
+	al_restore_state(&old_state);
+}
+
 /* start the game from level 0 */
 void dot_game_initialize(void * data, bool demo_seed)
 {
@@ -133,6 +185,11 @@ void dot_game_initialize(void * data, bool demo_seed)
     {
         t3f_srand(&app->rng_state, time(0));
     }
+	/* create number particle lists if they haven't been created yet */
+	if(app->number_particle_list[0].items == 0)
+	{
+		dot_game_create_particle_lists(data);
+	}
 	dot_game_setup_level(data, 0);
 	app->game.score = 0;
 	app->game.combo = 0;
@@ -228,47 +285,33 @@ static float dot_spread_effect_particle(int pos, int max, float size)
 static void dot_game_create_score_effect(void * data, float x, float y, int number)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	ALLEGRO_STATE old_state;
-	ALLEGRO_TRANSFORM identity;
 	char buf[16] = {0};
+	char cbuf[2] = {0};
 	int i, j;
-	ALLEGRO_COLOR c;
-	unsigned char r, g, b, a;
-	float ox;
-	float w, h;
+	float ox, px;
+	int ni;
+	float w, cw;
 
-	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM);
-	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
-	al_identity_transform(&identity);
-	al_use_transform(&identity);
-	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
 	sprintf(buf, "%d", number);
-	al_set_clipping_rectangle(0, 0, 512, 512);
-	al_draw_text(app->font[DOT_FONT_16], t3f_color_white, 0, 0, 0, buf);
-	t3f_set_clipping_rectangle(0, 0, 0, 0);
-	al_restore_state(&old_state);
-	al_lock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
-	ox = al_get_text_width(app->font[DOT_FONT_16], buf) / 2;
 	w = al_get_text_width(app->font[DOT_FONT_16], buf);
-	h = al_get_font_line_height(app->font[DOT_FONT_16]);
-	for(i = 0; i < w; i++)
+	ox = w / 2;
+	px = 0.0;
+	for(i = 0; i < strlen(buf); i++)
 	{
-		for(j = 0; j < h; j++)
+		ni = buf[i] - '0';
+		cbuf[0] = buf[i];
+		cw = al_get_text_width(app->font[DOT_FONT_16], cbuf);
+		for(j = 0; j < app->number_particle_list[ni].items; j++)
 		{
-			c = al_get_pixel(app->bitmap[DOT_BITMAP_SCRATCH], i, j);
-			al_unmap_rgba(c, &r, &g, &b, &a);
-			if(a > 0)
+			dot_create_particle(&app->particle[app->current_particle], x + (float)app->number_particle_list[ni].item[j].x + px - ox, y + app->number_particle_list[ni].item[j].y, 0.0, dot_spread_effect_particle(app->number_particle_list[ni].item[j].x + px, w, strlen(buf) * 2.5), dot_spread_effect_particle(app->number_particle_list[ni].item[j].y, al_get_font_line_height(app->font[DOT_FONT_16]), 4.0), -10.0, 0.0, 3.0, 45, app->bitmap[DOT_BITMAP_PARTICLE], t3f_color_white);
+			app->current_particle++;
+			if(app->current_particle >= DOT_MAX_PARTICLES)
 			{
-				dot_create_particle(&app->particle[app->current_particle], x + (float)i - ox, y + j, 0.0, dot_spread_effect_particle(i, w, strlen(buf) * 2.5), dot_spread_effect_particle(j, h, 4.0), -10.0, 0.0, 3.0, 45, app->bitmap[DOT_BITMAP_PARTICLE], c);
-				app->current_particle++;
-				if(app->current_particle >= DOT_MAX_PARTICLES)
-				{
-					app->current_particle = 0;
-				}
+				app->current_particle = 0;
 			}
 		}
+		px += cw;
 	}
-	al_unlock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
 }
 
 static void dot_game_create_splash_effect(void * data, float x, float y, float r, ALLEGRO_COLOR color)
