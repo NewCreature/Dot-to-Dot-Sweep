@@ -1,6 +1,8 @@
 dot-to-dot-sweep (1.1.1) maverick; urgency=low
 
   * Optimize score particle effects to eliminate in-game framerate stuttering.
+  * Fix issue where the mouse cursor would not be displayed on the title screen
+    if you exited the game state while it was hidden.
 
  -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
 
