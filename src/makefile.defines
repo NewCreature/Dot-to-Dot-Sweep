@@ -83,6 +83,15 @@ ANDROID_PLATFORM_LIBS = -lcurl
 #ANDROID_DEPEND_LIBS =
 #ANDROID_PLATFORM_TARGET =
 
+#############
+# iOS stuff #
+#############
+#IPHONE_CFLAGS =
+#IPHONE_PLATFORM_OBJECTS =
+#IPHONE_PLATFORM_LIBS =
+IPHONE_DEPEND_LIBS = -lcurl
+#IPHONE_PLATFORM_TARGET =
+
 ##########################
 # Debian packaging stuff #
 ##########################

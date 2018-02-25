@@ -637,7 +637,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 
 	/* change view focus so 3D effects look right */
-	t3f_set_view_focus(t3f_current_view, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2);
+	t3f_adjust_view(t3f_current_view, t3f_current_view->offset_x, t3f_current_view->offset_y, t3f_current_view->width, t3f_current_view->height, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, t3f_current_view->flags);
 
 	/* create color tables */
 	for(i = 0; i <= DOT_BITMAP_BALL_BLACK; i++)

@@ -70,9 +70,7 @@ typedef struct
 #include "font.h"
 #include "gui.h"
 #include "memory.h"
-#ifndef ALLEGRO_ANDROID
-    #include "menu.h"
-#endif
+#include "menu.h"
 #include "music.h"
 #include "primitives.h"
 #include "resource.h"
@@ -90,10 +88,6 @@ extern float t3f_display_scale_x;
 extern float t3f_display_scale_y;
 extern int t3f_display_width;
 extern int t3f_display_height;
-extern float t3f_display_top;
-extern float t3f_display_bottom;
-extern float t3f_display_left;
-extern float t3f_display_right;
 
 extern bool t3f_key[ALLEGRO_KEY_MAX];
 extern bool t3f_quit;
@@ -134,6 +128,7 @@ int t3f_set_gfx_mode(int w, int h, int flags);
 void t3f_set_clipping_rectangle(int x, int y, int w, int h);
 void t3f_set_event_handler(void (*proc)(ALLEGRO_EVENT * event, void * data));
 void t3f_exit(void);
+bool t3f_save_config(void);
 void t3f_event_handler(ALLEGRO_EVENT * event);
 void t3f_process_events(void);
 void t3f_render(bool flip);
@@ -158,18 +153,14 @@ bool t3f_push_state(int flags);
 bool t3f_pop_state(void);
 
 int t3f_get_joystick_number(ALLEGRO_JOYSTICK * jp);
-float t3f_fread_float(ALLEGRO_FILE * fp);
-int t3f_fwrite_float(ALLEGRO_FILE * fp, float f);
 
 ALLEGRO_FILE * t3f_open_file(ALLEGRO_PATH * pp, const char * fn, const char * m);
 unsigned long t3f_checksum_file(const char * fn);
 bool t3f_copy_file(const char * src, const char * dest);
 void t3f_setup_directories(ALLEGRO_PATH * final);
-const char * t3f_get_filename(ALLEGRO_PATH * path, const char * fn);
+char * t3f_get_filename(ALLEGRO_PATH * path, const char * fn, char * buffer, int buffer_size);
 bool t3f_save_bitmap_f(ALLEGRO_FILE * fp, ALLEGRO_BITMAP * bp);
 ALLEGRO_BITMAP * t3f_load_bitmap_f(ALLEGRO_FILE * fp);
-bool t3f_save_color_f(ALLEGRO_FILE * fp, ALLEGRO_COLOR * color);
-bool t3f_load_color_f(ALLEGRO_FILE * fp, ALLEGRO_COLOR * color);
 
 /* threading */
 bool t3f_queue_call(void (*proc)(void * data), void * data);

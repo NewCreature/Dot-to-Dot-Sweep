@@ -38,7 +38,7 @@ void dot_bg_objects_logic(void * data, float speed)
     for(i = 0; i < DOT_MAX_BG_OBJECTS; i++)
 	{
 		app->bg_object[i].x += app->bg_object[i].vx * speed;
-		if(app->bg_object[i].x < -DOT_GAME_BALL_SIZE)
+		if(t3f_project_x(app->bg_object[i].x + DOT_GAME_BALL_SIZE * 2.0, app->bg_object[i].z) < 0.0)
 		{
 			app->bg_object[i].x = DOT_GAME_PLAYFIELD_WIDTH;
 			app->bg_object[i].z = -t3f_drandom(&dot_bg_rng_state, 320.0);

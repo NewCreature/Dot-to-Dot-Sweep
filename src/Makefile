@@ -2,21 +2,25 @@
 # assumes user is building from source for their own use (won't select static
 # or cross-compile makefiles)
 
-UNAME=$(shell uname)
-ifneq (,$(findstring Linux,$(UNAME)))
-SYSTEM=linux
+ifeq ($(OS),Windows_NT)
+ SYSTEM=mingw
 else
-ifneq (,$(findstring Darwin,$(UNAME)))
-SYSTEM=macosx
-else
-ifneq (,$(findstring MINGW,$(UNAME)))
-SYSTEM=mingw
-else
-$(warning Not sure which system you are on, assuming Linux)
-$(warning   (uname says: '$(UNAME)'))
-SYSTEM=linux
-endif
-endif
+ UNAME=$(shell uname)
+ ifneq (,$(findstring Linux,$(UNAME)))
+  SYSTEM=linux
+ else
+  ifneq (,$(findstring Darwin,$(UNAME)))
+   SYSTEM=macosx
+  else
+   ifneq (,$(findstring MINGW,$(UNAME)))
+    SYSTEM=mingw_cross
+   else
+    $(warning Not sure which system you are on, assuming Linux)
+    $(warning   (uname says: '$(UNAME)'))
+    SYSTEM=linux
+   endif
+  endif
+ endif
 endif
 
 top:
@@ -45,10 +49,13 @@ android_sign:
 	$(MAKE) -f makefile.android android_sign
 
 windows_package:
-	$(MAKE) -f makefile.mingw_cross windows_zip
+	$(MAKE) -f makefile.mingw windows_zip
 
 mac_package:
 	$(MAKE) -f makefile.macosx mac_package
+
+iphone_package:
+	$(MAKE) -f makefile.iphone iphone_package
 
 demo:
 	$(MAKE) -f makefile.$(SYSTEM) demo
