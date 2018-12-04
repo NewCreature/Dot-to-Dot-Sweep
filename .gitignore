@@ -17,6 +17,7 @@
 *.iso
 *.jar
 *.rar
+*.aar
 *.tar
 *.zip
 *.apk
@@ -39,3 +40,4 @@ Thumbs.db
 *.app
 docs/changelog
 bin/dot-to-dot-sweep
+*.icns

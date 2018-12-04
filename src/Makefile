@@ -26,6 +26,9 @@ endif
 top:
 	$(MAKE) -f makefile.$(SYSTEM) all
 
+static:
+	$(MAKE) -f makefile.$(SYSTEM)_static all
+
 clean:
 	$(MAKE) -f makefile.$(SYSTEM) clean
 
@@ -41,9 +44,6 @@ debian_package:
 
 android_package:
 	$(MAKE) -f makefile.android android_package
-
-android_repackage:
-	$(MAKE) -f makefile.android android_repackage
 
 android_sign:
 	$(MAKE) -f makefile.android android_sign
@@ -62,3 +62,6 @@ demo:
 
 demo_gp:
 	$(MAKE) -f makefile.$(SYSTEM) demo_gp
+
+makeicon:
+	$(MAKE) -f makefile.$(SYSTEM) ../win32/makeicon

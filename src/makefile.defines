@@ -12,22 +12,18 @@ APP_NAME = dot-to-dot-sweep
 APP_TITLE = Dot\ to\ Dot\ Sweep
 APP_VERSION = 1.1.1
 APP_RELEASE = 11
-APP_PUBLISHER = T\^3\ Software
-APP_COPYRIGHT = Copyright\ (C)\ 2016\ T\^3\ Software
+APP_PUBLISHER = T³\ Software
+APP_COPYRIGHT = Copyright\ (C)\ 2018\ T³\ Software.
 APP_ANDROID_PACKAGE = com.t3i.dottodotsweep
+APP_ORIENTATION = portrait
 APP_URL = http://www.t3-i.com
 APP_OBJECTS = t3net/t3net.o t3net/leaderboard.o avc/avc.o main.o game.o intro.o leaderboard.o text.o particle.o color.o bg_object.o credits.o privacy.o
 #APP_LIBS =
-#APP_CFLAGS =
+APP_CFLAGS = -O2 -Wall -I.
 #APP_EXTRA_TARGET =
 APP_PACKAGE_DIR = ../packages
 app_clean:
 #	@
-
-################
-# global stuff #
-################
-GLOBAL_CFLAGS = -O2 -fomit-frame-pointer -funroll-loops -Wall -I. -DT3F_DEVELOPER_NAME="\"$(APP_COMPANY)\"" -DT3F_PACKAGE_NAME="\"$(APP_NAME)\"" -DT3F_APP_VERSION="\"$(APP_VERSION)\"" -DT3F_APP_TITLE=\"$(APP_TITLE)\"
 
 ##################
 # Mac OS X stuff #
@@ -79,7 +75,7 @@ MINGW_DEPEND_LIBS = -lcurl -lwldap32
 #################
 #ANDROID_CFLAGS =
 #ANDROID_PLATFORM_OBJECTS =
-ANDROID_PLATFORM_LIBS = -lcurl
+ANDROID_PLATFORM_LIBS = -lcurl -lz
 #ANDROID_DEPEND_LIBS =
 #ANDROID_PLATFORM_TARGET =
 
@@ -97,7 +93,10 @@ IPHONE_DEPEND_LIBS = -lcurl
 ##########################
 DEBIAN_APP_NAME = $(subst _,-,$(APP_NAME))
 DEBIAN_SECTION = games
-DEBIAN_DEPENDS = libc6,\ libcurl3-gnutls,\ libjpeg62,\ libdumb1
+DEBIAN_MENU_SECTION = Games
+DEBIAN_DESKTOP_CATEGORIES = Game
+DEBIAN_DIR = games
+DEBIAN_DEPENDS = libc6
 DEBIAN_MAINTAINER = Todd\ Cope\ \<user\@email.com\>
 DEBIAN_DESCRIPTION = Color\ matching\ arcade\ action.
 DEBIAN_LONG_DESCRIPTION = Dot\ to\ Dot\ Sweep\ is\ an\ arcade-style\ color\ matching\ game.\ Collect\ dots\ that\ match\ your\ color\ while\ avoiding\ all\ other\ dots.\ The\ game\ is\ inspired\ by\ classic\ arcade\ games\ and\ takes\ cues\ from\ modern\ games.\ The\ simple\ gameplay\ mechanics\ coupled\ with\ increasingly\ difficult\ levels\ allows\ players\ of\ all\ skill\ levels\ to\ enjoy\ playing.\ Try\ to\ beat\ your\ personal\ best\ score\ or,\ optionally,\ compete\ for\ the\ top\ spot\ on\ the\ worldwide\ leaderboard.
