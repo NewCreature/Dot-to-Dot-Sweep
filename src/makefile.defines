@@ -10,8 +10,8 @@ include makefile.include
 APP_COMPANY = t3-i
 APP_NAME = dot-to-dot-sweep
 APP_TITLE = Dot\ to\ Dot\ Sweep
-APP_VERSION = 1.1.1
-APP_RELEASE = 11
+APP_VERSION = 1.2
+APP_RELEASE = 12
 APP_PUBLISHER = T³\ Software
 APP_COPYRIGHT = Copyright\ (C)\ 2018\ T³\ Software.
 APP_ANDROID_PACKAGE = com.t3i.dottodotsweep
