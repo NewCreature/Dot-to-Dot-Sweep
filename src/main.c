@@ -268,6 +268,17 @@ static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn)
 	return true;
 }
 
+static bool dot_load_font(APP_INSTANCE * app, int font, const char * fn, int size)
+{
+	t3f_load_resource((void **)&app->font[font], T3F_RESOURCE_TYPE_FONT, fn, size, 0, 0);
+	if(!app->font[font])
+	{
+		printf("Failed to load font %d!\n", font);
+		return false;
+	}
+	return true;
+}
+
 static ALLEGRO_COLOR dot_get_ball_color(ALLEGRO_BITMAP * bp)
 {
 	ALLEGRO_COLOR c;
@@ -422,20 +433,17 @@ bool app_load_data(APP_INSTANCE * app)
 	}
 
 	/* load fonts */
-	app->font[DOT_FONT_8] = al_load_font("data/fonts/kongtext.ttf", 8, 0);
-	if(!app->font[DOT_FONT_8])
+	if(!dot_load_font(app, DOT_FONT_8, "data/fonts/kongtext.ttf", 8))
 	{
 		printf("Failed to load font %d!\n", DOT_FONT_8);
 		return false;
 	}
-	app->font[DOT_FONT_16] = al_load_font("data/fonts/kongtext.ttf", 16, 0);
-	if(!app->font[DOT_FONT_16])
+	if(!dot_load_font(app, DOT_FONT_16, "data/fonts/kongtext.ttf", 16))
 	{
 		printf("Failed to load font %d!\n", DOT_FONT_16);
 		return false;
 	}
-	app->font[DOT_FONT_32] = al_load_font("data/fonts/kongtext.ttf", 32, 0);
-	if(!app->font[DOT_FONT_32])
+	if(!dot_load_font(app, DOT_FONT_32, "data/fonts/kongtext.ttf", 32))
 	{
 		printf("Failed to load font %d!\n", DOT_FONT_32);
 		return false;
@@ -807,5 +815,6 @@ int main(int argc, char * argv[])
 		printf("Error: could not initialize game!\n");
 	}
 	app_exit(&app);
+	t3f_finish();
 	return 0;
 }
