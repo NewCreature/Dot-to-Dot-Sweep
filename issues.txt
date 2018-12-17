@@ -1,5 +1,12 @@
-Dot to Dot Sweep Issues
------------------------
+v1.2.1
+------
+
+[ ]Check for initial click during gameplay so we don't drop onto the board if
+   if we already had the mouse button down.
+
+
+Old Issues
+----------
 
 [X]Adjust ball size to make game more playable on phones. This will require
    adjusting the level setup charts as well.
