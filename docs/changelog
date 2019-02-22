@@ -3,7 +3,7 @@ Dot to Dot Sweep (1.2.1) maverick; urgency=low
   * Fix issues with Android port that were preventing it from working on many
     devices.
 
- -- Todd Cope <user@email.com>  Tue, 19 Feb 2019 22:57:43 +0000
+ -- Todd Cope <todd@t3-i.com>  Tue, 19 Feb 2019 22:57:43 +0000
 
 dot-to-dot-sweep (1.2) maverick; urgency=low
 
