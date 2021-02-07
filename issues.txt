@@ -4,6 +4,16 @@ v1.2.1
 [ ]Check for initial click during gameplay so we don't drop onto the board if
    if we already had the mouse button down.
 
+[ ]Window is too small on Macs with high resolution display. Consider adding
+   option to set the window size.
+
+[ ]Consider adding a small border around the gameplay area in the desktop
+   version. I find I frequently accidentally venture slightly outside the game
+   window, causing the game to pause.
+
+[ ]Make dots with other dots behind them translucent. Sometimes a dot is hiding
+   under another dot, causing the player to unfairly lose.
+
 
 Old Issues
 ----------
