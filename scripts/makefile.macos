@@ -28,7 +28,6 @@ T3F_PLATFORM_LIBRARIES =\
 	$(MACOS_CONFIG_DEPEND_LIBS)\
 	$(MACOS_PLATFORM_LIBS)\
 	$(MACOS_DEPEND_LIBS)
-T3F_PLATFORM_TARGET = $(APP_PACKAGE_DIR)/$(APP_TITLE).app
 DEL_COMMAND = rm -f
 DEL_FOLDER_COMMAND = rm -rf
 SED_COMMAND = sed -i ''
@@ -78,6 +77,17 @@ $(APP_PACKAGE_DIR)/$(APP_TITLE).app : $(APP_EXE_NAME) ../icons/macos_icon.icns
 	@sed -i '' "s|T3F_APP_VERSION|$(APP_VERSION)|" $(APP_PACKAGE_DIR)/$(APP_TITLE).app/Contents/Info.plist
 	@sed -i '' "s|T3F_APP_PACKAGE|$(APP_ANDROID_PACKAGE)|" $(APP_PACKAGE_DIR)/$(APP_TITLE).app/Contents/Info.plist
 	@echo Application bundle created!
+
+mac_bundle:
+	make clean
+	make MACOS_ARCHITECTURES="-arch i386" APP_EXE_SUFFIX=-i386
+	make clean
+	make MACOS_ARCHITECTURES="-arch x86_64" APP_EXE_SUFFIX=-x86_64
+	make clean
+	make MACOS_ARCHITECTURES="-arch arm64" APP_EXE_SUFFIX=-arm64
+	lipo -create $(APP_EXE_NAME)-i386 $(APP_EXE_NAME)-x86_64 $(APP_EXE_NAME)-arm64 -output $(APP_EXE_NAME)
+	rm $(APP_EXE_NAME)-i386 $(APP_EXE_NAME)-x86_64 $(APP_EXE_NAME)-arm64
+	make $(APP_PACKAGE_DIR)/$(APP_TITLE).app
 
 mac_package: $(APP_PACKAGE_DIR)/$(APP_TITLE).app
 	rm -rf $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-macos.dmg
