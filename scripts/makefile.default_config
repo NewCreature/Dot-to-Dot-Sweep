@@ -18,7 +18,13 @@ ALLEGRO_SRC_ROOT = $(HOME)/T3/Projects/Dev/allegro5
 ifndef MACOS_ARCHITECTURES
   MACOS_ARCHITECTURES = -arch i386 -arch x86_64
 endif
-#MACOS_SYS_ROOT =
+ifndef MACOS_TOOLCHAIN_ROOT
+  MACOS_TOOLCHAIN_ROOT = /Library/Developer/CommandLineTools/SDKs
+endif
+ifndef MACOS_SDK
+  MACOS_SDK = MacOSX.sdk
+endif
+MACOS_SYS_ROOT = -isysroot $(MACOS_TOOLCHAIN_ROOT)/$(MACOS_SDK)
 MACOS_MIN_VERSION = -mmacos-version-min=10.6
 MACOS_CC = gcc
 MACOS_CXX = g++

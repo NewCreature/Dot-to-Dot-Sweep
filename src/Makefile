@@ -65,6 +65,9 @@ windows_package:
 mac_bundle:
 	$(MAKE) -f ../scripts/makefile.macos -I ../scripts mac_bundle
 
+mac_build_bundle:
+	$(MAKE) -f ../scripts/makefile.macos -I ../scripts mac_build_bundle
+
 mac_package:
 	$(MAKE) -f ../scripts/makefile.macos -I ../scripts mac_package
 
