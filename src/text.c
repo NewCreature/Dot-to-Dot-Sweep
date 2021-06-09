@@ -1,4 +1,5 @@
 #include "t3f/t3f.h"
+#include "t3f/font.h"
 #include "instance.h"
 #include "game.h"
 
@@ -7,10 +8,10 @@ static char dot_initial_entry_text[1024] = {0};
 static int dot_entry_text_max = 0;
 static int dot_entry_text_pos = 0;
 
-void dot_shadow_text(ALLEGRO_FONT * font, ALLEGRO_COLOR color, ALLEGRO_COLOR shadow, float x, float y, float sx, float sy, int flags, const char * text)
+void dot_shadow_text(T3F_FONT * font, ALLEGRO_COLOR color, ALLEGRO_COLOR shadow, float x, float y, float sx, float sy, int flags, const char * text)
 {
-	al_draw_text(font, shadow, x + sx, y + sy, flags, text);
-	al_draw_text(font, color, x, y, flags, text);
+	t3f_draw_text(font, shadow, x + sx, y + sy, 0, flags, text);
+	t3f_draw_text(font, color, x, y, 0, flags, text);
 }
 
 void dot_show_message(void * data, const char * message)
@@ -20,7 +21,7 @@ void dot_show_message(void * data, const char * message)
 	t3f_render(false);
 	al_hold_bitmap_drawing(false);
 	al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width, t3f_virtual_display_height, al_map_rgba_f(0.0, 0.0, 0.0, 0.75));
-	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_16]) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, message);
+	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - t3f_get_font_line_height(app->font[DOT_FONT_16]) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, message);
 	al_draw_filled_rectangle(0.0, t3f_virtual_display_width, 0.0, t3f_virtual_display_height, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 	al_flip_display();
 }

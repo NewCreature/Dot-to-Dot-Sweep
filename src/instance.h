@@ -18,7 +18,7 @@ typedef struct
     /* data */
     ALLEGRO_BITMAP * bitmap[DOT_MAX_BITMAPS];
     ALLEGRO_SAMPLE * sample[DOT_MAX_SAMPLES];
-    ALLEGRO_FONT * font[DOT_MAX_FONTS];
+    T3F_FONT * font[DOT_MAX_FONTS];
     ALLEGRO_COLOR dot_color[16];
     ALLEGRO_COLOR level_color[10];
     T3F_ATLAS * atlas;

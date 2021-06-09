@@ -259,7 +259,7 @@ void app_render(void * data)
 
 static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn)
 {
-	t3f_load_resource((void **)&app->bitmap[bitmap], T3F_RESOURCE_TYPE_BITMAP, fn, 0, 0, 0);
+	t3f_load_resource((void **)&app->bitmap[bitmap], t3f_bitmap_resource_handler_proc, fn, 0, 0, 0);
 	if(!app->bitmap[bitmap])
 	{
 		printf("Failed to load image %d!\n", bitmap);
@@ -270,7 +270,7 @@ static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn)
 
 static bool dot_load_font(APP_INSTANCE * app, int font, const char * fn, int size)
 {
-	t3f_load_resource((void **)&app->font[font], T3F_RESOURCE_TYPE_FONT, fn, size, 0, 0);
+	t3f_load_resource((void **)&app->font[font], t3f_font_resource_handler_proc, fn, size, 0, 0);
 	if(!app->font[font])
 	{
 		printf("Failed to load font %d!\n", font);
@@ -620,7 +620,7 @@ void app_check_mobile_argument(APP_INSTANCE * app, int argc, char * argv[])
 static float get_copyright_message_width(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	ALLEGRO_FONT * font;
+	T3F_FONT * font;
 	int read_pos = 0;
 	int32_t read_char = 0;
 	float text_width = 0.0;
@@ -639,7 +639,7 @@ static float get_copyright_message_width(void * data)
 			font = app->font[DOT_FONT_16];
 		}
 		al_ustr_set_chr(app->copyright_message_char_ustr, 0, read_char);
-		text_width += al_get_text_width(font, al_cstr(app->copyright_message_char_ustr));
+		text_width += t3f_get_text_width(font, al_cstr(app->copyright_message_char_ustr));
 	}
 	return text_width;
 }
@@ -772,7 +772,7 @@ void app_exit(APP_INSTANCE * app)
 		{
 			if(!t3f_destroy_resource(app->font[i]))
 			{
-				al_destroy_font(app->font[i]);
+				t3f_destroy_font(app->font[i]);
 			}
 		}
 	}

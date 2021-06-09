@@ -173,12 +173,12 @@ void dot_game_create_particle_lists(void * data)
 		al_use_transform(&identity);
 		dot_game_clear_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
 		al_set_clipping_rectangle(0, 0, 512, 512);
-		al_draw_text(app->font[DOT_FONT_16], t3f_color_white, 0, 0, 0, buf);
+		t3f_draw_text(app->font[DOT_FONT_16], t3f_color_white, 0, 0, 0, 0, buf);
 		t3f_set_clipping_rectangle(0, 0, 0, 0);
 		al_restore_state(&old_state);
 		al_lock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
-		w = al_get_text_width(app->font[DOT_FONT_16], buf);
-		h = al_get_font_line_height(app->font[DOT_FONT_16]);
+		w = t3f_get_text_width(app->font[DOT_FONT_16], buf);
+		h = t3f_get_font_line_height(app->font[DOT_FONT_16]);
 		for(j = 0; j < w; j++)
 		{
 			for(k = 0; k < h; k++)
@@ -316,17 +316,17 @@ static void dot_game_create_score_effect(void * data, float x, float y, int numb
 	float w, cw;
 
 	sprintf(buf, "%d", number);
-	w = al_get_text_width(app->font[DOT_FONT_16], buf);
+	w = t3f_get_text_width(app->font[DOT_FONT_16], buf);
 	ox = w / 2;
 	px = 0.0;
 	for(i = 0; i < strlen(buf); i++)
 	{
 		ni = buf[i] - '0';
 		cbuf[0] = buf[i];
-		cw = al_get_text_width(app->font[DOT_FONT_16], cbuf);
+		cw = t3f_get_text_width(app->font[DOT_FONT_16], cbuf);
 		for(j = 0; j < app->number_particle_list[ni].items; j++)
 		{
-			dot_create_particle(&app->particle[app->current_particle], x + (float)app->number_particle_list[ni].item[j].x + px - ox, y + app->number_particle_list[ni].item[j].y, 0.0, dot_spread_effect_particle(app->number_particle_list[ni].item[j].x + px, w, strlen(buf) * 2.5), dot_spread_effect_particle(app->number_particle_list[ni].item[j].y, al_get_font_line_height(app->font[DOT_FONT_16]), 4.0), -10.0, 0.0, 3.0, 45, app->bitmap[DOT_BITMAP_PARTICLE], t3f_color_white);
+			dot_create_particle(&app->particle[app->current_particle], x + (float)app->number_particle_list[ni].item[j].x + px - ox, y + app->number_particle_list[ni].item[j].y, 0.0, dot_spread_effect_particle(app->number_particle_list[ni].item[j].x + px, w, strlen(buf) * 2.5), dot_spread_effect_particle(app->number_particle_list[ni].item[j].y, t3f_get_font_line_height(app->font[DOT_FONT_16]), 4.0), -10.0, 0.0, 3.0, 45, app->bitmap[DOT_BITMAP_PARTICLE], t3f_color_white);
 			app->current_particle++;
 			if(app->current_particle >= DOT_MAX_PARTICLES)
 			{
@@ -894,11 +894,11 @@ void dot_game_render_hud(void * data)
 	}
 	al_hold_bitmap_drawing(true);
 	sprintf(buffer, "Score");
-	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, t3f_virtual_display_width - 8, 440 + 40 - al_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_RIGHT, buffer);
+	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, t3f_virtual_display_width - 8, 440 + 40 - t3f_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_RIGHT, buffer);
 	sprintf(buffer, "%d", app->game.score);
 	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, t3f_virtual_display_width - 8, 440 + 40, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_RIGHT, buffer);
 	sprintf(buffer, "Lives");
-	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, 8, 440 + 40 - al_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, 0, buffer);
+	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, 8, 440 + 40 - t3f_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, 0, buffer);
 	sprintf(buffer, "%d", app->game.lives);
 	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, 8, 440 + 40, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, 0, buffer);
 
@@ -1016,7 +1016,7 @@ void dot_game_render(void * data)
 	if(!app->desktop_mode)
 	{
 		touch_effect_y = t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT;
-		level_y = DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_32]) / 2;
+		level_y = DOT_GAME_PLAYFIELD_HEIGHT / 2 - t3f_get_font_line_height(app->font[DOT_FONT_32]) / 2;
 		start_y = t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT / 2;
 		touch_text = "Touch";
 	}
@@ -1101,7 +1101,7 @@ void dot_game_render(void * data)
 			al_hold_bitmap_drawing(true);
 			t3f_set_clipping_rectangle(0, 0, 0, 0);
 		}
-		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_font_line_height(app->font[DOT_FONT_32]) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, "Paused");
+		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - t3f_get_font_line_height(app->font[DOT_FONT_32]) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_CENTRE, "Paused");
 	}
 	else if(app->game.state == DOT_GAME_STATE_START)
 	{
@@ -1127,7 +1127,7 @@ void dot_game_render(void * data)
 			sprintf(buf, "Level %d", app->game.level + 1);
 			dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, level_y, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_CENTRE, buf);
 		}
-		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, start_y - al_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_CENTRE, touch_text);
+		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, start_y - t3f_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_CENTRE, touch_text);
 		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, start_y, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_CENTRE, "Here");
 	}
 	al_hold_bitmap_drawing(false);

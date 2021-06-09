@@ -116,11 +116,11 @@ void dot_credits_render(void * data, float ox)
     {
         if(app->credits.current_credit < app->credits.credits)
         {
-            pos_y = DOT_GAME_PLAYFIELD_HEIGHT / 2.0 - ((app->credits.credit[app->credits.current_credit].names + 1) * al_get_font_line_height(app->font[DOT_FONT_32])) / 2.0;
+            pos_y = DOT_GAME_PLAYFIELD_HEIGHT / 2.0 - ((app->credits.credit[app->credits.current_credit].names + 1) * t3f_get_font_line_height(app->font[DOT_FONT_32])) / 2.0;
             dot_shadow_text(app->font[DOT_FONT_32], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2 + app->credits.ox + ox, pos_y, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_CENTRE, app->credits.credit[app->credits.current_credit].header);
             for(i = 0; i < app->credits.credit[app->credits.current_credit].names; i++)
             {
-                pos_y += al_get_font_line_height(app->font[DOT_FONT_32]);
+                pos_y += t3f_get_font_line_height(app->font[DOT_FONT_32]);
                 pos_ox = i % 2 ? app->credits.ox : -app->credits.ox;
                 dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2 + pos_ox + ox, pos_y, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_CENTRE, app->credits.credit[app->credits.current_credit].name[i]);
             }

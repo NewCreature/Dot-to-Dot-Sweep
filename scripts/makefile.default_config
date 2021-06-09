@@ -22,9 +22,12 @@ ifndef MACOS_SDK
   MACOS_SDK = MacOSX.sdk
 endif
 MACOS_SYS_ROOT = -isysroot $(MACOS_TOOLCHAIN_ROOT)/$(MACOS_SDK)
-MACOS_MIN_VERSION = -mmacos-version-min=10.6
+#MACOS_MIN_VERSION = -mmacos-version-min=10.6
 MACOS_CC = gcc
 MACOS_CXX = g++
+ifndef MACOS_CXX_STDLIB
+  MACOS_CXX_STDLIB = c++
+endif
 #MACOS_CONFIG_CFLAGS =
 #MACOS_CONFIG_LFLAGS =
 MACOS_CONFIG_PKG_CONFIG_OPTIONS = --libs --static
@@ -52,7 +55,7 @@ MSYS_CONFIG_ALLEGRO_SUFFIX = -static
 MSYS_CONFIG_DEPEND_LIBS = -luuid -lkernel32 -lwinmm -lpsapi\
               -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32\
               -ladvapi32 -lws2_32 -lshlwapi -lvorbisfile -lvorbis -lFLAC -logg\
-              -ldumb -lfreetype -lpng -lz -ljpeg -ld3d9 -ldsound -lstdc++
+              -ldumb -lopusfile -lopus -lfreetype -lpng -lz -ljpeg -ld3d9 -ldsound -lstdc++ -lssp
 
 ##################
 # Linux Settings #
