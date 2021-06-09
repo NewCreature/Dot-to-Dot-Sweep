@@ -433,6 +433,11 @@ bool app_load_data(APP_INSTANCE * app)
 	}
 
 	/* load fonts */
+	if(!dot_load_font(app, DOT_FONT_14, "data/fonts/kongtext.ttf", 14))
+	{
+		printf("Failed to load font %d!\n", DOT_FONT_8);
+		return false;
+	}
 	if(!dot_load_font(app, DOT_FONT_8, "data/fonts/kongtext.ttf", 8))
 	{
 		printf("Failed to load font %d!\n", DOT_FONT_8);
@@ -617,33 +622,6 @@ void app_check_mobile_argument(APP_INSTANCE * app, int argc, char * argv[])
 	}
 }
 
-static float get_copyright_message_width(void * data)
-{
-	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	T3F_FONT * font;
-	int read_pos = 0;
-	int32_t read_char = 0;
-	float text_width = 0.0;
-	int i;
-
-	for(i = 0; i < al_ustr_length(app->copyright_message_ustr); i++)
-	{
-		read_char = al_ustr_get_next(app->copyright_message_ustr, &read_pos);
-		if(read_char == 179)
-		{
-			font = app->font[DOT_FONT_8];
-			read_char = '3';
-		}
-		else
-		{
-			font = app->font[DOT_FONT_16];
-		}
-		al_ustr_set_chr(app->copyright_message_char_ustr, 0, read_char);
-		text_width += t3f_get_text_width(font, al_cstr(app->copyright_message_char_ustr));
-	}
-	return text_width;
-}
-
 /* initialize our app, load graphics, etc. */
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
@@ -664,29 +642,11 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	t3f_set_event_handler(dot_event_handler);
 	t3net_setup(NULL, al_path_cstr(t3f_temp_path, '/'));
-	#ifdef T3F_NO_UTF8
-		t3f_windows_text_to_utf8(T3F_APP_COPYRIGHT, app->copyright_message, 256);
-	#else
-		strcpy(app->copyright_message, T3F_APP_COPYRIGHT);
-	#endif
-	app->copyright_message_ustr = al_ustr_new(app->copyright_message);
-	if(!app->copyright_message_ustr)
-	{
-		printf("Failed to create message buffer!\n");
-		return false;
-	}
-	app->copyright_message_char_ustr = al_ustr_new(" ");
-	if(!app->copyright_message_char_ustr)
-	{
-		printf("Failed to create character buffer!\n");
-		return false;
-	}
 	if(!app_load_data(app))
 	{
 		printf("Failed to load data!\n");
 		return false;
 	}
-	app->copyright_message_width = get_copyright_message_width(app);
 
 	app_read_config(app);
 
@@ -791,14 +751,6 @@ void app_exit(APP_INSTANCE * app)
 	if(app->leaderboard)
 	{
 		t3net_destroy_leaderboard(app->leaderboard);
-	}
-	if(app->copyright_message_ustr)
-	{
-		al_ustr_free(app->copyright_message_ustr);
-	}
-	if(app->copyright_message_char_ustr)
-	{
-		al_ustr_free(app->copyright_message_char_ustr);
 	}
 }
 

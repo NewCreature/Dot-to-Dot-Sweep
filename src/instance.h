@@ -62,10 +62,6 @@ typedef struct
     float logo_ox;
     float credits_ox;
     bool menu_showing;
-    char copyright_message[256];
-    ALLEGRO_USTR * copyright_message_ustr;
-    ALLEGRO_USTR * copyright_message_char_ustr;
-    float copyright_message_width;
 
     /* credits data */
     DOT_CREDITS credits;

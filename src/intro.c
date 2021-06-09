@@ -457,30 +457,9 @@ void dot_intro_render_split(void * data)
 static void render_copyright_message(void * data, ALLEGRO_COLOR color, ALLEGRO_COLOR shadow, float x, float y, float sx, float sy)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	T3F_FONT * font;
-	int read_pos = 0;
-	int32_t read_char = 0;
-	float text_width = 0.0;
-	int i;
 
-	for(i = 0; i < al_ustr_length(app->copyright_message_ustr); i++)
-	{
-		read_char = al_ustr_get_next(app->copyright_message_ustr, &read_pos);
-		if(read_char == 179)
-		{
-			font = app->font[DOT_FONT_8];
-			read_char = '3';
-		}
-		else
-		{
-			font = app->font[DOT_FONT_16];
-		}
-		al_ustr_set_chr(app->copyright_message_char_ustr, 0, read_char);
-		text_width = t3f_get_text_width(font, al_cstr(app->copyright_message_char_ustr));
-		t3f_draw_text(font, shadow, x + sx, y + sy, 0, 0, al_cstr(app->copyright_message_char_ustr));
-		t3f_draw_text(font, color, x, y, 0, 0, al_cstr(app->copyright_message_char_ustr));
-		x += text_width;
-	}
+	t3f_draw_text(app->font[DOT_FONT_14], shadow, x + sx, y + sy, 0, 0, T3F_APP_COPYRIGHT);
+	t3f_draw_text(app->font[DOT_FONT_14], color, x, y, 0, 0, T3F_APP_COPYRIGHT);
 }
 
 void dot_intro_render(void * data)
@@ -495,7 +474,7 @@ void dot_intro_render(void * data)
 	{
 		al_draw_bitmap(app->bitmap[DOT_BITMAP_LOGO], DOT_GAME_PLAYFIELD_WIDTH / 2 - al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]) / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]) / 2, 0);
 		dot_credits_render(data, app->credits_ox);
-		render_copyright_message(data, t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2 - app->copyright_message_width / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT - t3f_get_font_line_height(app->font[DOT_FONT_16]) * 2, DOT_SHADOW_OX, DOT_SHADOW_OY);
+		render_copyright_message(data, t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2 - t3f_get_text_width(app->font[DOT_FONT_14], T3F_APP_COPYRIGHT) / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT - t3f_get_font_line_height(app->font[DOT_FONT_16]) * 2, DOT_SHADOW_OX, DOT_SHADOW_OY);
 	}
 	al_hold_bitmap_drawing(false);
 	dot_intro_render_split(data);

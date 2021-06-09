@@ -41,6 +41,7 @@
 #define DOT_FONT_16            0
 #define DOT_FONT_32            1
 #define DOT_FONT_8             2
+#define DOT_FONT_14            3
 
 #define DOT_MAX_MENUS          7
 #define DOT_MENU_MAIN          0
