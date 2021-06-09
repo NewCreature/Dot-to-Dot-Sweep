@@ -622,6 +622,30 @@ void app_check_mobile_argument(APP_INSTANCE * app, int argc, char * argv[])
 	}
 }
 
+static void set_optimal_display_size(APP_INSTANCE * app)
+{
+	ALLEGRO_MONITOR_INFO info;
+	int width, height;
+	int current_width = DOT_DISPLAY_WIDTH;
+	int current_height = DOT_DISPLAY_HEIGHT;
+
+	al_get_monitor_info(0, &info);
+	width = info.x2 - info.x1 - 64;
+	height = info.y2 - info.y1 - 64;
+	while(current_width <= width && current_height <= height)
+	{
+		current_width += DOT_DISPLAY_WIDTH / 4;
+		current_height += DOT_DISPLAY_HEIGHT / 4;
+	}
+	current_width -= DOT_DISPLAY_WIDTH / 4;
+	current_height -= DOT_DISPLAY_HEIGHT / 4;
+	if(current_width != al_get_display_width(t3f_display) || current_height != al_get_display_height(t3f_display))
+	{
+		t3f_set_gfx_mode(current_width, current_height, t3f_flags);
+		al_set_window_position(t3f_display, (info.x2 - info.x1) / 2 - current_width / 2, (info.y2 - info.y1) / 2 - current_height / 2);
+	}
+}
+
 /* initialize our app, load graphics, etc. */
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
@@ -641,6 +665,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		return false;
 	}
 	t3f_set_event_handler(dot_event_handler);
+	set_optimal_display_size(app);
 	t3net_setup(NULL, al_path_cstr(t3f_temp_path, '/'));
 	if(!app_load_data(app))
 	{
