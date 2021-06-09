@@ -5,7 +5,7 @@
 #include "leaderboard.h"
 #include "internal.h"
 
-T3NET_LEADERBOARD * t3net_get_leaderboard(char * url, char * game, char * version, char * mode, char * option, int entries, int ascend)
+T3NET_LEADERBOARD * t3net_get_leaderboard(int curl_mode, char * url, char * game, char * version, char * mode, char * option, int entries, int ascend)
 {
 	T3NET_LEADERBOARD * lp;
 	int i, j;
@@ -29,7 +29,7 @@ T3NET_LEADERBOARD * t3net_get_leaderboard(char * url, char * game, char * versio
 		{
 			break;
 		}
-		strcpy(lp->entry[i]->name, "");
+		t3net_strcpy(lp->entry[i]->name, "", 256);
 		lp->entry[i]->score = -1;
 	}
 	if(i < entries)
@@ -42,6 +42,7 @@ T3NET_LEADERBOARD * t3net_get_leaderboard(char * url, char * game, char * versio
 		return NULL;
 	}
 	lp->entries = entries;
+	lp->curl_mode = curl_mode;
 	strcpy(lp->url, url);
 	strcpy(lp->game, game);
 	strcpy(lp->version, version);
@@ -104,7 +105,7 @@ int t3net_update_leaderboard(T3NET_LEADERBOARD * lp)
 	{
 		goto fail;
 	}
-	data = t3net_get_data(lp->url, args);
+	data = t3net_get_data(lp->curl_mode, lp->url, args);
 	if(!data)
 	{
 		goto fail;
@@ -115,7 +116,7 @@ int t3net_update_leaderboard(T3NET_LEADERBOARD * lp)
 		val = t3net_get_data_entry_field(data, i, "name");
 		if(val)
 		{
-			strcpy(lp->entry[i]->name, val);
+			t3net_strcpy(lp->entry[i]->name, val, 256);
 		}
 		val = t3net_get_data_entry_field(data, i, "score");
 		if(val)
@@ -125,7 +126,7 @@ int t3net_update_leaderboard(T3NET_LEADERBOARD * lp)
 		val = t3net_get_data_entry_field(data, i, "extra");
 		if(val)
 		{
-			strcpy(lp->entry[i]->extra, val);
+			t3net_strcpy(lp->entry[i]->extra, val, 256);
 		}
 	}
 	lp->entries = data->entries;
@@ -164,7 +165,7 @@ void t3net_destroy_leaderboard(T3NET_LEADERBOARD * lp)
 	free(lp);
 }
 
-int t3net_upload_score(char * url, char * game, char * version, char * mode, char * option, char * name, unsigned long score, char * extra)
+int t3net_upload_score(int curl_mode, char * url, char * game, char * version, char * mode, char * option, char * name, unsigned long score, char * extra)
 {
 	T3NET_ARGUMENTS * args = NULL;
 	T3NET_DATA * data = NULL;
@@ -208,7 +209,7 @@ int t3net_upload_score(char * url, char * game, char * version, char * mode, cha
 			goto fail;
 		}
 	}
-	data = t3net_get_data(url, args);
+	data = t3net_get_data(curl_mode, url, args);
 	if(!data)
 	{
 		goto fail;

@@ -663,6 +663,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		return false;
 	}
 	t3f_set_event_handler(dot_event_handler);
+	t3net_setup(NULL, al_path_cstr(t3f_temp_path, '/'));
 	#ifdef T3F_NO_UTF8
 		t3f_windows_text_to_utf8(T3F_APP_COPYRIGHT, app->copyright_message, 256);
 	#else
