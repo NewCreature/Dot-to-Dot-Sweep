@@ -526,6 +526,37 @@ void app_read_config(APP_INSTANCE * app)
 			app->music_enabled = true;
 		}
 	}
+
+	app->game.cheats_enabled = false;
+	app->game.speed_multiplier = 1.0;
+	val = al_get_config_value(t3f_config, "Game Data", "speed_multiplier");
+	if(val)
+	{
+		app->game.speed_multiplier = atof(val);
+		app->game.cheats_enabled = true;
+	}
+
+	app->game.start_level = 0;
+	val = al_get_config_value(t3f_config, "Game Data", "start_level");
+	if(val)
+	{
+		app->game.start_level = atoi(val);
+		if(app->game.start_level != 0)
+		{
+			app->game.cheats_enabled = true;
+		}
+	}
+
+	app->game.start_lives = 3;
+	val = al_get_config_value(t3f_config, "Game Data", "start_lives");
+	if(val)
+	{
+		app->game.start_lives = atoi(val);
+		if(app->game.start_lives != 3)
+		{
+			app->game.cheats_enabled = true;
+		}
+	}
 }
 
 bool app_process_arguments(APP_INSTANCE * app, int argc, char * argv[])

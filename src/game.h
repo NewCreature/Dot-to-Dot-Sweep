@@ -111,6 +111,12 @@ typedef struct
 	DOT_PLAYER player;
 	DOT_SHIELD shield;
 
+	/* cheats */
+	bool cheats_enabled;
+	int start_level;
+	float speed_multiplier;
+	int start_lives;
+
 } DOT_GAME;
 
 void dot_game_initialize(void * data, bool demo_seed);

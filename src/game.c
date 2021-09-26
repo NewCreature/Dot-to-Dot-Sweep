@@ -82,6 +82,7 @@ void dot_game_setup_level(void * data, int level)
 		app->game.ball[i].z = 0;
 		app->game.ball[i].a = t3f_drand(&app->rng_state) * ALLEGRO_PI * 2.0;
 		app->game.ball[i].s = t3f_drand(&app->rng_state) * 0.75 + 0.25;
+		app->game.ball[i].s *= app->game.speed_multiplier;
 		app->game.ball[i].vx = cos(app->game.ball[i].a) * app->game.ball[i].s;
 		app->game.ball[i].vy = sin(app->game.ball[i].a) * app->game.ball[i].s;
 		app->game.ball[i].type = col;
@@ -102,6 +103,7 @@ void dot_game_setup_level(void * data, int level)
 		app->game.ball[j].z = 0;
 		app->game.ball[j].a = t3f_drand(&app->rng_state) * ALLEGRO_PI * 2.0;
 		app->game.ball[j].s = t3f_drand(&app->rng_state) * 0.75 + 0.25;
+		app->game.ball[j].s *= app->game.speed_multiplier;
 		app->game.ball[j].vx = cos(app->game.ball[j].a) * app->game.ball[j].s;
 		app->game.ball[j].vy = sin(app->game.ball[j].a) * app->game.ball[j].s;
 		app->game.ball[j].type = 6;
@@ -213,10 +215,10 @@ void dot_game_initialize(void * data, bool demo_seed)
 	{
 		dot_game_create_particle_lists(data);
 	}
-	dot_game_setup_level(data, 0);
+	dot_game_setup_level(data, app->game.start_level);
 	app->game.score = 0;
 	app->game.combo = 0;
-	app->game.lives = 3;
+	app->game.lives = app->game.start_lives;
 	app->game.shield.active = false;
 	app->game.old_bg_color = app->level_color[0];
 	app->game.bg_color_fade = 0.0;
@@ -255,7 +257,7 @@ void dot_game_exit(void * data)
 	al_save_config_file(al_path_cstr(t3f_config_path, '/'), t3f_config);
 
 	/* upload score */
-	if(app->upload_scores && !app->demo_file)
+	if(app->upload_scores && !app->demo_file && !app->game.cheats_enabled)
 	{
 		sprintf(buf, "%d", app->game.level + 1);
 		al_stop_timer(t3f_timer);
@@ -525,14 +527,17 @@ void dot_game_check_player_collisions(void * data)
 					dot_game_accumulate_score(data);
 					app->game.combo = 0;
 					app->game.shield.active = false;
-					app->game.lives--;
+					if(app->game.lives > 0)
+					{
+						app->game.lives--;
+					}
 					app->game.emo_tick = 60;
 					app->game.emo_state = DOT_GAME_EMO_STATE_DEAD;
 
 					/* change ball color to match the ball that is hit unless it is black */
 					if(app->game.ball[i].type != DOT_BITMAP_BALL_BLACK)
 					{
-						if(app->game.lives > 0)
+						if(app->game.lives > 0 || app->game.start_lives <= 0)
 						{
 							dot_game_drop_player(data, app->game.ball[i].type);
 							dot_game_target_balls(data, app->game.player.ball.type);
@@ -545,7 +550,7 @@ void dot_game_check_player_collisions(void * data)
 					}
 					else
 					{
-						if(app->game.lives > 0)
+						if(app->game.lives > 0 || app->game.start_lives <= 0)
 						{
 							dot_game_drop_player(data, app->game.player.ball.type);
 						}
