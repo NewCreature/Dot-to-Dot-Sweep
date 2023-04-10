@@ -1,11 +1,20 @@
-v1.2.1
+v1.2.2
 ------
+
+[ ]Update server-side leaderboard code.
+
+   [ ]There should only be one version of the leaderboard code on the site.
+
+   [ ]The current code doesn't seem to produce any output. Probably some syntax
+      error in the PHP code.
 
 [ ]Check for initial click during gameplay so we don't drop onto the board if
    if we already had the mouse button down.
 
-[ ]Window is too small on Macs with high resolution display. Consider adding
+[X]Window is too small on Macs with high resolution display. Consider adding
    option to set the window size.
+
+   [X]Added optimal window size detection.
 
 [ ]Consider adding a small border around the gameplay area in the desktop
    version. I find I frequently accidentally venture slightly outside the game
