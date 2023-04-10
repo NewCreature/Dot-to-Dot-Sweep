@@ -562,14 +562,14 @@ void app_read_config(APP_INSTANCE * app)
 	val = al_get_config_value(t3f_config, "Game Data", "leaderboard_submit_url");
 	if(!val)
 	{
-		val = "https://www.tcubedsoftware.com/scripts/t3net2/leaderboards/insert.php";
+		val = "https://www.tcubedsoftware.com/scripts/leaderboards/insert.php";
 		al_set_config_value(t3f_config, "Game Data", "leaderboard_submit_url", val);
 	}
 	strcpy(app->leaderboard_submit_url, val);
 	val = al_get_config_value(t3f_config, "Game Data", "leaderboard_retrieve_url");
 	if(!val)
 	{
-		val = "https://www.tcubedsoftware.com/scripts/t3net2/leaderboards/query.php";
+		val = "https://www.tcubedsoftware.com/scripts/leaderboards/query.php";
 		al_set_config_value(t3f_config, "Game Data", "leaderboard_retrieve_url", val);
 	}
 	strcpy(app->leaderboard_retrieve_url, val);
