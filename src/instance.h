@@ -49,6 +49,8 @@ typedef struct
     DOT_PARTICLE_LIST number_particle_list[10];
 
     /* leaderboard stuff */
+    char leaderboard_submit_url[1024];
+    char leaderboard_retrieve_url[1024];
     char user_name[256];
     bool upload_scores;
     T3NET_LEADERBOARD * leaderboard;

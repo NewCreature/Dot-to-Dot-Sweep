@@ -557,6 +557,22 @@ void app_read_config(APP_INSTANCE * app)
 			app->game.cheats_enabled = true;
 		}
 	}
+
+	/* set up leaderboard URLs */
+	val = al_get_config_value(t3f_config, "Game Data", "leaderboard_submit_url");
+	if(!val)
+	{
+		val = "https://www.tcubedsoftware.com/scripts/t3net2/leaderboards/insert.php";
+		al_set_config_value(t3f_config, "Game Data", "leaderboard_submit_url", val);
+	}
+	strcpy(app->leaderboard_submit_url, val);
+	val = al_get_config_value(t3f_config, "Game Data", "leaderboard_retrieve_url");
+	if(!val)
+	{
+		val = "https://www.tcubedsoftware.com/scripts/t3net2/leaderboards/query.php";
+		al_set_config_value(t3f_config, "Game Data", "leaderboard_retrieve_url", val);
+	}
+	strcpy(app->leaderboard_retrieve_url, val);
 }
 
 bool app_process_arguments(APP_INSTANCE * app, int argc, char * argv[])
