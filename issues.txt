@@ -31,6 +31,13 @@ v1.2.2
 [ ]Darkening overlay during game start and pause states doesn't cover the
    entire play area under certain circumstances.
 
+[ ]Add high resolution graphics. Include multiple graphics sets for verious
+   target resolutions and pick the closest one that is not greater than the
+   target resolution.
+
+[ ]Use T3F font engine to generate high resolution font based on target
+   resolution.
+
 
 Old Issues
 ----------
