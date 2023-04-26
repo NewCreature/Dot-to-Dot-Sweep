@@ -8,7 +8,7 @@ v1.2.2
    [X]The current code doesn't seem to produce any output. Probably some syntax
       error in the PHP code.
 
-[ ]Check for initial click during gameplay so we don't drop onto the board if
+[X]Check for initial click during gameplay so we don't drop onto the board if
    if we already had the mouse button down.
 
 [X]Window is too small on Macs with high resolution display. Consider adding
