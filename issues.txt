@@ -1,11 +1,11 @@
 v1.2.2
 ------
 
-[ ]Update server-side leaderboard code.
+[X]Update server-side leaderboard code.
 
-   [ ]There should only be one version of the leaderboard code on the site.
+   [X]There should only be one version of the leaderboard code on the site.
 
-   [ ]The current code doesn't seem to produce any output. Probably some syntax
+   [X]The current code doesn't seem to produce any output. Probably some syntax
       error in the PHP code.
 
 [ ]Check for initial click during gameplay so we don't drop onto the board if
