@@ -260,6 +260,15 @@ static T3F_FONT_DATA * load_font_old(const char * fn, int size, int flags)
 	if(generate)
 	{
 		fp = generate_font(al_path_cstr(pp, '/'), size, outline, outline_color);
+		if(!fp)
+		{
+			goto fail;
+		}
+		val = al_get_config_value(cp, "T3F Font Generator", "scale");
+		if(val)
+		{
+			fp->scale = atof(val);
+		}
 	}
 	else
 	{
