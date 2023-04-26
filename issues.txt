@@ -26,6 +26,11 @@ v1.2.2
 [X]Score particles sometimes aren't shaped like the number characters they are
    supposed to be based on.
 
+[ ]HUD does not render all the way to the edge under certain circumstances.
+
+[ ]Darkening overlay during game start and pause states doesn't cover the
+   entire play area under certain circumstances.
+
 
 Old Issues
 ----------
