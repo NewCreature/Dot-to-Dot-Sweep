@@ -227,6 +227,7 @@ void dot_game_initialize(void * data, bool demo_seed)
 		t3f_play_music(DOT_MUSIC_BGM);
 	}
 	app->game.tick = 0;
+	app->game.block_click = false;
 	app->state = DOT_STATE_GAME;
 }
 
@@ -773,7 +774,7 @@ void dot_game_logic(void * data)
 			app->game.state_tick++;
 			if(app->touch_id >= 0)
 			{
-				if(app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
+				if(!app->game.block_click && app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
 				{
 					t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
 					app->game.state = DOT_GAME_STATE_PLAY;
@@ -785,7 +786,12 @@ void dot_game_logic(void * data)
 					app->game.player.touch_offset_y = 0;
 					app->game.level_start = false;
 					al_hide_mouse_cursor(t3f_display);
+					app->game.block_click = true;
 				}
+			}
+			else
+			{
+				app->game.block_click = false;
 			}
 
 			/* handle ball logic */
