@@ -735,6 +735,17 @@ void dot_game_emo_logic(void * data)
 	}
 }
 
+static void exit_to_title(APP_INSTANCE * app)
+{
+	dot_intro_setup(app);
+	al_show_mouse_cursor(t3f_display);
+	app->state = DOT_STATE_INTRO;
+	if(app->music_enabled)
+	{
+		t3f_play_music(DOT_MUSIC_TITLE);
+	}
+}
+
 /* the main game logic function */
 void dot_game_logic(void * data)
 {
@@ -771,36 +782,49 @@ void dot_game_logic(void * data)
 		case DOT_GAME_STATE_START:
 		{
 			app->game.state_tick++;
-			if(app->touch_id >= 0)
+			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 			{
-				if(!app->game.block_click && app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
-				{
-					t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
-					app->game.state = DOT_GAME_STATE_PLAY;
-					app->game.state_tick = 0;
-					app->game.player.lost_touch = false;
-					app->game.player.ball.active = true;
-					app->game.player.want_shield = true;
-					app->game.player.touch_offset_x = 0;
-					app->game.player.touch_offset_y = 0;
-					app->game.level_start = false;
-					al_hide_mouse_cursor(t3f_display);
-					app->game.block_click = true;
-				}
+				exit_to_title(app);
 			}
 			else
 			{
-				app->game.block_click = false;
-			}
+				if(app->touch_id >= 0)
+				{
+					if(!app->game.block_click && app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
+					{
+						t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
+						app->game.state = DOT_GAME_STATE_PLAY;
+						app->game.state_tick = 0;
+						app->game.player.lost_touch = false;
+						app->game.player.ball.active = true;
+						app->game.player.want_shield = true;
+						app->game.player.touch_offset_x = 0;
+						app->game.player.touch_offset_y = 0;
+						app->game.level_start = false;
+						al_hide_mouse_cursor(t3f_display);
+						app->game.block_click = true;
+					}
+				}
+				else
+				{
+					app->game.block_click = false;
+				}
 
-			/* handle ball logic */
-			colored = dot_game_move_balls(data);
+				/* handle ball logic */
+				colored = dot_game_move_balls(data);
+			}
 			break;
 		}
 
 		case DOT_GAME_STATE_PAUSE:
 		{
-			if(app->touch_id >= 0 && t3f_distance(app->touch_x, app->touch_y, app->game.player.ball.x, app->game.player.ball.y) < DOT_GAME_GRAB_SPOT_SIZE)
+			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
+			{
+				exit_to_title(app);
+				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+				t3f_key[ALLEGRO_KEY_BACK] = 0;
+			}
+			else if(app->touch_id >= 0 && t3f_distance(app->touch_x, app->touch_y, app->game.player.ball.x, app->game.player.ball.y) < DOT_GAME_GRAB_SPOT_SIZE)
 			{
 				app->game.player.touch_offset_x = app->game.player.ball.x - app->touch_x;
 				app->game.player.touch_offset_y = app->game.player.ball.y - app->touch_y;
@@ -829,6 +853,12 @@ void dot_game_logic(void * data)
 		/* normal game state */
 		default:
 		{
+			if(t3f_key[ALLEGRO_KEY_ESCAPE])
+			{
+				app->game.state = DOT_GAME_STATE_PAUSE;
+				al_show_mouse_cursor(t3f_display);
+				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+			}
 			/* handle shield logic */
 			dot_game_shield_logic(data);
 
@@ -864,18 +894,6 @@ void dot_game_logic(void * data)
 			}
 			break;
 		}
-	}
-	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
-	{
-		dot_intro_setup(data);
-		al_show_mouse_cursor(t3f_display);
-		app->state = DOT_STATE_INTRO;
-		if(app->music_enabled)
-		{
-			t3f_play_music(DOT_MUSIC_TITLE);
-		}
-		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
 	app->game.tick++;
 }
