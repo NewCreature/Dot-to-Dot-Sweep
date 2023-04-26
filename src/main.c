@@ -706,7 +706,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app_check_mobile_argument(app, argc, argv);
 
 	/* initialize T3F */
-	if(!t3f_initialize(T3F_APP_TITLE, DOT_DISPLAY_WIDTH, DOT_DISPLAY_HEIGHT, 60.0, app_logic, app_render, T3F_DEFAULT | T3F_USE_FIXED_PIPELINE, app))
+	if(!t3f_initialize(T3F_APP_TITLE, DOT_DISPLAY_WIDTH, DOT_DISPLAY_HEIGHT, 60.0, app_logic, app_render, T3F_DEFAULT | T3F_USE_FIXED_PIPELINE | T3F_USE_FULLSCREEN, app))
 	{
 		printf("Error initializing T3F\n");
 		return false;
