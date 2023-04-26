@@ -10,6 +10,7 @@ typedef struct
 	int type;
 	int timer;
 	int target_tick;
+	bool obscured;
 	bool active;
 
 } DOT_BALL;
@@ -109,6 +110,7 @@ typedef struct
 	int emo_tick;
 
 	DOT_BALL ball[DOT_GAME_MAX_BALLS];
+	int ball_count;
 	DOT_PLAYER player;
 	DOT_SHIELD shield;
 

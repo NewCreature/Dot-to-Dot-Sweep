@@ -17,7 +17,7 @@ static void dot_game_target_balls(void * data, int type)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	int i;
 
-	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
+	for(i = 0; i < app->game.ball_count; i++)
 	{
 		if(app->game.ball[i].type == type)
 		{
@@ -48,7 +48,7 @@ void dot_game_drop_player(void * data, int type)
 	app->game.state_tick = 0;
 
 	/* clear the area where the player is so we don't get cheap deaths */
-	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
+	for(i = 0; i < app->game.ball_count; i++)
 	{
 		if(app->game.ball[i].active)
 		{
@@ -74,6 +74,7 @@ void dot_game_setup_level(void * data, int level)
 
 	/* initialize balls */
 	memset(app->game.ball, 0, sizeof(DOT_BALL) * DOT_GAME_MAX_BALLS);
+	app->game.ball_count = 0;
 	for(i = 0; i < num_balls && i < DOT_GAME_MAX_BALLS; i++)
 	{
 		app->game.ball[i].r = DOT_GAME_BALL_SIZE;
@@ -92,6 +93,7 @@ void dot_game_setup_level(void * data, int level)
 			col = 0;
 		}
 		app->game.ball[i].active = true;
+		app->game.ball_count++;
 	}
 
 	/* add black balls */
@@ -108,6 +110,7 @@ void dot_game_setup_level(void * data, int level)
 		app->game.ball[j].vy = sin(app->game.ball[j].a) * app->game.ball[j].s;
 		app->game.ball[j].type = 6;
 		app->game.ball[j].active = true;
+		app->game.ball_count++;
 	}
 
 	/* drop the player with a random color */
@@ -405,16 +408,31 @@ void dot_game_move_ball(void * data, int i)
 	}
 }
 
+static bool balls_collide(DOT_BALL * b1, DOT_BALL * b2)
+{
+	if(b1->active && b2->active)
+	{
+		if(fabs(b1->x - b2->x) < b1->r + b2->r && fabs(b1->y - b2->y) < b1->r + b2->r)
+		{
+			if(t3f_distance(b1->x, b1->y, b2->x, b2->y) < b1->r + b2->r)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 /* return the number of colored balls left */
 int dot_game_move_balls(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	int colored = 0;
-	int i;
+	int i, j;
 
 	/* move the balls */
-	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
+	for(i = 0; i < app->game.ball_count; i++)
 	{
 		if(app->game.ball[i].active)
 		{
@@ -429,6 +447,20 @@ int dot_game_move_balls(void * data)
 			}
 		}
 	}
+
+	/* mark obscured balls */
+	for(i = 0; i < app->game.ball_count; i++)
+	{
+		app->game.ball[i].obscured = false;
+		for(j = 0; j < app->game.ball_count; j++)
+		{
+			if(i != j && app->game.ball[i].type != app->game.ball[j].type && balls_collide(&app->game.ball[i], &app->game.ball[j]))
+			{
+				app->game.ball[i].obscured = true;
+			}
+		}
+	}
+
 	return colored;
 }
 
@@ -463,11 +495,11 @@ void dot_game_check_player_collisions(void * data)
 	int i, j;
 
 	/* see if player ball hits any other balls */
-	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
+	for(i = 0; i < app->game.ball_count; i++)
 	{
 		if(app->game.ball[i].active)
 		{
-			if(t3f_distance(app->game.ball[i].x, app->game.ball[i].y, app->game.player.ball.x, app->game.player.ball.y) < app->game.player.ball.r + app->game.ball[i].r)
+			if(balls_collide(&app->game.ball[i], &app->game.player.ball))
 			{
 				/* hitting the same color gives you points and increases your combo */
 				if(app->game.ball[i].type == app->game.player.ball.type)
@@ -480,7 +512,7 @@ void dot_game_check_player_collisions(void * data)
 					}
 					app->game.ascore = dot_game_get_combo_score(data);
 					app->game.player.ball.timer = 0;
-					for(j = 0; j < DOT_GAME_MAX_BALLS; j++)
+					for(j = 0; j < app->game.ball_count; j++)
 					{
 						if(app->game.ball[j].active && app->game.ball[j].type != DOT_BITMAP_BALL_BLACK && app->game.ball[j].type != app->game.player.ball.type)
 						{
@@ -852,7 +884,7 @@ void dot_game_logic(void * data)
 			if(colored == 0)
 			{
 				dot_game_accumulate_score(data);
-				for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
+				for(i = 0; i < app->game.ball_count; i++)
 				{
 					if(app->game.ball[i].active && app->game.ball[i].type == 6)
 					{
@@ -964,7 +996,7 @@ static void dot_create_touch_dots_effect(void * data)
 	al_set_clipping_rectangle(0, 0, 512, 512);
 	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
 	al_hold_bitmap_drawing(true);
-	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
+	for(i = 0; i < app->game.ball_count; i++)
 	{
 		if(app->game.ball[i].active)
 		{
@@ -1040,14 +1072,22 @@ void dot_game_render(void * data)
 		s = app->game.shield.r * 2.0;
 		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.125, 0.125, 0.0625, 0.125), app->game.shield.x - s / 2.0, app->game.shield.y - s / 2.0, app->game.player.ball.z, s, s, 0);
 	}
-	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
+	for(i = 0; i < app->game.ball_count; i++)
 	{
 		if(app->game.ball[i].active)
 		{
-			t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.ball[i].type], t3f_color_white, app->game.ball[i].x - app->game.ball[i].r, app->game.ball[i].y - app->game.ball[i].r, app->game.ball[i].z, app->game.ball[i].r * 2.0, app->game.ball[i].r * 2.0, 0);
+			if(app->game.ball[i].obscured)
+			{
+				a = 0.75;
+			}
+			else
+			{
+				a = 1.0;
+			}
+			t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.ball[i].type], al_map_rgba_f(a, a, a, a), app->game.ball[i].x - app->game.ball[i].r, app->game.ball[i].y - app->game.ball[i].r, app->game.ball[i].z, app->game.ball[i].r * 2.0, app->game.ball[i].r * 2.0, 0);
 		}
 	}
-	for(i = 0; i < DOT_GAME_MAX_BALLS; i++)
+	for(i = 0; i < app->game.ball_count; i++)
 	{
 		if(app->game.ball[i].active)
 		{
