@@ -79,6 +79,7 @@ static T3F_FONT_DATA * generate_font(const char * fn, int size, bool outline, AL
 	{
 		goto fail;
 	}
+	memset(fp, 0, sizeof(T3F_FONT_DATA));
 	if(t3f_font_file_is_true_type(fn))
 	{
 		normal_font = al_load_ttf_font(fn, size, 0);
