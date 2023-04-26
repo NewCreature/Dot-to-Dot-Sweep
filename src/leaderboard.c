@@ -62,7 +62,7 @@ void dot_leaderboard_render(void * data)
     al_hold_bitmap_drawing(true);
     dot_bg_objects_render(data);
     al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
-    dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, 32, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, ALLEGRO_ALIGN_CENTRE, "Leaderboard");
+    dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, 32, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, "Leaderboard");
     for(i = 0; i < app->leaderboard->entries; i++)
     {
         if(i == app->leaderboard_spot && (app->tick / 6) % 2)
@@ -76,7 +76,7 @@ void dot_leaderboard_render(void * data)
         sprintf(buf, " %s", app->leaderboard->entry[i]->name);
         dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 4, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buf);
         sprintf(buf, "%lu ", dot_leaderboard_unobfuscate_score(app->leaderboard->entry[i]->score));
-        dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width - 4, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, ALLEGRO_ALIGN_RIGHT, buf);
+        dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width - 4, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, T3F_FONT_ALIGN_RIGHT, buf);
     }
     if(!app->desktop_mode)
     {

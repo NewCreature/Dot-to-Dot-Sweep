@@ -433,22 +433,22 @@ bool app_load_data(APP_INSTANCE * app)
 	}
 
 	/* load fonts */
-	if(!dot_load_font(app, DOT_FONT_14, "data/fonts/kongtext.ttf", 14))
+	if(!dot_load_font(app, DOT_FONT_14, "data/fonts/kongtext.ini", 14))
 	{
 		printf("Failed to load font %d!\n", DOT_FONT_8);
 		return false;
 	}
-	if(!dot_load_font(app, DOT_FONT_8, "data/fonts/kongtext.ttf", 8))
+	if(!dot_load_font(app, DOT_FONT_8, "data/fonts/kongtext.ini", 8))
 	{
 		printf("Failed to load font %d!\n", DOT_FONT_8);
 		return false;
 	}
-	if(!dot_load_font(app, DOT_FONT_16, "data/fonts/kongtext.ttf", 16))
+	if(!dot_load_font(app, DOT_FONT_16, "data/fonts/kongtext.ini", 16))
 	{
 		printf("Failed to load font %d!\n", DOT_FONT_16);
 		return false;
 	}
-	if(!dot_load_font(app, DOT_FONT_32, "data/fonts/kongtext.ttf", 32))
+	if(!dot_load_font(app, DOT_FONT_32, "data/fonts/kongtext.ini", 32))
 	{
 		printf("Failed to load font %d!\n", DOT_FONT_32);
 		return false;
