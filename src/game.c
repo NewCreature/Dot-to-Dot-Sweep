@@ -136,7 +136,6 @@ static void dot_game_clear_bitmap(ALLEGRO_BITMAP * bp)
 {
 	ALLEGRO_STATE old_state;
 	ALLEGRO_TRANSFORM identity;
-	ALLEGRO_COLOR c;
 	int i, j;
 
 	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM);
