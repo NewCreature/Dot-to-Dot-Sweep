@@ -323,6 +323,18 @@ bool app_avc_logic_proc(void * data)
 bool app_load_data(APP_INSTANCE * app)
 {
 	int i;
+	int size_multiplier;
+	char fn_buf[1024];
+
+	size_multiplier = al_get_display_width(t3f_display) / t3f_virtual_display_width;
+	if(size_multiplier < 1)
+	{
+		size_multiplier = 1;
+	}
+	else if(size_multiplier > 5)
+	{
+		size_multiplier = 5;
+	}
 
 	/* load images */
 	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_RED, "data/graphics/ball_red.png"))
@@ -433,22 +445,23 @@ bool app_load_data(APP_INSTANCE * app)
 	}
 
 	/* load fonts */
-	if(!dot_load_font(app, DOT_FONT_14, "data/fonts/kongtext.ini", 14))
+	sprintf(fn_buf, "data/fonts/kongtext_%dx.ini", size_multiplier);
+	if(!dot_load_font(app, DOT_FONT_14, fn_buf, 14))
 	{
 		printf("Failed to load font %d!\n", DOT_FONT_8);
 		return false;
 	}
-	if(!dot_load_font(app, DOT_FONT_8, "data/fonts/kongtext.ini", 8))
+	if(!dot_load_font(app, DOT_FONT_8, fn_buf, 8))
 	{
 		printf("Failed to load font %d!\n", DOT_FONT_8);
 		return false;
 	}
-	if(!dot_load_font(app, DOT_FONT_16, "data/fonts/kongtext.ini", 16))
+	if(!dot_load_font(app, DOT_FONT_16, fn_buf, 16))
 	{
 		printf("Failed to load font %d!\n", DOT_FONT_16);
 		return false;
 	}
-	if(!dot_load_font(app, DOT_FONT_32, "data/fonts/kongtext.ini", 32))
+	if(!dot_load_font(app, DOT_FONT_32, fn_buf, 32))
 	{
 		printf("Failed to load font %d!\n", DOT_FONT_32);
 		return false;
