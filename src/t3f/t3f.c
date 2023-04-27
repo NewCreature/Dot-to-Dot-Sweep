@@ -934,7 +934,7 @@ void t3f_set_clipping_rectangle(int x, int y, int w, int h)
 	}
 	al_transform_coordinates(&t3f_current_transform, &tx, &ty);
 	al_transform_coordinates(&t3f_current_transform, &twx, &twy);
-	al_set_clipping_rectangle(tx, ty, twx - tx, twy - ty);
+	al_set_clipping_rectangle(tx + 0.5, ty + 0.5, twx - tx + 0.5, twy - ty + 0.5);
 }
 
 void t3f_set_event_handler(void (*proc)(ALLEGRO_EVENT * event, void * data))
