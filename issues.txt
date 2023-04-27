@@ -23,7 +23,7 @@ v1.2.2
    [X]The game now starts in full screen, so this isn't as big of an issue any
       more.
 
-[ ]Make dots with other dots behind them translucent. Sometimes a dot is hiding
+[X]Make dots with other dots behind them translucent. Sometimes a dot is hiding
    under another dot, causing the player to unfairly lose.
 
 [X]Score particles sometimes aren't shaped like the number characters they are
