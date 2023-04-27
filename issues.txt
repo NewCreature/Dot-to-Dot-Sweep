@@ -38,7 +38,7 @@ v1.2.2
 [X]Use T3F font engine to generate high resolution font based on target
    resolution.
 
-[ ]Menu system doesn't behave properly on item hover. Item should hover up and
+[X]Menu system doesn't behave properly on item hover. Item should hover up and
    to the right to match aesthetic. Shadow also appears to be too dark.
 
 
