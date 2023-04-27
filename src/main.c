@@ -327,6 +327,10 @@ bool app_load_data(APP_INSTANCE * app)
 	char fn_buf[1024];
 
 	size_multiplier = al_get_display_width(t3f_display) / t3f_virtual_display_width;
+	if(size_multiplier > al_get_display_height(t3f_display) / t3f_virtual_display_height)
+	{
+		size_multiplier = al_get_display_height(t3f_display) / t3f_virtual_display_height;
+	}
 	if(size_multiplier < 1)
 	{
 		size_multiplier = 1;
