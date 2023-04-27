@@ -590,20 +590,10 @@ void dot_game_move_player(void * data)
 		ox = app->game.player.ball.x;
 		oy = app->game.player.ball.y;
 
-		if(app->touch_id >= 0)
+		if(app->using_controller)
 		{
-			if(app->game.player.lost_touch)
-			{
-				if(t3f_distance(app->touch_x, app->touch_y, app->game.player.ball.x, app->game.player.ball.y) < DOT_GAME_GRAB_SPOT_SIZE)
-				{
-					app->game.player.lost_touch = false;
-				}
-			}
-			if(!app->game.player.lost_touch)
-			{
-				app->game.player.ball.x = app->touch_x + app->game.player.touch_offset_x;
-				app->game.player.ball.y = app->touch_y + app->game.player.touch_offset_y;
-			}
+			app->game.player.ball.x += app->axis_x * 4.0;
+			app->game.player.ball.y += app->axis_y * 4.0;
 			if(app->game.player.want_shield)
 			{
 				app->game.shield.x = app->game.player.ball.x;
@@ -615,9 +605,35 @@ void dot_game_move_player(void * data)
 		}
 		else
 		{
-			app->game.player.lost_touch = true;
-			app->game.state = DOT_GAME_STATE_PAUSE;
-			al_show_mouse_cursor(t3f_display);
+			if(app->touch_id >= 0)
+			{
+				if(app->game.player.lost_touch)
+				{
+					if(t3f_distance(app->touch_x, app->touch_y, app->game.player.ball.x, app->game.player.ball.y) < DOT_GAME_GRAB_SPOT_SIZE)
+					{
+						app->game.player.lost_touch = false;
+					}
+				}
+				if(!app->game.player.lost_touch)
+				{
+					app->game.player.ball.x = app->touch_x + app->game.player.touch_offset_x;
+					app->game.player.ball.y = app->touch_y + app->game.player.touch_offset_y;
+				}
+				if(app->game.player.want_shield)
+				{
+					app->game.shield.x = app->game.player.ball.x;
+					app->game.shield.y = app->game.player.ball.y;
+					app->game.shield.r = app->game.player.ball.r + 1.0;
+					app->game.shield.active = true;
+					app->game.player.want_shield = false;
+				}
+			}
+			else
+			{
+				app->game.player.lost_touch = true;
+				app->game.state = DOT_GAME_STATE_PAUSE;
+				al_show_mouse_cursor(t3f_display);
+			}
 		}
 
 		/* prevent player from moving past the edge */
@@ -815,6 +831,25 @@ void dot_game_logic(void * data)
 						app->game.block_click = true;
 					}
 				}
+				else if(app->button)
+				{
+					if(!app->game.block_click)
+					{
+						t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
+						app->game.state = DOT_GAME_STATE_PLAY;
+						app->game.state_tick = 0;
+						app->game.player.lost_touch = false;
+						app->game.player.ball.active = true;
+						app->game.player.want_shield = true;
+						app->game.player.touch_offset_x = 0;
+						app->game.player.touch_offset_y = 0;
+						app->game.player.ball.x = DOT_GAME_PLAYFIELD_WIDTH / 2;
+						app->game.player.ball.y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
+						app->game.level_start = false;
+						al_hide_mouse_cursor(t3f_display);
+						app->game.block_click = true;
+					}
+				}
 				else
 				{
 					app->game.block_click = false;
@@ -838,6 +873,13 @@ void dot_game_logic(void * data)
 			{
 				app->game.player.touch_offset_x = app->game.player.ball.x - app->touch_x;
 				app->game.player.touch_offset_y = app->game.player.ball.y - app->touch_y;
+				app->game.state = DOT_GAME_STATE_PLAY;
+				al_hide_mouse_cursor(t3f_display);
+			}
+			else if(app->button)
+			{
+				app->game.player.ball.x = DOT_GAME_PLAYFIELD_WIDTH / 2;
+				app->game.player.ball.y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
 				app->game.state = DOT_GAME_STATE_PLAY;
 				al_hide_mouse_cursor(t3f_display);
 			}

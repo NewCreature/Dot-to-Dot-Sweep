@@ -9,6 +9,7 @@
 #include "game.h"
 #include "leaderboard.h"
 #include "privacy.h"
+#include "input.h"
 
 static bool dot_show_touch_hand = false;
 static int dot_screenshot_count = 0;
@@ -82,6 +83,7 @@ void app_touch_logic(void * data)
 		{
 			app->touch_x = t3f_touch[app->touch_id].x;
 			app->touch_y = t3f_touch[app->touch_id].y - 520;
+			app->using_controller = false;
 		}
 	}
 	else
@@ -173,6 +175,18 @@ void app_logic(void * data)
 	}
 
 	app_touch_logic(data);
+	dot_read_input(&app->axis_x, &app->axis_y, &app->button, &app->axes_blocked, &app->button_blocked);
+	if(app->axis_x != 0.0 || app->axis_y != 0.0 || app->button)
+	{
+		app->using_controller = true;
+	}
+	for(i = 0; i < T3F_MAX_TOUCHES; i++)
+	{
+		if(t3f_touch[i].active)
+		{
+			app->using_controller = false;
+		}
+	}
 	switch(app->state)
 	{
 		case DOT_STATE_INTRO:

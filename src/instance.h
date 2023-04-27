@@ -33,9 +33,15 @@ typedef struct
     bool first_run;
 
     /* input state */
+    bool using_controller;
     int touch_id;
     float touch_x;
     float touch_y;
+    float axis_x;
+    float axis_y;
+    bool button;
+    bool axes_blocked;
+    bool button_blocked;
 
     /* game state */
     DOT_GAME game;

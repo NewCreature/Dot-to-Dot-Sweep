@@ -391,31 +391,31 @@ void dot_intro_logic(void * data)
 	}
 	if(!app->menu_showing)
 	{
-		if(t3f_mouse_button[0] || t3f_key[ALLEGRO_KEY_ENTER] || t3f_key[ALLEGRO_KEY_SPACE])
+		if(t3f_mouse_button[0] || app->button)
 		{
 			app->menu_showing = true;
 			t3f_mouse_button[0] = false;
-			t3f_key[ALLEGRO_KEY_ENTER] = 0;
-			t3f_key[ALLEGRO_KEY_SPACE] = 0;
+			app->button_blocked = true;
 		}
 	}
 	else
 	{
-		if(t3f_key[ALLEGRO_KEY_UP])
+		if(app->axis_y < 0.0)
 		{
 			t3f_select_previous_gui_element(app->menu[app->current_menu]);
 			t3f_key[ALLEGRO_KEY_UP] = 0;
+			app->axes_blocked = true;
 		}
-		if(t3f_key[ALLEGRO_KEY_DOWN])
+		if(app->axis_y > 0.0)
 		{
 			t3f_select_next_gui_element(app->menu[app->current_menu]);
 			t3f_key[ALLEGRO_KEY_DOWN] = 0;
+			app->axes_blocked = true;
 		}
-		if(t3f_key[ALLEGRO_KEY_ENTER] || t3f_key[ALLEGRO_KEY_SPACE])
+		if(app->button)
 		{
 			t3f_activate_selected_gui_element(app->menu[app->current_menu], app);
-			t3f_key[ALLEGRO_KEY_ENTER] = 0;
-			t3f_key[ALLEGRO_KEY_SPACE] = 0;
+			app->button_blocked = true;
 		}
 	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])

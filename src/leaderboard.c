@@ -24,7 +24,7 @@ void dot_leaderboard_logic(void * data)
         m = true;
     }
     dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
-    if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || m)
+    if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || m || app->button)
     {
         if(app->current_menu == DOT_MENU_LEADERBOARD_2)
         {
@@ -37,6 +37,7 @@ void dot_leaderboard_logic(void * data)
         t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
         t3f_key[ALLEGRO_KEY_BACK] = 0;
         t3f_mouse_button[0] = false;
+        app->button_blocked = true;
     }
     else if(app->current_menu == DOT_MENU_LEADERBOARD_2 && t3f_mouse_button[0])
     {
