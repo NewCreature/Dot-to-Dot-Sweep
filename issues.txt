@@ -28,15 +28,18 @@ v1.2.2
 
 [ ]HUD does not render all the way to the edge under certain circumstances.
 
+   [ ]Modified t3f_set_clipping_rectangle() to attempt fix. Needs testing.
+
 [ ]Darkening overlay during game start and pause states doesn't cover the
    entire play area under certain circumstances.
 
-[ ]Add high resolution graphics. Include multiple graphics sets for verious
-   target resolutions and pick the closest one that is not greater than the
-   target resolution.
+   [ ]Modified t3f_set_clipping_rectangle() to attempt fix. Needs testing.
 
-[ ]Use T3F font engine to generate high resolution font based on target
+[X]Use T3F font engine to generate high resolution font based on target
    resolution.
+
+[ ]Menu system doesn't behave properly on item hover. Item should hover up and
+   to the right to match aesthetic. Shadow also appears to be too dark.
 
 
 Old Issues
