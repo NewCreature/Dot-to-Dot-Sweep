@@ -29,6 +29,13 @@ v1.2.2
 [X]Score particles sometimes aren't shaped like the number characters they are
    supposed to be based on.
 
+[ ]Enable controller support. All 'sticks' should be scanned and player
+   movement should be controllable with the first two axes. Any button should
+   be usable for selection.
+
+[ ]Enable keyboard support. Cursor keys or WASD should be usable for movement.
+   Enter and Space Bar should be usable for selection.
+
 [ ]HUD does not render all the way to the edge under certain circumstances.
 
    [ ]Modified t3f_set_clipping_rectangle() to attempt fix. Needs testing.
