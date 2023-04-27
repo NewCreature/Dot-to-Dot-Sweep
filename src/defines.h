@@ -16,16 +16,16 @@
 #define DOT_BITMAP_COMBO           9
 #define DOT_BITMAP_PARTICLE       10
 #define DOT_BITMAP_LOGO           16
-#define DOT_BITMAP_EMO_NORMAL     17
-#define DOT_BITMAP_EMO_BLINK      18
-#define DOT_BITMAP_EMO_WOAH       19
-#define DOT_BITMAP_EMO_DEAD       20
-#define DOT_BITMAP_TARGET         21
-#define DOT_BITMAP_BG             22
-#define DOT_BITMAP_HAND           23
-#define DOT_BITMAP_HAND_DOWN      24
-#define DOT_BITMAP_EMO_BG         25
-#define DOT_BITMAP_EMO_FG         26
+#define DOT_BITMAP_EMO_BG         17
+#define DOT_BITMAP_EMO_FG         18
+#define DOT_BITMAP_EMO_NORMAL     19
+#define DOT_BITMAP_EMO_BLINK      20
+#define DOT_BITMAP_EMO_WOAH       21
+#define DOT_BITMAP_EMO_DEAD       22
+#define DOT_BITMAP_TARGET         23
+#define DOT_BITMAP_BG             24
+#define DOT_BITMAP_HAND           25
+#define DOT_BITMAP_HAND_DOWN      26
 #define DOT_BITMAP_ATLAS_BOUNDARY DOT_BITMAP_TARGET
 #define DOT_BITMAP_SCRATCH        27
 
