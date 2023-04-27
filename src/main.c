@@ -377,6 +377,14 @@ bool app_load_data(APP_INSTANCE * app)
 	{
 		return false;
 	}
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_BG, "data/graphics/emo_bg.png"))
+	{
+		return false;
+	}
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_FG, "data/graphics/emo_fg.png"))
+	{
+		return false;
+	}
 	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_NORMAL, "data/graphics/emo_normal.png"))
 	{
 		return false;

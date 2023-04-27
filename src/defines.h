@@ -24,8 +24,10 @@
 #define DOT_BITMAP_BG             22
 #define DOT_BITMAP_HAND           23
 #define DOT_BITMAP_HAND_DOWN      24
+#define DOT_BITMAP_EMO_BG         25
+#define DOT_BITMAP_EMO_FG         26
 #define DOT_BITMAP_ATLAS_BOUNDARY DOT_BITMAP_TARGET
-#define DOT_BITMAP_SCRATCH        25
+#define DOT_BITMAP_SCRATCH        27
 
 #define DOT_BITMAP_SCRATCH_WIDTH  512
 #define DOT_BITMAP_SCRATCH_HEIGHT 512
