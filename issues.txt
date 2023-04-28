@@ -29,12 +29,23 @@ v1.2.2
 [X]Score particles sometimes aren't shaped like the number characters they are
    supposed to be based on.
 
-[ ]Enable controller support. All 'sticks' should be scanned and player
+[X]Enable controller support. All 'sticks' should be scanned and player
    movement should be controllable with the first two axes. Any button should
    be usable for selection.
 
-[ ]Enable keyboard support. Cursor keys or WASD should be usable for movement.
+[X]Enable keyboard support. Cursor keys or WASD should be usable for movement.
    Enter and Space Bar should be usable for selection.
+
+[ ]Pushing controller button should pause game.
+
+[ ]Pushing diagonally on d-pad or keyboard keys should mimic the circular shape
+   of gamepad analog sticks.
+
+   [ ]Use distance formula on final x and y values. If distance > 1.0, get the
+      angle and use cos() and sin() to update the final value.
+
+[ ]Clicking mouse when controller mode is enabled should pause game so use has
+   a chance to orient the mouse to the in-game character.
 
 [ ]HUD does not render all the way to the edge under certain circumstances.
 
