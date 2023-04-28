@@ -38,14 +38,11 @@ v1.2.2
 
 [ ]Pushing controller button should pause game.
 
-[ ]Pushing diagonally on d-pad or keyboard keys should mimic the circular shape
+[X]Pushing diagonally on d-pad or keyboard keys should mimic the circular shape
    of gamepad analog sticks.
 
-   [ ]Use distance formula on final x and y values. If distance > 1.0, get the
+   [X]Use distance formula on final x and y values. If distance > 1.0, get the
       angle and use cos() and sin() to update the final value.
-
-[ ]Clicking mouse when controller mode is enabled should pause game so use has
-   a chance to orient the mouse to the in-game character.
 
 [ ]HUD does not render all the way to the edge under certain circumstances.
 
