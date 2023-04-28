@@ -6,6 +6,7 @@ void dot_read_input(float * x, float * y, bool * button, bool * block_axes, bool
   float val;
   bool using_axis = false; // flag if axis is being used
   bool using_button = false;
+  double a;
 
   *x = 0.0;
   *y = 0.0;
@@ -14,40 +15,65 @@ void dot_read_input(float * x, float * y, bool * button, bool * block_axes, bool
   /* read keyboard */
   if(t3f_key[ALLEGRO_KEY_UP] || t3f_key[ALLEGRO_KEY_W])
   {
-    *y = -1.0;
-    t3f_key[ALLEGRO_KEY_UP] = 0;
-    t3f_key[ALLEGRO_KEY_W] = 0;
-  }
-  else if(t3f_key[ALLEGRO_KEY_DOWN] || t3f_key[ALLEGRO_KEY_S])
-  {
-    *y = 1.0;
-    t3f_key[ALLEGRO_KEY_DOWN] = 0;
-    t3f_key[ALLEGRO_KEY_S] = 0;
-  }
-  else if(t3f_key[ALLEGRO_KEY_LEFT] || t3f_key[ALLEGRO_KEY_A])
-  {
-    *x = -1.0;
-    t3f_key[ALLEGRO_KEY_LEFT] = 0;
-    t3f_key[ALLEGRO_KEY_A] = 0;
-  }
-  else if(t3f_key[ALLEGRO_KEY_RIGHT] || t3f_key[ALLEGRO_KEY_D])
-  {
-    *x = 1.0;
-    t3f_key[ALLEGRO_KEY_RIGHT] = 0;
-    t3f_key[ALLEGRO_KEY_A] = 0;
-  }
-  else
-  {
-    for(i = 0; i < ALLEGRO_KEY_MAX; i++)
+    if(!(*block_axes))
     {
-      if(i != ALLEGRO_KEY_ESCAPE && i != ALLEGRO_KEY_BACK)
+      *y = -1.0;
+    }
+    using_axis = true;
+  }
+  if(t3f_key[ALLEGRO_KEY_DOWN] || t3f_key[ALLEGRO_KEY_S])
+  {
+    if(!(*block_axes))
+    {
+      *y = 1.0;
+    }
+    using_axis = true;
+  }
+  if(t3f_key[ALLEGRO_KEY_LEFT] || t3f_key[ALLEGRO_KEY_A])
+  {
+    if(!(*block_axes))
+    {
+      *x = -1.0;
+    }
+    using_axis = true;
+  }
+  if(t3f_key[ALLEGRO_KEY_RIGHT] || t3f_key[ALLEGRO_KEY_D])
+  {
+    if(!(*block_axes))
+    {
+      *x = 1.0;
+    }
+    using_axis = true;
+  }
+  for(i = 0; i < ALLEGRO_KEY_MAX; i++)
+  {
+    switch(i)
+    {
+      case ALLEGRO_KEY_ESCAPE:
+      case ALLEGRO_KEY_BACK:
+      case ALLEGRO_KEY_UP:
+      case ALLEGRO_KEY_DOWN:
+      case ALLEGRO_KEY_LEFT:
+      case ALLEGRO_KEY_RIGHT:
+      case ALLEGRO_KEY_W:
+      case ALLEGRO_KEY_D:
+      case ALLEGRO_KEY_A:
+      case ALLEGRO_KEY_S:
+      {
+        break;
+      }
+      default:
       {
         if(t3f_key[i])
         {
-          *button = true;
-          t3f_key[i] = 0;
-          break;
+          if(!(*block_button))
+          {
+            *button = true;
+          }
+          using_button = true;
+          i = ALLEGRO_KEY_MAX;
         }
+        break;
       }
     }
   }
@@ -123,5 +149,11 @@ void dot_read_input(float * x, float * y, bool * button, bool * block_axes, bool
   if(*y > 1.0)
   {
     *y = 1.0;
+  }
+  if(t3f_distance(0.0, 0.0, *x, *y) > 1.0)
+  {
+    a = atan2(*y, *x);
+    *x = cos(a);
+    *y = sin(a);
   }
 }
