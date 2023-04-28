@@ -61,6 +61,7 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 			al_restore_state(&old_state);
 			break;
 		}
+		case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
 		case ALLEGRO_EVENT_MOUSE_AXES:
 		{
 			t3f_event_handler(event);

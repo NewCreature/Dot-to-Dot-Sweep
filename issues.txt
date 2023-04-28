@@ -36,6 +36,9 @@ v1.2.2
 [X]Enable keyboard support. Cursor keys or WASD should be usable for movement.
    Enter and Space Bar should be usable for selection.
 
+[ ]Moving mouse when controller is enabled causes the player position to jump
+   to incorrect location for a frame or two.
+
 [ ]Pushing controller button should pause game.
 
 [X]Pushing diagonally on d-pad or keyboard keys should mimic the circular shape
