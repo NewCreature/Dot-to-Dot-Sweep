@@ -27,6 +27,18 @@ static ALLEGRO_BITMAP * dot_create_scratch_bitmap(int w, int h)
 	return bp;
 }
 
+static void disable_controller(APP_INSTANCE * app)
+{
+	if(app->using_controller)
+	{
+		if(app->state == DOT_STATE_GAME)
+		{
+			t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+		}
+		app->using_controller = false;
+	}
+}
+
 static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 {
 	ALLEGRO_STATE old_state;
@@ -47,6 +59,12 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 			al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR | ALLEGRO_NO_PRESERVE_TEXTURE);
 			app->bitmap[DOT_BITMAP_SCRATCH] = dot_create_scratch_bitmap(DOT_BITMAP_SCRATCH_WIDTH, DOT_BITMAP_SCRATCH_HEIGHT);
 			al_restore_state(&old_state);
+			break;
+		}
+		case ALLEGRO_EVENT_MOUSE_AXES:
+		{
+			t3f_event_handler(event);
+			disable_controller(app);
 			break;
 		}
 
@@ -83,7 +101,7 @@ void app_touch_logic(void * data)
 		{
 			app->touch_x = t3f_touch[app->touch_id].x;
 			app->touch_y = t3f_touch[app->touch_id].y - 520;
-			app->using_controller = false;
+			disable_controller(app);
 		}
 	}
 	else
@@ -184,7 +202,7 @@ void app_logic(void * data)
 	{
 		if(t3f_touch[i].active)
 		{
-			app->using_controller = false;
+			disable_controller(app);
 		}
 	}
 	switch(app->state)
