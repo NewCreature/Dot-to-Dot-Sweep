@@ -1051,10 +1051,11 @@ void t3f_set_mouse_xy(float x, float y)
 {
 	al_transform_coordinates(&t3f_current_view->transform, &x, &y);
 	al_set_mouse_xy(t3f_display, x, y);
-	t3f_mouse_x = x;
-	t3f_mouse_y = y;
-	t3f_touch[0].x = x;
-	t3f_touch[0].y = y;
+	t3f_real_mouse_x = x;
+	t3f_real_mouse_y = y;
+	t3f_touch[0].real_x = x;
+	t3f_touch[0].real_y = y;
+	t3f_select_input_view(t3f_current_view);
 }
 
 void t3f_clear_touch_data(void)
