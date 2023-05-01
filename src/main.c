@@ -65,7 +65,7 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 		case ALLEGRO_EVENT_MOUSE_AXES:
 		{
 			t3f_event_handler(event);
-			disable_controller(app);
+			app->want_disable_controller = true;
 			break;
 		}
 
@@ -193,6 +193,12 @@ void app_logic(void * data)
 		t3f_key[ALLEGRO_KEY_PRINTSCREEN] = 0;
 	}
 
+	if(app->want_disable_controller)
+	{
+		disable_controller(app);
+		app->want_disable_controller = false;
+		t3f_select_input_view(t3f_current_view);
+	}
 	app_touch_logic(data);
 	dot_read_input(&app->axis_x, &app->axis_y, &app->button, &app->axes_blocked, &app->button_blocked);
 	if(app->axis_x != 0.0 || app->axis_y != 0.0 || app->button)
