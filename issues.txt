@@ -1,6 +1,8 @@
 v1.2.2
 ------
 
+[ ]Use HttpURLConnection() on Android in place of cURL.
+
 [X]Update server-side leaderboard code.
 
    [X]There should only be one version of the leaderboard code on the site.
