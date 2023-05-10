@@ -56,6 +56,15 @@ debian_package:
 android_package:
 	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_package
 
+android_bundle:
+	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_bundle
+
+android_install:
+	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_install
+
+android_debug:
+	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_debug
+
 windows_package:
 	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts windows_zip
 

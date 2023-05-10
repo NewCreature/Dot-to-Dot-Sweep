@@ -30,6 +30,23 @@ ifdef ANDROID_SIGNING_SETTINGS
 endif
 	@echo Done.
 
+#generate Android app bundle
+android_bundle: clean_packages build_android_bundle $(ANDROID_PLATFORM_TARGET)
+ifdef ANDROID_SIGNING_SETTINGS
+	$(ANDROID_JAVA_HOME)/bin/jarsigner $(ANDROID_SIGNING_SETTINGS) ../packages/$(APP_PACKAGE_NAME)-android-unsigned.aab $(ANDROID_SIGNING_KEY)
+	mv ../packages/$(APP_PACKAGE_NAME)-android-unsigned.aab ../packages/$(APP_PACKAGE_NAME)-android.aab
+	@echo Generated signed AAB for Play Store distribution.
+else
+  @echo Android app bundle not signed! Must be signed for distribution through play store.
+endif
+	@echo Done.
+
+android_install: ../packages/$(APP_PACKAGE_NAME)-android.apk
+	$(ANDROID_SDK_ROOT)/platform-tools/adb -d install -r ../packages/$(APP_PACKAGE_NAME)-android.apk
+
+android_debug: ../packages/$(APP_PACKAGE_NAME)-android.apk
+	$(ANDROID_SDK_ROOT)/platform-tools/adb logcat | grep --line-buffered $(APP_ANDROID_PACKAGE)
+
 ../android_temp:
 	@echo Copying template to temporary folder...
 	cp -a -R -L ../android ../android_temp
@@ -82,6 +99,13 @@ build_android: ../android_temp edit_project copy_resources copy_libs create_nati
 	cp ../android_temp/app.project/app/build/outputs/apk/release/app-release-unsigned.apk ../packages/$(APP_PACKAGE_NAME)-android-unsigned.apk
 	rm -rf ../android_temp
 	@echo Unsigned APK generated.
+
+build_android_bundle: ../android_temp edit_project copy_resources copy_libs create_native_libs
+	@echo Building Android project
+	cd ../android_temp/app.project; export ANDROID_HOME=$(ANDROID_SDK_ROOT); export JAVA_HOME=$(ANDROID_JAVA_HOME); ./gradlew bundle
+	cp ../android_temp/app.project/app/build/outputs/bundle/release/app-release.aab ../packages/$(APP_PACKAGE_NAME)-android-unsigned.aab
+	rm -rf ../android_temp
+	@echo Unsigned AAB generated.
 
 build_temp:
 	mkdir -p ../android_temp
