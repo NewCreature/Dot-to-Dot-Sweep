@@ -21,6 +21,7 @@
 *.tar
 *.zip
 *.apk
+*.aab
 
 # Logs and databases #
 ######################
