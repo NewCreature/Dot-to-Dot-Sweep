@@ -79,7 +79,7 @@ MSYS_PLATFORM_LIBS = -lcurl
 #################
 # Android stuff #
 #################
-#ANDROID_CFLAGS =
+ANDROID_CFLAGS = -DT3NET_NO_LIBCURL
 #ANDROID_PLATFORM_OBJECTS =
 ANDROID_PLATFORM_LIBS = -lcurl -lz
 #ANDROID_PLATFORM_TARGET =

@@ -89,4 +89,22 @@ public class MainActivity extends AllegroActivity
 		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 		startActivity(intent);
 	}
+
+    /* returns string containing web page at 'url' */
+    /*public String runURL(String url)
+    {
+        URL jURL = new URL(url);
+        InputStream in;
+        HttpURLConnection urlConnection = (HttpURLConnection)jURL.openConnection();
+        try
+        {
+            in = new BufferedInputStream(urlConnection.getInputStream());
+            readStream(in);
+        }
+        finally
+        {
+            urlConnection.disconnect();
+            return in;
+        }
+    } */
 }

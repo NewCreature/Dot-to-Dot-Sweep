@@ -1,9 +1,19 @@
 ####################
 # Android Settings #
 ####################
-ANDROID_SDK_ROOT = $(HOME)/Development/Android/Tools/android-sdk
-ANDROID_NDK_ROOT = $(HOME)/Development/Android/Tools/android-ndk
-ANDROID_TOOLCHAIN_ROOT = $(HOME)/Development/Android/Tools/android-toolchain
+ANDROID_JAVA_HOME = /Applications/Android\ Studio.app/Contents/jbr/Contents/Home
+ANDROID_SDK_ROOT = $(HOME)/Library/Android/sdk
+ANDROID_NDK_ROOT = $(ANDROID_SDK_ROOT)/ndk/25.2.9519653
+ANDROID_TOOLCHAIN_ROOT = $(ANDROID_NDK_ROOT)/toolchains/llvm/prebuilt/darwin-x86_64
+ifndef ANDROID_ARCHITECTURE
+  ANDROID_ARCHITECTURE = armeabi-v7a
+endif
+ANDROID_LIBRARY_ROOT = $(HOME)/code/libraries/android/$(ANDROID_ARCHITECTURE)
+ifndef ANDROID_TRIPLET
+  ANDROID_TRIPLET = armv7a-linux-androideabi26
+endif
+ANDROID_CC = $(ANDROID_TOOLCHAIN_ROOT)/bin/$(ANDROID_TRIPLET)-clang
+ANDROID_CXX = $(ANDROID_TOOLCHAIN_ROOT)/bin/$(ANDROID_TRIPLET)-clang++
 ANDROID_VERSION_TARGET = android-26
 ALLEGRO_SRC_ROOT = $(HOME)/T3/Projects/Dev/allegro5
 
