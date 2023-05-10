@@ -772,28 +772,38 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	/* initialize T3F */
 	if(!t3f_initialize(T3F_APP_TITLE, DOT_DISPLAY_WIDTH, DOT_DISPLAY_HEIGHT, 60.0, app_logic, app_render, T3F_DEFAULT | T3F_USE_FIXED_PIPELINE | T3F_USE_FULLSCREEN, app))
 	{
+		t3f_debug_message("breal 1\n");
 		printf("Error initializing T3F\n");
 		return false;
 	}
+	t3f_debug_message("breal 2\n");
 	t3f_set_event_handler(dot_event_handler);
+	t3f_debug_message("breal 3\n");
 	set_optimal_display_size(app);
+	t3f_debug_message("breal 4\n");
 	t3net_setup(NULL, al_path_cstr(t3f_temp_path, '/'));
+	t3f_debug_message("breal 5\n");
 	if(!app_load_data(app))
 	{
+		t3f_debug_message("breal 6\n");
 		printf("Failed to load data!\n");
 		return false;
 	}
 
+	t3f_debug_message("breal 7\n");
 	app_read_config(app);
+	t3f_debug_message("breal 8\n");
 
 	if(!dot_intro_initialize(app))
 	{
 		printf("Failed to create menu!\n");
 		return false;
 	}
+	t3f_debug_message("breal 9\n");
 
 	/* change view focus so 3D effects look right */
 	t3f_adjust_view(t3f_current_view, t3f_current_view->offset_x, t3f_current_view->offset_y, t3f_current_view->width, t3f_current_view->height, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, t3f_current_view->flags);
+	t3f_debug_message("breal 10\n");
 
 	/* create color tables */
 	for(i = 0; i <= DOT_BITMAP_BALL_BLACK; i++)
@@ -811,6 +821,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->level_color[8] = al_map_rgb(218, 48, 48);
 	app->level_color[9] = al_map_rgb(204, 48, 218);
 
+	t3f_debug_message("breal 11\n");
 	dot_setup_bg_objects(app);
 	dot_setup_credits(&app->credits);
 
@@ -819,6 +830,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		t3f_play_music(DOT_MUSIC_TITLE);
 	}
+	t3f_debug_message("breal 12\n");
 	if(!app->desktop_mode)
 	{
 		app->menu_showing = true;
@@ -829,6 +841,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	app->state = DOT_STATE_INTRO;
 
+	t3f_debug_message("breal 13\n");
 	if(!app_process_arguments(app, argc, argv))
 	{
 		printf("Failed to process command line arguments!\n");

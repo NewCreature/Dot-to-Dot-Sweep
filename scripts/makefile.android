@@ -84,14 +84,13 @@ copy_libs:
 
 create_native_libs:
 	make clean
-	make -f ../scripts/makefile.android
-	make -f ../scripts/makefile.android_helper -I ../scripts ANDROID_ARCHITECTURE=armeabi-v7a ANDROID_C_ARCH="-march=armv7-a" ANDROID_HOST=arm-linux-androideabi CFLAGS_ARCH="-mfpu=vfpv3-d16 -mfloat-abi=softfp" LFLAGS_ARCH=-"Wl,--fix-cortex-a8" create_native_lib
+	make -f ../scripts/makefile.android_helper -I ../scripts ANDROID_ARCHITECTURE=armeabi-v7a ANDROID_C_ARCH="-march=armv7-a" ANDROID_TRIPLET=armv7a-linux-androideabi26 CFLAGS_ARCH="-mfpu=vfpv3-d16 -mfloat-abi=softfp" LFLAGS_ARCH=-"Wl,--fix-cortex-a8" create_native_lib
 	make clean
-	make -f ../scripts/makefile.android_helper ANDROID_ARCHITECTURE=arm64-v8a ANDROID_C_ARCH="" ANDROID_HOST=aarch64-linux-android CFLAGS_ARCH="" LFLAGS_ARCH="" create_native_lib
+	make -f ../scripts/makefile.android_helper ANDROID_ARCHITECTURE=arm64-v8a ANDROID_C_ARCH="" ANDROID_TRIPLET=aarch64-linux-android26 CFLAGS_ARCH="" LFLAGS_ARCH="" create_native_lib
 	make clean
-	make -f ../scripts/makefile.android_helper ANDROID_ARCHITECTURE=x86 ANDROID_C_ARCH="" ANDROID_HOST=x86-linux-android CFLAGS_ARCH="" LFLAGS_ARCH="" create_native_lib
+	make -f ../scripts/makefile.android_helper ANDROID_ARCHITECTURE=x86 ANDROID_C_ARCH="" ANDROID_TRIPLEt=x86-linux-android26 CFLAGS_ARCH="" LFLAGS_ARCH="" create_native_lib
 	make clean
-	make -f ../scripts/makefile.android_helper ANDROID_ARCHITECTURE=x86_64 ANDROID_C_ARCH="" ANDROID_HOST=x86_64-linux-android CFLAGS_ARCH="" LFLAGS_ARCH="" create_native_lib
+	make -f ../scripts/makefile.android_helper ANDROID_ARCHITECTURE=x86_64 ANDROID_C_ARCH="" ANDROID_TRIPLET=x86_64-linux-android26 CFLAGS_ARCH="" LFLAGS_ARCH="" create_native_lib
 
 build_android: ../android_temp edit_project copy_resources copy_libs create_native_libs
 	@echo Building Android project
