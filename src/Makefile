@@ -56,9 +56,6 @@ debian_package:
 android_package:
 	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_package
 
-android_package_unsigned:
-	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_package_unsigned
-
 windows_package:
 	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts windows_zip
 
