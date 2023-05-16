@@ -1181,7 +1181,9 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 		{
 			char val[8] = {0};
 			al_acknowledge_resize(t3f_display);
-			t3f_handle_menu_resize();
+			#ifndef ALLEGRO_ANDROID
+				t3f_handle_menu_resize();
+			#endif
 			handle_view_resize();
 			sprintf(val, "%d", al_get_display_width(t3f_display));
 			al_set_config_value(t3f_config, "T3F", "display_width", val);

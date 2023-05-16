@@ -1,15 +1,4 @@
 T3F_PLATFORM_NAME = android
-T3F_PLATFORM_OBJECTS = $(ANDROID_PLATFORM_OBJECTS)
-T3F_PLATFORM_LIBS =\
-	-lallegro\
-	-lallegro_audio\
-	-lallegro_image\
-	-lallegro_acodec\
-	-lallegro_font\
-	-lallegro_ttf\
-	-lallegro_primitives\
-	-lallegro_memfile\
-	-lallegro_physfs
 #DEL_COMMAND = rm -f
 #DEL_FOLDER_COMMAND = rm -rf
 
@@ -37,7 +26,7 @@ ifdef ANDROID_SIGNING_SETTINGS
 	mv ../packages/$(APP_PACKAGE_NAME)-android-unsigned.aab ../packages/$(APP_PACKAGE_NAME)-android.aab
 	@echo Generated signed AAB for Play Store distribution.
 else
-  @echo Android app bundle not signed! Must be signed for distribution through play store.
+	@echo "Android app bundle not signed! Must be signed for distribution through Play Store."
 endif
 	@echo Done.
 
