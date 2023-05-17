@@ -228,13 +228,17 @@ static bool t3f_locate_resource(const char * filename)
 	/* handle Android first so we don't do unnecessary checks */
 	#ifdef ALLEGRO_ANDROID
 
+		PHYSFS_AndroidInit android_init;
 		int ret;
 
+		/* try to use PHYSFS to access data */
 		path = al_get_standard_path(ALLEGRO_EXENAME_PATH);
 		if(path)
 		{
-			/* try to use PHYSFS to access data */
-			if(PHYSFS_init(al_path_cstr(path, '/')))
+			/* initialize PhysFS with JNI stuff as required */
+			android_init.jnienv = _al_android_get_jnienv();
+			android_init.context = _al_android_activity_object();
+			if(PHYSFS_init(&android_init))
 			{
 				ret = PHYSFS_addToSearchPath(al_path_cstr(path, '/'), 1);
 				al_destroy_path(path);
