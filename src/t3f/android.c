@@ -247,7 +247,7 @@ JNI_FUNC(void, MainActivity, nativeOnEditComplete, (JNIEnv *env, jobject obj, js
 		al_start_timer(t3f_timer);
 	}
 
-	const char * t3f_run_url(const char * url)
+	char * t3f_run_url(const char * url)
 	{
 	}
 
