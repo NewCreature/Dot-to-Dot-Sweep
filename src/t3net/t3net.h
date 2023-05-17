@@ -54,7 +54,7 @@ typedef struct
 extern char t3net_server_message[1024];
 
 /* initialization */
-int t3net_setup(const char * curl_command, const char * temp_dir);
+int t3net_setup(char * (*url_runner)(const char * url), const char * temp_dir);
 const char * t3net_get_curl_command(void);
 char * t3net_escape(const char * s);
 

@@ -777,7 +777,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 	t3f_set_event_handler(dot_event_handler);
 	set_optimal_display_size(app);
-	t3net_setup(NULL, al_path_cstr(t3f_temp_path, '/'));
+	t3net_setup(t3f_run_url, al_path_cstr(t3f_temp_path, '/'));
 	if(!app_load_data(app))
 	{
 		printf("Failed to load data!\n");

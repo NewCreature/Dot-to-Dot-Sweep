@@ -32,6 +32,22 @@
 	   _jni_checkException(env); \
 	})
 
+	#define _jni_callObjectMethodV(env, obj, name, sig, args...) ({ \
+	   jclass class_id = _jni_call(env, jclass, GetObjectClass, obj); \
+	   \
+	   jmethodID method_id = _jni_call(env, jmethodID, GetMethodID, class_id, name, sig); \
+		 \
+		 jstring ret = NULL; \
+	   if(method_id == NULL) { \
+	   } else { \
+		  ret = _jni_call(env, jstring, CallObjectMethod, obj, method_id, ##args); \
+	   } \
+	   \
+	   _jni_callv(env, DeleteLocalRef, class_id); \
+		 \
+		 ret; \
+	})
+
 	#define _jni_callVoidMethodV(env, obj, name, sig, args...) ({ \
 	   jclass class_id = _jni_call(env, jclass, GetObjectClass, obj); \
 	   \
@@ -172,11 +188,32 @@ JNI_FUNC(void, MainActivity, nativeOnEditComplete, (JNIEnv *env, jobject obj, js
 			_al_android_get_jnienv(),
 			_al_android_activity_object(),
 			"openURL",
-			"(Ljava/lang/String;)V",
+			"(Ljava/lang/String;)L",
 			urlS
 		);
 		(*env)->DeleteLocalRef(env, urlS);
 	}
+
+	char * t3f_run_url(const char * url)
+	{
+		JNIEnv * env = _al_android_get_jnienv();
+		jstring urlS = (*env)->NewStringUTF(env, url);
+		jstring retS;
+		const char * ret;
+		char * real_ret;
+
+		retS = _jni_callObjectMethodV(
+			_al_android_get_jnienv(),
+			_al_android_activity_object(),
+			"runURL",
+			"(Ljava/lang/String;)Ljava/lang/String;",
+			urlS
+		);
+		ret = (*env)->GetStringUTFChars(env, retS, NULL);
+		real_ret = strdup(ret);
+		(*env)->ReleaseStringUTFChars(env, retS, ret);
+		return real_ret;
+}
 
 #else
 
@@ -209,4 +246,9 @@ JNI_FUNC(void, MainActivity, nativeOnEditComplete, (JNIEnv *env, jobject obj, js
 		(void) system(command);
 		al_start_timer(t3f_timer);
 	}
+
+	const char * t3f_run_url(const char * url)
+	{
+	}
+
 #endif
