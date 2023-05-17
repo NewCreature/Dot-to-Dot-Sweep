@@ -235,10 +235,11 @@ static bool t3f_locate_resource(const char * filename)
 		path = al_get_standard_path(ALLEGRO_EXENAME_PATH);
 		if(path)
 		{
-			/* initialize PhysFS with JNI stuff as required */
-			android_init.jnienv = _al_android_get_jnienv();
-			android_init.context = _al_android_activity_object();
-			if(PHYSFS_init(&android_init))
+			/* Pass NULL here even though the docs say not to. We don't use the write
+			   functionality of PhysFS anyway. */
+//			android_init.jnienv = _al_android_get_jnienv();
+//			android_init.context = _al_android_activity_object();
+			if(PHYSFS_init(NULL))
 			{
 				ret = PHYSFS_addToSearchPath(al_path_cstr(path, '/'), 1);
 				al_destroy_path(path);
