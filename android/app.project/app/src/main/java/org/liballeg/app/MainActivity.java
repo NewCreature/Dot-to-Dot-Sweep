@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.content.Context;
 import android.util.Log;
+import java.net.URL;
+import java.util.Scanner;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
 public class MainActivity extends AllegroActivity
 {
@@ -90,21 +94,27 @@ public class MainActivity extends AllegroActivity
 		startActivity(intent);
 	}
 
-    /* returns string containing web page at 'url' */
-    /*public String runURL(String url)
+    public String runURL(String url) 
     {
-        URL jURL = new URL(url);
-        InputStream in;
-        HttpURLConnection urlConnection = (HttpURLConnection)jURL.openConnection();
         try
         {
-            in = new BufferedInputStream(urlConnection.getInputStream());
-            readStream(in);
+            Log.d("runURL", "start");
+            URL urlObj = new URL(url);
+            Scanner sc = new Scanner(urlObj.openStream());
+            StringBuffer sb = new StringBuffer();
+            while(sc.hasNext())
+            {
+                sb.append(sc.next());
+            }
+            Log.d("runURL ", sb.toString());
+            return sb.toString();
         }
-        finally
+        catch(MalformedURLException e)
         {
-            urlConnection.disconnect();
-            return in;
         }
-    } */
+        catch(IOException e)
+        {
+        }
+        return null;
+    }
 }
