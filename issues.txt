@@ -1,7 +1,9 @@
 v1.2.2
 ------
 
-[ ]Use HttpURLConnection() on Android in place of cURL.
+[ ]Use Android functionality to run URLs for T3Net.
+
+   [ ]Implemented, but doesn't seem to work. Needs debugging.
 
 [ ]When controller active, ensure menu item is selected.
 
