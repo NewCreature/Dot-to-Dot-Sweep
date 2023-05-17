@@ -34,7 +34,11 @@ android_install: ../packages/$(APP_PACKAGE_NAME)-android.apk
 	$(ANDROID_SDK_ROOT)/platform-tools/adb -d install -r ../packages/$(APP_PACKAGE_NAME)-android.apk
 
 android_debug: ../packages/$(APP_PACKAGE_NAME)-android.apk
-	$(ANDROID_SDK_ROOT)/platform-tools/adb logcat | grep --line-buffered $(APP_ANDROID_PACKAGE)
+ifdef DEBUG_STRING
+	$(ANDROID_SDK_ROOT)/platform-tools/adb logcat | grep --line-buffered $(DEBUG_STRING)
+else
+	$(ANDROID_SDK_ROOT)/platform-tools/adb logcat
+endif
 
 ../android_temp:
 	@echo Copying template to temporary folder...
