@@ -1,9 +1,9 @@
 v1.2.2
 ------
 
-[ ]Use Android functionality to run URLs for T3Net.
+[X]Use Android functionality to run URLs for T3Net.
 
-   [ ]Implemented, but doesn't seem to work. Needs debugging.
+   [X]Implemented, but doesn't seem to work. Needs debugging.
 
 [ ]When controller active, ensure menu item is selected.
 
