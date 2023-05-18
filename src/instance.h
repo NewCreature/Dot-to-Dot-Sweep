@@ -71,6 +71,7 @@ typedef struct
     float logo_ox;
     float credits_ox;
     bool menu_showing;
+    int previous_element;
 
     /* credits data */
     DOT_CREDITS credits;

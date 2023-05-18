@@ -6,6 +6,31 @@
 #include "color.h"
 #include "intro.h"
 
+static void select_first_element(APP_INSTANCE * app)
+{
+	app->menu[app->current_menu]->hover_element = 0;
+	if(!app->menu[app->current_menu]->element[app->menu[app->current_menu]->hover_element].proc)
+	{
+		t3f_select_next_gui_element(app->menu[app->current_menu]);
+	}
+}
+
+static void select_last_element(APP_INSTANCE * app)
+{
+	app->menu[app->current_menu]->hover_element = -1;
+	t3f_select_previous_gui_element(app->menu[app->current_menu]);
+}
+
+static void remember_element(APP_INSTANCE * app)
+{
+	app->previous_element = app->menu[app->current_menu]->hover_element;
+}
+
+static void recall_element(APP_INSTANCE * app)
+{
+	app->menu[app->current_menu]->hover_element = app->previous_element;
+}
+
 int dot_menu_proc_play(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -26,6 +51,7 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 	app->leaderboard = t3net_get_leaderboard(app->leaderboard_retrieve_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", 10, 0);
 	if(app->leaderboard)
 	{
+		remember_element(app);
 		app->leaderboard_spot = -1;
 		app->state = DOT_STATE_LEADERBOARD;
 		app->current_menu = DOT_MENU_LEADERBOARD;
@@ -38,7 +64,9 @@ int dot_menu_proc_setup(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
+	remember_element(app);
 	app->current_menu = DOT_MENU_UPLOAD_SCORES;
+	select_first_element(app);
 	return 1;
 }
 
@@ -59,6 +87,7 @@ int dot_menu_proc_music_yes(void * data, int i, void * pp)
 		t3f_play_music(DOT_MUSIC_TITLE);
 	}
 	app->current_menu = DOT_MENU_MAIN;
+	recall_element(app);
 	dot_update_first_run();
 	return 1;
 }
@@ -76,6 +105,7 @@ int dot_menu_proc_music_no(void * data, int i, void * pp)
 		al_resume_timer(t3f_timer);
 	}
 	app->current_menu = DOT_MENU_MAIN;
+	recall_element(app);
 	dot_update_first_run();
 	return 1;
 }
@@ -84,6 +114,7 @@ int dot_menu_proc_privacy(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
+	remember_element(app);
 	app->current_menu = DOT_MENU_PRIVACY;
 	app->state = DOT_STATE_PRIVACY;
 	t3f_mouse_button[0] = false;
@@ -115,6 +146,7 @@ int dot_menu_proc_profile_name(void * data, int i, void * pp)
 	{
 		t3f_open_edit_box("Enter Name", app->user_name, 256, "CapWords", dot_menu_proc_profile_name_callback, app);
 	}
+	select_first_element(app);
 	return 1;
 }
 
@@ -123,6 +155,7 @@ int dot_menu_proc_profile_okay(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	app->current_menu = DOT_MENU_MUSIC;
+	select_first_element(app);
 	return 1;
 }
 
@@ -134,6 +167,7 @@ int dot_menu_proc_upload_yes(void * data, int i, void * pp)
 	al_set_config_value(t3f_config, "Game Data", "Upload Scores", "true");
 	al_save_config_file(al_path_cstr(t3f_config_path, '/'), t3f_config);
 	app->current_menu = DOT_MENU_PROFILE;
+	select_first_element(app);
 	return 1;
 }
 
@@ -145,6 +179,7 @@ int dot_menu_proc_upload_no(void * data, int i, void * pp)
 	al_set_config_value(t3f_config, "Game Data", "Upload Scores", "false");
 	al_save_config_file(al_path_cstr(t3f_config_path, '/'), t3f_config);
 	app->current_menu = DOT_MENU_MUSIC;
+	select_first_element(app);
 	return 1;
 }
 
@@ -153,6 +188,7 @@ int dot_menu_proc_profile_back(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	app->current_menu = DOT_MENU_MAIN;
+	recall_element(app);
 
 	return 1;
 }
@@ -166,6 +202,7 @@ int dot_menu_proc_leaderboard_back(void * data, int i, void * pp)
 	dot_intro_setup(data);
 	app->state = DOT_STATE_INTRO;
 	app->current_menu = DOT_MENU_MAIN;
+	recall_element(app);
 
 	return 1;
 }
@@ -177,6 +214,7 @@ int dot_menu_proc_privacy_back(void * data, int i, void * pp)
 	dot_intro_setup(data);
 	app->state = DOT_STATE_INTRO;
 	app->current_menu = DOT_MENU_MAIN;
+	recall_element(app);
 
 	return 1;
 }
@@ -193,6 +231,7 @@ int dot_menu_proc_leaderboard_main_menu(void * data, int i, void * pp)
 	dot_intro_setup(data);
 	app->state = DOT_STATE_INTRO;
 	app->current_menu = DOT_MENU_MAIN;
+	select_last_element(app);
 	if(app->music_enabled)
 	{
 		t3f_play_music(DOT_MUSIC_TITLE);
@@ -400,6 +439,13 @@ void dot_intro_logic(void * data)
 	}
 	else
 	{
+		if(app->using_controller)
+		{
+			if(app->menu[app->current_menu]->hover_element < 0)
+			{
+				t3f_select_previous_gui_element(app->menu[app->current_menu]);
+			}
+		}
 		if(app->axis_y < 0.0)
 		{
 			t3f_select_previous_gui_element(app->menu[app->current_menu]);

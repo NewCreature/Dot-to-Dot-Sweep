@@ -428,7 +428,7 @@ void t3f_select_previous_gui_element(T3F_GUI * pp)
 		{
 			pp->hover_element = pp->elements - 1;
 		}
-		if(!(pp->element[pp->hover_element].flags & T3F_GUI_ELEMENT_STATIC))
+		if(pp->element[pp->hover_element].proc && !(pp->element[pp->hover_element].flags & T3F_GUI_ELEMENT_STATIC))
 		{
 			break;
 		}
@@ -444,7 +444,7 @@ void t3f_select_next_gui_element(T3F_GUI * pp)
 		{
 			pp->hover_element = 0;
 		}
-		if(!(pp->element[pp->hover_element].flags & T3F_GUI_ELEMENT_STATIC))
+		if(pp->element[pp->hover_element].proc && !(pp->element[pp->hover_element].flags & T3F_GUI_ELEMENT_STATIC))
 		{
 			break;
 		}
