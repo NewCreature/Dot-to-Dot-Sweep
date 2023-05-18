@@ -1,6 +1,8 @@
 v1.2.2
 ------
 
+[ ]Look into score particles being one pixel too tall.
+
 [X]Use Android functionality to run URLs for T3Net.
 
    [X]Implemented, but doesn't seem to work. Needs debugging.
