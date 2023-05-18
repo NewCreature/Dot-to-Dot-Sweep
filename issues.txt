@@ -5,7 +5,7 @@ v1.2.2
 
    [X]Implemented, but doesn't seem to work. Needs debugging.
 
-[ ]When controller active, ensure menu item is selected.
+[X]When controller active, ensure menu item is selected.
 
 [X]Update server-side leaderboard code.
 
