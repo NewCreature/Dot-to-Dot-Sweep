@@ -37,10 +37,10 @@
 	   \
 	   jmethodID method_id = _jni_call(env, jmethodID, GetMethodID, class_id, name, sig); \
 		 \
-		 jstring ret = NULL; \
+		 jbyteArray ret = NULL; \
 	   if(method_id == NULL) { \
 	   } else { \
-		  ret = _jni_call(env, jstring, CallObjectMethod, obj, method_id, ##args); \
+		  ret = _jni_call(env, jbyteArray, CallObjectMethod, obj, method_id, ##args); \
 	   } \
 	   \
 	   _jni_callv(env, DeleteLocalRef, class_id); \
@@ -198,20 +198,26 @@ JNI_FUNC(void, MainActivity, nativeOnEditComplete, (JNIEnv *env, jobject obj, js
 	{
 		JNIEnv * env = _al_android_get_jnienv();
 		jstring urlS = (*env)->NewStringUTF(env, url);
-		jstring retS;
-		const char * ret;
+		jbyteArray retB;
+		int retB_size;
+		const jbyte * ret;
 		char * real_ret;
 
-		retS = _jni_callObjectMethodV(
+		retB = _jni_callObjectMethodV(
 			_al_android_get_jnienv(),
 			_al_android_activity_object(),
-			"runURL",
-			"(Ljava/lang/String;)Ljava/lang/String;",
+			"downloadURL",
+			"(Ljava/lang/String;)[B",
 			urlS
 		);
-		ret = (*env)->GetStringUTFChars(env, retS, NULL);
-		real_ret = strdup(ret);
-		(*env)->ReleaseStringUTFChars(env, retS, ret);
+		retB_size = (*env)->GetArrayLength(env, retB);
+		ret = (*env)->GetByteArrayElements(env, retB, NULL);
+		real_ret = malloc(retB_size);
+		if(real_ret)
+		{
+			memcpy(real_ret, ret, retB_size);
+		}
+		(*env)->ReleaseStringUTFChars(env, retB, ret);
 		return real_ret;
 }
 

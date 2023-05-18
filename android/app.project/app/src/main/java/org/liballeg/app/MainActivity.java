@@ -6,7 +6,7 @@ import android.content.Context;
 import android.util.Log;
 import java.net.URL;
 import java.util.Scanner;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 
 public class MainActivity extends AllegroActivity
@@ -93,6 +93,36 @@ public class MainActivity extends AllegroActivity
 		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 		startActivity(intent);
 	}
+
+    public byte[] downloadURL(String url)
+    {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        try
+        {
+            URL urlObj = new URL(url);
+            byte[] chunk = new byte[4096];
+            int bytesRead;
+            InputStream stream = urlObj.openStream();
+
+            while((bytesRead = stream.read(chunk)) > 0)
+            {
+                outputStream.write(chunk, 0, bytesRead);
+            }
+
+        }
+        catch(MalformedURLException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+        return outputStream.toByteArray();
+    }
 
     public String runURL(String url) 
     {
