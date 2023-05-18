@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef T3NET_NO_LIBCURL
-	#include <curl/curl.h>
-#endif
 #include "t3net.h"
 #include "internal.h"
 
@@ -82,14 +79,6 @@ char * t3net_load_file(const char * fn)
 		return NULL;
 	}
 }
-
-typedef struct
-{
-
-	char * data;
-	size_t filled;
-
-} T3NET_MEMORY_CHUNK;
 
 int t3net_setup(char * (*url_runner)(const char * url), const char * temp_dir)
 {
@@ -239,30 +228,6 @@ int t3net_add_argument(T3NET_ARGUMENTS * arguments, const char * key, const char
 		return 1;
 	}
 	return 0;
-}
-
-size_t t3net_internal_write_function(void * ptr, size_t size, size_t nmemb, void * stream)
-{
-	size_t realsize = size * nmemb;
-	T3NET_MEMORY_CHUNK * mem = (T3NET_MEMORY_CHUNK *)stream;
-	size_t blocks = (mem->filled + 1) / T3NET_DATA_CHUNK_SIZE + 1;
-	size_t blocks_required = (realsize + mem->filled + 1) / T3NET_DATA_CHUNK_SIZE + 1;
-
-	/* increase chunk size if we exceed it */
-	if(realsize + mem->filled + 1 >= T3NET_DATA_CHUNK_SIZE * blocks)
-	{
-		mem->data = realloc(mem->data, T3NET_DATA_CHUNK_SIZE * blocks_required);
-		if(mem->data == NULL)
-		{
-  	    	/* out of memory! */
-  	    	return 0;
-		}
-	}
-	memcpy(&(mem->data[mem->filled]), ptr, realsize);
-	mem->filled += realsize;
-	mem->data[mem->filled] = '\0';
-
-	return realsize;
 }
 
 static int t3net_get_line_length(const char * data, unsigned int text_pos)
@@ -433,101 +398,40 @@ static char * _t3net_default_url_runner(const char * url)
 	return NULL;
 }
 
-char * t3net_get_raw_data(int method, const char * url, const T3NET_ARGUMENTS * arguments)
+char * t3net_get_raw_data(const char * url, const T3NET_ARGUMENTS * arguments)
 {
-	#ifndef T3NET_NO_LIBCURL
-		CURL * curl;
-	#endif
-	T3NET_MEMORY_CHUNK data;
 	char * final_url = NULL;
-	char * curl_command = NULL;
+	char * ret;
 	int final_url_size;
 	int i;
 
-	data.data = malloc(T3NET_DATA_CHUNK_SIZE);
-	if(!data.data)
-	{
-		goto fail;
-	}
-	memset(data.data, 0, T3NET_DATA_CHUNK_SIZE);
-	data.filled = 0;
-
-	/* make HTTP request */
-	if(method == T3NET_CURL_LIBCURL)
-	{
-		#ifndef T3NET_NO_LIBCURL
-			curl = curl_easy_init();
-			if(!curl)
-			{
-				goto fail;
-			}
-		#else
-			goto fail;
-		#endif
-	}
 	final_url_size = strlen(url) + get_arguments_length(arguments) + 1;
 	final_url = malloc(final_url_size);
-	if(!final_url)
+	if(final_url)
 	{
-		goto fail;
-	}
-	strcpy(final_url, url);
-	if(arguments)
-	{
-		for(i = 0; i < arguments->count; i++)
+		strcpy(final_url, url);
+		if(arguments)
 		{
-			if(i == 0)
+			for(i = 0; i < arguments->count; i++)
 			{
-				strcat(final_url, "?");
+				if(i == 0)
+				{
+					strcat(final_url, "?");
+				}
+				else
+				{
+					strcat(final_url, "&");
+				}
+				strcat(final_url, arguments->key[i]);
+				strcat(final_url, "=");
+				strcat(final_url, arguments->val[i]);
 			}
-			else
-			{
-				strcat(final_url, "&");
-			}
-			strcat(final_url, arguments->key[i]);
-			strcat(final_url, "=");
-			strcat(final_url, arguments->val[i]);
 		}
-	}
-	if(method == T3NET_CURL_LIBCURL)
-	{
-		#ifndef T3NET_NO_LIBCURL
-			curl_easy_setopt(curl, CURLOPT_URL, final_url);
-			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, t3net_internal_write_function);
-			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
-			curl_easy_setopt(curl, CURLOPT_TIMEOUT, T3NET_TIMEOUT_TIME);
-	    if(curl_easy_perform(curl))
-	    {
-				curl_easy_cleanup(curl);
-				goto fail;
-			}
-	    curl_easy_cleanup(curl);
-		#else
-			goto fail;
-		#endif
-	}
-	else
-	{
-		return _t3net_url_runner(final_url);
+		ret = _t3net_url_runner(final_url);
+		free(final_url);
+		return ret;
 	}
 
-	return data.data;
-
-	fail:
-	{
-		if(final_url)
-		{
-			free(final_url);
-		}
-		if(curl_command)
-		{
-			free(curl_command);
-		}
-		if(data.data)
-		{
-			free(data.data);
-		}
-	}
 	return NULL;
 }
 
@@ -792,12 +696,12 @@ T3NET_DATA * t3net_get_data_from_string(const char * raw_data)
 	}
 }
 
-T3NET_DATA * t3net_get_data(int method, const char * url, const T3NET_ARGUMENTS * arguments)
+T3NET_DATA * t3net_get_data(const char * url, const T3NET_ARGUMENTS * arguments)
 {
 	char * raw_data;
 	T3NET_DATA * data = NULL;
 
-	raw_data = t3net_get_raw_data(method, url, arguments);
+	raw_data = t3net_get_raw_data(url, arguments);
 	if(raw_data)
 	{
 		data = t3net_get_data_from_string(raw_data);
