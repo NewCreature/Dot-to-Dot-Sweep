@@ -125,6 +125,20 @@ void dot_game_setup_level(void * data, int level)
 	app->game.level_start = true;
 }
 
+static void compute_bg_color(APP_INSTANCE * app)
+{
+	float rgb = 1.0;
+	int i, m;
+
+	/* make level colors darker after every 10 levels */
+	m = app->game.level / 10;
+	for(i = 0; i < m; i++)
+	{
+		rgb *= 0.75;
+	}
+	app->game.bg_color = dot_darken_color(dot_transition_color(app->game.old_bg_color, app->level_color[app->game.level % 10], app->game.bg_color_fade), rgb);
+}
+
 /* start the game from level 0 */
 void dot_game_initialize(void * data, bool demo_seed)
 {
@@ -151,6 +165,7 @@ void dot_game_initialize(void * data, bool demo_seed)
 	}
 	app->game.tick = 0;
 	app->game.block_click = false;
+	compute_bg_color(app);
 	app->state = DOT_STATE_GAME;
 }
 
@@ -772,8 +787,7 @@ void dot_game_logic(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	int colored = 0;
-	float rgb = 1.0;
-	int i, m;
+	int i;
 
 	/* handle level bg color transition */
 	if(app->game.bg_color_fade < 1.0)
@@ -785,13 +799,7 @@ void dot_game_logic(void * data)
 		}
 	}
 
-	/* make level colors darker after every 10 levels */
-	m = app->game.level / 10;
-	for(i = 0; i < m; i++)
-	{
-		rgb *= 0.75;
-	}
-	app->game.bg_color = dot_darken_color(dot_transition_color(app->game.old_bg_color, app->level_color[app->game.level % 10], app->game.bg_color_fade), rgb);
+	compute_bg_color(app);
 
 	dot_game_emo_logic(data);
 	dot_bg_objects_logic(data, app->game.speed);
