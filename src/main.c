@@ -775,19 +775,25 @@ static bool create_particle_lists(APP_INSTANCE * app)
 	int i, j, k, w, h;
 	unsigned char r, g, b, a;
 	char buf[16] = {0};
-	T3F_FONT * font;
+	T3F_FONT * font = NULL;;
+	ALLEGRO_BITMAP * scratch = NULL;
 
 	font = t3f_load_resource((void **)&font, t3f_font_resource_handler_proc, "data/fonts/kongtext_1x.ini", 16, 0, 0);
 	if(!font)
 	{
-		return false;
+		goto fail;
+	}
+	scratch = al_create_bitmap(DOT_BITMAP_SCRATCH_WIDTH, DOT_BITMAP_SCRATCH_HEIGHT);
+	if(!scratch)
+	{
+		goto fail;
 	}
 	for(i = 0; i < 10; i++)
 	{
 		app->number_particle_list[i].items = 0;
 		sprintf(buf, "%d", i);
 		al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM);
-		al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+		al_set_target_bitmap(scratch);
 		al_identity_transform(&identity);
 		al_use_transform(&identity);
 		al_set_clipping_rectangle(0, 0, 512, 512);
@@ -795,14 +801,14 @@ static bool create_particle_lists(APP_INSTANCE * app)
 		t3f_draw_text(font, t3f_color_white, 0, 0, 0, 0, buf);
 		t3f_set_clipping_rectangle(0, 0, 0, 0);
 		al_restore_state(&old_state);
-		al_lock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
-		w = t3f_get_text_width(app->font[DOT_FONT_16], buf);
-		h = t3f_get_font_line_height(app->font[DOT_FONT_16]);
+		al_lock_bitmap(scratch, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
+		w = t3f_get_text_width(font, buf);
+		h = t3f_get_font_line_height(font);
 		for(j = 0; j < w; j++)
 		{
 			for(k = 0; k < h; k++)
 			{
-				c = al_get_pixel(app->bitmap[DOT_BITMAP_SCRATCH], j, k);
+				c = al_get_pixel(scratch, j, k);
 				al_unmap_rgba(c, &r, &g, &b, &a);
 				if(a > 192)
 				{
@@ -810,13 +816,29 @@ static bool create_particle_lists(APP_INSTANCE * app)
 				}
 			}
 		}
-		al_unlock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+		al_unlock_bitmap(scratch);
 	}
 	if(!t3f_destroy_resource(font))
 	{
 		t3f_destroy_font(font);
 	}
 	return true;
+
+	fail:
+	{
+		if(scratch)
+		{
+			al_destroy_bitmap(scratch);
+		}
+		if(font)
+		{
+			if(!t3f_destroy_resource(font))
+			{
+				t3f_destroy_font(font);
+			}
+		}
+		return false;
+	}
 }
 
 /* initialize our app, load graphics, etc. */
@@ -844,12 +866,16 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	#else
 		t3net_setup(NULL, al_path_cstr(t3f_temp_path, '/'));
 	#endif
+	if(!create_particle_lists(app))
+	{
+		printf("Failed to generate data for particle effects!\n");
+		return false;
+	}
 	if(!app_load_data(app))
 	{
 		printf("Failed to load data!\n");
 		return false;
 	}
-	create_particle_lists(app);
 
 	app_read_config(app);
 
