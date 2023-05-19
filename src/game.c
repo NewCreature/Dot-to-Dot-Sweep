@@ -687,6 +687,10 @@ void dot_game_move_player(void * data)
 			app->game.player.target_angle = atan2(oy - app->game.player.ball.y, ox - app->game.player.ball.x);
 			angle_dir = get_angle_dir(app->game.player.target_angle, app->game.player.ball.a);
 			angle_diff = get_angle_diff(app->game.player.ball.a, app->game.player.target_angle);
+			if(angle_diff < ALLEGRO_PI / 4.0 && angle_div > 20.0)
+			{
+				angle_div = angle_div * (angle_div / 5.0);
+			}
 			if(angle_dir < 0)
 			{
 				if(angle_diff <= ALLEGRO_PI / angle_div)
