@@ -489,6 +489,27 @@ static float get_angle_dir(float a1, float a2)
 	}
 }
 
+static float get_angle_diff(float a1, float a2)
+{
+	if(a1 < -ALLEGRO_PI)
+	{
+		a1 += ALLEGRO_PI * 2.0;
+	}
+	else if(a1 > ALLEGRO_PI)
+	{
+		a1 -= ALLEGRO_PI * 2.0;
+	}
+	if(a2 < -ALLEGRO_PI)
+	{
+		a2 += ALLEGRO_PI * 2.0;
+	}
+	else if(a2 > ALLEGRO_PI)
+	{
+		a2 -= ALLEGRO_PI * 2.0;
+	}
+	return fabs(a1 - a2);
+}
+
 void dot_game_check_player_collisions(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -583,7 +604,7 @@ void dot_game_move_player(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	float ox, oy, target_angle;
+	float ox, oy, angle_dir, angle_div, angle_diff;
 
 	if(app->game.player.ball.active)
 	{
@@ -657,18 +678,44 @@ void dot_game_move_player(void * data)
 		/* if the player has moved, change the angle of the character */
 		if((int)ox != (int)app->game.player.ball.x || (int)oy != (int)app->game.player.ball.y)
 		{
-			target_angle = atan2(oy - app->game.player.ball.y, ox - app->game.player.ball.x);
-			if(fabs(target_angle - app->game.player.ball.a) > ALLEGRO_PI / 16.0)
+			angle_div = 24.0 - t3f_distance(ox, oy, app->game.player.ball.x, app->game.player.ball.y);
+			if(angle_div < 1.0)
 			{
-				app->game.player.ball.a += (ALLEGRO_PI / 16.0) * get_angle_dir(target_angle, app->game.player.ball.a);
-				if(app->game.player.ball.a > ALLEGRO_PI)
+				angle_div = 1.0;
+			}
+			app->game.player.old_target_angle = app->game.player.target_angle;
+			app->game.player.target_angle = atan2(oy - app->game.player.ball.y, ox - app->game.player.ball.x);
+			angle_dir = get_angle_dir(app->game.player.target_angle, app->game.player.ball.a);
+			angle_diff = get_angle_diff(app->game.player.ball.a, app->game.player.target_angle);
+			if(angle_dir < 0)
+			{
+				if(angle_diff <= ALLEGRO_PI / angle_div)
 				{
-					app->game.player.ball.a -= ALLEGRO_PI * 2.0;
+					app->game.player.ball.a = app->game.player.target_angle;
 				}
-				if(app->game.player.ball.a < -ALLEGRO_PI)
+				else
 				{
-					app->game.player.ball.a += ALLEGRO_PI * 2.0;
+					app->game.player.ball.a -= ALLEGRO_PI / angle_div;
 				}
+			}
+			else
+			{
+				if(angle_diff <= ALLEGRO_PI / angle_div)
+				{
+					app->game.player.ball.a = app->game.player.target_angle;
+				}
+				else
+				{
+					app->game.player.ball.a += ALLEGRO_PI / angle_div;
+				}
+			}
+			if(app->game.player.ball.a > ALLEGRO_PI)
+			{
+				app->game.player.ball.a -= ALLEGRO_PI * 2.0;
+			}
+			if(app->game.player.ball.a < -ALLEGRO_PI)
+			{
+				app->game.player.ball.a += ALLEGRO_PI * 2.0;
 			}
 		}
 

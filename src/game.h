@@ -22,6 +22,7 @@ typedef struct
 	bool lost_touch;
 	bool want_shield;
 	float touch_offset_x, touch_offset_y;
+	float target_angle, old_target_angle;
 
 } DOT_PLAYER;
 
