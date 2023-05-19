@@ -23,6 +23,7 @@ typedef struct
     ALLEGRO_COLOR level_color[10];
     T3F_ATLAS * atlas;
     bool music_enabled;
+    int graphics_size_multiplier;
 
     /* program state */
     int state;

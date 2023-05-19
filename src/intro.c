@@ -539,6 +539,7 @@ static void render_copyright_message(void * data, ALLEGRO_COLOR color, ALLEGRO_C
 void dot_intro_render(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int w, h;
 
 	al_clear_to_color(app->level_color[0]);
 	al_hold_bitmap_drawing(true);
@@ -546,7 +547,9 @@ void dot_intro_render(void * data)
 	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
 	if(!app->desktop_mode || !app->menu_showing)
 	{
-		al_draw_bitmap(app->bitmap[DOT_BITMAP_LOGO], DOT_GAME_PLAYFIELD_WIDTH / 2 - al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]) / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT / 2 - al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]) / 2, 0);
+		w = al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]) / app->graphics_size_multiplier;
+		h = al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]) / app->graphics_size_multiplier;
+		al_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_LOGO], 0, 0, al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]), al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]), DOT_GAME_PLAYFIELD_WIDTH / 2 - w / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT / 2 - h / 2, w, h, 0);
 		dot_credits_render(data, app->credits_ox);
 		render_copyright_message(data, t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2 - t3f_get_text_width(app->font[DOT_FONT_14], T3F_APP_COPYRIGHT) / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT - t3f_get_font_line_height(app->font[DOT_FONT_16]) * 2, DOT_SHADOW_OX, DOT_SHADOW_OY);
 	}
