@@ -517,6 +517,11 @@ bool app_load_data(APP_INSTANCE * app)
 		printf("Failed to load font %d!\n", DOT_FONT_32);
 		return false;
 	}
+	if(!dot_load_font(app, DOT_FONT_16_1, "data/fonts/kongtext_1x.ini", 16))
+	{
+		printf("Failed to load font %d!\n", DOT_FONT_16_1);
+		return false;
+	}
 
 	/* build atlas */
 	app->atlas = t3f_create_atlas(1024, 1024);

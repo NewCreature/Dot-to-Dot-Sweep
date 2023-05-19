@@ -155,7 +155,7 @@ void dot_game_create_particle_lists(void * data)
 		al_use_transform(&identity);
 		al_set_clipping_rectangle(0, 0, 512, 512);
 		al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
-		t3f_draw_text(app->font[DOT_FONT_16], t3f_color_white, 0, 0, 0, 0, buf);
+		t3f_draw_text(app->font[DOT_FONT_16_1], t3f_color_white, 0, 0, 0, 0, buf);
 		t3f_set_clipping_rectangle(0, 0, 0, 0);
 		al_restore_state(&old_state);
 		al_lock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
@@ -167,7 +167,7 @@ void dot_game_create_particle_lists(void * data)
 			{
 				c = al_get_pixel(app->bitmap[DOT_BITMAP_SCRATCH], j, k);
 				al_unmap_rgba(c, &r, &g, &b, &a);
-				if(a > 0)
+				if(a > 192)
 				{
 					dot_game_add_particle_list_item(&app->number_particle_list[i], j, k);
 				}
