@@ -44,7 +44,7 @@ v1.2.2
 [X]Enable keyboard support. Cursor keys or WASD should be usable for movement.
    Enter and Space Bar should be usable for selection.
 
-[ ]When moving character in a straight line, the angle lands incorrectly. We
+[X]When moving character in a straight line, the angle lands incorrectly. We
    might want to disable the jitter protection when using controllers.
 
 [ ]Moving mouse when controller is enabled causes the player position to jump
