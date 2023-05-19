@@ -296,15 +296,22 @@ void app_render(void * data)
 	al_hold_bitmap_drawing(false);
 }
 
-static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn)
+static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn, int size)
 {
-	t3f_load_resource((void **)&app->bitmap[bitmap], t3f_bitmap_resource_handler_proc, fn, 0, 0, 0);
-	if(!app->bitmap[bitmap])
+	char buf[256];
+	int i;
+
+	for(i = size; i >= 1; i--)
 	{
-		printf("Failed to load image %d!\n", bitmap);
-		return false;
+		sprintf(buf, "data/graphics/%dx/%s", i, fn);
+		t3f_load_resource((void **)&app->bitmap[bitmap], t3f_bitmap_resource_handler_proc, buf, 0, 0, 0);
+		if(app->bitmap[bitmap])
+		{
+			return true;
+		}
 	}
-	return true;
+	printf("Failed to load image %d (%s)!\n", bitmap, fn);
+	return false;
 }
 
 static bool dot_load_font(APP_INSTANCE * app, int font, const char * fn, int size)
@@ -380,79 +387,79 @@ bool app_load_data(APP_INSTANCE * app)
 	}
 
 	/* load images */
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_RED, "data/graphics/ball_red.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_RED, "ball_red.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_GREEN, "data/graphics/ball_green.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_GREEN, "ball_green.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_BLUE, "data/graphics/ball_blue.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_BLUE, "ball_blue.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_PURPLE, "data/graphics/ball_purple.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_PURPLE, "ball_purple.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_YELLOW, "data/graphics/ball_yellow.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_YELLOW, "ball_yellow.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_ORANGE, "data/graphics/ball_orange.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_ORANGE, "ball_orange.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_BLACK, "data/graphics/ball_black.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_BLACK, "ball_black.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_EYES, "data/graphics/ball_eyes.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_EYES, "ball_eyes.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_COMBO, "data/graphics/combo.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_COMBO, "combo.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_PARTICLE, "data/graphics/particle.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_PARTICLE, "particle.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_BG, "data/graphics/emo_bg.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_BG, "emo_bg.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_FG, "data/graphics/emo_fg.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_FG, "emo_fg.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_NORMAL, "data/graphics/emo_normal.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_NORMAL, "emo_normal.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_BLINK, "data/graphics/emo_blink.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_BLINK, "emo_blink.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_WOAH, "data/graphics/emo_woah.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_WOAH, "emo_woah.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_DEAD, "data/graphics/emo_dead.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_DEAD, "emo_dead.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_TARGET, "data/graphics/target.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_TARGET, "target.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BG, "data/graphics/bg.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BG, "bg.png", size_multiplier))
 	{
 		return false;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_LOGO, "data/graphics/logo.png"))
+	if(!dot_load_bitmap(app, DOT_BITMAP_LOGO, "logo.png", size_multiplier))
 	{
 		return false;
 	}
@@ -519,7 +526,7 @@ bool app_load_data(APP_INSTANCE * app)
 	}
 
 	/* build atlas */
-	app->atlas = t3f_create_atlas(1024, 1024);
+	app->atlas = t3f_create_atlas(512 * size_multiplier, 512 * size_multiplier);
 	if(app->atlas)
 	{
 		for(i = 0; i < DOT_BITMAP_ATLAS_BOUNDARY; i++)
@@ -655,11 +662,11 @@ bool app_process_arguments(APP_INSTANCE * app, int argc, char * argv[])
 			}
 			else
 			{
-				if(!dot_load_bitmap(app, DOT_BITMAP_HAND, "data/graphics/hand.png"))
+				if(!dot_load_bitmap(app, DOT_BITMAP_HAND, "hand.png", 1))
 				{
 					return false;
 				}
-				if(!dot_load_bitmap(app, DOT_BITMAP_HAND_DOWN, "data/graphics/hand_down.png"))
+				if(!dot_load_bitmap(app, DOT_BITMAP_HAND_DOWN, "hand_down.png", 1))
 				{
 					return false;
 				}
@@ -698,11 +705,11 @@ bool app_process_arguments(APP_INSTANCE * app, int argc, char * argv[])
 			}
 			else
 			{
-				if(!dot_load_bitmap(app, DOT_BITMAP_HAND, "data/graphics/hand.png"))
+				if(!dot_load_bitmap(app, DOT_BITMAP_HAND, "hand.png", 1))
 				{
 					return false;
 				}
-				if(!dot_load_bitmap(app, DOT_BITMAP_HAND_DOWN, "data/graphics/hand_down.png"))
+				if(!dot_load_bitmap(app, DOT_BITMAP_HAND_DOWN, "hand_down.png", 1))
 				{
 					return false;
 				}
