@@ -6,7 +6,7 @@ v1.2.2
    [X]Move particle list generation to main init routine. Load the size 16 font
       as 1x temporarily while we generate the particle list.
 
-[ ]Look into first frame being wrong at game start when running at low frame
+[X]Look into first frame being wrong at game start when running at low frame
    rate during testing. I think it might be caused by rendering happening
    before the level color is calculated in the logic. If that's the case, we
    can prime that variable at game init.
