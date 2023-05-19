@@ -517,11 +517,6 @@ bool app_load_data(APP_INSTANCE * app)
 		printf("Failed to load font %d!\n", DOT_FONT_32);
 		return false;
 	}
-	if(!dot_load_font(app, DOT_FONT_16_1, "data/fonts/kongtext_1x.ini", 16))
-	{
-		printf("Failed to load font %d!\n", DOT_FONT_16_1);
-		return false;
-	}
 
 	/* build atlas */
 	app->atlas = t3f_create_atlas(1024, 1024);
@@ -762,6 +757,68 @@ static void set_optimal_display_size(APP_INSTANCE * app)
 	}
 }
 
+static void add_particle_list_item(DOT_PARTICLE_LIST * lp, float x, float y)
+{
+	if(lp->items < DOT_MAX_PARTICLE_LIST_ITEMS)
+	{
+		lp->item[lp->items].x = x;
+		lp->item[lp->items].y = y;
+		lp->items++;
+	}
+}
+
+static bool create_particle_lists(APP_INSTANCE * app)
+{
+	ALLEGRO_STATE old_state;
+	ALLEGRO_TRANSFORM identity;
+	ALLEGRO_COLOR c;
+	int i, j, k, w, h;
+	unsigned char r, g, b, a;
+	char buf[16] = {0};
+	T3F_FONT * font;
+
+	font = t3f_load_resource((void **)&font, t3f_font_resource_handler_proc, "data/fonts/kongtext_1x.ini", 16, 0, 0);
+	if(!font)
+	{
+		return false;
+	}
+	for(i = 0; i < 10; i++)
+	{
+		app->number_particle_list[i].items = 0;
+		sprintf(buf, "%d", i);
+		al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM);
+		al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+		al_identity_transform(&identity);
+		al_use_transform(&identity);
+		al_set_clipping_rectangle(0, 0, 512, 512);
+		al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
+		t3f_draw_text(font, t3f_color_white, 0, 0, 0, 0, buf);
+		t3f_set_clipping_rectangle(0, 0, 0, 0);
+		al_restore_state(&old_state);
+		al_lock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
+		w = t3f_get_text_width(app->font[DOT_FONT_16], buf);
+		h = t3f_get_font_line_height(app->font[DOT_FONT_16]);
+		for(j = 0; j < w; j++)
+		{
+			for(k = 0; k < h; k++)
+			{
+				c = al_get_pixel(app->bitmap[DOT_BITMAP_SCRATCH], j, k);
+				al_unmap_rgba(c, &r, &g, &b, &a);
+				if(a > 192)
+				{
+					add_particle_list_item(&app->number_particle_list[i], j, k);
+				}
+			}
+		}
+		al_unlock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+	}
+	if(!t3f_destroy_resource(font))
+	{
+		t3f_destroy_font(font);
+	}
+	return true;
+}
+
 /* initialize our app, load graphics, etc. */
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
@@ -792,6 +849,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Failed to load data!\n");
 		return false;
 	}
+	create_particle_lists(app);
 
 	app_read_config(app);
 

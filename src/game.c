@@ -125,75 +125,18 @@ void dot_game_setup_level(void * data, int level)
 	app->game.level_start = true;
 }
 
-static void dot_game_add_particle_list_item(DOT_PARTICLE_LIST * lp, float x, float y)
-{
-	if(lp->items < DOT_MAX_PARTICLE_LIST_ITEMS)
-	{
-		lp->item[lp->items].x = x;
-		lp->item[lp->items].y = y;
-		lp->items++;
-	}
-}
-
-void dot_game_create_particle_lists(void * data)
-{
-	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	ALLEGRO_STATE old_state;
-	ALLEGRO_TRANSFORM identity;
-	ALLEGRO_COLOR c;
-	int i, j, k, w, h;
-	unsigned char r, g, b, a;
-	char buf[16] = {0};
-
-	for(i = 0; i < 10; i++)
-	{
-		app->number_particle_list[i].items = 0;
-		sprintf(buf, "%d", i);
-		al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM);
-		al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
-		al_identity_transform(&identity);
-		al_use_transform(&identity);
-		al_set_clipping_rectangle(0, 0, 512, 512);
-		al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
-		t3f_draw_text(app->font[DOT_FONT_16_1], t3f_color_white, 0, 0, 0, 0, buf);
-		t3f_set_clipping_rectangle(0, 0, 0, 0);
-		al_restore_state(&old_state);
-		al_lock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READONLY);
-		w = t3f_get_text_width(app->font[DOT_FONT_16], buf);
-		h = t3f_get_font_line_height(app->font[DOT_FONT_16]);
-		for(j = 0; j < w; j++)
-		{
-			for(k = 0; k < h; k++)
-			{
-				c = al_get_pixel(app->bitmap[DOT_BITMAP_SCRATCH], j, k);
-				al_unmap_rgba(c, &r, &g, &b, &a);
-				if(a > 192)
-				{
-					dot_game_add_particle_list_item(&app->number_particle_list[i], j, k);
-				}
-			}
-		}
-		al_unlock_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
-	}
-}
-
 /* start the game from level 0 */
 void dot_game_initialize(void * data, bool demo_seed)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-    if(demo_seed)
-    {
-        t3f_srand(&app->rng_state, app->demo_seed);
-    }
-    else
-    {
-        t3f_srand(&app->rng_state, time(0));
-    }
-	/* create number particle lists if they haven't been created yet */
-	if(app->number_particle_list[0].items == 0)
+	if(demo_seed)
 	{
-		dot_game_create_particle_lists(data);
+			t3f_srand(&app->rng_state, app->demo_seed);
+	}
+	else
+	{
+			t3f_srand(&app->rng_state, time(0));
 	}
 	dot_game_setup_level(data, app->game.start_level);
 	app->game.score = 0;
