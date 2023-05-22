@@ -1,6 +1,8 @@
 v1.2.2
 ------
 
+[ ]Woah emotion seems to never trigger.
+
 [X]Look into score particles being one pixel too tall.
 
    [X]Move particle list generation to main init routine. Load the size 16 font
