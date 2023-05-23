@@ -931,6 +931,11 @@ void dot_game_logic(void * data)
 			/* move on to next level */
 			if(colored == 0)
 			{
+				if(app->game.combo >= 10)
+				{
+					app->game.emo_tick = 60;
+					app->game.emo_state = DOT_GAME_EMO_STATE_WOAH;
+				}
 				dot_game_accumulate_score(data);
 				for(i = 0; i < app->game.ball_count; i++)
 				{
