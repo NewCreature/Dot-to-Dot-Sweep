@@ -4,7 +4,7 @@ v1.2.2
 [X]Implement fallback system for graphics loading. If all graphics don't load,
    fall back to the previous multiplier until we succeed.
 
-[ ]Test graphics for all size multipliers.
+[X]Test graphics for all size multipliers.
 
 [X]Look into score particles being one pixel too tall.
 
