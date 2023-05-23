@@ -82,7 +82,7 @@ v1.2.2
 
    [ ]Modified t3f_set_clipping_rectangle() to attempt fix. Needs testing.
 
-[ ]Add Quit option to main menu so gamepad players don't have to reach for the
+[X]Add Quit option to main menu so gamepad players don't have to reach for the
    keyboard.
 
 [X]Use T3F font engine to generate high resolution font based on target
