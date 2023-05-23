@@ -1,7 +1,7 @@
 v1.2.2
 ------
 
-[ ]Implement fallback system for graphics loading. If all graphics don't load,
+[X]Implement fallback system for graphics loading. If all graphics don't load,
    fall back to the previous multiplier until we succeed.
 
 [ ]Test graphics for all size multipliers.
