@@ -1149,7 +1149,7 @@ void dot_game_render(void * data)
 			{
 				r = 32.0 + app->game.ball[i].target_tick * 2;
 				a = 1.0 - app->game.ball[i].target_tick / (float)DOT_GAME_TARGET_TICKS;
-				t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_TARGET], al_map_rgba_f(a, a, a, a), app->game.ball[i].x - r, app->game.ball[i].y - r, app->game.ball[i].z, r * 2.0, r * 2.0, 0);
+				t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_TARGET], app->game.ball[i].obscured ? al_map_rgba_f(a, a, 0.5 * a, a) : al_map_rgba_f(a, a, a, a), app->game.ball[i].x - r, app->game.ball[i].y - r, app->game.ball[i].z, r * 2.0, r * 2.0, 0);
 			}
 		}
 	}
