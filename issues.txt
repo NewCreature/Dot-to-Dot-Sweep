@@ -1,6 +1,9 @@
 v1.3
 ----
 
+[ ]Had issue where lifting finger during gameplay would not pause the game on
+   Android.
+
 [X]Implement fallback system for graphics loading. If all graphics don't load,
    fall back to the previous multiplier until we succeed.
 
