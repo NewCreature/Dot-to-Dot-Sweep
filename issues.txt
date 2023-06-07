@@ -1,6 +1,21 @@
 v1.3
 ----
 
+[ ]Add haptic feedback for gamepads.
+
+[ ]Research joystick issues.
+
+   [ ]XBox controllers have issues with axes on Linux.
+
+   [ ]Look into Steam Deck controller information.
+
+   [ ]Add manual configuration for controllers. Users who experience issues
+      with controllers should be able to manually specify the settings instead
+      of relying on autodetection.
+
+[ ]Look into issue where name entry menu did not dismiss properly, leaving the
+   text entry mode on while on another menu.
+
 [ ]Had issue where lifting finger during gameplay would not pause the game on
    Android.
 
