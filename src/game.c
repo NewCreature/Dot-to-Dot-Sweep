@@ -571,8 +571,8 @@ void dot_game_move_player(void * data)
 
 		if(app->using_controller)
 		{
-			app->game.player.ball.x += app->axis_x * 4.0;
-			app->game.player.ball.y += app->axis_y * 4.0;
+			app->game.player.ball.x += app->controller.axis_x * 4.0;
+			app->game.player.ball.y += app->controller.axis_y * 4.0;
 			if(app->game.player.want_shield)
 			{
 				app->game.shield.x = app->game.player.ball.x;
@@ -833,7 +833,7 @@ void dot_game_logic(void * data)
 						app->game.block_click = true;
 					}
 				}
-				else if(app->button)
+				else if(app->controller.button)
 				{
 					if(!app->game.block_click)
 					{
@@ -851,8 +851,8 @@ void dot_game_logic(void * data)
 						al_hide_mouse_cursor(t3f_display);
 						app->game.block_click = true;
 					}
-					app->button = false;
-					app->button_blocked = true;
+					app->controller.button = false;
+					app->controller.button_blocked = true;
 				}
 				else
 				{
@@ -880,11 +880,11 @@ void dot_game_logic(void * data)
 				app->game.state = DOT_GAME_STATE_PLAY;
 				al_hide_mouse_cursor(t3f_display);
 			}
-			else if(app->button)
+			else if(app->controller.button)
 			{
 				app->game.state = DOT_GAME_STATE_PLAY;
-				app->button = false;
-				app->button_blocked = true;
+				app->controller.button = false;
+				app->controller.button_blocked = true;
 				al_hide_mouse_cursor(t3f_display);
 			}
 			break;
@@ -909,13 +909,13 @@ void dot_game_logic(void * data)
 		/* normal game state */
 		default:
 		{
-			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->button)
+			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.button)
 			{
 				app->game.state = DOT_GAME_STATE_PAUSE;
 				al_show_mouse_cursor(t3f_display);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-				app->button = false;
-				app->button_blocked = true;
+				app->controller.button = false;
+				app->controller.button_blocked = true;
 			}
 			/* handle shield logic */
 			dot_game_shield_logic(data);

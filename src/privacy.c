@@ -42,13 +42,13 @@ void dot_privacy_logic(void * data)
 	{
 		m = true;
 	}
-	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || m || app->button)
+	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || m || app->controller.button)
 	{
 		dot_menu_proc_privacy_back(data, 0, NULL);
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
 		t3f_mouse_button[0] = false;
-		app->button_blocked = true;
+		app->controller.button_blocked = true;
 	}
 	app->tick++;
 	if(!app->desktop_mode)

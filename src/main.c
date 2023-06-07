@@ -72,6 +72,7 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 		/* pass the event through to T3F for handling by default */
 		default:
 		{
+			dot_handle_joystick_event(&app->controller, event);
 			t3f_event_handler(event);
 			break;
 		}
@@ -200,11 +201,25 @@ void app_logic(void * data)
 		t3f_select_input_view(t3f_current_view);
 	}
 	app_touch_logic(data);
-	dot_read_input(&app->axis_x, &app->axis_y, &app->button, &app->axes_blocked, &app->button_blocked);
-	if(app->axis_x != 0.0 || app->axis_y != 0.0 || app->button)
+	app->controller.dead_zone = 0.1;
+	dot_read_input(&app->controller);
+	if(app->controller.axis_x != 0.0 || app->controller.axis_y != 0.0 || app->controller.button)
 	{
 		app->using_controller = true;
 	}
+/*	if(app->button)
+	{
+		if(app->controller.axis_x != 0.0 || app->controller.axis_y != 0.0)
+		{
+			app->controller.dead_zone = fabs(app->controller.axis_x);
+			if(fabs(app->controller.axis_y) > app->controller.dead_zone)
+			{
+				app->controller.dead_zone = fabs(app->controller.axis_y);
+			}
+			app->controller.dead_zone += 0.05;
+			printf("dead zone: %f\n", app->controller.dead_zone);
+		}
+	} */
 	for(i = 0; i < T3F_MAX_TOUCHES; i++)
 	{
 		if(t3f_touch[i].active)

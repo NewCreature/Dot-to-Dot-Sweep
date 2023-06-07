@@ -10,6 +10,7 @@
 #include "particle.h"
 #include "bg_object.h"
 #include "credits.h"
+#include "input.h"
 
 /* structure to hold all of our app-specific data */
 typedef struct
@@ -39,11 +40,7 @@ typedef struct
     int touch_id;
     float touch_x;
     float touch_y;
-    float axis_x;
-    float axis_y;
-    bool button;
-    bool axes_blocked;
-    bool button_blocked;
+    DOT_INPUT_DATA controller;
 
     /* game state */
     DOT_GAME game;

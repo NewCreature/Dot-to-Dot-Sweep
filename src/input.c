@@ -1,6 +1,23 @@
 #include "t3f/t3f.h"
+#include "input.h"
 
-void dot_read_input(float * x, float * y, bool * button, bool * block_axes, bool * block_button)
+void dot_handle_joystick_event(DOT_INPUT_DATA * ip, ALLEGRO_EVENT * ep)
+{
+  if(ep->type == ALLEGRO_EVENT_JOYSTICK_AXIS)
+  {
+    ip->current_joy = t3f_get_joystick_number(ep->joystick.id);
+    if(ip->current_joy >= 0)
+    {
+      ip->current_stick = ep->joystick.stick;
+    }
+  }
+  else if(ep->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)
+  {
+    ip->current_joy = t3f_get_joystick_number(ep->joystick.id);
+  }
+}
+
+void dot_read_input(DOT_INPUT_DATA * ip)
 {
   int i, j;
   float val;
@@ -8,40 +25,40 @@ void dot_read_input(float * x, float * y, bool * button, bool * block_axes, bool
   bool using_button = false;
   double a;
 
-  *x = 0.0;
-  *y = 0.0;
-  *button = false;
+  ip->axis_x = 0.0;
+  ip->axis_y = 0.0;
+  ip->button = false;
  
   /* read keyboard */
   if(t3f_key[ALLEGRO_KEY_UP] || t3f_key[ALLEGRO_KEY_W])
   {
-    if(!(*block_axes))
+    if(!(ip->axes_blocked))
     {
-      *y = -1.0;
+      ip->axis_y = -1.0;
     }
     using_axis = true;
   }
   if(t3f_key[ALLEGRO_KEY_DOWN] || t3f_key[ALLEGRO_KEY_S])
   {
-    if(!(*block_axes))
+    if(!(ip->axes_blocked))
     {
-      *y = 1.0;
+      ip->axis_y = 1.0;
     }
     using_axis = true;
   }
   if(t3f_key[ALLEGRO_KEY_LEFT] || t3f_key[ALLEGRO_KEY_A])
   {
-    if(!(*block_axes))
+    if(!(ip->axes_blocked))
     {
-      *x = -1.0;
+      ip->axis_x = -1.0;
     }
     using_axis = true;
   }
   if(t3f_key[ALLEGRO_KEY_RIGHT] || t3f_key[ALLEGRO_KEY_D])
   {
-    if(!(*block_axes))
+    if(!(ip->axes_blocked))
     {
-      *x = 1.0;
+      ip->axis_x = 1.0;
     }
     using_axis = true;
   }
@@ -66,9 +83,9 @@ void dot_read_input(float * x, float * y, bool * button, bool * block_axes, bool
       {
         if(t3f_key[i])
         {
-          if(!(*block_button))
+          if(!(ip->button_blocked))
           {
-            *button = true;
+            ip->button = true;
           }
           using_button = true;
           i = ALLEGRO_KEY_MAX;
@@ -78,82 +95,71 @@ void dot_read_input(float * x, float * y, bool * button, bool * block_axes, bool
     }
   }
 
-  /* read controllers */
-  for(i = 0; i < al_get_num_joysticks(); i++)
+  /* read buttons */
+  for(j = 0; j < al_get_joystick_num_buttons(t3f_joystick[ip->current_joy]); j++)
   {
-    /* read buttons */
-    for(j = 0; j < al_get_joystick_num_buttons(t3f_joystick[i]); j++)
+    if(t3f_joystick_state[ip->current_joy].button[j])
     {
-      if(t3f_joystick_state[i].button[j])
+      if(!(ip->button_blocked))
       {
-        if(!(*block_button))
-        {
-          *button = true;
-        }
-        using_button = true;
-        break;
+        ip->button = true;
       }
+      using_button = true;
+      break;
     }
+  }
 
-    /* read sticks */
-    for(j = 0; j < al_get_joystick_num_sticks(t3f_joystick[i]) && j <= 2; j++)
+  if(ip->current_joy >= 0 && al_get_joystick_num_axes(t3f_joystick[ip->current_joy], ip->current_stick) > 1)
+  {
+    val = t3f_joystick_state[ip->current_joy].stick[ip->current_stick].axis[0];
+    if(fabs(val) > ip->dead_zone)
     {
-      if(al_get_joystick_num_axes(t3f_joystick[i], j) > 0)
+      if(!(ip->axes_blocked))
       {
-        val = t3f_joystick_state[i].stick[j].axis[0];
-        if(fabs(val) > 0.1)
-        {
-          if(!(*block_axes))
-          {
-            *x += (val - 0.1) / 0.9;
-          }
-          using_axis = true;
-        }
+        ip->axis_x += (val - ip->dead_zone) / (1.0 - ip->dead_zone);
       }
-      if(al_get_joystick_num_axes(t3f_joystick[i], j) > 1)
+      using_axis = true;
+    }
+    val = t3f_joystick_state[ip->current_joy].stick[ip->current_stick].axis[1];
+    if(fabs(val) > ip->dead_zone)
+    {
+      if(!(ip->axes_blocked))
       {
-        val = t3f_joystick_state[i].stick[j].axis[1];
-        if(fabs(val) > 0.1)
-        {
-          if(!(*block_axes))
-          {
-            *y += (val - 0.1) / 0.9;
-          }
-          using_axis = true;
-        }
+        ip->axis_y += (val - ip->dead_zone) / (1.0 - ip->dead_zone);
       }
+      using_axis = true;
     }
   }
   if(!using_axis)
   {
-    *block_axes = false;
+    ip->axes_blocked = false;
   }
   if(!using_button)
   {
-    *block_button = false;
+    ip->button_blocked = false;
   }
 
   /* keep axis values within range */
-  if(*x < -1.0)
+  if(ip->axis_x < -1.0)
   {
-    *x = -1.0;
+    ip->axis_x = -1.0;
   }
-  if(*x > 1.0)
+  if(ip->axis_x > 1.0)
   {
-    *x = 1.0;
+    ip->axis_x = 1.0;
   }
-  if(*y < -1.0)
+  if(ip->axis_y < -1.0)
   {
-    *y = -1.0;
+    ip->axis_y = -1.0;
   }
-  if(*y > 1.0)
+  if(ip->axis_y > 1.0)
   {
-    *y = 1.0;
+    ip->axis_y = 1.0;
   }
-  if(t3f_distance(0.0, 0.0, *x, *y) > 1.0)
+  if(t3f_distance(0.0, 0.0, ip->axis_x, ip->axis_y) > 1.0)
   {
-    a = atan2(*y, *x);
-    *x = cos(a);
-    *y = sin(a);
+    a = atan2(ip->axis_y, ip->axis_x);
+    ip->axis_x = cos(a);
+    ip->axis_y = sin(a);
   }
 }
