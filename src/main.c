@@ -201,7 +201,6 @@ void app_logic(void * data)
 		t3f_select_input_view(t3f_current_view);
 	}
 	app_touch_logic(data);
-	app->controller.dead_zone = 0.1;
 	dot_read_input(&app->controller);
 	if(app->controller.axis_x != 0.0 || app->controller.axis_y != 0.0 || app->controller.button)
 	{
@@ -684,6 +683,15 @@ void app_read_config(APP_INSTANCE * app)
 		}
 	}
 
+	app->controller.dead_zone = 0.1;
+	val = al_get_config_value(t3f_config, "Game Data", "Controller Dead Zone");
+	if(val)
+	{
+		printf("break 1\n");
+		app->controller.dead_zone = atoi(val);
+		printf("break 2\n");
+	}
+
 	app->game.cheats_enabled = false;
 	app->game.speed_multiplier = 1.0;
 	val = al_get_config_value(t3f_config, "Game Data", "speed_multiplier");
@@ -996,6 +1004,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->level_color[7] = al_map_rgb(218, 123, 48);
 	app->level_color[8] = al_map_rgb(218, 48, 48);
 	app->level_color[9] = al_map_rgb(204, 48, 218);
+	app->controller.current_joy = -1;
 
 	dot_setup_bg_objects(app);
 	dot_setup_credits(&app->credits);

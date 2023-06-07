@@ -96,38 +96,41 @@ void dot_read_input(DOT_INPUT_DATA * ip)
   }
 
   /* read buttons */
-  for(j = 0; j < al_get_joystick_num_buttons(t3f_joystick[ip->current_joy]); j++)
+  if(ip->current_joy >= 0 && t3f_joystick[ip->current_joy])
   {
-    if(t3f_joystick_state[ip->current_joy].button[j])
+    for(j = 0; j < al_get_joystick_num_buttons(t3f_joystick[ip->current_joy]); j++)
     {
-      if(!(ip->button_blocked))
+      if(t3f_joystick_state[ip->current_joy].button[j])
       {
-        ip->button = true;
+        if(!(ip->button_blocked))
+        {
+          ip->button = true;
+        }
+        using_button = true;
+        break;
       }
-      using_button = true;
-      break;
     }
-  }
 
-  if(ip->current_joy >= 0 && al_get_joystick_num_axes(t3f_joystick[ip->current_joy], ip->current_stick) > 1)
-  {
-    val = t3f_joystick_state[ip->current_joy].stick[ip->current_stick].axis[0];
-    if(fabs(val) > ip->dead_zone)
+    if(al_get_joystick_num_axes(t3f_joystick[ip->current_joy], ip->current_stick) > 1)
     {
-      if(!(ip->axes_blocked))
+      val = t3f_joystick_state[ip->current_joy].stick[ip->current_stick].axis[0];
+      if(fabs(val) > ip->dead_zone)
       {
-        ip->axis_x += (val - ip->dead_zone) / (1.0 - ip->dead_zone);
+        if(!(ip->axes_blocked))
+        {
+          ip->axis_x += (val - ip->dead_zone) / (1.0 - ip->dead_zone);
+        }
+        using_axis = true;
       }
-      using_axis = true;
-    }
-    val = t3f_joystick_state[ip->current_joy].stick[ip->current_stick].axis[1];
-    if(fabs(val) > ip->dead_zone)
-    {
-      if(!(ip->axes_blocked))
+      val = t3f_joystick_state[ip->current_joy].stick[ip->current_stick].axis[1];
+      if(fabs(val) > ip->dead_zone)
       {
-        ip->axis_y += (val - ip->dead_zone) / (1.0 - ip->dead_zone);
+        if(!(ip->axes_blocked))
+        {
+          ip->axis_y += (val - ip->dead_zone) / (1.0 - ip->dead_zone);
+        }
+        using_axis = true;
       }
-      using_axis = true;
     }
   }
   if(!using_axis)
