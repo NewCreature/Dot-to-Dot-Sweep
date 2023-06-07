@@ -76,14 +76,14 @@ v1.3
    [X]Use distance formula on final x and y values. If distance > 1.0, get the
       angle and use cos() and sin() to update the final value.
 
-[ ]HUD does not render all the way to the edge under certain circumstances.
+[X]HUD does not render all the way to the edge under certain circumstances.
 
-   [ ]Modified t3f_set_clipping_rectangle() to attempt fix. Needs testing.
+   [X]Modified t3f_set_clipping_rectangle() to attempt fix. Needs testing.
 
-[ ]Darkening overlay during game start and pause states doesn't cover the
+[X]Darkening overlay during game start and pause states doesn't cover the
    entire play area under certain circumstances.
 
-   [ ]Modified t3f_set_clipping_rectangle() to attempt fix. Needs testing.
+   [X]Modified t3f_set_clipping_rectangle() to attempt fix. Needs testing.
 
 [X]Add Quit option to main menu so gamepad players don't have to reach for the
    keyboard.
