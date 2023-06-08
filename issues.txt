@@ -7,7 +7,15 @@ v1.3
 
    [ ]XBox controllers have issues with axes on Linux.
 
-   [ ]Look into Steam Deck controller information.
+   [ ]Look into Steam Deck controller information. If Steam handles remapping
+      for us and gives Allegro a good set of data for the controller, we should
+      be able to assume certain things about the controller. We might want to
+      detect if the game is being run through Steam (I think we'll be able to
+      if we are using Steamworks or whatever to handle achievements).
+
+      Most users will probably run the game fron Steam, so if Steam handles
+      this stuff properly, we should be okay to have a default setup with
+      manual overrides for running outside of Steam.
 
    [ ]Add manual configuration for controllers. Users who experience issues
       with controllers should be able to manually specify the settings instead
