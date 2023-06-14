@@ -683,12 +683,12 @@ void app_read_config(APP_INSTANCE * app)
 		}
 	}
 
-	app->controller.dead_zone = 0.1;
+	app->controller.dead_zone = 0.15;
 	val = al_get_config_value(t3f_config, "Game Data", "Controller Dead Zone");
 	if(val)
 	{
 		printf("break 1\n");
-		app->controller.dead_zone = atoi(val);
+		app->controller.dead_zone = atof(val);
 		printf("break 2\n");
 	}
 
