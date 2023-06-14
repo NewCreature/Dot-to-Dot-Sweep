@@ -5,7 +5,7 @@ v1.3
 
 [ ]Research joystick issues.
 
-   [ ]XBox controllers have issues with axes on Linux.
+   [X]XBox controllers have issues with axes on Linux.
 
    [ ]Look into Steam Deck controller information. If Steam handles remapping
       for us and gives Allegro a good set of data for the controller, we should
@@ -16,10 +16,6 @@ v1.3
       Most users will probably run the game fron Steam, so if Steam handles
       this stuff properly, we should be okay to have a default setup with
       manual overrides for running outside of Steam.
-
-   [ ]Add manual configuration for controllers. Users who experience issues
-      with controllers should be able to manually specify the settings instead
-      of relying on autodetection.
 
 [ ]Look into issue where name entry menu did not dismiss properly, leaving the
    text entry mode on while on another menu.
