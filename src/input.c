@@ -6,7 +6,7 @@ void dot_handle_joystick_event(DOT_INPUT_DATA * ip, ALLEGRO_EVENT * ep)
   if(ep->type == ALLEGRO_EVENT_JOYSTICK_AXIS)
   {
     ip->current_joy = t3f_get_joystick_number(ep->joystick.id);
-    if(ip->current_joy >= 0)
+    if(ip->current_joy >= 0 && fabs(ep->joystick.pos) > ip->dead_zone)
     {
       ip->current_stick = ep->joystick.stick;
     }
@@ -28,7 +28,7 @@ void dot_read_input(DOT_INPUT_DATA * ip)
   ip->axis_x = 0.0;
   ip->axis_y = 0.0;
   ip->button = false;
- 
+
   /* read keyboard */
   if(t3f_key[ALLEGRO_KEY_UP] || t3f_key[ALLEGRO_KEY_W])
   {
