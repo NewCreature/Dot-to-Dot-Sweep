@@ -1,6 +1,11 @@
 v1.3
 ----
 
+[ ]Add Steam module to T3F to handle interfacing with SteamWorks.
+
+   [ ]Expose needed functions only. We will be using a small subset of
+      SteamWorks.
+
 [ ]Prepare Steam release.
 
    [ ]Set up store page.
