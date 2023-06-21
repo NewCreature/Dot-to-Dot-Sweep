@@ -1,6 +1,12 @@
 v1.3
 ----
 
+[ ]Select one input device at a time. If the player moves the mouse, the input
+   device should switch back to mouse until the player moves the controller
+   again.
+
+[ ]If the controller in use disconnects, pause the game.
+
 [ ]Add haptic feedback for gamepads.
 
 [ ]Research joystick issues.
