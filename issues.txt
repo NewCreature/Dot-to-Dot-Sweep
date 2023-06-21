@@ -1,6 +1,38 @@
 v1.3
 ----
 
+[ ]Prepare Steam release.
+
+   [ ]Set up store page.
+
+   [ ]Add templates for Steam metadata. There should be default templates in
+      the framework that are used to generate the final template at build time.
+      These generated files can be overwritten by the user if they wish to
+      deviate from the default settings.
+
+   [ ]Add Steam-related definitions to 'makefile.defines'.
+
+   [ ]Automate Steam release preparations.
+
+      [ ]We'll probably need to set up a staging area for building the Steam
+         release, similar to the Android build process.
+
+      [ ]If we need to build through the Steam SDK, add 'steam_build' target to
+         build scripts.
+      
+      [ ]Add 'steam_release' targets to makefiles to handle the release
+         process.
+
+         [ ]Target script needs to be implemented for each platform.
+      
+      [ ]The build and release processes should be separate. The release
+         process might not be fully auotmatable on MacOS due to Apple
+         notarization requirements.
+      
+      [ ]Provide a configuration option that points to the location of the
+         SteamWorks SDK. We should be able to find an use the tools we need for
+         each platform with just this one extra variable.
+
 [ ]Select one input device at a time. If the player moves the mouse, the input
    device should switch back to mouse until the player moves the controller
    again.
@@ -13,21 +45,10 @@ v1.3
 
    [X]XBox controllers have issues with axes on Linux.
 
-   [ ]Look into Steam Deck controller information. If Steam handles remapping
-      for us and gives Allegro a good set of data for the controller, we should
-      be able to assume certain things about the controller. We might want to
-      detect if the game is being run through Steam (I think we'll be able to
-      if we are using Steamworks or whatever to handle achievements).
-
-      Most users will probably run the game fron Steam, so if Steam handles
-      this stuff properly, we should be okay to have a default setup with
-      manual overrides for running outside of Steam.
-
-      [ ]Steam seems to map controllers to mimic XBox 360 controllers. If this
-         is true, we should be able to make certain assumptions about the
-         controller layout. Unfortunately, the information from the input
-         system does not match expectations. For instance, the triggers map
-         onto separate sticks/axes.
+      [X]Fixed by making the default dead zone a bit larger and only selecting
+         a stick on a gamepad with axis events if it exceeds the dead zone.
+   
+   [ ]Implement new input module in T3F (see 'T3F/issues.txt' for more info).
 
 [ ]Look into issue where name entry menu did not dismiss properly, leaving the
    text entry mode on while on another menu.
