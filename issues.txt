@@ -55,6 +55,20 @@ v1.3
    
    [ ]Implement new input module in T3F (see 'T3F/issues.txt' for more info).
 
+   [ ]Steam will map input from controllers to XBox mapping for us. We need to
+      detect if the game is running through Steam and use XBox mapping if that
+      is the case. This means we don't need to use SteamInput, but we'll still
+      need to detect if game is running through Steam.
+
+      [ ]I think the simplest way to detect Steam is to see if SteamWorks will
+         initialize. We should try to do this during t3f_initialize() so we
+         can make informed decisions from our game's init code about input
+         configuration.
+      
+      [ ]Make XBox-style input default in the new input module. We might
+         consider just assuming XBox and letting the user override the settings
+         if it's not working for them.
+
 [ ]Look into issue where name entry menu did not dismiss properly, leaving the
    text entry mode on while on another menu.
 
