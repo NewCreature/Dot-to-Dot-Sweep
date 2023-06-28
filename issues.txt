@@ -1,10 +1,7 @@
 v1.3
 ----
 
-[ ]Add Steam module to T3F to handle interfacing with SteamWorks.
-
-   [ ]Expose needed functions only. We will be using a small subset of
-      SteamWorks.
+[ ]Store user save data in separate INI file to enable proper cloud synching.
 
 [ ]Prepare Steam release.
 
@@ -41,6 +38,10 @@ v1.3
 [ ]Select one input device at a time. If the player moves the mouse, the input
    device should switch back to mouse until the player moves the controller
    again.
+
+[ ]Show a pause menu when using something other than a pointing device to pause
+   the game. Users should be able to decide what to do on whichever device they
+   happen to be using.
 
 [ ]If the controller in use disconnects, pause the game.
 
