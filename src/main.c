@@ -184,7 +184,7 @@ void app_logic(void * data)
 	}
 
 	/* capture screenshot */
-	if(t3f_key[ALLEGRO_KEY_PRINTSCREEN])
+	if(t3f_key[ALLEGRO_KEY_PRINTSCREEN] || t3f_key[ALLEGRO_KEY_TILDE] || t3f_key[104])
 	{
 		char buf[32];
 
@@ -192,6 +192,8 @@ void app_logic(void * data)
 		al_save_bitmap(buf, al_get_backbuffer(t3f_display));
 		dot_screenshot_count++;
 		t3f_key[ALLEGRO_KEY_PRINTSCREEN] = 0;
+		t3f_key[ALLEGRO_KEY_TILDE] = 0;
+		t3f_key[104] = 0;
 	}
 
 	if(app->want_disable_controller)

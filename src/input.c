@@ -76,6 +76,9 @@ void dot_read_input(DOT_INPUT_DATA * ip)
       case ALLEGRO_KEY_D:
       case ALLEGRO_KEY_A:
       case ALLEGRO_KEY_S:
+      case ALLEGRO_KEY_PRINTSCREEN:
+      case ALLEGRO_KEY_TILDE:
+      case 104:
       {
         break;
       }
