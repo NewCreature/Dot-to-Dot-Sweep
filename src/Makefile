@@ -109,3 +109,6 @@ install_flatpak:
 
 data_package:
 	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts data_package
+
+steam_binary_package:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts steam_binary_package SYSTEM=$(SYSTEM)

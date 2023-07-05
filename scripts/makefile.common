@@ -124,4 +124,9 @@ demo_gp: demo demo_edit_gp
 	$(CC) $(LFLAGS) ../win32/makeicon.o $(T3F_LIBRARIES) -o ../win32/makeicon
 
 data_package:
+	rm -f $(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-data.zip
 	cd ../bin && zip -9 -r $(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-data.zip data -x data/.\*
+
+steam_binary_package: $(APP_EXE_NAME)
+	rm -f $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-$(SYSTEM)-binaries.zip
+	cd ../bin && zip -9 $(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-$(SYSTEM)-binaries.zip * -x data\*
