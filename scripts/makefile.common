@@ -122,3 +122,6 @@ demo_gp: demo demo_edit_gp
 
 ../win32/makeicon$(EXE_SUFFIX): ../win32/makeicon.o
 	$(CC) $(LFLAGS) ../win32/makeicon.o $(T3F_LIBRARIES) -o ../win32/makeicon
+
+data_package:
+	cd ../bin && zip -9 -r $(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-data.zip data -x data/.\*

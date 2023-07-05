@@ -106,3 +106,6 @@ uninstall:
 
 install_flatpak:
 	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts install_flatpak
+
+data_package:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts data_package
