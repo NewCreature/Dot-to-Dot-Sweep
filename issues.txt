@@ -3,37 +3,19 @@ v1.3
 
 [ ]Store user save data in separate INI file to enable proper cloud synching.
 
+   [ ]Make user settings file the cloud sync file.
+
 [ ]Prepare Steam release.
 
-   [ ]Set up store page.
+   [X]Set up store page.
 
-   [ ]Add templates for Steam metadata. There should be default templates in
-      the framework that are used to generate the final template at build time.
-      These generated files can be overwritten by the user if they wish to
-      deviate from the default settings.
+   [ ]Upload notarized MacOS app bundle.
 
-   [ ]Add Steam-related definitions to 'makefile.defines'.
+   [ ]Upload Linux executable.
 
-   [ ]Automate Steam release preparations.
+   [ ]Upload Windows executable.
 
-      [ ]We'll probably need to set up a staging area for building the Steam
-         release, similar to the Android build process.
-
-      [ ]If we need to build through the Steam SDK, add 'steam_build' target to
-         build scripts.
-      
-      [ ]Add 'steam_release' targets to makefiles to handle the release
-         process.
-
-         [ ]Target script needs to be implemented for each platform.
-      
-      [ ]The build and release processes should be separate. The release
-         process might not be fully auotmatable on MacOS due to Apple
-         notarization requirements.
-      
-      [ ]Provide a configuration option that points to the location of the
-         SteamWorks SDK. We should be able to find an use the tools we need for
-         each platform with just this one extra variable.
+[ ]Finish XBox controller implementation.
 
 [ ]Select one input device at a time. If the player moves the mouse, the input
    device should switch back to mouse until the player moves the controller
@@ -44,8 +26,6 @@ v1.3
    happen to be using.
 
 [ ]If the controller in use disconnects, pause the game.
-
-[ ]Add haptic feedback for gamepads.
 
 [ ]Research joystick issues.
 
