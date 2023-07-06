@@ -34,6 +34,8 @@ v1.3
 
       [ ]Make sure text entry uses SteamWorks so the keyboard pops up.
 
+         [ ]Begin work on Steam Optional open source project.
+
 [ ]Finish XBox controller implementation.
 
 [ ]Select one input device at a time. If the player moves the mouse, the input
