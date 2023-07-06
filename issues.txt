@@ -1,6 +1,21 @@
 v1.3
 ----
 
+[ ]See if we can get ranked leaderboards working.
+
+   [ ]Generate user key at startup if one does not exist.
+
+   [ ]Update leaderboard script to accept user keys for insertion and selection
+      operations. Use of user key will branch to the modern leaderboard style.
+
+      [ ]When submitting a score with user key, check if the submitted score is
+         better than the existing one for that user key, game, mode, etc.
+         before replacing. We need a way to specify if lower or higher is
+         better.
+      
+      [ ]Consider removing backwards compatibility since the games have to be
+         updated anyway to work with the new site.
+
 [ ]Store user save data in separate INI file to enable proper cloud synching.
 
    [ ]Make user settings file the cloud sync file.
