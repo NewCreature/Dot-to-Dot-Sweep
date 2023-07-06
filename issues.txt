@@ -30,6 +30,10 @@ v1.3
 
    [ ]Upload Windows executable.
 
+   [ ]Get ready for Steam Deck verification.
+
+      [ ]Make sure text entry uses SteamWorks so the keyboard pops up.
+
 [ ]Finish XBox controller implementation.
 
 [ ]Select one input device at a time. If the player moves the mouse, the input
