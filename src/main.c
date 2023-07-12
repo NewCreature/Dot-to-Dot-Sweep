@@ -727,7 +727,7 @@ void app_read_user_data(APP_INSTANCE * app)
 	val = al_get_config_value(t3f_user_data, "Game Data", "leaderboard_submit_url");
 	if(!val)
 	{
-		val = "https://www.tcubedsoftware.com/scripts/leaderboards/insert.php";
+		val = "https://www.tcubedsoftware.com/scripts/leaderboards/update.php";
 		al_set_config_value(t3f_user_data, "Game Data", "leaderboard_submit_url", val);
 	}
 	strcpy(app->leaderboard_submit_url, val);
