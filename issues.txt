@@ -74,6 +74,9 @@ v1.3
 [ ]Look into issue where name entry menu did not dismiss properly, leaving the
    text entry mode on while on another menu.
 
+   [ ]Don't accept menu navigation keys when in text input mode. The menu
+      malfunctions when using keys associated with menu navigation.
+
 [ ]Had issue where lifting finger during gameplay would not pause the game on
    Android.
 
