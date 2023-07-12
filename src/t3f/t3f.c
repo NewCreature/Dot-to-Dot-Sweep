@@ -78,7 +78,7 @@ int t3f_option[T3F_MAX_OPTIONS] = {0};
 
 void (*t3f_logic_proc)(void * data) = NULL;
 void (*t3f_render_proc)(void * data) = NULL;
-static void * t3f_user_data = NULL;
+static void * t3f_app_data = NULL;
 
 ALLEGRO_DISPLAY * t3f_display = NULL;
 ALLEGRO_TIMER * t3f_timer = NULL;
@@ -86,10 +86,12 @@ ALLEGRO_EVENT_QUEUE * t3f_queue = NULL;
 char t3f_window_title[1024] = {0};
 
 ALLEGRO_CONFIG * t3f_config = NULL;
+ALLEGRO_CONFIG * t3f_user_data = NULL;
 ALLEGRO_PATH * t3f_data_path = NULL;
 ALLEGRO_PATH * t3f_config_path = NULL;
 ALLEGRO_PATH * t3f_temp_path = NULL;
 static char t3f_config_filename[1024] = {0};
+static char t3f_user_data_filename[1024] = {0};
 
 /* colors */
 ALLEGRO_COLOR t3f_color_white;
@@ -430,6 +432,20 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 	}
 	t3f_get_options();
 
+	/* set up user data file */
+	temp_path = al_clone_path(t3f_data_path);
+	al_set_path_filename(temp_path, "user_data.ini");
+	strcpy(t3f_user_data_filename, al_path_cstr(temp_path, '/'));
+	al_destroy_path(temp_path);
+	old_interface = al_get_new_file_interface();
+	al_set_standard_file_interface();
+	t3f_user_data = al_load_config_file(t3f_user_data_filename);
+	al_set_new_file_interface(old_interface);
+	if(!t3f_user_data)
+	{
+		t3f_user_data = al_create_config();
+	}
+
 	if(!al_init_image_addon())
 	{
 		printf("Failed to initialize image add-on!\n");
@@ -560,7 +576,7 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 
 	t3f_logic_proc = logic_proc;
 	t3f_render_proc = render_proc;
-	t3f_user_data = data;
+	t3f_app_data = data;
 
 	/* locate user resources */
 	t3f_locate_resource("data/t3f.dat");
@@ -955,6 +971,19 @@ bool t3f_save_config(void)
 	old_interface = al_get_new_file_interface();
 	al_set_standard_file_interface();
 	ret = al_save_config_file(t3f_config_filename, t3f_config);
+	al_set_new_file_interface(old_interface);
+
+	return ret;
+}
+
+bool t3f_save_user_data(void)
+{
+	const ALLEGRO_FILE_INTERFACE * old_interface;
+	bool ret;
+
+	old_interface = al_get_new_file_interface();
+	al_set_standard_file_interface();
+	ret = al_save_config_file(t3f_user_data_filename, t3f_user_data);
 	al_set_new_file_interface(old_interface);
 
 	return ret;
@@ -1358,7 +1387,8 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			{
 				t3f_pause_music();
 			}
-			al_save_config_file(t3f_config_filename, t3f_config);
+			t3f_save_config();
+			t3f_save_user_data();
 			break;
 		}
 		case ALLEGRO_EVENT_DISPLAY_RESUME_DRAWING:
@@ -1378,7 +1408,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 		#ifndef ALLEGRO_ANDROID
 			case ALLEGRO_EVENT_MENU_CLICK:
 			{
-				t3f_process_menu_click(event->user.data1, t3f_user_data);
+				t3f_process_menu_click(event->user.data1, t3f_app_data);
 				break;
 			}
 		#endif
@@ -1388,13 +1418,13 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 		{
 			t3f_android_support_helper();
 			#ifndef ALLEGRO_ANDROID
-				t3f_update_menus(t3f_user_data);
+				t3f_update_menus(t3f_app_data);
 			#endif
 			if(!(t3f_flags & T3F_NO_DISPLAY))
 			{
 				t3f_select_input_view(t3f_default_view);
 			}
-			t3f_logic_proc(t3f_user_data);
+			t3f_logic_proc(t3f_app_data);
 			t3f_need_redraw = true;
 			break;
 		}
@@ -1416,7 +1446,7 @@ void t3f_render(bool flip)
 			t3f_select_view(t3f_current_view);
 		}
 		al_use_transform(&t3f_current_transform);
-		t3f_render_proc(t3f_user_data);
+		t3f_render_proc(t3f_app_data);
 		if(flip)
 		{
 			al_flip_display();
@@ -1435,7 +1465,7 @@ void t3f_process_events(bool ignore)
 		{
 			if(t3f_event_handler_proc)
 			{
-				t3f_event_handler_proc(&event, t3f_user_data);
+				t3f_event_handler_proc(&event, t3f_app_data);
 			}
 			else
 			{
@@ -1464,7 +1494,7 @@ void t3f_run(void)
 		al_wait_for_event(t3f_queue, &event);
 		if(t3f_event_handler_proc)
 		{
-			t3f_event_handler_proc(&event, t3f_user_data);
+			t3f_event_handler_proc(&event, t3f_app_data);
 		}
 		else
 		{
@@ -1492,6 +1522,7 @@ void t3f_run(void)
 void t3f_finish(void)
 {
 	t3f_save_config();
+	t3f_save_user_data();
 	if(t3f_timer)
 	{
 		al_destroy_timer(t3f_timer);

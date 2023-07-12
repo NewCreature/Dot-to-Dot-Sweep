@@ -628,13 +628,14 @@ bool app_load_data(APP_INSTANCE * app)
 	return true;
 }
 
-void app_read_config(APP_INSTANCE * app)
+/* read user preferences and other data */
+void app_read_user_data(APP_INSTANCE * app)
 {
 	const char * val;
 
 	/* see if we need to run setup */
 	app->first_run = true;
-	val = al_get_config_value(t3f_config, "Game Data", "Setup Done");
+	val = al_get_config_value(t3f_user_data, "Game Data", "Setup Done");
 	if(val)
 	{
 		if(!strcasecmp(val, "true"))
@@ -644,7 +645,7 @@ void app_read_config(APP_INSTANCE * app)
 	}
 
 	/* load high score */
-	val = al_get_config_value(t3f_config, "Game Data", "High Score");
+	val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
 	if(val)
 	{
 		app->game.high_score = atoi(val);
@@ -654,8 +655,15 @@ void app_read_config(APP_INSTANCE * app)
 		app->game.high_score = 0;
 	}
 
+	/* load user key */
+	val = al_get_config_value(t3f_user_data, "Game Data", "User Key");
+	if(val)
+	{
+		strcpy(app->user_key, val);
+	}
+
 	/* load user name */
-	val = al_get_config_value(t3f_config, "Game Data", "User Name");
+	val = al_get_config_value(t3f_user_data, "Game Data", "User Name");
 	if(val)
 	{
 		strcpy(app->user_name, val);
@@ -666,7 +674,7 @@ void app_read_config(APP_INSTANCE * app)
 	}
 
 	app->upload_scores = false;
-	val = al_get_config_value(t3f_config, "Game Data", "Upload Scores");
+	val = al_get_config_value(t3f_user_data, "Game Data", "Upload Scores");
 	if(val)
 	{
 		if(!strcasecmp(val, "true"))
@@ -676,7 +684,7 @@ void app_read_config(APP_INSTANCE * app)
 	}
 
 	app->music_enabled = false;
-	val = al_get_config_value(t3f_config, "Game Data", "Music Enabled");
+	val = al_get_config_value(t3f_user_data, "Game Data", "Music Enabled");
 	if(val)
 	{
 		if(!strcasecmp(val, "true"))
@@ -685,26 +693,17 @@ void app_read_config(APP_INSTANCE * app)
 		}
 	}
 
-	app->controller.dead_zone = 0.15;
-	val = al_get_config_value(t3f_config, "Game Data", "Controller Dead Zone");
-	if(val)
-	{
-		printf("break 1\n");
-		app->controller.dead_zone = atof(val);
-		printf("break 2\n");
-	}
-
+	/* user cheat settings */
 	app->game.cheats_enabled = false;
 	app->game.speed_multiplier = 1.0;
-	val = al_get_config_value(t3f_config, "Game Data", "speed_multiplier");
+	val = al_get_config_value(t3f_user_data, "Game Data", "speed_multiplier");
 	if(val)
 	{
 		app->game.speed_multiplier = atof(val);
 		app->game.cheats_enabled = true;
 	}
-
 	app->game.start_level = 0;
-	val = al_get_config_value(t3f_config, "Game Data", "start_level");
+	val = al_get_config_value(t3f_user_data, "Game Data", "start_level");
 	if(val)
 	{
 		app->game.start_level = atoi(val);
@@ -713,9 +712,8 @@ void app_read_config(APP_INSTANCE * app)
 			app->game.cheats_enabled = true;
 		}
 	}
-
 	app->game.start_lives = 3;
-	val = al_get_config_value(t3f_config, "Game Data", "start_lives");
+	val = al_get_config_value(t3f_user_data, "Game Data", "start_lives");
 	if(val)
 	{
 		app->game.start_lives = atoi(val);
@@ -726,20 +724,33 @@ void app_read_config(APP_INSTANCE * app)
 	}
 
 	/* set up leaderboard URLs */
-	val = al_get_config_value(t3f_config, "Game Data", "leaderboard_submit_url");
+	val = al_get_config_value(t3f_user_data, "Game Data", "leaderboard_submit_url");
 	if(!val)
 	{
 		val = "https://www.tcubedsoftware.com/scripts/leaderboards/insert.php";
-		al_set_config_value(t3f_config, "Game Data", "leaderboard_submit_url", val);
+		al_set_config_value(t3f_user_data, "Game Data", "leaderboard_submit_url", val);
 	}
 	strcpy(app->leaderboard_submit_url, val);
-	val = al_get_config_value(t3f_config, "Game Data", "leaderboard_retrieve_url");
+	val = al_get_config_value(t3f_user_data, "Game Data", "leaderboard_retrieve_url");
 	if(!val)
 	{
 		val = "https://www.tcubedsoftware.com/scripts/leaderboards/query.php";
-		al_set_config_value(t3f_config, "Game Data", "leaderboard_retrieve_url", val);
+		al_set_config_value(t3f_user_data, "Game Data", "leaderboard_retrieve_url", val);
 	}
 	strcpy(app->leaderboard_retrieve_url, val);
+}
+
+/* read config for local machine */
+void app_read_config(APP_INSTANCE * app)
+{
+	const char * val;
+
+	app->controller.dead_zone = 0.15;
+	val = al_get_config_value(t3f_config, "Game Data", "Controller Dead Zone");
+	if(val)
+	{
+		app->controller.dead_zone = atof(val);
+	}
 }
 
 bool app_process_arguments(APP_INSTANCE * app, int argc, char * argv[])
@@ -981,6 +992,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 
 	app_read_config(app);
+	app_read_user_data(app);
 
 	if(!dot_intro_initialize(app))
 	{

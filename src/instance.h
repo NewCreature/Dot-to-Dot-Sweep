@@ -56,6 +56,7 @@ typedef struct
     /* leaderboard stuff */
     char leaderboard_submit_url[1024];
     char leaderboard_retrieve_url[1024];
+    char user_key[128];
     char user_name[256];
     bool upload_scores;
     T3NET_LEADERBOARD * leaderboard;

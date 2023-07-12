@@ -192,8 +192,8 @@ void dot_game_exit(void * data)
 
 	/* save high score */
 	sprintf(buf, "%d", app->game.high_score);
-	al_set_config_value(t3f_config, "Game Data", "High Score", buf);
-	al_save_config_file(al_path_cstr(t3f_config_path, '/'), t3f_config);
+	al_set_config_value(t3f_user_data, "Game Data", "High Score", buf);
+	t3f_save_user_data();
 
 	/* upload score */
 	if(app->upload_scores && !app->demo_file && !app->game.cheats_enabled)

@@ -83,8 +83,8 @@ int dot_menu_proc_setup(void * data, int i, void * pp)
 
 static void dot_update_first_run(void)
 {
-	al_set_config_value(t3f_config, "Game Data", "Setup Done", "true");
-	al_save_config_file(al_path_cstr(t3f_config_path, '/'), t3f_config);
+	al_set_config_value(t3f_user_data, "Game Data", "Setup Done", "true");
+	t3f_save_user_data();
 }
 
 int dot_menu_proc_music_yes(void * data, int i, void * pp)
@@ -92,7 +92,7 @@ int dot_menu_proc_music_yes(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	app->music_enabled = true;
-	al_set_config_value(t3f_config, "Game Data", "Music Enabled", "true");
+	al_set_config_value(t3f_user_data, "Game Data", "Music Enabled", "true");
 	if(t3f_get_music_state() != T3F_MUSIC_STATE_PLAYING)
 	{
 		t3f_play_music(DOT_MUSIC_TITLE);
@@ -108,7 +108,7 @@ int dot_menu_proc_music_no(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	app->music_enabled = false;
-	al_set_config_value(t3f_config, "Game Data", "Music Enabled", "false");
+	al_set_config_value(t3f_user_data, "Game Data", "Music Enabled", "false");
 	if(t3f_get_music_state() == T3F_MUSIC_STATE_PLAYING)
 	{
 		al_stop_timer(t3f_timer);
@@ -140,8 +140,8 @@ void dot_menu_proc_profile_name_callback(void * data)
 	{
 		strcpy(app->user_name, "Anonymous");
 	}
-	al_set_config_value(t3f_config, "Game Data", "User Name", app->user_name);
-	al_save_config_file(al_path_cstr(t3f_config_path, '/'), t3f_config);
+	al_set_config_value(t3f_user_data, "Game Data", "User Name", app->user_name);
+	t3f_save_user_data();
 }
 
 int dot_menu_proc_profile_name(void * data, int i, void * pp)
@@ -175,8 +175,8 @@ int dot_menu_proc_upload_yes(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	app->upload_scores = true;
-	al_set_config_value(t3f_config, "Game Data", "Upload Scores", "true");
-	al_save_config_file(al_path_cstr(t3f_config_path, '/'), t3f_config);
+	al_set_config_value(t3f_user_data, "Game Data", "Upload Scores", "true");
+	t3f_save_user_data();
 	app->current_menu = DOT_MENU_PROFILE;
 	select_first_element(app);
 	return 1;
@@ -187,8 +187,8 @@ int dot_menu_proc_upload_no(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	app->upload_scores = false;
-	al_set_config_value(t3f_config, "Game Data", "Upload Scores", "false");
-	al_save_config_file(al_path_cstr(t3f_config_path, '/'), t3f_config);
+	al_set_config_value(t3f_user_data, "Game Data", "Upload Scores", "false");
+	t3f_save_user_data();
 	app->current_menu = DOT_MENU_MUSIC;
 	select_first_element(app);
 	return 1;
@@ -391,7 +391,7 @@ void dot_intro_logic(void * data)
 		}
 		if(r == 1)
 		{
-			al_set_config_value(t3f_config, "Game Data", "User Name", app->user_name);
+			al_set_config_value(t3f_user_data, "Game Data", "User Name", app->user_name);
 		}
 	}
 	dot_game_emo_logic(data);
