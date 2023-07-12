@@ -54,6 +54,8 @@ typedef struct
     DOT_PARTICLE_LIST number_particle_list[10];
 
     /* leaderboard stuff */
+    char leaderboard_get_user_key_url[1024];
+    char leaderboard_set_user_name_url[1024];
     char leaderboard_submit_url[1024];
     char leaderboard_retrieve_url[1024];
     char user_key[128];

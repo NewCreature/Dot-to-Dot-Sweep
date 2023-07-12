@@ -27,6 +27,10 @@ typedef struct
 
 } T3NET_LEADERBOARD;
 
+/* leaderboard setup functions */
+char * t3net_get_new_leaderboard_user_key(const char * url, const char * user_name);
+int t3net_update_leaderboard_user_name(const char * url, const char * user_key, const char * user_name);
+
 /* leaderboard download functions */
 T3NET_LEADERBOARD * t3net_get_leaderboard(char * url, char * game, char * version, char * mode, char * option, int entries, int ascend);
 int t3net_update_leaderboard(T3NET_LEADERBOARD * lp);

@@ -5,6 +5,111 @@
 #include "leaderboard.h"
 #include "internal.h"
 
+/* leaderboard setup functions */
+char * t3net_get_new_leaderboard_user_key(const char * url, const char * user_name)
+{
+	T3NET_ARGUMENTS * args = NULL;
+	const char * val;
+	T3NET_DATA * data = NULL;
+	int i;
+	char * ret = NULL;
+
+	args = t3net_create_arguments();
+	if(!args)
+	{
+		goto fail;
+	}
+	if(user_name)
+	{
+		if(!t3net_add_argument(args, "user_name", user_name))
+		{
+			goto fail;
+		}
+	}
+	data = t3net_get_data(url, args);
+	if(!data)
+	{
+		goto fail;
+	}
+
+	for(i = 0; i < data->entries; i++)
+	{
+		val = t3net_get_data_entry_field(data, i, "user_key");
+		if(val)
+		{
+			ret = strdup(val);
+			break;
+		}
+	}
+	t3net_destroy_arguments(args);
+	t3net_destroy_data(data);
+
+	return ret;
+
+	fail:
+	{
+		if(ret)
+		{
+			free(ret);
+		}
+		if(args)
+		{
+			t3net_destroy_arguments(args);
+		}
+		if(data)
+		{
+			t3net_destroy_data(data);
+		}
+		return NULL;
+	}
+}
+
+int t3net_update_leaderboard_user_name(const char * url, const char * user_key, const char * user_name)
+{
+	T3NET_ARGUMENTS * args = NULL;
+	T3NET_DATA * data = NULL;
+
+	args = t3net_create_arguments();
+	if(!args)
+	{
+		goto fail;
+	}
+	if(user_name)
+	{
+		if(!t3net_add_argument(args, "user_key", user_key))
+		{
+			goto fail;
+		}
+		if(!t3net_add_argument(args, "user_name", user_name))
+		{
+			goto fail;
+		}
+	}
+	data = t3net_get_data(url, args);
+	if(!data)
+	{
+		goto fail;
+	}
+	t3net_destroy_arguments(args);
+	t3net_destroy_data(data);
+
+	return 1;
+
+	fail:
+	{
+		if(args)
+		{
+			t3net_destroy_arguments(args);
+		}
+		if(data)
+		{
+			t3net_destroy_data(data);
+		}
+		return 0;
+	}
+}
+
+
 T3NET_LEADERBOARD * t3net_get_leaderboard(char * url, char * game, char * version, char * mode, char * option, int entries, int ascend)
 {
 	T3NET_LEADERBOARD * lp;

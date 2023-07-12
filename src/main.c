@@ -3,6 +3,7 @@
 #include "t3f/music.h"
 #include "t3f/view.h"
 #include "t3f/draw.h"
+#include "t3net/leaderboard.h"
 #include "avc/avc.h"
 #include "instance.h"
 #include "intro.h"
@@ -724,6 +725,20 @@ void app_read_user_data(APP_INSTANCE * app)
 	}
 
 	/* set up leaderboard URLs */
+	val = al_get_config_value(t3f_user_data, "Game Data", "leaderboard_get_user_key_url");
+	if(!val)
+	{
+		val = "https://www.tcubedsoftware.com/scripts/leaderboards/get_user_key.php";
+		al_set_config_value(t3f_user_data, "Game Data", "leaderboard_get_user_key_url", val);
+	}
+	strcpy(app->leaderboard_get_user_key_url, val);
+	val = al_get_config_value(t3f_user_data, "Game Data", "leaderboard_set_user_name_url");
+	if(!val)
+	{
+		val = "https://www.tcubedsoftware.com/scripts/leaderboards/set_user_name.php";
+		al_set_config_value(t3f_user_data, "Game Data", "leaderboard_set_user_name_url", val);
+	}
+	strcpy(app->leaderboard_set_user_name_url, val);
 	val = al_get_config_value(t3f_user_data, "Game Data", "leaderboard_submit_url");
 	if(!val)
 	{
@@ -959,6 +974,7 @@ static bool create_particle_lists(APP_INSTANCE * app)
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
 	int i;
+	char * val;
 
 	/* detect game type */
 	app->desktop_mode = false;
@@ -993,6 +1009,16 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 
 	app_read_config(app);
 	app_read_user_data(app);
+	if(app->upload_scores && strlen(app->user_key) < 1)
+	{
+		val = t3net_get_new_leaderboard_user_key(app->leaderboard_get_user_key_url, NULL);
+		if(val)
+		{
+			al_set_config_value(t3f_user_data, "Game Data", "User Key", val);
+			free(val);
+			t3f_save_user_data();
+		}
+	}
 
 	if(!dot_intro_initialize(app))
 	{
