@@ -150,6 +150,7 @@ int dot_menu_proc_profile_name(void * data, int i, void * pp)
 
 	if(app->desktop_mode)
 	{
+		dot_clear_input(&app->controller);
 		app->entering_name = true;
 		dot_enter_text(app->user_name, 256);
 		t3f_select_next_gui_element(app->menu[app->current_menu]);
@@ -403,6 +404,10 @@ void dot_intro_logic(void * data)
 		{
 			app->entering_name = false;
 		}
+		if(r == 1)
+		{
+			dot_menu_proc_profile_okay(app, 0, NULL);
+		}
 	}
 	else
 	{
@@ -483,32 +488,29 @@ void dot_intro_logic(void * data)
 	}
 	else
 	{
-		if(!app->entering_name)
+		if(app->using_controller)
 		{
-			if(app->using_controller)
-			{
-				if(app->menu[app->current_menu]->hover_element < 0)
-				{
-					t3f_select_previous_gui_element(app->menu[app->current_menu]);
-				}
-			}
-			if(app->controller.axis_y < 0.0)
+			if(app->menu[app->current_menu]->hover_element < 0)
 			{
 				t3f_select_previous_gui_element(app->menu[app->current_menu]);
-				t3f_key[ALLEGRO_KEY_UP] = 0;
-				app->controller.axes_blocked = true;
 			}
-			if(app->controller.axis_y > 0.0)
-			{
-				t3f_select_next_gui_element(app->menu[app->current_menu]);
-				t3f_key[ALLEGRO_KEY_DOWN] = 0;
-				app->controller.axes_blocked = true;
-			}
-			if(app->controller.button)
-			{
-				t3f_activate_selected_gui_element(app->menu[app->current_menu], app);
-				app->controller.button_blocked = true;
-			}
+		}
+		if(app->controller.axis_y < 0.0)
+		{
+			t3f_select_previous_gui_element(app->menu[app->current_menu]);
+			t3f_key[ALLEGRO_KEY_UP] = 0;
+			app->controller.axes_blocked = true;
+		}
+		if(app->controller.axis_y > 0.0)
+		{
+			t3f_select_next_gui_element(app->menu[app->current_menu]);
+			t3f_key[ALLEGRO_KEY_DOWN] = 0;
+			app->controller.axes_blocked = true;
+		}
+		if(app->controller.button)
+		{
+			t3f_activate_selected_gui_element(app->menu[app->current_menu], app);
+			app->controller.button_blocked = true;
 		}
 	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])

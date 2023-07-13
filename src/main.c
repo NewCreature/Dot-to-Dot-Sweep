@@ -204,7 +204,10 @@ void app_logic(void * data)
 		t3f_select_input_view(t3f_current_view);
 	}
 	app_touch_logic(data);
-	dot_read_input(&app->controller);
+	if(!app->entering_name)
+	{
+		dot_read_input(&app->controller);
+	}
 	if(app->controller.axis_x != 0.0 || app->controller.axis_y != 0.0 || app->controller.button)
 	{
 		app->using_controller = true;

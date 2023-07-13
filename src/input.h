@@ -17,5 +17,6 @@ typedef struct
 
 void dot_handle_joystick_event(DOT_INPUT_DATA * ip, ALLEGRO_EVENT * ep);
 void dot_read_input(DOT_INPUT_DATA * ip);
+void dot_clear_input(DOT_INPUT_DATA * ip);
 
 #endif

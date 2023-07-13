@@ -169,3 +169,8 @@ void dot_read_input(DOT_INPUT_DATA * ip)
     ip->axis_y = sin(a);
   }
 }
+
+void dot_clear_input(DOT_INPUT_DATA * ip)
+{
+  memset(ip, 0, sizeof(DOT_INPUT_DATA));
+}
