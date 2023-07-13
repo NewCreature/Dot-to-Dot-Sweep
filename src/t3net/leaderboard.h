@@ -38,6 +38,6 @@ void t3net_clear_leaderboard(T3NET_LEADERBOARD * lp);
 void t3net_destroy_leaderboard(T3NET_LEADERBOARD * lp);
 
 /* leaderboard upload functions */
-int t3net_upload_score(char * url, char * game, char * version, char * mode, char * option, char * name, unsigned long score, char * extra);
+int t3net_upload_score(char * url, char * game, char * version, char * mode, char * option, char * user_key, unsigned long score, char * extra);
 
 #endif

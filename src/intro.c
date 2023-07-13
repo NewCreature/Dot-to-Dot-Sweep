@@ -140,8 +140,14 @@ void dot_menu_proc_profile_name_callback(void * data)
 	{
 		strcpy(app->user_name, "Anonymous");
 	}
+	al_set_config_value(t3f_user_data, "Game Data", "User Name Uploaded", "false");
 	al_set_config_value(t3f_user_data, "Game Data", "User Name", app->user_name);
 	t3f_save_user_data();
+	if(t3net_update_leaderboard_user_name(app->leaderboard_set_user_name_url, app->user_key, app->user_name))
+	{
+		al_remove_config_key(t3f_user_data, "Game Data", "User Name Uploaded");
+		t3f_save_user_data();
+	}
 }
 
 int dot_menu_proc_profile_name(void * data, int i, void * pp)
@@ -391,7 +397,14 @@ void dot_intro_logic(void * data)
 		}
 		if(r == 1)
 		{
+			al_set_config_value(t3f_user_data, "Game Data", "User Name Uploaded", "false");
 			al_set_config_value(t3f_user_data, "Game Data", "User Name", app->user_name);
+			t3f_save_user_data();
+			if(t3net_update_leaderboard_user_name(app->leaderboard_set_user_name_url, app->user_key, app->user_name))
+			{
+				al_remove_config_key(t3f_user_data, "Game Data", "User Name Uploaded");
+				t3f_save_user_data();
+			}
 		}
 	}
 	dot_game_emo_logic(data);

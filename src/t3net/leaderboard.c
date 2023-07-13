@@ -194,7 +194,7 @@ int t3net_update_leaderboard(T3NET_LEADERBOARD * lp)
 	{
 		goto fail;
 	}
-	if(!t3net_add_argument(args, "option", lp->option))
+	if(!t3net_add_argument(args, "mode_option", lp->option))
 	{
 		goto fail;
 	}
@@ -269,7 +269,7 @@ void t3net_destroy_leaderboard(T3NET_LEADERBOARD * lp)
 	free(lp);
 }
 
-int t3net_upload_score(char * url, char * game, char * version, char * mode, char * option, char * name, unsigned long score, char * extra)
+int t3net_upload_score(char * url, char * game, char * version, char * mode, char * option, char * user_key, unsigned long score, char * extra)
 {
 	T3NET_ARGUMENTS * args = NULL;
 	T3NET_DATA * data = NULL;
@@ -294,11 +294,11 @@ int t3net_upload_score(char * url, char * game, char * version, char * mode, cha
 	{
 		goto fail;
 	}
-	if(!t3net_add_argument(args, "option", option))
+	if(!t3net_add_argument(args, "mode_option", option))
 	{
 		goto fail;
 	}
-	if(!t3net_add_argument(args, "name", name))
+	if(!t3net_add_argument(args, "user_key", user_key))
 	{
 		goto fail;
 	}
