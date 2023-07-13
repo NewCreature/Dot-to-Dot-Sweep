@@ -140,14 +140,8 @@ void dot_menu_proc_profile_name_callback(void * data)
 	{
 		strcpy(app->user_name, "Anonymous");
 	}
-	al_set_config_value(t3f_user_data, "Game Data", "User Name Uploaded", "false");
 	al_set_config_value(t3f_user_data, "Game Data", "User Name", app->user_name);
 	t3f_save_user_data();
-	if(t3net_update_leaderboard_user_name(app->leaderboard_set_user_name_url, app->user_key, app->user_name))
-	{
-		al_remove_config_key(t3f_user_data, "Game Data", "User Name Uploaded");
-		t3f_save_user_data();
-	}
 }
 
 int dot_menu_proc_profile_name(void * data, int i, void * pp)
@@ -174,6 +168,11 @@ int dot_menu_proc_profile_okay(void * data, int i, void * pp)
 
 	app->current_menu = DOT_MENU_MUSIC;
 	select_first_element(app);
+	if(strlen(app->user_name) > 0)
+	{
+		al_set_config_value(t3f_user_data, "Game Data", "User Name", "");
+	}
+	app->entering_name = false;
 	return 1;
 }
 
@@ -204,9 +203,16 @@ int dot_menu_proc_upload_no(void * data, int i, void * pp)
 int dot_menu_proc_profile_back(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	const char * val;
 
 	app->current_menu = DOT_MENU_MAIN;
 	recall_element(app);
+	val = al_get_config_value(t3f_user_data, "Game Data", "User Name");
+	if(val)
+	{
+		strcpy(app->user_name, val);
+	}
+	app->entering_name = false;
 
 	return 1;
 }
@@ -387,6 +393,7 @@ void dot_intro_setup(void * data)
 void dot_intro_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	const char * val;
 	int r;
 
 	if(app->entering_name)
@@ -396,16 +403,22 @@ void dot_intro_logic(void * data)
 		{
 			app->entering_name = false;
 		}
-		if(r == 1)
+	}
+	else
+	{
+		val = al_get_config_value(t3f_user_data, "Game Data", "User Name");
+		if(!val || strcmp(val, app->user_name))
 		{
 			al_set_config_value(t3f_user_data, "Game Data", "User Name Uploaded", "false");
 			al_set_config_value(t3f_user_data, "Game Data", "User Name", app->user_name);
 			t3f_save_user_data();
+			al_stop_timer(t3f_timer);
 			if(t3net_update_leaderboard_user_name(app->leaderboard_set_user_name_url, app->user_key, app->user_name))
 			{
 				al_remove_config_key(t3f_user_data, "Game Data", "User Name Uploaded");
 				t3f_save_user_data();
 			}
+			al_start_timer(t3f_timer);
 		}
 	}
 	dot_game_emo_logic(data);
