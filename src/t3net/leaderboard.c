@@ -149,9 +149,9 @@ T3NET_LEADERBOARD * t3net_get_leaderboard(char * url, char * game, char * versio
 	lp->entries = entries;
 	strcpy(lp->url, url);
 	strcpy(lp->game, game);
-	strcpy(lp->version, version);
-	strcpy(lp->mode, mode);
-	strcpy(lp->option, option);
+	strcpy(lp->version, version ? version : "");
+	strcpy(lp->mode, mode ? mode : "");
+	strcpy(lp->option, option ? option : "");
 	lp->ascend = ascend;
 	if(!t3net_update_leaderboard(lp))
 	{
@@ -186,15 +186,15 @@ int t3net_update_leaderboard(T3NET_LEADERBOARD * lp)
 	{
 		goto fail;
 	}
-	if(!t3net_add_argument(args, "version", lp->version))
+	if(strlen(lp->version) > 0 && !t3net_add_argument(args, "version", lp->version))
 	{
 		goto fail;
 	}
-	if(!t3net_add_argument(args, "mode", lp->mode))
+	if(strlen(lp->mode) > 0 && !t3net_add_argument(args, "mode", lp->mode))
 	{
 		goto fail;
 	}
-	if(!t3net_add_argument(args, "mode_option", lp->option))
+	if(strlen(lp->option) > 0 && !t3net_add_argument(args, "mode_option", lp->option))
 	{
 		goto fail;
 	}
@@ -286,15 +286,15 @@ int t3net_upload_score(char * url, char * game, char * version, char * mode, cha
 	{
 		goto fail;
 	}
-	if(!t3net_add_argument(args, "version", version))
+	if(version && !t3net_add_argument(args, "version", version))
 	{
 		goto fail;
 	}
-	if(!t3net_add_argument(args, "mode", mode))
+	if(mode && !t3net_add_argument(args, "mode", mode))
 	{
 		goto fail;
 	}
-	if(!t3net_add_argument(args, "mode_option", option))
+	if(option && !t3net_add_argument(args, "mode_option", option))
 	{
 		goto fail;
 	}
