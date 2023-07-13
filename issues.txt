@@ -3,22 +3,20 @@ v1.3
 
 [ ]See if we can get ranked leaderboards working.
 
-   [ ]Generate user key at startup if one does not exist.
+   [X]Generate user key at startup if one does not exist.
 
-   [ ]Update leaderboard script to accept user keys for insertion and selection
+   [X]Update leaderboard script to accept user keys for insertion and selection
       operations. Use of user key will branch to the modern leaderboard style.
 
-      [ ]When submitting a score with user key, check if the submitted score is
+      [X]When submitting a score with user key, check if the submitted score is
          better than the existing one for that user key, game, mode, etc.
          before replacing. We need a way to specify if lower or higher is
          better.
       
-      [ ]Consider removing backwards compatibility since the games have to be
+      [X]Consider removing backwards compatibility since the games have to be
          updated anyway to work with the new site.
 
-[ ]Store user save data in separate INI file to enable proper cloud synching.
-
-   [ ]Make user settings file the cloud sync file.
+[X]Store user save data in separate INI file to enable proper cloud synching.
 
 [ ]Prepare Steam release.
 
@@ -71,10 +69,10 @@ v1.3
          consider just assuming XBox and letting the user override the settings
          if it's not working for them.
 
-[ ]Look into issue where name entry menu did not dismiss properly, leaving the
+[X]Look into issue where name entry menu did not dismiss properly, leaving the
    text entry mode on while on another menu.
 
-   [ ]Don't accept menu navigation keys when in text input mode. The menu
+   [X]Don't accept menu navigation keys when in text input mode. The menu
       malfunctions when using keys associated with menu navigation.
 
 [ ]Had issue where lifting finger during gameplay would not pause the game on
