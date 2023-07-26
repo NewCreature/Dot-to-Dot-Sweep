@@ -56,7 +56,7 @@ typedef struct
 
 	bool active; // is this touch active?
 	bool released;
-    float real_x, real_y; // the actual screen coordinates
+  float real_x, real_y; // the actual screen coordinates
 	float x, y; // coordinates transformed to for a view
 	bool primary;
 
@@ -107,6 +107,7 @@ extern bool t3f_mouse_hidden;
 
 extern ALLEGRO_JOYSTICK * t3f_joystick[T3F_MAX_JOYSTICKS];
 extern ALLEGRO_JOYSTICK_STATE t3f_joystick_state[T3F_MAX_JOYSTICKS];
+extern bool t3f_joystick_state_updated[T3F_MAX_JOYSTICKS];
 extern T3F_TOUCH t3f_touch[T3F_MAX_TOUCHES];
 extern ALLEGRO_DISPLAY * t3f_display;
 extern ALLEGRO_TIMER * t3f_timer;

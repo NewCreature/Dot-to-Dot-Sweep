@@ -60,6 +60,7 @@ bool t3f_mouse_hidden = false;
 /* joystick data */
 ALLEGRO_JOYSTICK * t3f_joystick[T3F_MAX_JOYSTICKS] = {NULL};
 ALLEGRO_JOYSTICK_STATE t3f_joystick_state[T3F_MAX_JOYSTICKS];
+bool t3f_joystick_state_updated[T3F_MAX_JOYSTICKS] = {false};
 
 /* touch data */
 T3F_TOUCH t3f_touch[T3F_MAX_TOUCHES];
@@ -1346,6 +1347,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			if(jn >= 0)
 			{
 				al_get_joystick_state(event->joystick.id, &t3f_joystick_state[jn]);
+				t3f_joystick_state_updated[jn] = true;
 			}
 			break;
 		}
