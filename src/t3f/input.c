@@ -218,52 +218,74 @@ bool t3f_map_input_for_xbox_controller(T3F_INPUT_HANDLER * input_handler, int jo
   return true;
 }
 
-void t3f_update_input_devices(void)
+static void update_input_device(int device)
 {
-  int i;
-
   #ifdef ALLEGRO_MACOSX
-    for(i = 0; i < al_get_num_joysticks(); i++)
+    if(t3f_joystick_state_updated[device])
     {
-
-      if(t3f_joystick_state_updated[i])
+      /* up */
+      if(t3f_joystick_state[device].stick[4].axis[0] >= 1.0 && t3f_joystick_state[device].stick[4].axis[1] <= -1.0)
       {
-        /* up */
-        if(t3f_joystick_state[i].stick[4].axis[0] >= 1.0 && t3f_joystick_state[i].stick[4].axis[1] <= -1.0)
-        {
-          t3f_joystick_state[i].stick[4].axis[0] = 0.0;
-          t3f_joystick_state[i].stick[4].axis[1] = -1.0;
-        }
-
-        /* down */
-        else if(t3f_joystick_state[i].stick[4].axis[0] <= -1.0 && t3f_joystick_state[i].stick[4].axis[1] >= 1.0)
-        {
-          t3f_joystick_state[i].stick[4].axis[0] = 0.0;
-          t3f_joystick_state[i].stick[4].axis[1] = 1.0;
-        }
-
-        /* left */
-        else if(t3f_joystick_state[i].stick[4].axis[0] <= -1.0 && t3f_joystick_state[i].stick[4].axis[1] <= -1.0)
-        {
-          t3f_joystick_state[i].stick[4].axis[0] = -1.0;
-          t3f_joystick_state[i].stick[4].axis[1] = 0.0;
-        }
-
-        /* right */
-        else if(t3f_joystick_state[i].stick[4].axis[0] >= 1.0 && t3f_joystick_state[i].stick[4].axis[1] >= 1.0)
-        {
-          t3f_joystick_state[i].stick[4].axis[0] = 1.0;
-          t3f_joystick_state[i].stick[4].axis[1] = 0.0;
-        }
-
-        /* idle */
-        else
-        {
-          t3f_joystick_state[i].stick[4].axis[0] = 0.0;
-          t3f_joystick_state[i].stick[4].axis[1] = 0.0;
-        }
-        t3f_joystick_state_updated[i] = false;
+        t3f_joystick_state[device].stick[4].axis[0] = 0.0;
+        t3f_joystick_state[device].stick[4].axis[1] = -1.0;
       }
+
+      /* down */
+      else if(t3f_joystick_state[device].stick[4].axis[0] <= -1.0 && t3f_joystick_state[device].stick[4].axis[1] >= 1.0)
+      {
+        t3f_joystick_state[device].stick[4].axis[0] = 0.0;
+        t3f_joystick_state[device].stick[4].axis[1] = 1.0;
+      }
+
+      /* left */
+      else if(t3f_joystick_state[device].stick[4].axis[0] <= -1.0 && t3f_joystick_state[device].stick[4].axis[1] <= -1.0)
+      {
+        t3f_joystick_state[device].stick[4].axis[0] = -1.0;
+        t3f_joystick_state[device].stick[4].axis[1] = 0.0;
+      }
+
+      /* right */
+      else if(t3f_joystick_state[device].stick[4].axis[0] >= 1.0 && t3f_joystick_state[device].stick[4].axis[1] >= 1.0)
+      {
+        t3f_joystick_state[device].stick[4].axis[0] = 1.0;
+        t3f_joystick_state[device].stick[4].axis[1] = 0.0;
+      }
+
+      /* up-right */
+      else if(t3f_joystick_state[device].stick[4].axis[0] >= 1.0)
+      {
+        t3f_joystick_state[device].stick[4].axis[0] = 1.0;
+        t3f_joystick_state[device].stick[4].axis[1] = -1.0;
+      }
+
+      /* down-right */
+      else if(t3f_joystick_state[device].stick[4].axis[1] >= 1.0)
+      {
+        t3f_joystick_state[device].stick[4].axis[0] = 1.0;
+        t3f_joystick_state[device].stick[4].axis[1] = 1.0;
+      }
+
+      /* down-left */
+      else if(t3f_joystick_state[device].stick[4].axis[0] <= -1.0)
+      {
+        t3f_joystick_state[device].stick[4].axis[0] = -1.0;
+        t3f_joystick_state[device].stick[4].axis[1] = 1.0;
+      }
+
+      /* up-left */
+      else if(t3f_joystick_state[device].stick[4].axis[0] == 0.0 && t3f_joystick_state[device].stick[4].axis[1] == 0.0)
+      {
+        t3f_joystick_state[device].stick[4].axis[0] = -1.0;
+        t3f_joystick_state[device].stick[4].axis[1] = -1.0;
+      }
+
+      /* idle */
+      else
+      {
+        t3f_joystick_state[device].stick[4].axis[0] = 0.0;
+        t3f_joystick_state[device].stick[4].axis[1] = 0.0;
+      }
+      t3f_joystick_state_updated[device] = false;
     }
   #endif
 }
@@ -386,6 +408,7 @@ static void update_input_handler_element_joystick_cache(T3F_INPUT_HANDLER_ELEMEN
 static void update_input_handler_element_state_joystick(T3F_INPUT_HANDLER_ELEMENT * element)
 {
   update_input_handler_element_joystick_cache(element);
+  update_input_device(element->device_number);
   if(element->device_element < element->stick_elements)
   {
     element->val = t3f_joystick_state[element->device_number].stick[element->stick[element->device_element]].axis[element->axis[element->device_element]];

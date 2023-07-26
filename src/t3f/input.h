@@ -71,7 +71,6 @@ bool t3f_add_input_handler_element(T3F_INPUT_HANDLER * input_handler, int type);
 void t3f_bind_input_handler_element(T3F_INPUT_HANDLER * input_handler, int element, int device_type, int device_number, int device_element);
 bool t3f_map_input_for_xbox_controller(T3F_INPUT_HANDLER * input_handler, int joystick);
 
-void t3f_update_input_devices(void);
 void t3f_update_input_handler_state(T3F_INPUT_HANDLER * input_handler);
 
 #endif
