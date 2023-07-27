@@ -409,6 +409,10 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 	/* set up application path */
 	t3f_config_path = al_get_standard_path(ALLEGRO_USER_SETTINGS_PATH);
 	t3f_data_path = al_get_standard_path(ALLEGRO_USER_DATA_PATH);
+	#ifdef ALLEGRO_WINDOWS
+		al_append_path_component(t3f_config_path, "config");
+		al_append_path_component(t3f_data_path, "data");
+	#endif
 	t3f_temp_path = al_get_standard_path(ALLEGRO_TEMP_PATH);
 	t3f_setup_directories(t3f_config_path);
 	t3f_setup_directories(t3f_data_path);
