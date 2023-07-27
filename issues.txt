@@ -1,6 +1,8 @@
 v1.3
 ----
 
+[ ]Show score particles when dying for consistency.
+
 [ ]See if we can get ranked leaderboards working.
 
    [X]Generate user key at startup if one does not exist.
