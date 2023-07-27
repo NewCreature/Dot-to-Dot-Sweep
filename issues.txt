@@ -1,7 +1,7 @@
 v1.3
 ----
 
-[ ]Look into full screen not working on Windows.
+[X]Look into full screen not working on Windows.
 
 [ ]Add 'APP_DIRECTORY' variable for specifying a directory for config and data
    saves that's separate from the application title. For some apps, we'll want
