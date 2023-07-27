@@ -1,6 +1,8 @@
 v1.3
 ----
 
+[ ]Look into full screen not working on Windows.
+
 [ ]Add 'APP_DIRECTORY' variable for specifying a directory for config and data
    saves that's separate from the application title. For some apps, we'll want
    to share the location between different versions.
@@ -11,7 +13,7 @@ v1.3
 
 [ ]Show score particles when dying for consistency.
 
-[ ]See if we can get ranked leaderboards working.
+[X]See if we can get ranked leaderboards working.
 
    [X]Generate user key at startup if one does not exist.
 
@@ -27,6 +29,8 @@ v1.3
          updated anyway to work with the new site.
 
 [X]Store user save data in separate INI file to enable proper cloud synching.
+
+[ ]Find a way to separate config and user data on Windows.
 
 [ ]Prepare Steam release.
 
@@ -48,7 +52,9 @@ v1.3
 
    [ ]Add Linux XBox controller configuration.
 
-   [ ]Add Windows XBox controller configuration.
+   [X]Add Windows XBox controller configuration.
+
+[ ]Make new input system respect user configured dead zone.
 
 [ ]Select one input device at a time. If the player moves the mouse, the input
    device should switch back to mouse until the player moves the controller
