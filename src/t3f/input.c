@@ -40,8 +40,10 @@ T3F_INPUT_HANDLER * t3f_create_input_handler(int type)
       t3f_add_input_handler_element(input_handler, T3F_INPUT_HANDLER_ELEMENT_TYPE_AXIS); // Left Analog Y
       t3f_add_input_handler_element(input_handler, T3F_INPUT_HANDLER_ELEMENT_TYPE_AXIS); // Right Analog X
       t3f_add_input_handler_element(input_handler, T3F_INPUT_HANDLER_ELEMENT_TYPE_AXIS); // Right Analog Y
-      t3f_add_input_handler_element(input_handler, T3F_INPUT_HANDLER_ELEMENT_TYPE_AXIS); // D-Pad X
-      t3f_add_input_handler_element(input_handler, T3F_INPUT_HANDLER_ELEMENT_TYPE_AXIS); // D-Pad Y
+      t3f_add_input_handler_element(input_handler, T3F_INPUT_HANDLER_ELEMENT_TYPE_AXIS); // D-Pad Left
+      t3f_add_input_handler_element(input_handler, T3F_INPUT_HANDLER_ELEMENT_TYPE_AXIS); // D-Pad Right
+      t3f_add_input_handler_element(input_handler, T3F_INPUT_HANDLER_ELEMENT_TYPE_AXIS); // D-Pad Up
+      t3f_add_input_handler_element(input_handler, T3F_INPUT_HANDLER_ELEMENT_TYPE_AXIS); // D-Pad Down
       t3f_add_input_handler_element(input_handler, T3F_INPUT_HANDLER_ELEMENT_TYPE_AXIS); // Left Trigger
       t3f_add_input_handler_element(input_handler, T3F_INPUT_HANDLER_ELEMENT_TYPE_AXIS); // Right Trigger
       t3f_add_input_handler_element(input_handler, T3F_INPUT_HANDLER_ELEMENT_TYPE_BUTTON); // A
@@ -123,115 +125,269 @@ bool t3f_map_input_for_xbox_controller(T3F_INPUT_HANDLER * input_handler, int jo
   #ifdef ALLEGRO_MACOSX
 
     /* Left Analog X */
-    input_handler->element[0].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[0].device_number = joystick;
-    input_handler->element[0].device_element = 0;
-    input_handler->element[0].dead_zone = 0.15;
-    input_handler->element[0].threshold = 0.5;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].device_element = 0;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].dead_zone = 0.15;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].threshold = 0.5;
 
     /* Left Analog Y */
-    input_handler->element[1].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[1].device_number = joystick;
-    input_handler->element[1].device_element = 1;
-    input_handler->element[1].dead_zone = 0.15;
-    input_handler->element[1].threshold = 0.5;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].device_element = 1;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].dead_zone = 0.15;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].threshold = 0.5;
 
     /* Right Analog X */
-    input_handler->element[2].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[2].device_number = joystick;
-    input_handler->element[2].device_element = 2;
-    input_handler->element[2].dead_zone = 0.15;
-    input_handler->element[2].threshold = 0.5;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].device_element = 2;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].dead_zone = 0.15;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].threshold = 0.5;
 
     /* Right Analog Y */
-    input_handler->element[3].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[3].device_number = joystick;
-    input_handler->element[3].device_element = 3;
-    input_handler->element[3].dead_zone = 0.15;
-    input_handler->element[3].threshold = 0.5;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].device_element = 3;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].dead_zone = 0.15;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].threshold = 0.5;
 
-    /* D-Pad X */
-    input_handler->element[4].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[4].device_number = joystick;
-    input_handler->element[4].device_element = 6;
-    input_handler->element[4].dead_zone = 0.0;
-    input_handler->element[4].threshold = 0.1;
+    /* D-Pad Left */
+    input_handler->element[T3F_GAMEPAD_DPAD_LEFT].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_DPAD_LEFT].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_DPAD_LEFT].device_element = 6;
+    input_handler->element[T3F_GAMEPAD_DPAD_LEFT].device_element_dir = -1.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_LEFT].dead_zone = 0.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_LEFT].threshold = 0.1;
 
-    /* D-Pad Y */
-    input_handler->element[5].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[5].device_number = joystick;
-    input_handler->element[5].device_element = 7;
-    input_handler->element[5].dead_zone = 0.0;
-    input_handler->element[5].threshold = 0.1;
+    /* D-Pad Right */
+    input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].device_element = 6;
+    input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].device_element_dir = 1.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].dead_zone = 0.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].threshold = 0.1;
+
+    /* D-Pad Up */
+    input_handler->element[T3F_GAMEPAD_DPAD_UP].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_DPAD_UP].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_DPAD_UP].device_element = 7;
+    input_handler->element[T3F_GAMEPAD_DPAD_UP].device_element_dir = -1.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_UP].dead_zone = 0.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_UP].threshold = 0.1;
+
+    /* D-Pad Down */
+    input_handler->element[T3F_GAMEPAD_DPAD_DOWN].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_DPAD_DOWN].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_DPAD_DOWN].device_element = 7;
+    input_handler->element[T3F_GAMEPAD_DPAD_DOWN].device_element_dir = 1.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_DOWN].dead_zone = 0.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_DOWN].threshold = 0.1;
 
     /* Left Trigger */
-    input_handler->element[6].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[6].device_number = joystick;
-    input_handler->element[6].device_element = 4;
-    input_handler->element[6].dead_zone = 0.0;
-    input_handler->element[6].threshold = 0.5;
+    input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].device_element = 4;
+    input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].dead_zone = 0.0;
+    input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].threshold = 0.5;
 
     /* Right Trigger */
-    input_handler->element[7].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[7].device_number = joystick;
-    input_handler->element[7].device_element = 5;
-    input_handler->element[7].dead_zone = 0.0;
-    input_handler->element[7].threshold = 0.5;
+    input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].device_element = 5;
+    input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].dead_zone = 0.0;
+    input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].threshold = 0.5;
 
     /* A */
-    input_handler->element[8].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[8].device_number = joystick;
-    input_handler->element[8].device_element = 8;
+    input_handler->element[T3F_GAMEPAD_A].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_A].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_A].device_element = 8;
 
     /* B */
-    input_handler->element[9].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[9].device_number = joystick;
-    input_handler->element[9].device_element = 9;
+    input_handler->element[T3F_GAMEPAD_B].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_B].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_B].device_element = 9;
 
     /* X */
-    input_handler->element[10].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[10].device_number = joystick;
-    input_handler->element[10].device_element = 10;
+    input_handler->element[T3F_GAMEPAD_X].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_X].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_X].device_element = 10;
 
     /* Y */
-    input_handler->element[11].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[11].device_number = joystick;
-    input_handler->element[11].device_element = 11;
+    input_handler->element[T3F_GAMEPAD_Y].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_Y].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_Y].device_element = 11;
 
     /* L */
-    input_handler->element[12].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[12].device_number = joystick;
-    input_handler->element[12].device_element = 12;
+    input_handler->element[T3F_GAMEPAD_L].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_L].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_L].device_element = 12;
 
     /* R */
-    input_handler->element[13].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[13].device_number = joystick;
-    input_handler->element[13].device_element = 13;
+    input_handler->element[T3F_GAMEPAD_R].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_R].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_R].device_element = 13;
 
     /* L3 */
-    input_handler->element[14].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[14].device_number = joystick;
-    input_handler->element[14].device_element = 16;
+    input_handler->element[T3F_GAMEPAD_L3].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_L3].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_L3].device_element = 16;
 
     /* R3 */
-    input_handler->element[15].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[15].device_number = joystick;
-    input_handler->element[15].device_element = 17;
+    input_handler->element[T3F_GAMEPAD_R3].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_R3].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_R3].device_element = 17;
 
     /* Start */
-    input_handler->element[16].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[16].device_number = joystick;
-    input_handler->element[16].device_element = 14;
+    input_handler->element[T3F_GAMEPAD_START].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_START].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_START].device_element = 14;
 
     /* Select */
-    input_handler->element[17].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[17].device_number = joystick;
-    input_handler->element[17].device_element = 15;
+    input_handler->element[T3F_GAMEPAD_SELECT].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_SELECT].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_SELECT].device_element = 15;
 
-  #else
+    return true;
+
   #endif
 
-  return true;
+  #ifdef ALLEGRO_WINDOWS
+
+    /* Left Analog X */
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].device_element = 0;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].dead_zone = 0.15;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].threshold = 0.5;
+
+    /* Left Analog Y */
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].device_element = 1;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].dead_zone = 0.15;
+    input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].threshold = 0.5;
+
+    /* Right Analog X */
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].device_element = 2;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].dead_zone = 0.15;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].threshold = 0.5;
+
+    /* Right Analog Y */
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].device_element = 3;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].dead_zone = 0.15;
+    input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].threshold = 0.5;
+
+    /* D-Pad Left */
+    input_handler->element[T3F_GAMEPAD_DPAD_LEFT].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_DPAD_LEFT].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_DPAD_LEFT].device_element = 17;
+    input_handler->element[T3F_GAMEPAD_DPAD_LEFT].device_element_dir = -1.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_LEFT].dead_zone = 0.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_LEFT].threshold = 0.1;
+
+    /* D-Pad Right */
+    input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].device_element = 16;
+    input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].device_element_dir = 1.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].dead_zone = 0.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].threshold = 0.1;
+
+    /* D-Pad Up */
+    input_handler->element[T3F_GAMEPAD_DPAD_UP].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_DPAD_UP].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_DPAD_UP].device_element = 19;
+    input_handler->element[T3F_GAMEPAD_DPAD_UP].device_element_dir = -1.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_UP].dead_zone = 0.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_UP].threshold = 0.1;
+
+    /* D-Pad Down */
+    input_handler->element[T3F_GAMEPAD_DPAD_DOWN].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_DPAD_DOWN].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_DPAD_DOWN].device_element = 18;
+    input_handler->element[T3F_GAMEPAD_DPAD_DOWN].device_element_dir = 1.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_DOWN].dead_zone = 0.0;
+    input_handler->element[T3F_GAMEPAD_DPAD_DOWN].threshold = 0.1;
+
+    /* Left Trigger */
+    input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].device_element = 4;
+    input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].dead_zone = 0.0;
+    input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].threshold = 0.5;
+
+    /* Right Trigger */
+    input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].device_element = 5;
+    input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].dead_zone = 0.0;
+    input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].threshold = 0.5;
+
+    /* A */
+    input_handler->element[T3F_GAMEPAD_A].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_A].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_A].device_element = 6;
+
+    /* B */
+    input_handler->element[T3F_GAMEPAD_B].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_B].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_B].device_element = 7;
+
+    /* X */
+    input_handler->element[T3F_GAMEPAD_X].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_X].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_X].device_element = 8;
+
+    /* Y */
+    input_handler->element[T3F_GAMEPAD_Y].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_Y].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_Y].device_element = 9;
+
+    /* L */
+    input_handler->element[T3F_GAMEPAD_L].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_L].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_L].device_element = 11;
+
+    /* R */
+    input_handler->element[T3F_GAMEPAD_R].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_R].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_R].device_element = 10;
+
+    /* L3 */
+    input_handler->element[T3F_GAMEPAD_L3].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_L3].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_L3].device_element = 13;
+
+    /* R3 */
+    input_handler->element[T3F_GAMEPAD_R3].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_R3].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_R3].device_element = 12;
+
+    /* Start */
+    input_handler->element[T3F_GAMEPAD_START].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_START].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_START].device_element = 14;
+
+    /* Select */
+    input_handler->element[T3F_GAMEPAD_SELECT].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+    input_handler->element[T3F_GAMEPAD_SELECT].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_SELECT].device_element = 15;
+
+    return true;
+
+  #endif
+
+  #ifdef ALLEGRO_UNIX
+
+    return true;
+  
+  #endif
+
 }
 
 static void update_input_device(int device)

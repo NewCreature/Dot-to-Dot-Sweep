@@ -121,7 +121,7 @@ void dot_read_input(DOT_INPUT_DATA * ip)
   /* read buttons */
   if(ip->current_joy >= 0 && t3f_joystick[ip->current_joy])
   {
-    for(j = 6; j < ip->input_handler->elements; j++)
+    for(j = T3F_GAMEPAD_LEFT_TRIGGER; j < ip->input_handler->elements; j++)
     {
       if(ip->input_handler->element[j].pressed)
       {
@@ -130,50 +130,66 @@ void dot_read_input(DOT_INPUT_DATA * ip)
       }
     }
 
-    if(fabs(ip->input_handler->element[0].val) > 0.0)
+    if(fabs(ip->input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].val) > 0.0)
     {
-      ip->axis_x = ip->input_handler->element[0].val;
-      if(ip->input_handler->element[0].pressed)
+      ip->axis_x = ip->input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].val;
+      if(ip->input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].pressed)
       {
         ip->axis_x_pressed = true;
       }
     }
-    if(fabs(ip->input_handler->element[2].val) > 0.0)
+    if(fabs(ip->input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].val) > 0.0)
     {
-      ip->axis_x = ip->input_handler->element[2].val;
-      if(ip->input_handler->element[2].pressed)
+      ip->axis_x = ip->input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].val;
+      if(ip->input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].pressed)
       {
         ip->axis_x_pressed = true;
       }
     }
-    if(fabs(ip->input_handler->element[4].val) > 0.0)
+    if(ip->input_handler->element[T3F_GAMEPAD_DPAD_LEFT].held)
     {
-      ip->axis_x = ip->input_handler->element[4].val;
-      if(ip->input_handler->element[4].pressed)
+      ip->axis_x = -1.0;
+      if(ip->input_handler->element[T3F_GAMEPAD_DPAD_LEFT].pressed)
       {
         ip->axis_x_pressed = true;
       }
     }
-    if(fabs(ip->input_handler->element[1].val) > 0.0)
+    if(ip->input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].held)
     {
-      ip->axis_y += ip->input_handler->element[1].val;
-      if(ip->input_handler->element[1].pressed)
+      ip->axis_x = 1.0;
+      if(ip->input_handler->element[T3F_GAMEPAD_DPAD_RIGHT].pressed)
+      {
+        ip->axis_x_pressed = true;
+      }
+    }
+    if(fabs(ip->input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].val) > 0.0)
+    {
+      ip->axis_y += ip->input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].val;
+      if(ip->input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].pressed)
       {
         ip->axis_y_pressed = true;
       }
     }
-    if(fabs(ip->input_handler->element[3].val) > 0.0)
+    if(fabs(ip->input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].val) > 0.0)
     {
-      ip->axis_y += ip->input_handler->element[3].val;
-      if(ip->input_handler->element[3].pressed)
+      ip->axis_y += ip->input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].val;
+      if(ip->input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].pressed)
       {
         ip->axis_y_pressed = true;
       }
     }
-    if(fabs(ip->input_handler->element[5].val) > 0.0)
+    if(ip->input_handler->element[T3F_GAMEPAD_DPAD_UP].held)
     {
-      ip->axis_y += ip->input_handler->element[5].val;
-      if(ip->input_handler->element[5].pressed)
+      ip->axis_y = -1.0;
+      if(ip->input_handler->element[T3F_GAMEPAD_DPAD_UP].pressed)
+      {
+        ip->axis_y_pressed = true;
+      }
+    }
+    if(ip->input_handler->element[T3F_GAMEPAD_DPAD_DOWN].held)
+    {
+      ip->axis_y = 1.0;
+      if(ip->input_handler->element[T3F_GAMEPAD_DPAD_DOWN].pressed)
       {
         ip->axis_y_pressed = true;
       }

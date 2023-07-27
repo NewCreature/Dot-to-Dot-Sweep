@@ -29,6 +29,27 @@
 #define T3F_INPUT_HANDLER_ELEMENT_TYPE_AXIS          1
 #define T3F_INPUT_HANDLER_ELEMENT_TYPE_ABSOLUTE_AXIS 2
 
+#define T3F_GAMEPAD_LEFT_ANALOG_X                    0
+#define T3F_GAMEPAD_LEFT_ANALOG_Y                    1
+#define T3F_GAMEPAD_RIGHT_ANALOG_X                   2
+#define T3F_GAMEPAD_RIGHT_ANALOG_Y                   3
+#define T3F_GAMEPAD_DPAD_LEFT                        4
+#define T3F_GAMEPAD_DPAD_RIGHT                       5
+#define T3F_GAMEPAD_DPAD_UP                          6
+#define T3F_GAMEPAD_DPAD_DOWN                        7
+#define T3F_GAMEPAD_LEFT_TRIGGER                     8
+#define T3F_GAMEPAD_RIGHT_TRIGGER                    9
+#define T3F_GAMEPAD_A                               10
+#define T3F_GAMEPAD_B                               11
+#define T3F_GAMEPAD_X                               12
+#define T3F_GAMEPAD_Y                               13
+#define T3F_GAMEPAD_L                               14
+#define T3F_GAMEPAD_R                               15
+#define T3F_GAMEPAD_L3                              16
+#define T3F_GAMEPAD_R3                              17
+#define T3F_GAMEPAD_SELECT                          18
+#define T3F_GAMEPAD_START                           19
+
 /* define an input element */
 typedef struct
 {
@@ -38,6 +59,7 @@ typedef struct
   int device_type;    // source device type
   int device_number;  // source device number
   int device_element; // source device element number
+  float device_element_dir; // for mapping axes to buttons
   float dead_zone;    // dead zone for analog inputs
   float threshold;    // threshold for analog input to register pressed/released
 
