@@ -38,6 +38,10 @@ v1.3
 
 [ ]Finish XBox controller implementation.
 
+   [ ]Add Linux XBox controller configuration.
+
+   [ ]Add Windows XBox controller configuration.
+
 [ ]Select one input device at a time. If the player moves the mouse, the input
    device should switch back to mouse until the player moves the controller
    again.
@@ -48,6 +52,10 @@ v1.3
 
 [ ]If the controller in use disconnects, pause the game.
 
+   [ ]We should try to implement joystick reconfiguration events into the new
+      input system. We'll probably need to rework the framework a bit to handle
+      this properly.
+
 [ ]Research joystick issues.
 
    [X]XBox controllers have issues with axes on Linux.
@@ -55,7 +63,7 @@ v1.3
       [X]Fixed by making the default dead zone a bit larger and only selecting
          a stick on a gamepad with axis events if it exceeds the dead zone.
    
-   [ ]Implement new input module in T3F (see 'T3F/issues.txt' for more info).
+   [X]Implement new input module in T3F (see 'T3F/issues.txt' for more info).
 
    [ ]Steam will map input from controllers to XBox mapping for us. We need to
       detect if the game is running through Steam and use XBox mapping if that
