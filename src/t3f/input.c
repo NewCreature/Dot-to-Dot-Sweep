@@ -126,41 +126,57 @@ bool t3f_map_input_for_xbox_controller(T3F_INPUT_HANDLER * input_handler, int jo
     input_handler->element[0].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
     input_handler->element[0].device_number = joystick;
     input_handler->element[0].device_element = 0;
+    input_handler->element[0].dead_zone = 0.15;
+    input_handler->element[0].threshold = 0.5;
 
     /* Left Analog Y */
     input_handler->element[1].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
     input_handler->element[1].device_number = joystick;
     input_handler->element[1].device_element = 1;
+    input_handler->element[1].dead_zone = 0.15;
+    input_handler->element[1].threshold = 0.5;
 
     /* Right Analog X */
     input_handler->element[2].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
     input_handler->element[2].device_number = joystick;
     input_handler->element[2].device_element = 2;
+    input_handler->element[2].dead_zone = 0.15;
+    input_handler->element[2].threshold = 0.5;
 
     /* Right Analog Y */
     input_handler->element[3].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
     input_handler->element[3].device_number = joystick;
     input_handler->element[3].device_element = 3;
+    input_handler->element[3].dead_zone = 0.15;
+    input_handler->element[3].threshold = 0.5;
 
     /* D-Pad X */
     input_handler->element[4].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
     input_handler->element[4].device_number = joystick;
     input_handler->element[4].device_element = 6;
+    input_handler->element[4].dead_zone = 0.0;
+    input_handler->element[4].threshold = 0.1;
 
     /* D-Pad Y */
     input_handler->element[5].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
     input_handler->element[5].device_number = joystick;
     input_handler->element[5].device_element = 7;
+    input_handler->element[5].dead_zone = 0.0;
+    input_handler->element[5].threshold = 0.1;
 
     /* Left Trigger */
     input_handler->element[6].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
     input_handler->element[6].device_number = joystick;
     input_handler->element[6].device_element = 4;
+    input_handler->element[6].dead_zone = 0.0;
+    input_handler->element[6].threshold = 0.5;
 
     /* Right Trigger */
     input_handler->element[7].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
     input_handler->element[7].device_number = joystick;
     input_handler->element[7].device_element = 5;
+    input_handler->element[7].dead_zone = 0.0;
+    input_handler->element[7].threshold = 0.5;
 
     /* A */
     input_handler->element[8].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
@@ -285,6 +301,11 @@ static void update_input_device(int device)
         t3f_joystick_state[device].stick[4].axis[0] = 0.0;
         t3f_joystick_state[device].stick[4].axis[1] = 0.0;
       }
+
+      /* triggers */
+      t3f_joystick_state[device].stick[2].axis[0] = (t3f_joystick_state[device].stick[2].axis[0] + 1.0) / 2.0;
+      t3f_joystick_state[device].stick[3].axis[0] = (t3f_joystick_state[device].stick[3].axis[0] + 1.0) / 2.0;
+
       t3f_joystick_state_updated[device] = false;
     }
   #endif
@@ -411,7 +432,22 @@ static void update_input_handler_element_state_joystick(T3F_INPUT_HANDLER_ELEMEN
   update_input_device(element->device_number);
   if(element->device_element < element->stick_elements)
   {
-    element->val = t3f_joystick_state[element->device_number].stick[element->stick[element->device_element]].axis[element->axis[element->device_element]];
+    if(fabs(t3f_joystick_state[element->device_number].stick[element->stick[element->device_element]].axis[element->axis[element->device_element]]) >= element->dead_zone)
+    {
+      element->val = t3f_joystick_state[element->device_number].stick[element->stick[element->device_element]].axis[element->axis[element->device_element]];
+      if(element->val < 0.0)
+      {
+        element->val = (element->val + element->dead_zone) / (1.0 - element->dead_zone);
+      }
+      else
+      {
+        element->val = (element->val - element->dead_zone) / (1.0 - element->dead_zone);
+      }
+    }
+    else
+    {
+      element->val = 0.0;
+    }
     if(fabs(element->val) >= element->threshold)
     {
       element->held = true;

@@ -38,6 +38,7 @@ typedef struct
   int device_type;    // source device type
   int device_number;  // source device number
   int device_element; // source device element number
+  float dead_zone;    // dead zone for analog inputs
   float threshold;    // threshold for analog input to register pressed/released
 
   /* state */
