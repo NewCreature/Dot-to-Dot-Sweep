@@ -30,7 +30,7 @@ v1.3
 
 [X]Store user save data in separate INI file to enable proper cloud synching.
 
-[ ]Find a way to separate config and user data on Windows.
+[X]Find a way to separate config and user data on Windows.
 
 [ ]Prepare Steam release.
 
