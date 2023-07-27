@@ -3,6 +3,7 @@
 #include "t3f/music.h"
 #include "t3f/view.h"
 #include "t3f/draw.h"
+#include "t3f/input.h"
 #include "t3net/leaderboard.h"
 #include "avc/avc.h"
 #include "instance.h"
@@ -267,6 +268,19 @@ void app_logic(void * data)
 	}
 }
 
+static void show_joystick_data(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int i;
+	int pos_y = 0;
+
+	for(i = 0; i < app->controller.input_handler->elements; i++)
+	{
+		t3f_draw_textf(app->font[DOT_FONT_8], t3f_color_white, 0, pos_y, 0, 0, "%1.1f %d", app->controller.input_handler->element[i].val, app->controller.input_handler->element[i].pressed);
+		pos_y += t3f_get_font_line_height(app->font[DOT_FONT_8]);
+	}
+}
+
 void app_render(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -314,6 +328,7 @@ void app_render(void * data)
 		}
 	}
 	al_hold_bitmap_drawing(false);
+	show_joystick_data(app);
 }
 
 static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn, int size)
@@ -992,6 +1007,11 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Error initializing T3F\n");
 		return false;
 	}
+	if(!dot_initialize_input(&app->controller))
+	{
+		printf("Error initializing input system!\n");
+		return false;
+	}
 	t3f_set_event_handler(dot_event_handler);
 	set_optimal_display_size(app);
 	#ifdef ALLEGRO_ANDROID
@@ -1103,6 +1123,7 @@ void app_exit(APP_INSTANCE * app)
 	{
 		t3net_destroy_leaderboard(app->leaderboard);
 	}
+	dot_destroy_input(&app->controller);
 }
 
 int main(int argc, char * argv[])

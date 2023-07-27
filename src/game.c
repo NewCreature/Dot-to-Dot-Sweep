@@ -852,7 +852,6 @@ void dot_game_logic(void * data)
 						app->game.block_click = true;
 					}
 					app->controller.button = false;
-					app->controller.button_blocked = true;
 				}
 				else
 				{
@@ -884,7 +883,6 @@ void dot_game_logic(void * data)
 			{
 				app->game.state = DOT_GAME_STATE_PLAY;
 				app->controller.button = false;
-				app->controller.button_blocked = true;
 				al_hide_mouse_cursor(t3f_display);
 			}
 			break;
@@ -915,7 +913,6 @@ void dot_game_logic(void * data)
 				al_show_mouse_cursor(t3f_display);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				app->controller.button = false;
-				app->controller.button_blocked = true;
 			}
 			/* handle shield logic */
 			dot_game_shield_logic(data);

@@ -1,29 +1,58 @@
 #include "t3f/t3f.h"
 #include "input.h"
 
+bool dot_initialize_input(DOT_INPUT_DATA * ip)
+{
+  if(!t3f_initialize_input(0))
+  {
+    return false;
+  }
+  ip->input_handler = t3f_create_input_handler(T3F_INPUT_HANDLER_TYPE_GAMEPAD);
+  if(!ip->input_handler)
+  {
+    return false;
+  }
+  if(al_get_num_joysticks() > 0)
+  {
+    t3f_map_input_for_xbox_controller(ip->input_handler, 0);
+  }
+  return true;
+}
+
+void dot_destroy_input(DOT_INPUT_DATA * ip)
+{
+  t3f_destroy_input_handler(ip->input_handler);
+  t3f_deinitialize_input();
+}
+
 void dot_handle_joystick_event(DOT_INPUT_DATA * ip, ALLEGRO_EVENT * ep)
 {
+  int new_joy;
+
   if(ep->type == ALLEGRO_EVENT_JOYSTICK_AXIS)
   {
-    ip->current_joy = t3f_get_joystick_number(ep->joystick.id);
-    if(ip->current_joy >= 0 && fabs(ep->joystick.pos) > ip->dead_zone)
+    new_joy = t3f_get_joystick_number(ep->joystick.id);
+    if(new_joy >= 0 && new_joy != ip->current_joy && fabs(ep->joystick.pos) >= ip->dead_zone)
     {
-      ip->current_stick = ep->joystick.stick;
+      t3f_map_input_for_xbox_controller(ip->input_handler, new_joy);
+      ip->current_joy = new_joy;
     }
   }
   else if(ep->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)
   {
-    ip->current_joy = t3f_get_joystick_number(ep->joystick.id);
+    new_joy = t3f_get_joystick_number(ep->joystick.id);
+    if(new_joy >= 0 && new_joy != ip->current_joy)
+    {
+      t3f_map_input_for_xbox_controller(ip->input_handler, new_joy);
+      ip->current_joy = t3f_get_joystick_number(ep->joystick.id);
+    }
   }
 }
 
 void dot_read_input(DOT_INPUT_DATA * ip)
 {
   int i, j;
-  float val;
-  bool using_axis = false; // flag if axis is being used
-  bool using_button = false;
-  double a;
+  float a;
 
   ip->axis_x = 0.0;
   ip->axis_y = 0.0;
@@ -32,35 +61,27 @@ void dot_read_input(DOT_INPUT_DATA * ip)
   /* read keyboard */
   if(t3f_key[ALLEGRO_KEY_UP] || t3f_key[ALLEGRO_KEY_W])
   {
-    if(!(ip->axes_blocked))
-    {
-      ip->axis_y = -1.0;
-    }
-    using_axis = true;
+    ip->axis_y = -1.0;
+    t3f_key[ALLEGRO_KEY_UP] = 0;
+    t3f_key[ALLEGRO_KEY_W] = 0;
   }
   if(t3f_key[ALLEGRO_KEY_DOWN] || t3f_key[ALLEGRO_KEY_S])
   {
-    if(!(ip->axes_blocked))
-    {
-      ip->axis_y = 1.0;
-    }
-    using_axis = true;
+    ip->axis_y = 1.0;
+    t3f_key[ALLEGRO_KEY_DOWN] = 0;
+    t3f_key[ALLEGRO_KEY_S] = 0;
   }
   if(t3f_key[ALLEGRO_KEY_LEFT] || t3f_key[ALLEGRO_KEY_A])
   {
-    if(!(ip->axes_blocked))
-    {
-      ip->axis_x = -1.0;
-    }
-    using_axis = true;
+    ip->axis_x = -1.0;
+    t3f_key[ALLEGRO_KEY_LEFT] = 0;
+    t3f_key[ALLEGRO_KEY_A] = 0;
   }
   if(t3f_key[ALLEGRO_KEY_RIGHT] || t3f_key[ALLEGRO_KEY_D])
   {
-    if(!(ip->axes_blocked))
-    {
-      ip->axis_x = 1.0;
-    }
-    using_axis = true;
+    ip->axis_x = 1.0;
+    t3f_key[ALLEGRO_KEY_RIGHT] = 0;
+    t3f_key[ALLEGRO_KEY_D] = 0;
   }
   for(i = 0; i < ALLEGRO_KEY_MAX; i++)
   {
@@ -86,11 +107,8 @@ void dot_read_input(DOT_INPUT_DATA * ip)
       {
         if(t3f_key[i])
         {
-          if(!(ip->button_blocked))
-          {
-            ip->button = true;
-          }
-          using_button = true;
+          ip->button = true;
+          t3f_key[i] = 0;
           i = ALLEGRO_KEY_MAX;
         }
         break;
@@ -98,51 +116,68 @@ void dot_read_input(DOT_INPUT_DATA * ip)
     }
   }
 
+	t3f_update_input_handler_state(ip->input_handler);
+
   /* read buttons */
   if(ip->current_joy >= 0 && t3f_joystick[ip->current_joy])
   {
-    for(j = 0; j < al_get_joystick_num_buttons(t3f_joystick[ip->current_joy]); j++)
+    for(j = 6; j < ip->input_handler->elements; j++)
     {
-      if(t3f_joystick_state[ip->current_joy].button[j])
+      if(ip->input_handler->element[j].pressed)
       {
-        if(!(ip->button_blocked))
-        {
-          ip->button = true;
-        }
-        using_button = true;
+        ip->button = true;
         break;
       }
     }
 
-    if(al_get_joystick_num_axes(t3f_joystick[ip->current_joy], ip->current_stick) > 1)
+    if(fabs(ip->input_handler->element[0].val) > 0.0)
     {
-      val = t3f_joystick_state[ip->current_joy].stick[ip->current_stick].axis[0];
-      if(fabs(val) > ip->dead_zone)
+      ip->axis_x = ip->input_handler->element[0].val;
+      if(ip->input_handler->element[0].pressed)
       {
-        if(!(ip->axes_blocked))
-        {
-          ip->axis_x += (val - ip->dead_zone) / (1.0 - ip->dead_zone);
-        }
-        using_axis = true;
-      }
-      val = t3f_joystick_state[ip->current_joy].stick[ip->current_stick].axis[1];
-      if(fabs(val) > ip->dead_zone)
-      {
-        if(!(ip->axes_blocked))
-        {
-          ip->axis_y += (val - ip->dead_zone) / (1.0 - ip->dead_zone);
-        }
-        using_axis = true;
+        ip->axis_x_pressed = true;
       }
     }
-  }
-  if(!using_axis)
-  {
-    ip->axes_blocked = false;
-  }
-  if(!using_button)
-  {
-    ip->button_blocked = false;
+    if(fabs(ip->input_handler->element[2].val) > 0.0)
+    {
+      ip->axis_x = ip->input_handler->element[2].val;
+      if(ip->input_handler->element[2].pressed)
+      {
+        ip->axis_x_pressed = true;
+      }
+    }
+    if(fabs(ip->input_handler->element[4].val) > 0.0)
+    {
+      ip->axis_x = ip->input_handler->element[4].val;
+      if(ip->input_handler->element[4].pressed)
+      {
+        ip->axis_x_pressed = true;
+      }
+    }
+    if(fabs(ip->input_handler->element[1].val) > 0.0)
+    {
+      ip->axis_y += ip->input_handler->element[1].val;
+      if(ip->input_handler->element[1].pressed)
+      {
+        ip->axis_y_pressed = true;
+      }
+    }
+    if(fabs(ip->input_handler->element[3].val) > 0.0)
+    {
+      ip->axis_y += ip->input_handler->element[3].val;
+      if(ip->input_handler->element[3].pressed)
+      {
+        ip->axis_y_pressed = true;
+      }
+    }
+    if(fabs(ip->input_handler->element[5].val) > 0.0)
+    {
+      ip->axis_y += ip->input_handler->element[5].val;
+      if(ip->input_handler->element[5].pressed)
+      {
+        ip->axis_y_pressed = true;
+      }
+    }
   }
 
   /* keep axis values within range */

@@ -48,7 +48,7 @@ void dot_privacy_logic(void * data)
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
 		t3f_mouse_button[0] = false;
-		app->controller.button_blocked = true;
+		app->controller.button = false;
 	}
 	app->tick++;
 	if(!app->desktop_mode)

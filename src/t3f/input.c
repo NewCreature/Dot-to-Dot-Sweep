@@ -450,9 +450,7 @@ static void update_input_handler_element_state_joystick(T3F_INPUT_HANDLER_ELEMEN
     }
     if(fabs(element->val) >= element->threshold)
     {
-      element->held = true;
-      element->released = false;
-      if(!element->pressed)
+      if(!element->held)
       {
         element->pressed = true;
       }
@@ -460,12 +458,12 @@ static void update_input_handler_element_state_joystick(T3F_INPUT_HANDLER_ELEMEN
       {
         element->pressed = false;
       }
+      element->held = true;
+      element->released = false;
     }
     else
     {
-      element->held = false;
-      element->pressed = false;
-      if(!element->released)
+      if(element->held)
       {
         element->released = true;
       }
@@ -473,15 +471,15 @@ static void update_input_handler_element_state_joystick(T3F_INPUT_HANDLER_ELEMEN
       {
         element->released = false;
       }
+      element->held = false;
+      element->pressed = false;
     }
   }
   else
   {
     if(t3f_joystick_state[element->device_number].button[element->device_element - element->stick_elements])
     {
-      element->held = true;
-      element->released = false;
-      if(!element->pressed)
+      if(!element->held)
       {
         element->pressed = true;
       }
@@ -489,12 +487,12 @@ static void update_input_handler_element_state_joystick(T3F_INPUT_HANDLER_ELEMEN
       {
         element->pressed = false;
       }
+      element->held = true;
+      element->released = false;
     }
     else
     {
-      element->held = false;
-      element->pressed = false;
-      if(!element->released)
+      if(element->held)
       {
         element->released = true;
       }
@@ -502,6 +500,8 @@ static void update_input_handler_element_state_joystick(T3F_INPUT_HANDLER_ELEMEN
       {
         element->released = false;
       }
+      element->held = false;
+      element->pressed = false;
     }
   }
 }

@@ -483,7 +483,7 @@ void dot_intro_logic(void * data)
 		{
 			app->menu_showing = true;
 			t3f_mouse_button[0] = false;
-			app->controller.button_blocked = true;
+			app->controller.button = false;
 		}
 	}
 	else
@@ -495,22 +495,22 @@ void dot_intro_logic(void * data)
 				t3f_select_previous_gui_element(app->menu[app->current_menu]);
 			}
 		}
-		if(app->controller.axis_y < 0.0)
+		if(app->controller.axis_y < 0.0 && app->controller.axis_y_pressed)
 		{
 			t3f_select_previous_gui_element(app->menu[app->current_menu]);
 			t3f_key[ALLEGRO_KEY_UP] = 0;
-			app->controller.axes_blocked = true;
+			app->controller.axis_y_pressed = false;
 		}
-		if(app->controller.axis_y > 0.0)
+		if(app->controller.axis_y > 0.0 && app->controller.axis_y_pressed)
 		{
 			t3f_select_next_gui_element(app->menu[app->current_menu]);
 			t3f_key[ALLEGRO_KEY_DOWN] = 0;
-			app->controller.axes_blocked = true;
+			app->controller.axis_y_pressed = false;
 		}
 		if(app->controller.button)
 		{
 			t3f_activate_selected_gui_element(app->menu[app->current_menu], app);
-			app->controller.button_blocked = true;
+			app->controller.button = false;
 		}
 	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
