@@ -18,7 +18,7 @@ APP_COPYRIGHT = Copyright\ (C)\ 2023\ T\ Cubed\ Software.
 APP_ANDROID_PACKAGE = com.tcubedsoftware.dottodotsweep
 APP_ORIENTATION = portrait
 APP_URL = https://www.tcubedsoftware.com
-APP_OBJECTS = t3net/t3net.o t3net/leaderboard.o avc/avc.o main.o game.o intro.o leaderboard.o text.o particle.o color.o bg_object.o credits.o privacy.o input.o
+APP_OBJECTS = t3net/t3net.o t3net/leaderboard.o avc/avc.o main.o game.o intro.o leaderboard.o text.o particle.o color.o bg_object.o credits.o privacy.o input.o t3f/steam.o
 #APP_LIBS =
 APP_CFLAGS = -O2 -Wall -I.
 #APP_EXTRA_TARGET =
@@ -30,9 +30,10 @@ app_clean:
 # Mac OS X stuff #
 ##################
 #MACOS_CFLAGS =
+MACOS_CXXFLAGS = -std=c++11
 #MACOS_PLATFORM_OBJECTS =
 #MACOS_PLATFORM_LIBS =
-MACOS_DEPEND_LIBS =
+MACOS_DEPEND_LIBS = ../macos/blobs/libsteam_api.dylib
 #MACOS_PLATFORM_TARGET =
 
 ###############
@@ -41,7 +42,7 @@ MACOS_DEPEND_LIBS =
 #LINUX_CFLAGS =
 #LINUX_PLATFORM_OBJECTS =
 #LINUX_PLATFORM_LIBS =
-#LINUX_DEPEND_LIBS =
+LINUX_DEPEND_LIBS = ../linux/blobs/libsteam_api.so
 #LINUX_PLATFORM_TARGET =
 
 ################################################
@@ -74,7 +75,7 @@ MINGW_PLATFORM_LIBS = -lcurl -lwldap32
 ##############
 MSYS_CFLAGS = -DCURL_STATICLIB
 #MSYS_PLATFORM_OBJECTS =
-MSYS_PLATFORM_LIBS = -lcurl
+MSYS_PLATFORM_LIBS = -lcurl ../win32/libraries/steam_api.lib
 #MSYS_PLATFORM_TARGET =
 
 #################
