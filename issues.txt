@@ -3,13 +3,13 @@ v1.3
 
 [X]Look into full screen not working on Windows.
 
-[ ]Add 'APP_DIRECTORY' variable for specifying a directory for config and data
+[X]Add 'APP_DIRECTORY' variable for specifying a directory for config and data
    saves that's separate from the application title. For some apps, we'll want
    to share the location between different versions.
 
-   [ ]Default to $APP_TITLE for simplicity.
+   [X]Default to $APP_TITLE for simplicity.
 
-   [ ]Pass $APP_DIRECTORY to compiler arguments in place of $APP_TITLE.
+   [X]Pass $APP_DIRECTORY to compiler arguments in place of $APP_TITLE.
 
 [ ]Show score particles when dying for consistency.
 
