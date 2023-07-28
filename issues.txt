@@ -11,8 +11,6 @@ v1.3
 
    [X]Pass $APP_DIRECTORY to compiler arguments in place of $APP_TITLE.
 
-[ ]Show score particles when dying for consistency.
-
 [X]See if we can get ranked leaderboards working.
 
    [X]Generate user key at startup if one does not exist.
