@@ -10,6 +10,7 @@ include makefile.include
 APP_COMPANY = tcubedsoftware
 APP_NAME = dot-to-dot-sweep
 APP_TITLE = Dot\ to\ Dot\ Sweep
+APP_DATA_DIR = $(APP_TITLE)
 APP_VERSION = 1.3
 APP_RELEASE = 14
 APP_PUBLISHER = T\ Cubed\ Software

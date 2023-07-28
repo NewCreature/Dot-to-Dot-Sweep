@@ -4,7 +4,7 @@ SPACE:=$(NOTHING) $(NOTHING)
 
 T3F_LIBRARIES = $(T3F_PLATFORM_LIBRARIES)
 
-T3F_CFLAGS = -DT3F_DEVELOPER_NAME="\"$(subst \ ,$(SPACE),$(APP_COMPANY))\"" -DT3F_PACKAGE_NAME="\"$(subst \ ,$(SPACE),$(APP_NAME))\"" -DT3F_APP_VERSION="\"$(subst \ ,$(SPACE),$(APP_VERSION))\"" -DT3F_APP_TITLE="\"$(subst \ ,$(SPACE),$(APP_TITLE))\"" -DT3F_APP_COPYRIGHT="\"$(subst \ ,$(SPACE),$(APP_COPYRIGHT))\"" -DT3F_APP_PUBLISHER="\"$(subst \ ,$(SPACE),$(APP_PUBLISHER))\""
+T3F_CFLAGS = -DT3F_DEVELOPER_NAME="\"$(subst \ ,$(SPACE),$(APP_COMPANY))\"" -DT3F_PACKAGE_NAME="\"$(subst \ ,$(SPACE),$(APP_NAME))\"" -DT3F_APP_VERSION="\"$(subst \ ,$(SPACE),$(APP_VERSION))\"" -DT3F_APP_TITLE="\"$(subst \ ,$(SPACE),$(APP_TITLE))\"" -DT3F_APP_DATA_DIR="\"$(subst \ ,$(SPACE),$(APP_DATA_DIR))\"" -DT3F_APP_COPYRIGHT="\"$(subst \ ,$(SPACE),$(APP_COPYRIGHT))\"" -DT3F_APP_PUBLISHER="\"$(subst \ ,$(SPACE),$(APP_PUBLISHER))\""
 
 include makefile.defines
 include makefile.default_config

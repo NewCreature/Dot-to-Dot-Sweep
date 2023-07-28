@@ -400,7 +400,7 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 		return 0;
 	}
 
-	al_set_app_name(name);
+	al_set_app_name(T3F_APP_DATA_DIR);
 	if(t3f_developer_name)
 	{
 		al_set_org_name(t3f_developer_name);
