@@ -1007,6 +1007,10 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Error initializing T3F\n");
 		return false;
 	}
+	if(!t3f_init_steam_integration())
+	{
+		printf("Steam not running!\n");
+	}
 	if(!dot_initialize_input(&app->controller))
 	{
 		printf("Error initializing input system!\n");
@@ -1127,6 +1131,7 @@ void app_exit(APP_INSTANCE * app)
 		t3net_destroy_leaderboard(app->leaderboard);
 	}
 	dot_destroy_input(&app->controller);
+	t3f_shutdown_steam_integration();
 }
 
 int main(int argc, char * argv[])
