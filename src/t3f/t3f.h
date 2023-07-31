@@ -85,6 +85,7 @@ typedef struct
 #include "tilemap.h"
 #include "vector.h"
 #include "view.h"
+#include "achievements.h"
 #include "steam.h"
 
 extern int t3f_virtual_display_width;
