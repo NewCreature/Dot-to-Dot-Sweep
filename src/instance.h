@@ -60,6 +60,7 @@ typedef struct
     char leaderboard_retrieve_url[1024];
     char user_key[128];
     char user_name[256];
+    bool tried_user_name_upload;
     bool upload_scores;
     T3NET_LEADERBOARD * leaderboard;
     int leaderboard_tick;

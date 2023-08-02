@@ -451,6 +451,7 @@ void dot_intro_logic(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	const char * val;
 	int r;
+	bool upload_user_name = false;
 
 	if(app->entering_name)
 	{
@@ -466,20 +467,36 @@ void dot_intro_logic(void * data)
 	}
 	else
 	{
+		if(!app->tried_user_name_upload)
+		{
+			/* upload user name if we failed to previously */
+			val = al_get_config_value(t3f_user_data, "Game Data", "User Name Uploaded");
+			if(val && !strcmp(val, "false"))
+			{
+				upload_user_name = true;
+			}
+		}
+		/* upload user name if it's been changed */
 		val = al_get_config_value(t3f_user_data, "Game Data", "User Name");
 		if(!val || strcmp(val, app->user_name))
 		{
-			al_set_config_value(t3f_user_data, "Game Data", "User Name Uploaded", "false");
-			al_set_config_value(t3f_user_data, "Game Data", "User Name", app->user_name);
-			t3f_save_user_data();
-			al_stop_timer(t3f_timer);
-			if(t3net_update_leaderboard_user_name(app->leaderboard_set_user_name_url, app->user_key, app->user_name))
-			{
-				al_remove_config_key(t3f_user_data, "Game Data", "User Name Uploaded");
-				t3f_save_user_data();
-			}
-			al_start_timer(t3f_timer);
+			upload_user_name = true;
 		}
+	}
+	if(upload_user_name)
+	{
+		printf("upload\n");
+		al_set_config_value(t3f_user_data, "Game Data", "User Name Uploaded", "false");
+		al_set_config_value(t3f_user_data, "Game Data", "User Name", app->user_name);
+		t3f_save_user_data();
+		al_stop_timer(t3f_timer);
+		if(t3net_update_leaderboard_user_name(app->leaderboard_set_user_name_url, app->user_key, app->user_name))
+		{
+			al_remove_config_key(t3f_user_data, "Game Data", "User Name Uploaded");
+			t3f_save_user_data();
+		}
+		al_start_timer(t3f_timer);
+		app->tried_user_name_upload = true;
 	}
 	dot_game_emo_logic(data);
 	dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
