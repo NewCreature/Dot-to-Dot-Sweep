@@ -180,12 +180,24 @@ int dot_menu_proc_profile_okay(void * data, int i, void * pp)
 int dot_menu_proc_upload_yes(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	const char * val;
 
 	app->upload_scores = true;
 	al_set_config_value(t3f_user_data, "Game Data", "Upload Scores", "true");
+	val = t3f_get_steam_user_display_name();
+	if(val)
+	{
+		al_set_config_value(t3f_user_data, "Game Data", "Steam User Display Name", val);
+		strcpy(app->user_name, val);
+		app->current_menu = DOT_MENU_MUSIC;
+		select_first_element(app);
+	}
+	else
+	{
+		app->current_menu = DOT_MENU_PROFILE;
+		select_first_element(app);
+	}
 	t3f_save_user_data();
-	app->current_menu = DOT_MENU_PROFILE;
-	select_first_element(app);
 	return 1;
 }
 

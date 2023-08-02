@@ -39,4 +39,16 @@ bool t3f_show_steam_text_input(int x, int y, int width, int height)
       SteamAPI_ISteamUtils_ShowFloatingGamepadTextInput(SteamUtils(), k_EFloatingGamepadTextInputModeModeSingleLine, x, y, width, height);
     }
   #endif
+  return true;
+}
+
+const char * t3f_get_steam_user_display_name(void)
+{
+  #ifndef T3F_DISABLE_STEAM_INTEGRATION
+    if(_t3f_steam_integration_enabled)
+    {
+      return SteamAPI_ISteamFriends_GetPersonaName(SteamFriends());
+    }
+  #endif
+  return NULL;
 }
