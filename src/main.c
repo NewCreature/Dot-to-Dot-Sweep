@@ -1075,6 +1075,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app->level_color[8] = al_map_rgb(218, 48, 48);
 	app->level_color[9] = al_map_rgb(204, 48, 218);
 	app->controller.current_joy = -1;
+	app->controller.current_joy_handle = NULL;
 
 	dot_setup_bg_objects(app);
 	dot_setup_credits(&app->credits);

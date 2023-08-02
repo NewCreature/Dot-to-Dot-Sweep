@@ -907,7 +907,7 @@ void dot_game_logic(void * data)
 		/* normal game state */
 		default:
 		{
-			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.button)
+			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.button || app->controller.current_joy_disconnected)
 			{
 				app->game.state = DOT_GAME_STATE_PAUSE;
 				al_show_mouse_cursor(t3f_display);
@@ -955,6 +955,7 @@ void dot_game_logic(void * data)
 			break;
 		}
 	}
+	app->controller.current_joy_disconnected = false;
 	app->game.tick++;
 }
 

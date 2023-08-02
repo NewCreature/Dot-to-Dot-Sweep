@@ -45,6 +45,7 @@ void dot_handle_joystick_event(DOT_INPUT_DATA * ip, ALLEGRO_EVENT * ep)
     {
       remap_controller(ip->input_handler, new_joy, ip->dead_zone);
       ip->current_joy = new_joy;
+      ip->current_joy_handle = t3f_joystick[new_joy];
     }
   }
   else if(ep->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)
@@ -54,6 +55,28 @@ void dot_handle_joystick_event(DOT_INPUT_DATA * ip, ALLEGRO_EVENT * ep)
     {
       remap_controller(ip->input_handler, new_joy, ip->dead_zone);
       ip->current_joy = new_joy;
+      ip->current_joy_handle = t3f_joystick[new_joy];
+    }
+  }
+  else if(ep->type == ALLEGRO_EVENT_JOYSTICK_CONFIGURATION)
+  {
+    int i;
+
+    if(al_get_num_joysticks() > 0 || ip->current_joy_handle)
+    {
+      for(i = 0; i < al_get_num_joysticks(); i++)
+      {
+        if(ip->current_joy_handle == al_get_joystick(i))
+        {
+          break;
+        }
+      }
+      if(i == al_get_num_joysticks())
+      {
+        ip->current_joy = -1;
+        ip->current_joy_handle = NULL;
+        ip->current_joy_disconnected = true;
+      }
     }
   }
 }

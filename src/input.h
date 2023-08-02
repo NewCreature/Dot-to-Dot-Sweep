@@ -10,6 +10,8 @@ typedef struct
 
   /* auto select joystick and stick based on joystick events */
   int current_joy;
+  ALLEGRO_JOYSTICK * current_joy_handle;
+  bool current_joy_disconnected;
 
   float axis_x;
   float axis_y;
