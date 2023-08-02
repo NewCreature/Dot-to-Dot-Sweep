@@ -692,6 +692,21 @@ void app_read_user_data(APP_INSTANCE * app)
 		strcpy(app->user_name, "Anonymous");
 	}
 
+	/* load Steam user display name */
+	val = t3f_get_steam_user_display_name();
+	if(val)
+	{
+		al_set_config_value(t3f_user_data, "Game Data", "Steam User Display Name", val);
+	}
+	else
+	{
+		val = al_get_config_value(t3f_user_data, "Game Data", "Steam User Display Name");
+	}
+	if(val)
+	{
+		strcpy(app->user_name, val);
+	}
+
 	app->upload_scores = false;
 	val = al_get_config_value(t3f_user_data, "Game Data", "Upload Scores");
 	if(val)
