@@ -488,25 +488,53 @@ bool t3f_map_input_for_xbox_controller(T3F_INPUT_HANDLER * input_handler, int jo
     input_handler->element[T3F_GAMEPAD_R].device_number = joystick;
     input_handler->element[T3F_GAMEPAD_R].device_element = 13;
 
-    /* L3 */
-    input_handler->element[T3F_GAMEPAD_L3].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[T3F_GAMEPAD_L3].device_number = joystick;
-    input_handler->element[T3F_GAMEPAD_L3].device_element = 18;
+    /* wired version */
+    if(al_get_joystick_num_buttons(t3f_joystick[joystick]) > 10)
+    {
+      /* L3 */
+      input_handler->element[T3F_GAMEPAD_L3].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+      input_handler->element[T3F_GAMEPAD_L3].device_number = joystick;
+      input_handler->element[T3F_GAMEPAD_L3].device_element = 17;
 
-    /* R3 */
-    input_handler->element[T3F_GAMEPAD_R3].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[T3F_GAMEPAD_R3].device_number = joystick;
-    input_handler->element[T3F_GAMEPAD_R3].device_element = 19;
+      /* R3 */
+      input_handler->element[T3F_GAMEPAD_R3].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+      input_handler->element[T3F_GAMEPAD_R3].device_number = joystick;
+      input_handler->element[T3F_GAMEPAD_R3].device_element = 18;
 
-    /* Start */
-    input_handler->element[T3F_GAMEPAD_START].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[T3F_GAMEPAD_START].device_number = joystick;
-    input_handler->element[T3F_GAMEPAD_START].device_element = 16;
+      /* Start */
+      input_handler->element[T3F_GAMEPAD_START].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+      input_handler->element[T3F_GAMEPAD_START].device_number = joystick;
+      input_handler->element[T3F_GAMEPAD_START].device_element = 15;
 
-    /* Select */
-    input_handler->element[T3F_GAMEPAD_SELECT].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
-    input_handler->element[T3F_GAMEPAD_SELECT].device_number = joystick;
-    input_handler->element[T3F_GAMEPAD_SELECT].device_element = 15;
+      /* Select */
+      input_handler->element[T3F_GAMEPAD_SELECT].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+      input_handler->element[T3F_GAMEPAD_SELECT].device_number = joystick;
+      input_handler->element[T3F_GAMEPAD_SELECT].device_element = 14;
+    }
+
+    /* wireless version */
+    else
+    {
+      /* L3 */
+      input_handler->element[T3F_GAMEPAD_L3].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+      input_handler->element[T3F_GAMEPAD_L3].device_number = joystick;
+      input_handler->element[T3F_GAMEPAD_L3].device_element = 16;
+
+      /* R3 */
+      input_handler->element[T3F_GAMEPAD_R3].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+      input_handler->element[T3F_GAMEPAD_R3].device_number = joystick;
+      input_handler->element[T3F_GAMEPAD_R3].device_element = 17;
+
+      /* Start */
+      input_handler->element[T3F_GAMEPAD_START].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+      input_handler->element[T3F_GAMEPAD_START].device_number = joystick;
+      input_handler->element[T3F_GAMEPAD_START].device_element = 15;
+
+      /* Select */
+      input_handler->element[T3F_GAMEPAD_SELECT].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
+      input_handler->element[T3F_GAMEPAD_SELECT].device_number = joystick;
+      input_handler->element[T3F_GAMEPAD_SELECT].device_element = 14;
+    }
 
     return true;
 
