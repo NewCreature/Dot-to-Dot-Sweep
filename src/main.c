@@ -74,8 +74,8 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 		/* pass the event through to T3F for handling by default */
 		default:
 		{
-			dot_handle_joystick_event(&app->controller, event);
 			t3f_event_handler(event);
+			dot_handle_joystick_event(&app->controller, event);
 			break;
 		}
 	}
