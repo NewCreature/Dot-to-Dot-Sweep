@@ -42,7 +42,7 @@ MACOS_DEPEND_LIBS = ../macos/blobs/libsteam_api.dylib
 #LINUX_CFLAGS =
 #LINUX_PLATFORM_OBJECTS =
 #LINUX_PLATFORM_LIBS =
-LINUX_DEPEND_LIBS = ../linux/blobs/libsteam_api.so
+LINUX_DEPEND_LIBS = ../linux/blobs/`uname -m`/libsteam_api.so
 #LINUX_PLATFORM_TARGET =
 
 ################################################
