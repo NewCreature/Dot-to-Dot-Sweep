@@ -328,7 +328,7 @@ void app_render(void * data)
 		}
 	}
 	al_hold_bitmap_drawing(false);
-	show_joystick_data(app);
+//	show_joystick_data(app);
 }
 
 static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn, int size)
