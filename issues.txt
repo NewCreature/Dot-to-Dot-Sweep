@@ -55,9 +55,11 @@ v1.3
 
 [ ]Finish XBox controller implementation.
 
-   [ ]Add Linux XBox controller configuration.
+   [X]Add Linux XBox controller configuration.
 
    [X]Add Windows XBox controller configuration.
+
+   [ ]See if we can fix initial joystick state on MacOS.
 
 [ ]Make new input system respect user configured dead zone.
 
@@ -75,7 +77,7 @@ v1.3
       input system. We'll probably need to rework the framework a bit to handle
       this properly.
 
-[ ]Research joystick issues.
+[X]Research joystick issues.
 
    [X]XBox controllers have issues with axes on Linux.
 
@@ -84,17 +86,17 @@ v1.3
    
    [X]Implement new input module in T3F (see 'T3F/issues.txt' for more info).
 
-   [ ]Steam will map input from controllers to XBox mapping for us. We need to
+   [X]Steam will map input from controllers to XBox mapping for us. We need to
       detect if the game is running through Steam and use XBox mapping if that
       is the case. This means we don't need to use SteamInput, but we'll still
       need to detect if game is running through Steam.
 
-      [ ]I think the simplest way to detect Steam is to see if SteamWorks will
+      [X]I think the simplest way to detect Steam is to see if SteamWorks will
          initialize. We should try to do this during t3f_initialize() so we
          can make informed decisions from our game's init code about input
          configuration.
       
-      [ ]Make XBox-style input default in the new input module. We might
+      [X]Make XBox-style input default in the new input module. We might
          consider just assuming XBox and letting the user override the settings
          if it's not working for them.
 
