@@ -255,5 +255,7 @@ void dot_read_input(DOT_INPUT_DATA * ip)
 
 void dot_clear_input(DOT_INPUT_DATA * ip)
 {
+  T3F_INPUT_HANDLER * old_input_handler = ip->input_handler;
   memset(ip, 0, sizeof(DOT_INPUT_DATA));
+  ip->input_handler = old_input_handler;
 }
