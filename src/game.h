@@ -59,10 +59,11 @@ typedef struct
 #define DOT_GAME_TARGET_TICKS  30
 
 #define DOT_GAME_MAX_BALLS   256
-#define DOT_GAME_STATE_START   0
-#define DOT_GAME_STATE_PLAY    1
-#define DOT_GAME_STATE_PAUSE   2
-#define DOT_GAME_STATE_DONE    3
+#define DOT_GAME_STATE_START      0
+#define DOT_GAME_STATE_PLAY       1
+#define DOT_GAME_STATE_PAUSE      2
+#define DOT_GAME_STATE_PAUSE_MENU 3
+#define DOT_GAME_STATE_DONE       4
 
 #define DOT_GAME_EMO_STATE_NORMAL 0
 #define DOT_GAME_EMO_STATE_BLINK  1
@@ -94,6 +95,7 @@ typedef struct
 
 	int state;
 	int state_tick;
+	int pause_state;
 	float speed, speed_inc;
 	ALLEGRO_COLOR bg_color;
 	ALLEGRO_COLOR old_bg_color;

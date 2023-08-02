@@ -265,6 +265,38 @@ int dot_menu_proc_leaderboard_main_menu(void * data, int i, void * pp)
 	return 1;
 }
 
+int dot_menu_proc_pause_resume(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	if(app->controller.button)
+	{
+		app->game.state = app->game.pause_state;
+	}
+	else
+	{
+		app->game.state = DOT_GAME_STATE_PAUSE;
+		app->game.block_click = true;
+	}
+
+	return 1;
+}
+
+int dot_menu_proc_pause_quit(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	dot_intro_setup(app);
+	al_show_mouse_cursor(t3f_display);
+	app->state = DOT_STATE_INTRO;
+	if(app->music_enabled)
+	{
+		t3f_play_music(DOT_MUSIC_TITLE);
+	}
+
+	return 1;
+}
+
 bool dot_intro_initialize(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -371,6 +403,17 @@ bool dot_intro_initialize(void * data)
 	t3f_set_gui_shadow(app->menu[DOT_MENU_MUSIC], -2, 2);
   t3f_set_gui_hover_lift(app->menu[DOT_MENU_MUSIC], 2, -2);
 
+	app->menu[DOT_MENU_PAUSE] = t3f_create_gui(0, 0);
+	if(!app->menu[DOT_MENU_PAUSE])
+	{
+		return false;
+	}
+	t3f_add_gui_text_element(app->menu[DOT_MENU_PAUSE], NULL, "Paused", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_PAUSE], dot_menu_proc_pause_resume, "Resume", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_PAUSE], dot_menu_proc_pause_quit, "Quit", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(app->menu[DOT_MENU_PAUSE], top, bottom);
+	t3f_set_gui_shadow(app->menu[DOT_MENU_PAUSE], -2, 2);
+  t3f_set_gui_hover_lift(app->menu[DOT_MENU_PAUSE], 2, -2);
 	app->current_menu = DOT_MENU_MAIN;
 
 	return true;
