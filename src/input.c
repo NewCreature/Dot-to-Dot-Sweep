@@ -25,6 +25,15 @@ void dot_destroy_input(DOT_INPUT_DATA * ip)
   t3f_deinitialize_input();
 }
 
+static void remap_controller(T3F_INPUT_HANDLER * input_handler, int device_index, float dead_zone)
+{
+  t3f_map_input_for_xbox_controller(input_handler, device_index);
+  input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].dead_zone = dead_zone;
+  input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].dead_zone = dead_zone;
+  input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].dead_zone = dead_zone;
+  input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].dead_zone = dead_zone;
+}
+
 void dot_handle_joystick_event(DOT_INPUT_DATA * ip, ALLEGRO_EVENT * ep)
 {
   int new_joy;
@@ -34,7 +43,7 @@ void dot_handle_joystick_event(DOT_INPUT_DATA * ip, ALLEGRO_EVENT * ep)
     new_joy = t3f_get_joystick_number(ep->joystick.id);
     if(new_joy >= 0 && new_joy != ip->current_joy && fabs(ep->joystick.pos) >= ip->dead_zone)
     {
-      t3f_map_input_for_xbox_controller(ip->input_handler, new_joy);
+      remap_controller(ip->input_handler, new_joy, ip->dead_zone);
       ip->current_joy = new_joy;
     }
   }
@@ -43,8 +52,8 @@ void dot_handle_joystick_event(DOT_INPUT_DATA * ip, ALLEGRO_EVENT * ep)
     new_joy = t3f_get_joystick_number(ep->joystick.id);
     if(new_joy >= 0 && new_joy != ip->current_joy)
     {
-      t3f_map_input_for_xbox_controller(ip->input_handler, new_joy);
-      ip->current_joy = t3f_get_joystick_number(ep->joystick.id);
+      remap_controller(ip->input_handler, new_joy, ip->dead_zone);
+      ip->current_joy = new_joy;
     }
   }
 }
