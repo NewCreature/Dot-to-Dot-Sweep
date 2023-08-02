@@ -1343,6 +1343,23 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			break;
 		}
 
+		case ALLEGRO_EVENT_JOYSTICK_CONFIGURATION:
+		{
+			int i;
+			al_reconfigure_joysticks();
+			memset(t3f_joystick, 0, sizeof(ALLEGRO_JOYSTICK *));
+			for(i = 0; i < T3F_MAX_JOYSTICKS; i++)
+			{
+				memset(&t3f_joystick_state[i], 0, sizeof(ALLEGRO_JOYSTICK_STATE));
+			}
+			memset(t3f_joystick_state_updated, 0, sizeof(bool));
+			for(i = 0; i < al_get_num_joysticks(); i++)
+			{
+				t3f_joystick[i] = al_get_joystick(i);
+			}
+			break;
+		}
+
 		case ALLEGRO_EVENT_JOYSTICK_AXIS:
 		case ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN:
 		case ALLEGRO_EVENT_JOYSTICK_BUTTON_UP:
