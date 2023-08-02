@@ -25,6 +25,7 @@
 #include "view.h"
 #include "music.h"
 #include "android.h"
+#include "input.h"
 #ifndef ALLEGRO_ANDROID
 	#include "menu.h"
 #endif
@@ -1357,6 +1358,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			{
 				t3f_joystick[i] = al_get_joystick(i);
 			}
+			_t3f_input_handle_joystick_event(event);
 			break;
 		}
 
@@ -1370,6 +1372,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 				al_get_joystick_state(event->joystick.id, &t3f_joystick_state[jn]);
 				t3f_joystick_state_updated[jn] = true;
 			}
+			_t3f_input_handle_joystick_event(event);
 			break;
 		}
 

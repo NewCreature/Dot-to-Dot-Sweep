@@ -2,11 +2,36 @@
 #include "input.h"
 
 static bool _t3f_input_initialized = false;
+ALLEGRO_JOYSTICK_STATE _input_state_fudging_helper[T3F_MAX_JOYSTICKS];
+
+static void _reset_input_state_fudging(void)
+{
+  #ifdef ALLEGRO_MACOSX
+    for(i = 0; i < T3F_MAX_JOYSTICKS; i++)
+    {
+      _input_state_fudging_helper[i].stick[4].axis[0] = 100.0;
+      _input_state_fudging_helper[i].stick[4].axis[1] = 100.0;
+      _input_state_fudging_helper[i].stick[2].axis[0] = 100.0;
+      _input_state_fudging_helper[i].stick[3].axis[0] = 100.0;
+    }
+  #else
+    #ifdef ALLEGRO_UNIX
+      for(i = 0; i < T3F_MAX_JOYSTICKS; i++)
+      {
+        _input_state_fudging_helper[i].stick[1].axis[0] = 100.0;
+        _input_state_fudging_helper[i].stick[2].axis[1] = 100.0;
+      }
+    #endif
+  #endif
+}
 
 bool t3f_initialize_input(int flags)
 {
+  int i;
+
   if(!_t3f_input_initialized)
   {
+    _reset_input_state_fudging();
     _t3f_input_initialized = true;
   }
   return true;
@@ -547,86 +572,103 @@ static void update_input_device(int device)
   #ifdef ALLEGRO_MACOSX
     if(t3f_joystick_state_updated[device])
     {
-      /* up */
-      if(t3f_joystick_state[device].stick[4].axis[0] >= 1.0 && t3f_joystick_state[device].stick[4].axis[1] <= -1.0)
+      if(_input_state_fudging_helper[device].stick[4].axis[0] < 100.0 || _input_state_fudging_helper[device].stick[4].axis[1] < 100.0)
       {
-        t3f_joystick_state[device].stick[4].axis[0] = 0.0;
-        t3f_joystick_state[device].stick[4].axis[1] = -1.0;
-      }
+        /* up */
+        if(t3f_joystick_state[device].stick[4].axis[0] >= 1.0 && t3f_joystick_state[device].stick[4].axis[1] <= -1.0)
+        {
+          t3f_joystick_state[device].stick[4].axis[0] = 0.0;
+          t3f_joystick_state[device].stick[4].axis[1] = -1.0;
+        }
 
-      /* down */
-      else if(t3f_joystick_state[device].stick[4].axis[0] <= -1.0 && t3f_joystick_state[device].stick[4].axis[1] >= 1.0)
-      {
-        t3f_joystick_state[device].stick[4].axis[0] = 0.0;
-        t3f_joystick_state[device].stick[4].axis[1] = 1.0;
-      }
+        /* down */
+        else if(t3f_joystick_state[device].stick[4].axis[0] <= -1.0 && t3f_joystick_state[device].stick[4].axis[1] >= 1.0)
+        {
+          t3f_joystick_state[device].stick[4].axis[0] = 0.0;
+          t3f_joystick_state[device].stick[4].axis[1] = 1.0;
+        }
 
-      /* left */
-      else if(t3f_joystick_state[device].stick[4].axis[0] <= -1.0 && t3f_joystick_state[device].stick[4].axis[1] <= -1.0)
-      {
-        t3f_joystick_state[device].stick[4].axis[0] = -1.0;
-        t3f_joystick_state[device].stick[4].axis[1] = 0.0;
-      }
+        /* left */
+        else if(t3f_joystick_state[device].stick[4].axis[0] <= -1.0 && t3f_joystick_state[device].stick[4].axis[1] <= -1.0)
+        {
+          t3f_joystick_state[device].stick[4].axis[0] = -1.0;
+          t3f_joystick_state[device].stick[4].axis[1] = 0.0;
+        }
 
-      /* right */
-      else if(t3f_joystick_state[device].stick[4].axis[0] >= 1.0 && t3f_joystick_state[device].stick[4].axis[1] >= 1.0)
-      {
-        t3f_joystick_state[device].stick[4].axis[0] = 1.0;
-        t3f_joystick_state[device].stick[4].axis[1] = 0.0;
-      }
+        /* right */
+        else if(t3f_joystick_state[device].stick[4].axis[0] >= 1.0 && t3f_joystick_state[device].stick[4].axis[1] >= 1.0)
+        {
+          t3f_joystick_state[device].stick[4].axis[0] = 1.0;
+          t3f_joystick_state[device].stick[4].axis[1] = 0.0;
+        }
 
-      /* up-right */
-      else if(t3f_joystick_state[device].stick[4].axis[0] >= 1.0)
-      {
-        t3f_joystick_state[device].stick[4].axis[0] = 1.0;
-        t3f_joystick_state[device].stick[4].axis[1] = -1.0;
-      }
+        /* up-right */
+        else if(t3f_joystick_state[device].stick[4].axis[0] >= 1.0)
+        {
+          t3f_joystick_state[device].stick[4].axis[0] = 1.0;
+          t3f_joystick_state[device].stick[4].axis[1] = -1.0;
+        }
 
-      /* down-right */
-      else if(t3f_joystick_state[device].stick[4].axis[1] >= 1.0)
-      {
-        t3f_joystick_state[device].stick[4].axis[0] = 1.0;
-        t3f_joystick_state[device].stick[4].axis[1] = 1.0;
-      }
+        /* down-right */
+        else if(t3f_joystick_state[device].stick[4].axis[1] >= 1.0)
+        {
+          t3f_joystick_state[device].stick[4].axis[0] = 1.0;
+          t3f_joystick_state[device].stick[4].axis[1] = 1.0;
+        }
 
-      /* down-left */
-      else if(t3f_joystick_state[device].stick[4].axis[0] <= -1.0)
-      {
-        t3f_joystick_state[device].stick[4].axis[0] = -1.0;
-        t3f_joystick_state[device].stick[4].axis[1] = 1.0;
-      }
+        /* down-left */
+        else if(t3f_joystick_state[device].stick[4].axis[0] <= -1.0)
+        {
+          t3f_joystick_state[device].stick[4].axis[0] = -1.0;
+          t3f_joystick_state[device].stick[4].axis[1] = 1.0;
+        }
 
-      /* up-left */
-      else if(t3f_joystick_state[device].stick[4].axis[0] == 0.0 && t3f_joystick_state[device].stick[4].axis[1] == 0.0)
-      {
-        t3f_joystick_state[device].stick[4].axis[0] = -1.0;
-        t3f_joystick_state[device].stick[4].axis[1] = -1.0;
-      }
+        /* up-left */
+        else if(t3f_joystick_state[device].stick[4].axis[0] == 0.0 && t3f_joystick_state[device].stick[4].axis[1] == 0.0)
+        {
+          t3f_joystick_state[device].stick[4].axis[0] = -1.0;
+          t3f_joystick_state[device].stick[4].axis[1] = -1.0;
+        }
 
-      /* idle */
-      else
-      {
-        t3f_joystick_state[device].stick[4].axis[0] = 0.0;
-        t3f_joystick_state[device].stick[4].axis[1] = 0.0;
+        /* idle */
+        else
+        {
+          t3f_joystick_state[device].stick[4].axis[0] = 0.0;
+          t3f_joystick_state[device].stick[4].axis[1] = 0.0;
+        }
       }
 
       /* triggers */
-      t3f_joystick_state[device].stick[2].axis[0] = (t3f_joystick_state[device].stick[2].axis[0] + 1.0) / 2.0;
-      t3f_joystick_state[device].stick[3].axis[0] = (t3f_joystick_state[device].stick[3].axis[0] + 1.0) / 2.0;
+      if(_input_state_fudging_helper[device].stick[2].axis[0] < 100.0)
+      {
+        t3f_joystick_state[device].stick[2].axis[0] = (t3f_joystick_state[device].stick[2].axis[0] + 1.0) / 2.0;
+      }
+      if(_input_state_fudging_helper[device].stick[3].axis[0] < 100.0)
+      {
+        t3f_joystick_state[device].stick[3].axis[0] = (t3f_joystick_state[device].stick[3].axis[0] + 1.0) / 2.0;
+      }
 
       t3f_joystick_state_updated[device] = false;
     }
+    return;
   #endif
 
   #ifdef ALLEGRO_UNIX
     if(t3f_joystick_state_updated[device])
     {
       /* triggers */
-      t3f_joystick_state[device].stick[1].axis[0] = (t3f_joystick_state[device].stick[1].axis[0] + 1.0) / 2.0;
-      t3f_joystick_state[device].stick[2].axis[1] = (t3f_joystick_state[device].stick[2].axis[1] + 1.0) / 2.0;
+      if(_input_state_fudging_helper[device].stick[1].axis[0] < 100.0)
+      {
+        t3f_joystick_state[device].stick[1].axis[0] = (t3f_joystick_state[device].stick[1].axis[0] + 1.0) / 2.0;
+      }
+      if(_input_state_fudging_helper[device].stick[2].axis[1] < 100.0)
+      {
+        t3f_joystick_state[device].stick[2].axis[1] = (t3f_joystick_state[device].stick[2].axis[1] + 1.0) / 2.0;
+      }
 
       t3f_joystick_state_updated[device] = false;
     }
+    return;
   #endif
 }
 
@@ -874,4 +916,29 @@ void t3f_update_input_handler_state(T3F_INPUT_HANDLER * input_handler)
   {
     update_input_handler_element_state(&input_handler->element[i]);
   }
+}
+
+void _t3f_input_handle_joystick_event(ALLEGRO_EVENT * event)
+{
+  int joy_num = -1;
+
+  if(event->type == ALLEGRO_EVENT_JOYSTICK_CONFIGURATION)
+  {
+    _reset_input_state_fudging();
+  }
+
+  #ifdef ALLEGRO_MACOSX
+    if(event->type == ALLEGRO_EVENT_JOYSTICK_AXIS)
+    {
+      if(event->joystick.stick == 4)
+      {
+        joy_num = t3f_get_joystick_number(event->joystick.id);
+        if(joy_num >= 0)
+        {
+          _input_state_fudging_helper[joy_num].stick[4].axis[0] = 0.0;
+          _input_state_fudging_helper[joy_num].stick[4].axis[1] = 0.0;
+        }
+      }
+    }
+  #endif
 }
