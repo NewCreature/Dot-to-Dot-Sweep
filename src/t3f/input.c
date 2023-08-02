@@ -618,12 +618,12 @@ static void update_input_device(int device)
     }
   #endif
 
-  #ifdef ALLEGRO_LINUX
+  #ifdef ALLEGRO_UNIX
     if(t3f_joystick_state_updated[device])
     {
       /* triggers */
-      t3f_joystick_state[device].stick[1].axis[0] = (t3f_joystick_state[device].stick[2].axis[0] + 1.0) / 2.0;
-      t3f_joystick_state[device].stick[2].axis[1] = (t3f_joystick_state[device].stick[3].axis[0] + 1.0) / 2.0;
+      t3f_joystick_state[device].stick[1].axis[0] = (t3f_joystick_state[device].stick[1].axis[0] + 1.0) / 2.0;
+      t3f_joystick_state[device].stick[2].axis[1] = (t3f_joystick_state[device].stick[2].axis[1] + 1.0) / 2.0;
 
       t3f_joystick_state_updated[device] = false;
     }
