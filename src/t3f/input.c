@@ -589,6 +589,17 @@ static void update_input_device(int device)
       t3f_joystick_state_updated[device] = false;
     }
   #endif
+
+  #ifdef ALLEGRO_LINUX
+    if(t3f_joystick_state_updated[device])
+    {
+      /* triggers */
+      t3f_joystick_state[device].stick[1].axis[0] = (t3f_joystick_state[device].stick[2].axis[0] + 1.0) / 2.0;
+      t3f_joystick_state[device].stick[2].axis[1] = (t3f_joystick_state[device].stick[3].axis[0] + 1.0) / 2.0;
+
+      t3f_joystick_state_updated[device] = false;
+    }
+  #endif
 }
 
 static void update_input_handler_element_state_keyboard(T3F_INPUT_HANDLER_ELEMENT * element)
