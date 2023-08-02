@@ -276,7 +276,7 @@ static void show_joystick_data(void * data)
 
 	for(i = 0; i < app->controller.input_handler->elements; i++)
 	{
-		t3f_draw_textf(app->font[DOT_FONT_8], t3f_color_white, 0, pos_y, 0, 0, "%1.1f %d", app->controller.input_handler->element[i].val, app->controller.input_handler->element[i].pressed);
+		t3f_draw_textf(app->font[DOT_FONT_8], t3f_color_white, 0, pos_y, 0, 0, "%1.1f %d", app->controller.input_handler->element[i].val, app->controller.input_handler->element[i].held);
 		pos_y += t3f_get_font_line_height(app->font[DOT_FONT_8]);
 	}
 }

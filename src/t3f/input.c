@@ -509,7 +509,7 @@ bool t3f_map_input_for_xbox_controller(T3F_INPUT_HANDLER * input_handler, int jo
     input_handler->element[T3F_GAMEPAD_SELECT].device_element = 15;
 
     return true;
-  
+
   #endif
 
 }
@@ -719,6 +719,8 @@ static void update_input_handler_element_joystick_cache(T3F_INPUT_HANDLER_ELEMEN
 
 static void update_input_handler_element_state_joystick(T3F_INPUT_HANDLER_ELEMENT * element)
 {
+  float tval;
+
   update_input_handler_element_joystick_cache(element);
   update_input_device(element->device_number);
   if(element->device_element < element->stick_elements)
@@ -739,7 +741,19 @@ static void update_input_handler_element_state_joystick(T3F_INPUT_HANDLER_ELEMEN
     {
       element->val = 0.0;
     }
-    if(fabs(element->val) >= element->threshold)
+    if(element->device_element_dir < 0.0)
+    {
+      tval = -element->val;
+    }
+    else if(element->device_element_dir > 0.0)
+    {
+      tval = element->val;
+    }
+    else
+    {
+      tval = fabs(element->val);
+    }
+    if(tval >= element->threshold)
     {
       if(!element->held)
       {
@@ -830,7 +844,6 @@ void t3f_update_input_handler_state(T3F_INPUT_HANDLER * input_handler)
 
   for(i = 0; i < input_handler->elements; i++)
   {
-    update_input_handler_element_state(&input_handler->element[i]);    
+    update_input_handler_element_state(&input_handler->element[i]);
   }
 }
-
