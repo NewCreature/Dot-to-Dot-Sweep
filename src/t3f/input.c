@@ -6,6 +6,8 @@ ALLEGRO_JOYSTICK_STATE _input_state_fudging_helper[T3F_MAX_JOYSTICKS];
 
 static void _reset_input_state_fudging(void)
 {
+  int i;
+
   #ifdef ALLEGRO_MACOSX
     for(i = 0; i < T3F_MAX_JOYSTICKS; i++)
     {
