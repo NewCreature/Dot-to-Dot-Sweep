@@ -63,7 +63,7 @@ v1.3
 
 [X]Make new input system respect user configured dead zone.
 
-[ ]Show a pause menu when using something other than a pointing device to pause
+[X]Show a pause menu when using something other than a pointing device to pause
    the game. Users should be able to decide what to do on whichever device they
    happen to be using.
 
