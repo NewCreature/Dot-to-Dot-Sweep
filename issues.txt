@@ -53,13 +53,13 @@ v1.3
 
          [ ]Begin work on Steam Optional open source project.
 
-[ ]Finish XBox controller implementation.
+[X]Finish XBox controller implementation.
 
    [X]Add Linux XBox controller configuration.
 
    [X]Add Windows XBox controller configuration.
 
-   [ ]See if we can fix initial joystick state on MacOS.
+   [X]See if we can fix initial joystick state on MacOS.
 
 [X]Make new input system respect user configured dead zone.
 
