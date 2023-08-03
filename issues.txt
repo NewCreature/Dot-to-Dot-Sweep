@@ -1,6 +1,12 @@
 v1.3
 ----
 
+[ ]Make score upload more robust.
+
+   [ ]Retry score uploads later if score upload failed.
+
+   [ ]Only upload score if it is better than previously uploaded score.
+
 [ ]Add achievements.
 
    [ ]We'll track achievements internally but not have in-game visibility to
@@ -49,9 +55,7 @@ v1.3
 
    [ ]Get ready for Steam Deck verification.
 
-      [ ]Make sure text entry uses SteamWorks so the keyboard pops up.
-
-         [ ]Begin work on Steam Optional open source project.
+      [ ]Make community post about intentions to be optimized for Steam Deck.
 
 [X]Finish XBox controller implementation.
 
