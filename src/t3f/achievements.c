@@ -53,11 +53,20 @@ void t3f_destroy_achievements_list(T3F_ACHIEVEMENTS_LIST * achievements_list)
   }
 }
 
-bool t3f_set_achievement_details(T3F_ACHIEVEMENTS_LIST * achievements_list, int entry, const char * name, const char * description, int steps)
+bool t3f_set_achievement_details(T3F_ACHIEVEMENTS_LIST * achievements_list, int entry, const char * steam_id, const char * name, const char * description, int steps, bool hidden)
 {
   if(!name || !description)
   {
     return false;
+  }
+  if(steam_id)
+  {
+    achievements_list->entry[entry].steam_id = malloc(strlen(steam_id) + 1);
+    if(!achievements_list->entry[entry].steam_id)
+    {
+      return false;
+    }
+    strcpy(achievements_list->entry[entry].steam_id, steam_id);
   }
   achievements_list->entry[entry].name = malloc(strlen(name) + 1);
   if(!achievements_list->entry[entry].name)
@@ -71,6 +80,7 @@ bool t3f_set_achievement_details(T3F_ACHIEVEMENTS_LIST * achievements_list, int 
     return false;
   }
   strcpy(achievements_list->entry[entry].description, description);
+  achievements_list->entry[entry].hidden = hidden;
 
   return true;
 }
