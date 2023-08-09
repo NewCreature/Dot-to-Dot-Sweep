@@ -1010,7 +1010,7 @@ bool dot_initialize_achievements(APP_INSTANCE * app)
 	{
 		goto fail;
 	}
-	if(!t3f_set_achievement_details(app->achievements, DOT_ACHIEVEMENT_LEVEL_COMPLETED, "LEVEL_COMPLETED", "Full Combo", "Complete a level without breaking your combo.", 1, false))
+	if(!t3f_set_achievement_details(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT, "GETTING_INTO_IT", "Full Combo", "Complete a level without breaking your combo.", 1, false))
 	{
 		goto fail;
 	}
