@@ -269,7 +269,7 @@ void t3net_destroy_leaderboard(T3NET_LEADERBOARD * lp)
 	free(lp);
 }
 
-int t3net_upload_score(char * url, char * game, char * version, char * mode, char * option, char * user_key, unsigned long score, char * extra)
+int t3net_upload_score(const char * url, const char * game, const char * version, const char * mode, const char * option, const char * user_key, unsigned long score, const char * extra)
 {
 	T3NET_ARGUMENTS * args = NULL;
 	T3NET_DATA * data = NULL;
