@@ -313,6 +313,10 @@ void dot_game_accumulate_score(void * data)
 		{
 			app->game.high_score = app->game.score;
 		}
+		if(app->game.score >= 100000)
+		{
+			t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GOOD_GAME, 1);
+		}
 		dot_game_create_score_effect(data, app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, app->game.ascore);
 		app->game.ascore = 0;
 	}
