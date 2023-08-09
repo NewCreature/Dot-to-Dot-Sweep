@@ -313,9 +313,13 @@ void dot_game_accumulate_score(void * data)
 		{
 			app->game.high_score = app->game.score;
 		}
-		if(app->game.score >= 100000)
+		if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GOOD_GAME))
 		{
-			t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GOOD_GAME, 1);
+			if(app->game.score >= 100000)
+			{
+				t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GOOD_GAME, 1);
+				app->sync_achievements = true;
+			}
 		}
 		dot_game_create_score_effect(data, app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, app->game.ascore);
 		app->game.ascore = 0;
@@ -513,13 +517,21 @@ void dot_game_check_player_collisions(void * data)
 				/* hitting other color kills you */
 				else
 				{
-					if(app->game.a_oops_ticks <= 60)
+					if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_OOPS))
 					{
-						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_OOPS, 1);
+						if(app->game.a_oops_ticks <= 60)
+						{
+							t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_OOPS, 1);
+							app->sync_achievements = true;
+						}
 					}
-					if(app->game.a_colored_balls_remaining <= 1)
+					if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_SO_CLOSE))
 					{
-						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_SO_CLOSE, 1);
+						if(app->game.a_colored_balls_remaining <= 1)
+						{
+							t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_SO_CLOSE, 1);
+							app->sync_achievements = true;
+						}
 					}
 					if(app->touch_id >= 0)
 					{
@@ -1022,14 +1034,26 @@ void dot_game_logic(void * data)
 			/* move on to next level */
 			if(colored == 0)
 			{
-				t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT, 1);
-				if(!app->game.a_combo_broken)
+				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT))
 				{
-					t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO, 1);
+					t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT, 1);
+					app->sync_achievements = true;
 				}
-				if(app->game.a_start_lives == app->game.lives)
+				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO))
 				{
-					t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GETTING_GOOD, 1);
+					if(!app->game.a_combo_broken)
+					{
+						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO, 1);
+						app->sync_achievements = true;
+					}
+				}
+				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GETTING_GOOD))
+				{
+					if(app->game.a_start_lives == app->game.lives)
+					{
+						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GETTING_GOOD, 1);
+						app->sync_achievements = true;
+					}
 				}
 				if(app->game.combo >= 10)
 				{
@@ -1054,9 +1078,13 @@ void dot_game_logic(void * data)
 				app->game.bg_color_fade = 0.0;
 				app->game.combo = 0;
 				app->game.shield.active = false;
-				if(app->game.level >= 10)
+				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_SEE_IT_THROUGH))
 				{
-					t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_SEE_IT_THROUGH, 1);
+					if(app->game.level >= 10)
+					{
+						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_SEE_IT_THROUGH, 1);
+						app->sync_achievements = true;
+					}
 				}
 			}
 			break;
@@ -1064,9 +1092,13 @@ void dot_game_logic(void * data)
 	}
 	app->controller.current_joy_disconnected = false;
 	app->game.a_bob_and_weave_ticks++;
-	if(app->game.a_bob_and_weave_ticks >= 300)
+	if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_BOB_AND_WEAVE))
 	{
-		t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_BOB_AND_WEAVE, 1);
+		if(app->game.a_bob_and_weave_ticks >= 3600)
+		{
+			t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_BOB_AND_WEAVE, 1);
+			app->sync_achievements = true;
+		}
 	}
 	app->game.tick++;
 }

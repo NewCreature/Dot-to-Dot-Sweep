@@ -27,6 +27,7 @@ typedef struct
     bool music_enabled;
     int graphics_size_multiplier;
     T3F_ACHIEVEMENTS_LIST * achievements;
+    bool sync_achievements;
 
     /* program state */
     int state;

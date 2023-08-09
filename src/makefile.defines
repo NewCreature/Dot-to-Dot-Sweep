@@ -33,7 +33,7 @@ app_clean:
 MACOS_CXXFLAGS = -std=c++11
 #MACOS_PLATFORM_OBJECTS =
 #MACOS_PLATFORM_LIBS =
-MACOS_DEPEND_LIBS = ../macos/blobs/libsteam_api.dylib
+MACOS_DEPEND_LIBS = ../macos/blobs/libsteam_api.dylib -lc++
 #MACOS_PLATFORM_TARGET =
 
 ###############

@@ -1,7 +1,32 @@
 #include "t3f/t3f.h"
 #include "steam/steam_api_flat.h"
 
+class _t3f_steam_stats_class
+{
+  private:
+	  STEAM_CALLBACK(_t3f_steam_stats_class, OnUserStatsReceived, UserStatsReceived_t);
+	  STEAM_CALLBACK(_t3f_steam_stats_class, OnUserStatsStored, UserStatsStored_t);
+};
+
 static bool _t3f_steam_integration_enabled = false;
+static bool _t3f_steam_stats_ready = false;
+static _t3f_steam_stats_class * _t3f_steam_stats = NULL;
+
+void _t3f_steam_stats_class::OnUserStatsReceived(UserStatsReceived_t * callback)
+{
+	if(callback->m_eResult == k_EResultOK)
+  {
+    _t3f_steam_stats_ready = true;
+  }
+}
+
+void _t3f_steam_stats_class::OnUserStatsStored(UserStatsStored_t * callback)
+{
+	if(callback->m_eResult == k_EResultOK)
+  {
+    _t3f_steam_stats_ready = true;
+  }
+}
 
 bool t3f_init_steam_integration(void)
 {
@@ -10,9 +35,18 @@ bool t3f_init_steam_integration(void)
     {
       goto fail;
     }
+    _t3f_steam_integration_enabled = true;
+    _t3f_steam_stats = new _t3f_steam_stats_class;
+    if(_t3f_steam_stats == NULL)
+    {
+      goto fail;
+    }
+    SteamAPI_ISteamUserStats_RequestCurrentStats(SteamUserStats());
+    return true;
 
     fail:
     {
+      t3f_shutdown_steam_integration();
       return false;
     }
   #else
@@ -25,6 +59,10 @@ void t3f_shutdown_steam_integration(void)
   #ifndef T3F_DISABLE_STEAM_INTEGRATION
     if(_t3f_steam_integration_enabled)
     {
+      if(_t3f_steam_stats)
+      {
+        delete _t3f_steam_stats;
+      }
       SteamAPI_Shutdown();
       _t3f_steam_integration_enabled = false;
     }
@@ -42,6 +80,28 @@ bool t3f_show_steam_text_input(int x, int y, int width, int height)
   return true;
 }
 
+bool t3f_synchronize_achievements_with_steam(T3F_ACHIEVEMENTS_LIST * achievements_list)
+{
+  #ifndef T3F_DISABLE_STEAM_INTEGRATION
+    int i;
+
+    if(_t3f_steam_integration_enabled && _t3f_steam_stats_ready)
+    {
+      _t3f_steam_stats_ready = false;
+      for(i = 0; i < achievements_list->entries; i++)
+      {
+        if(achievements_list->entry[i].step >= achievements_list->entry[i].steps)
+        {
+          SteamAPI_ISteamUserStats_SetAchievement(SteamUserStats(), achievements_list->entry[i].steam_id);
+        }
+      }
+      SteamAPI_ISteamUserStats_StoreStats(SteamUserStats());
+      return true;
+    }
+  #endif
+  return false;
+}
+
 const char * t3f_get_steam_user_display_name(void)
 {
   #ifndef T3F_DISABLE_STEAM_INTEGRATION
@@ -51,4 +111,14 @@ const char * t3f_get_steam_user_display_name(void)
     }
   #endif
   return NULL;
+}
+
+void t3f_steam_logic(void)
+{
+  #ifndef T3F_DISABLE_STEAM_INTEGRATION
+    if(_t3f_steam_integration_enabled)
+    {
+      SteamAPI_ISteamNetworkingSockets_RunCallbacks(SteamNetworkingSockets());
+    }
+  #endif
 }
