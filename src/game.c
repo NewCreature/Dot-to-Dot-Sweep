@@ -1045,6 +1045,10 @@ void dot_game_logic(void * data)
 				app->game.bg_color_fade = 0.0;
 				app->game.combo = 0;
 				app->game.shield.active = false;
+				if(app->game.level >= 10)
+				{
+					t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_SEE_IT_THROUGH, 1);
+				}
 			}
 			break;
 		}
