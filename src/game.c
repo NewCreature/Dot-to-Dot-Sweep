@@ -1000,6 +1000,7 @@ void dot_game_logic(void * data)
 			/* move on to next level */
 			if(colored == 0)
 			{
+				t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT, 1);
 				if(app->game.combo >= 10)
 				{
 					app->game.emo_tick = 60;
