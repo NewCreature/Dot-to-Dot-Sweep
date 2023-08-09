@@ -1,11 +1,11 @@
 v1.3
 ----
 
-[ ]Make score upload more robust.
+[X]Make score upload more robust.
 
-   [ ]Retry score uploads later if score upload failed.
+   [X]Retry score uploads later if score upload failed.
 
-   [ ]Only upload score if it is better than previously uploaded score.
+   [X]Only upload score if it is better than previously uploaded score.
 
 [X]Add achievements.
 
