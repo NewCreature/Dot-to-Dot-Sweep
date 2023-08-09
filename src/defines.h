@@ -74,4 +74,13 @@
 #define DOT_MUSIC_TITLE "data/music/verge_of_happiness_remix.xm"
 #define DOT_MUSIC_BGM   "data/music/going_for_it.xm"
 
+#define DOT_ACHIEVEMENT_LEVEL_COMPLETED 0
+#define DOT_ACHIEVEMENT_FULL_COMBO      1
+#define DOT_ACHIEVEMENT_BOB_AND_WEAVE   2
+#define DOT_ACHIEVEMENT_GETTING_GOOD    3
+#define DOT_ACHIEVEMENT_OOPS            4
+#define DOT_ACHIEVEMENT_SEE_IT_THROUGH  5
+#define DOT_ACHIEVEMENT_SO_CLOSE        6
+#define DOT_ACHIEVEMENT_GOOD_GAME       7
+
 #endif

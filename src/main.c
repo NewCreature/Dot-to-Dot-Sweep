@@ -1010,35 +1010,35 @@ bool dot_initialize_achievements(APP_INSTANCE * app)
 	{
 		goto fail;
 	}
-	if(!t3f_set_achievement_details(app->achievements, 0, "LEVEL_COMPLETED", "Full Combo", "Complete a level without breaking your combo.", 1, false))
+	if(!t3f_set_achievement_details(app->achievements, DOT_ACHIEVEMENT_LEVEL_COMPLETED, "LEVEL_COMPLETED", "Full Combo", "Complete a level without breaking your combo.", 1, false))
 	{
 		goto fail;
 	}
-	if(!t3f_set_achievement_details(app->achievements, 1, "FULL_COMBO", "Getting Into It", "Complete a level by clearing the board of all colored dots.", 1, false))
+	if(!t3f_set_achievement_details(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO, "FULL_COMBO", "Getting Into It", "Complete a level by clearing the board of all colored dots.", 1, false))
 	{
 		goto fail;
 	}
-	if(!t3f_set_achievement_details(app->achievements, 2, "BOB_AND_WEAVE", "Bob and Weave", "Survive for one minute without touching any dots.", 1, false))
+	if(!t3f_set_achievement_details(app->achievements, DOT_ACHIEVEMENT_BOB_AND_WEAVE, "BOB_AND_WEAVE", "Bob and Weave", "Survive for one minute without touching any dots.", 1, false))
 	{
 		goto fail;
 	}
-	if(!t3f_set_achievement_details(app->achievements, 3, "GETTING_GOOD", "Getting Good", "Complete a level without losing a life.", 1, false))
+	if(!t3f_set_achievement_details(app->achievements, DOT_ACHIEVEMENT_GETTING_GOOD, "GETTING_GOOD", "Getting Good", "Complete a level without losing a life.", 1, false))
 	{
 		goto fail;
 	}
-	if(!t3f_set_achievement_details(app->achievements, 4, "OOPS", "Oops!", "Die within one second of starting a life.", 1, false))
+	if(!t3f_set_achievement_details(app->achievements, DOT_ACHIEVEMENT_OOPS, "OOPS", "Oops!", "Die within one second of starting a life.", 1, false))
 	{
 		goto fail;
 	}
-	if(!t3f_set_achievement_details(app->achievements, 5, "SEE_IT_THROUGH", "See It Through", "Complete the first loop by beating level 10.", 1, false))
+	if(!t3f_set_achievement_details(app->achievements, DOT_ACHIEVEMENT_SEE_IT_THROUGH, "SEE_IT_THROUGH", "See It Through", "Complete the first loop by beating level 10.", 1, false))
 	{
 		goto fail;
 	}
-	if(!t3f_set_achievement_details(app->achievements, 6, "SO_CLOSE", "So Close!", "Die with only one colored dot remaining.", 1, false))
+	if(!t3f_set_achievement_details(app->achievements, DOT_ACHIEVEMENT_SO_CLOSE, "SO_CLOSE", "So Close!", "Die with only one colored dot remaining.", 1, false))
 	{
 		goto fail;
 	}
-	if(!t3f_set_achievement_details(app->achievements, 7, "GOOD_GAME", "Good Game", "Score 100,000 points.", 1, false))
+	if(!t3f_set_achievement_details(app->achievements, DOT_ACHIEVEMENT_GOOD_GAME, "GOOD_GAME", "Good Game", "Score 100,000 points.", 1, false))
 	{
 		goto fail;
 	}
