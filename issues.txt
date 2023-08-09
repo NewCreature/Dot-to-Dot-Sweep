@@ -7,9 +7,9 @@ v1.3
 
    [ ]Only upload score if it is better than previously uploaded score.
 
-[ ]Add achievements.
+[X]Add achievements.
 
-   [ ]We'll track achievements internally but not have in-game visibility to
+   [X]We'll track achievements internally but not have in-game visibility to
       them. We want the achievements to update even if the game is not running
       under Steam. The Steam side will be updated on launch and as achievements
       are unlocked while running through Steam.
