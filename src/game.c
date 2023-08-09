@@ -120,6 +120,7 @@ void dot_game_setup_level(void * data, int level)
 	app->game.player.ball.r = 16.0;
 	dot_game_target_balls(data, app->game.player.ball.type);
 	app->game.a_combo_broken = false;
+	app->game.a_start_lives = app->game.lives;
 
 	app->game.level = level;
 	app->game.speed = DOT_GAME_LEVEL_BASE_SPEED;
@@ -154,11 +155,11 @@ void dot_game_initialize(void * data, bool demo_seed)
 	{
 			t3f_srand(&app->rng_state, time(0));
 	}
-	dot_game_setup_level(data, app->game.start_level);
 	app->game.score = 0;
 	app->game.combo = 0;
 	app->game.lives = app->game.start_lives;
 	app->game.shield.active = false;
+	dot_game_setup_level(data, app->game.start_level);
 	app->game.old_bg_color = app->level_color[0];
 	app->game.bg_color_fade = 0.0;
 	if(app->music_enabled)
@@ -1008,6 +1009,10 @@ void dot_game_logic(void * data)
 				if(!app->game.a_combo_broken)
 				{
 					t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO, 1);
+				}
+				if(app->game.a_start_lives == app->game.lives)
+				{
+					t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GETTING_GOOD, 1);
 				}
 				if(app->game.combo >= 10)
 				{
