@@ -46,6 +46,7 @@ void dot_game_drop_player(void * data, int type)
 	/* initialize game state */
 	app->game.state = DOT_GAME_STATE_START;
 	app->game.state_tick = 0;
+	app->game.a_bob_and_weave_ticks = 0;
 
 	/* clear the area where the player is so we don't get cheap deaths */
 	for(i = 0; i < app->game.ball_count; i++)
@@ -481,6 +482,7 @@ void dot_game_check_player_collisions(void * data)
 		{
 			if(balls_collide(&app->game.ball[i], &app->game.player.ball))
 			{
+				app->game.a_bob_and_weave_ticks = 0;
 				/* hitting the same color gives you points and increases your combo */
 				if(app->game.ball[i].type == app->game.player.ball.type)
 				{
@@ -1035,6 +1037,11 @@ void dot_game_logic(void * data)
 		}
 	}
 	app->controller.current_joy_disconnected = false;
+	app->game.a_bob_and_weave_ticks++;
+	if(app->game.a_bob_and_weave_ticks >= 300)
+	{
+		t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_BOB_AND_WEAVE, 1);
+	}
 	app->game.tick++;
 }
 
