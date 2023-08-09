@@ -34,6 +34,19 @@ void dot_upload_current_high_score(void * data)
     }    
 }
 
+int dot_get_leaderboard_spot(T3NET_LEADERBOARD * lp, const char * name, unsigned long score)
+{
+	int i;
+
+	for(i = 0; i < lp->entries; i++)
+	{
+		if(!strcmp(lp->entry[i]-> name, name) && lp->entry[i]->score == score)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
 
 void dot_leaderboard_logic(void * data)
 {

@@ -171,20 +171,6 @@ void dot_game_initialize(void * data, bool demo_seed)
 	app->state = DOT_STATE_GAME;
 }
 
-int dot_get_leaderboard_spot(T3NET_LEADERBOARD * lp, const char * name, unsigned long score)
-{
-	int i;
-
-	for(i = 0; i < lp->entries; i++)
-	{
-		if(!strcmp(lp->entry[i]-> name, name) && lp->entry[i]->score == score)
-		{
-			return i;
-		}
-	}
-	return -1;
-}
-
 /* finish the game */
 void dot_game_exit(void * data)
 {

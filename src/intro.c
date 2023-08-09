@@ -5,6 +5,7 @@
 #include "text.h"
 #include "color.h"
 #include "intro.h"
+#include "leaderboard.h"
 
 static void select_first_element(APP_INSTANCE * app)
 {
@@ -45,14 +46,26 @@ int dot_menu_proc_play(void * data, int i, void * pp)
 int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	const char * val;
 
 	al_stop_timer(t3f_timer);
+	val = al_get_config_value(t3f_user_data, "Game Data", "Score Uploaded");
+	if(val && !strcmp(val, "false"))
+	{
+		dot_show_message(data, "Uploading current high score...");
+		dot_upload_current_high_score(data);
+	}
 	dot_show_message(data, "Downloading leaderboard...");
 	app->leaderboard = t3net_get_leaderboard(app->leaderboard_retrieve_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", 10, 0);
 	if(app->leaderboard)
 	{
 		remember_element(app);
 		app->leaderboard_spot = -1;
+		val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
+		if(val)
+		{
+			app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, dot_leaderboard_obfuscate_score(atoi(val)));
+		}
 		app->state = DOT_STATE_LEADERBOARD;
 		app->current_menu = DOT_MENU_LEADERBOARD;
 	}
