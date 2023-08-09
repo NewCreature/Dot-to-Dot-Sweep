@@ -118,6 +118,7 @@ void dot_game_setup_level(void * data, int level)
 	t3f_play_sample(app->sample[DOT_SAMPLE_START], 1.0, 0.0, 1.0);
 	app->game.player.ball.r = 16.0;
 	dot_game_target_balls(data, app->game.player.ball.type);
+	app->game.a_combo_broken = false;
 
 	app->game.level = level;
 	app->game.speed = DOT_GAME_LEVEL_BASE_SPEED;
@@ -522,6 +523,7 @@ void dot_game_check_player_collisions(void * data)
 					}
 					app->game.emo_tick = 60;
 					app->game.emo_state = DOT_GAME_EMO_STATE_DEAD;
+					app->game.a_combo_broken = true;
 
 					/* change ball color to match the ball that is hit unless it is black */
 					if(app->game.ball[i].type != DOT_BITMAP_BALL_BLACK)
@@ -1001,6 +1003,10 @@ void dot_game_logic(void * data)
 			if(colored == 0)
 			{
 				t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT, 1);
+				if(!app->game.a_combo_broken)
+				{
+					t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO, 1);
+				}
 				if(app->game.combo >= 10)
 				{
 					app->game.emo_tick = 60;

@@ -111,6 +111,7 @@ typedef struct
 	bool level_start;
 	int emo_state;
 	int emo_tick;
+	bool a_combo_broken;
 
 	DOT_BALL ball[DOT_GAME_MAX_BALLS];
 	int ball_count;
