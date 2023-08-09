@@ -75,7 +75,7 @@ bool t3f_set_achievement_details(T3F_ACHIEVEMENTS_LIST * achievements_list, int 
   }
   strcpy(achievements_list->entry[entry].name, name);
   achievements_list->entry[entry].description = malloc(strlen(description) + 1);
-  if(achievements_list->entry[entry].description)
+  if(!achievements_list->entry[entry].description)
   {
     return false;
   }
