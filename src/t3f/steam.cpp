@@ -30,7 +30,7 @@ void _t3f_steam_stats_class::OnUserStatsStored(UserStatsStored_t * callback)
 
 bool t3f_init_steam_integration(void)
 {
-  #ifndef T3F_DISABLE_STEAM_INTEGRATION
+  #ifdef T3F_ENABLE_STEAM_INTEGRATION
     if(!SteamAPI_Init())
     {
       goto fail;
@@ -56,7 +56,7 @@ bool t3f_init_steam_integration(void)
 
 void t3f_shutdown_steam_integration(void)
 {
-  #ifndef T3F_DISABLE_STEAM_INTEGRATION
+  #ifdef T3F_ENABLE_STEAM_INTEGRATION
     if(_t3f_steam_integration_enabled)
     {
       if(_t3f_steam_stats)
@@ -71,7 +71,7 @@ void t3f_shutdown_steam_integration(void)
 
 bool t3f_show_steam_text_input(int x, int y, int width, int height)
 {
-  #ifndef T3F_DISABLE_STEAM_INTEGRATION
+  #ifdef T3F_ENABLE_STEAM_INTEGRATION
     if(_t3f_steam_integration_enabled)
     {
       SteamAPI_ISteamUtils_ShowFloatingGamepadTextInput(SteamUtils(), k_EFloatingGamepadTextInputModeModeSingleLine, x, y, width, height);
@@ -82,7 +82,7 @@ bool t3f_show_steam_text_input(int x, int y, int width, int height)
 
 bool t3f_synchronize_achievements_with_steam(T3F_ACHIEVEMENTS_LIST * achievements_list)
 {
-  #ifndef T3F_DISABLE_STEAM_INTEGRATION
+  #ifdef T3F_ENABLE_STEAM_INTEGRATION
     int i;
 
     if(_t3f_steam_integration_enabled && _t3f_steam_stats_ready)
@@ -104,7 +104,7 @@ bool t3f_synchronize_achievements_with_steam(T3F_ACHIEVEMENTS_LIST * achievement
 
 const char * t3f_get_steam_user_display_name(void)
 {
-  #ifndef T3F_DISABLE_STEAM_INTEGRATION
+  #ifdef T3F_ENABLE_STEAM_INTEGRATION
     if(_t3f_steam_integration_enabled)
     {
       return SteamAPI_ISteamFriends_GetPersonaName(SteamFriends());
@@ -115,7 +115,7 @@ const char * t3f_get_steam_user_display_name(void)
 
 void t3f_steam_logic(void)
 {
-  #ifndef T3F_DISABLE_STEAM_INTEGRATION
+  #ifdef T3F_ENABLE_STEAM_INTEGRATION
     if(_t3f_steam_integration_enabled)
     {
       SteamAPI_ISteamNetworkingSockets_RunCallbacks(SteamNetworkingSockets());

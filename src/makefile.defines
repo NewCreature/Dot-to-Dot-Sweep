@@ -29,7 +29,7 @@ app_clean:
 ##################
 # Mac OS X stuff #
 ##################
-#MACOS_CFLAGS =
+MACOS_CFLAGS = -DT3F_ENABLE_STEAM_INTEGRATION
 MACOS_CXXFLAGS = -std=c++11
 #MACOS_PLATFORM_OBJECTS =
 #MACOS_PLATFORM_LIBS =
@@ -39,10 +39,10 @@ MACOS_DEPEND_LIBS = ../macos/blobs/libsteam_api.dylib -lc++
 ###############
 # Linux stuff #
 ###############
-#LINUX_CFLAGS =
+LINUX_CFLAGS = -DT3F_ENABLE_STEAM_INTEGRATION
 #LINUX_PLATFORM_OBJECTS =
 #LINUX_PLATFORM_LIBS =
-LINUX_DEPEND_LIBS = ../linux/blobs/`uname -m`/libsteam_api.so
+LINUX_DEPEND_LIBS = ../linux/blobs/`uname -m`/libsteam_api.so -lstdc++
 #LINUX_PLATFORM_TARGET =
 
 ################################################
@@ -73,7 +73,7 @@ MINGW_PLATFORM_LIBS = -lcurl -lwldap32
 ##############
 # MSYS stuff #
 ##############
-MSYS_CFLAGS = -DCURL_STATICLIB
+MSYS_CFLAGS = -DT3F_ENABLE_STEAM_INTEGRATION
 #MSYS_PLATFORM_OBJECTS =
 MSYS_PLATFORM_LIBS = -lcurl ../win32/libraries/steam_api.lib
 #MSYS_PLATFORM_TARGET =
