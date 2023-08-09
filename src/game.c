@@ -483,7 +483,6 @@ void dot_game_check_player_collisions(void * data)
 		{
 			if(balls_collide(&app->game.ball[i], &app->game.player.ball))
 			{
-				app->game.a_bob_and_weave_ticks = 0;
 				/* hitting the same color gives you points and increases your combo */
 				if(app->game.ball[i].type == app->game.player.ball.type)
 				{
@@ -511,6 +510,11 @@ void dot_game_check_player_collisions(void * data)
 				/* hitting other color kills you */
 				else
 				{
+					printf("%d\n", app->game.a_bob_and_weave_ticks);
+					if(app->game.a_bob_and_weave_ticks <= 60)
+					{
+						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_OOPS, 1);
+					}
 					if(app->touch_id >= 0)
 					{
 						t3f_touch[app->touch_id].active = false;
@@ -557,6 +561,7 @@ void dot_game_check_player_collisions(void * data)
 					al_show_mouse_cursor(t3f_display);
 					break;
 				}
+				app->game.a_bob_and_weave_ticks = 0;
 			}
 		}
 	}
