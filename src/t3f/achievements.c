@@ -15,6 +15,7 @@ T3F_ACHIEVEMENTS_LIST * t3f_create_achievements_list(int entries)
   {
     goto fail;
   }
+  achievements_list->entries = entries;
 
   return achievements_list;
 
