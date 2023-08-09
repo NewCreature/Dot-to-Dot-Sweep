@@ -191,26 +191,47 @@ void dot_game_exit(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	char buf[256] = {0};
+	const char * val;
+	const char * val2;
+	bool upload = false;
 
+	/* determine if we need to upload */
+	val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
+	if(!val || atoi(val) < app->game.score)
+	{
+		al_set_config_value(t3f_user_data, "Game Data", "Score Uploaded", "false");
+		upload = true;
+	}
+	val = al_get_config_value(t3f_user_data, "Game Data", "Score Uploaded");
+	if(val && !strcmp(val, false))
+	{
+		upload = true;
+	}
+	
 	/* save high score */
-	sprintf(buf, "%d", app->game.high_score);
-	al_set_config_value(t3f_user_data, "Game Data", "High Score", buf);
-	t3f_save_user_data();
+	if(app->game.score > app->game.high_score)
+	{
+		sprintf(buf, "%d", app->game.high_score);
+		al_set_config_value(t3f_user_data, "Game Data", "High Score", buf);
+		sprintf(buf, "%d", app->game.level + 1);
+		al_set_config_value(t3f_user_data, "Game Data", "High Score Level", buf);
+		t3f_save_user_data();
+	}
 
 	/* upload score */
 	if(app->upload_scores && !app->demo_file && !app->game.cheats_enabled)
 	{
-		sprintf(buf, "%d", app->game.level + 1);
-		al_stop_timer(t3f_timer);
-		dot_show_message(data, "Uploading score...");
-		if(t3net_upload_score(app->leaderboard_submit_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_key, dot_leaderboard_obfuscate_score(app->game.score), buf))
+		if(upload)
 		{
-			dot_show_message(data, "Downloading leaderboard...");
-			app->leaderboard = t3net_get_leaderboard(app->leaderboard_retrieve_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", 10, 0);
-			if(app->leaderboard)
-			{
-				app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, dot_leaderboard_obfuscate_score(app->game.score));
-			}
+			al_stop_timer(t3f_timer);
+			dot_show_message(data, "Uploading score...");
+			dot_upload_current_high_score(app);
+		}
+		dot_show_message(data, "Downloading leaderboard...");
+		app->leaderboard = t3net_get_leaderboard(app->leaderboard_retrieve_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", 10, 0);
+		if(app->leaderboard)
+		{
+			app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, dot_leaderboard_obfuscate_score(app->game.score));
 		}
 		al_resume_timer(t3f_timer);
 	}

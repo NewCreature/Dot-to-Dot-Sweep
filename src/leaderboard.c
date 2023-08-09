@@ -14,6 +14,27 @@ unsigned long dot_leaderboard_unobfuscate_score(unsigned long score)
   return (score - 's' - 'd' - '2') / 'd';
 }
 
+void dot_upload_current_high_score(void * data)
+{
+    APP_INSTANCE * app = (APP_INSTANCE *)data;
+	const char * val;
+	const char * val2;
+
+    val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
+    if(val)
+    {
+        val2 = al_get_config_value(t3f_user_data, "Game Data", "High Score Level");
+        if(val2)
+        {
+            if(t3net_upload_score(app->leaderboard_submit_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_key, dot_leaderboard_obfuscate_score(atoi(val)), val2))
+            {
+                al_remove_config_key(t3f_user_data, "Game Data", "Score Uploaded");
+            }
+        }
+    }    
+}
+
+
 void dot_leaderboard_logic(void * data)
 {
     APP_INSTANCE * app = (APP_INSTANCE *)data;
