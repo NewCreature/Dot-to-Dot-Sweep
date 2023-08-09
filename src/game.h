@@ -114,6 +114,7 @@ typedef struct
 	bool a_combo_broken;
 	int a_bob_and_weave_ticks;
 	int a_start_lives;
+	int a_oops_ticks;
 
 	DOT_BALL ball[DOT_GAME_MAX_BALLS];
 	int ball_count;

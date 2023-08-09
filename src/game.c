@@ -46,7 +46,6 @@ void dot_game_drop_player(void * data, int type)
 	/* initialize game state */
 	app->game.state = DOT_GAME_STATE_START;
 	app->game.state_tick = 0;
-	app->game.a_bob_and_weave_ticks = 0;
 
 	/* clear the area where the player is so we don't get cheap deaths */
 	for(i = 0; i < app->game.ball_count; i++)
@@ -510,8 +509,7 @@ void dot_game_check_player_collisions(void * data)
 				/* hitting other color kills you */
 				else
 				{
-					printf("%d\n", app->game.a_bob_and_weave_ticks);
-					if(app->game.a_bob_and_weave_ticks <= 60)
+					if(app->game.a_oops_ticks <= 60)
 					{
 						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_OOPS, 1);
 					}
@@ -868,6 +866,11 @@ void dot_game_logic(void * data)
 				else
 				{
 					app->game.block_click = false;
+				}
+				if(app->game.state == DOT_GAME_STATE_PLAY)
+				{
+					app->game.a_bob_and_weave_ticks = 0;
+					app->game.a_oops_ticks = 0;
 				}
 
 				/* handle ball logic */
