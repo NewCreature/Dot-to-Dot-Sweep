@@ -4,6 +4,7 @@
 #include "t3f/t3f.h"
 #include "t3f/rng.h"
 #include "t3f/gui.h"
+#include "t3f/achievements.h"
 #include "t3net/leaderboard.h"
 #include "defines.h"
 #include "game.h"
@@ -25,6 +26,7 @@ typedef struct
     T3F_ATLAS * atlas;
     bool music_enabled;
     int graphics_size_multiplier;
+    T3F_ACHIEVEMENTS_LIST * achievements;
 
     /* program state */
     int state;

@@ -1003,6 +1003,68 @@ static bool create_particle_lists(APP_INSTANCE * app)
 	}
 }
 
+bool dot_initialize_achievements(APP_INSTANCE * app)
+{
+	app->achievements = t3f_create_achievements_list(8);
+	if(!app->achievements)
+	{
+		goto fail;
+	}
+	if(!t3f_set_achievement_details(app->achievements, 0, "LEVEL_COMPLETED", "Full Combo", "Complete a level without breaking your combo.", 1, false))
+	{
+		goto fail;
+	}
+	if(!t3f_set_achievement_details(app->achievements, 1, "FULL_COMBO", "Getting Into It", "Complete a level by clearing the board of all colored dots.", 1, false))
+	{
+		goto fail;
+	}
+	if(!t3f_set_achievement_details(app->achievements, 2, "BOB_AND_WEAVE", "Bob and Weave", "Survive for one minute without touching any dots.", 1, false))
+	{
+		goto fail;
+	}
+	if(!t3f_set_achievement_details(app->achievements, 3, "GETTING_GOOD", "Getting Good", "Complete a level without losing a life.", 1, false))
+	{
+		goto fail;
+	}
+	if(!t3f_set_achievement_details(app->achievements, 4, "OOPS", "Oops!", "Die within one second of starting a life.", 1, false))
+	{
+		goto fail;
+	}
+	if(!t3f_set_achievement_details(app->achievements, 5, "SEE_IT_THROUGH", "See It Through", "Complete the first loop by beating level 10.", 1, false))
+	{
+		goto fail;
+	}
+	if(!t3f_set_achievement_details(app->achievements, 6, "SO_CLOSE", "So Close!", "Die with only one colored dot remaining.", 1, false))
+	{
+		goto fail;
+	}
+	if(!t3f_set_achievement_details(app->achievements, 7, "GOOD_GAME", "Good Game", "Score 100,000 points.", 1, false))
+	{
+		goto fail;
+	}
+	t3f_load_achievements_data(app->achievements, t3f_user_data, "Achievements");
+	return true;
+
+	fail:
+	{
+		if(app->achievements)
+		{
+			t3f_destroy_achievements_list(app->achievements);
+			app->achievements = NULL;
+		}
+		return false;
+	}
+}
+
+void dot_deinitialize_achievements(APP_INSTANCE * app)
+{
+	if(app->achievements)
+	{
+		t3f_save_achievements_data(app->achievements, t3f_user_data, "Achievements");
+		t3f_destroy_achievements_list(app->achievements);
+	}
+}
+
 /* initialize our app, load graphics, etc. */
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
@@ -1029,6 +1091,11 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	if(!dot_initialize_input(&app->controller))
 	{
 		printf("Error initializing input system!\n");
+		return false;
+	}
+	if(!dot_initialize_achievements(app))
+	{
+		printf("Error initializing achievements list!\n");
 		return false;
 	}
 	t3f_set_event_handler(dot_event_handler);
@@ -1146,6 +1213,7 @@ void app_exit(APP_INSTANCE * app)
 	{
 		t3net_destroy_leaderboard(app->leaderboard);
 	}
+	dot_deinitialize_achievements(app);
 	dot_destroy_input(&app->controller);
 	t3f_shutdown_steam_integration();
 }
