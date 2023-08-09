@@ -513,6 +513,10 @@ void dot_game_check_player_collisions(void * data)
 					{
 						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_OOPS, 1);
 					}
+					if(app->game.a_colored_balls_remaining <= 1)
+					{
+						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_SO_CLOSE, 1);
+					}
 					if(app->touch_id >= 0)
 					{
 						t3f_touch[app->touch_id].active = false;
@@ -1008,6 +1012,7 @@ void dot_game_logic(void * data)
 			/* handle ball logic */
 			colored = dot_game_move_balls(data);
 
+			app->game.a_colored_balls_remaining = colored;
 			dot_game_check_player_collisions(data);
 
 			/* move on to next level */
