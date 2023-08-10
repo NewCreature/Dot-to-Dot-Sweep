@@ -488,6 +488,7 @@ void dot_intro_logic(void * data)
 			{
 				upload_user_name = true;
 			}
+			app->tried_user_name_upload = true;
 		}
 		/* upload user name if it's been changed */
 		val = al_get_config_value(t3f_user_data, "Game Data", "User Name");
@@ -509,7 +510,6 @@ void dot_intro_logic(void * data)
 			t3f_save_user_data();
 		}
 		al_start_timer(t3f_timer);
-		app->tried_user_name_upload = true;
 	}
 	dot_game_emo_logic(data);
 	dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
