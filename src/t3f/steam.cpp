@@ -128,7 +128,7 @@ const char * t3f_get_steam_user_display_name(void)
   return NULL;
 }
 
-void t3f_steam_logic(void)
+void t3f_steam_integration_logic(void)
 {
   #ifdef T3F_ENABLE_STEAM_INTEGRATION
     const char * val;

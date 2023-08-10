@@ -266,12 +266,12 @@ void app_logic(void * data)
 		}
 		dot_particle_logic(&app->particle[i]);
 	}
-	t3f_steam_logic();
 	if(app->sync_achievements)
 	{
 		t3f_synchronize_achievements_with_steam(app->achievements);
 		app->sync_achievements = false;
 	}
+	t3f_steam_integration_logic();
 }
 
 static void show_joystick_data(void * data)
