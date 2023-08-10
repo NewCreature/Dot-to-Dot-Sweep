@@ -1104,6 +1104,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Error initializing achievements list!\n");
 		return false;
 	}
+	app->sync_achievements = true;
 	t3f_set_event_handler(dot_event_handler);
 	if(!(t3f_flags & T3F_USE_FULLSCREEN))
 	{
