@@ -1,6 +1,19 @@
 v1.3
 ----
 
+[ ]Ensure achievements sync up to Steam.
+
+   [ ]Set flag in user data when it's time to store achievements. Even if Steam
+      integration is off at the moment, the user may launch the game from Steam
+      later. We should check the flag at startup to store any unstored
+      achievements.
+   
+   [ ]Clear the flag when storage is successful.
+
+   [ ]This process should be automated as much as possible. We might handle
+      this in steam_logic() since the user has to call that anyway. We should
+      set up a proper retry interval so as not to overwhelm the network.
+
 [X]Make score upload more robust.
 
    [X]Retry score uploads later if score upload failed.
