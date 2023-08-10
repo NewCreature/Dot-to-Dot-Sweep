@@ -26,6 +26,16 @@ ANDROID_VERSION_TARGET = android-26
 # 'xcode-select -s /Applications/Xcode.app' to select toolchain. This allows  #
 # us to just use 'gcc' and 'g++' like we would on other Unix systems to build #
 # things. 'MacOSX10.13.sdk' is the last SDK we can use to target i386.        #
+#                                                                             #
+# 'mac_sign_bundle' requires you to have set MACOS_CONFIG_CERT_NAME if you    #
+# installed more than one certificate into your keychain. Additionally, your  #
+# certificate must be trusted or the signing process will fail. If you got    #
+# your certificate by following the steps on the Apple Developer portal and   #
+# the certificate is showing as not trusted, this is most likely due to       #
+# missing certificates in the chain of trust. You might need to install extra #
+# intermediate certificates from Apple's Worldwide Developer Relations. See:  #
+# https://www.apple.com/certificateauthority for a list of available certs.   #
+# Certificates should be installed into the System keychain.                  #
 ###############################################################################
 ifndef MACOS_TOOLCHAIN_ROOT
   MACOS_TOOLCHAIN_ROOT = /Library/Developer/CommandLineTools/SDKs
@@ -46,6 +56,7 @@ endif
 MACOS_CONFIG_PKG_CONFIG_OPTIONS = --libs --static
 MACOS_CONFIG_ALLEGRO_SUFFIX = -static
 MACOS_CONFIG_DEPEND_LIBS = -lsharpyuv
+MACOS_CONFIG_CERT_NAME = Developer ID Application: T CUBED SOFTWARE LLC (GNF5BCX36T)
 
 ###################
 # iPhone Settings #
