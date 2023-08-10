@@ -115,3 +115,12 @@ steam_binary_package:
 
 mac_sign_bundle:
 	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts mac_sign_bundle
+
+mac_notarize_bundle:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts mac_notarize_bundle
+
+mac_sign_and_notarize_bundle:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts mac_sign_and_notarize_bundle
+
+mac_sign_package:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts mac_sign_package
