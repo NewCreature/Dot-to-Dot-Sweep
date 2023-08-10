@@ -499,7 +499,6 @@ void dot_intro_logic(void * data)
 	}
 	if(upload_user_name)
 	{
-		printf("upload\n");
 		al_set_config_value(t3f_user_data, "Game Data", "User Name Uploaded", "false");
 		al_set_config_value(t3f_user_data, "Game Data", "User Name", app->user_name);
 		t3f_save_user_data();
