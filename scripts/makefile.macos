@@ -88,13 +88,26 @@ mac_bundle : ../icons/macos_icon.icns ../macos/Info.plist
 	@rm $(APP_PACKAGE_DIR)/$(APP_TITLE).app/Contents/MacOS/binaries.here
 	@echo Application bundle created!
 
+mac_i386:
+	make MACOS_ARCHITECTURES="-arch i386" MACOS_SDK=MacOSX10.13.sdk MACOS_CXX_STDLIB=stdc++ MACOS_MIN_VERSION=-mmacos-version-min=10.6
+	vtool -set-build-version macos 10.6 10.13 ../bin/$(APP_EXE_NAME)$(APP_EXE_SUFFIX) -o ../bin/$(APP_EXE_NAME)$(APP_EXE_SUFFIX)-i386
+	rm ../bin/$(APP_EXE_NAME)$(APP_EXE_SUFFIX)
+
+mac_x86_64:
+	make MACOS_ARCHITECTURES="-arch x86_64" MACOS_SDK=MacOSX10.13.sdk MACOS_CXX_STDLIB=stdc++ MACOS_MIN_VERSION=-mmacos-version-min=10.6
+	vtool -set-build-version macos 10.6 10.13 ../bin/$(APP_EXE_NAME)$(APP_EXE_SUFFIX) -o ../bin/$(APP_EXE_NAME)$(APP_EXE_SUFFIX)-x86_64
+	rm ../bin/$(APP_EXE_NAME)$(APP_EXE_SUFFIX)
+
+mac_arm64:
+	make MACOS_ARCHITECTURES="-arch arm64" APP_EXE_SUFFIX=-arm64 MACOS_SDK=MacOSX.sdk MACOS_MIN_VERSION=-mmacos-version-min=11.0
+
 mac_universal_bundle:
 	make clean
-	make MACOS_ARCHITECTURES="-arch i386" APP_EXE_SUFFIX=-i386 MACOS_SDK=MacOSX10.13.sdk MACOS_CXX_STDLIB=stdc++ MACOS_MIN_VERSION=-mmacos-version-min=10.6
+	make mac_i386
 	make clean
-	make MACOS_ARCHITECTURES="-arch x86_64" APP_EXE_SUFFIX=-x86_64 MACOS_SDK=MacOSX10.13.sdk MACOS_CXX_STDLIB=stdc++ MACOS_MIN_VERSION=-mmacos-version-min=10.6
+	make mac_x86_64
 	make clean
-	make MACOS_ARCHITECTURES="-arch arm64" APP_EXE_SUFFIX=-arm64 MACOS_SDK=MacOSX.sdk MACOS_MIN_VERSION=-mmacos-version-min=11.0
+	make mac_arm64
 	lipo -create $(APP_EXE_NAME)-i386 $(APP_EXE_NAME)-x86_64 $(APP_EXE_NAME)-arm64 -output $(APP_EXE_NAME)
 	rm $(APP_EXE_NAME)-i386 $(APP_EXE_NAME)-x86_64 $(APP_EXE_NAME)-arm64
 	make mac_bundle
@@ -122,3 +135,6 @@ mac_sign_and_notarize_bundle: mac_sign_bundle mac_notarize_bundle
 
 mac_sign_package: $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-macos.dmg
 	codesign -s "$(MACOS_CONFIG_CERT_NAME)" --timestamp -i "$(APP_ANDROID_PACKAGE)" $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-macos.dmg
+
+mac_steam_package:
+	ditto -c -k --keepParent $(APP_PACKAGE_DIR)/$(APP_TITLE).app $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-macos-steam.zip

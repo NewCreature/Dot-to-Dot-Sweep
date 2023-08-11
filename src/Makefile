@@ -124,3 +124,15 @@ mac_sign_and_notarize_bundle:
 
 mac_sign_package:
 	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts mac_sign_package
+
+mac_steam_package:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts mac_steam_package
+
+mac_i386:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts mac_i386
+
+mac_x86_64:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts mac_x86_64
+
+mac_arm64:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts mac_arm64
