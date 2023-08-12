@@ -62,15 +62,20 @@ v1.3
 
    [X]Set up store page.
 
-   [ ]Upload notarized MacOS app bundle.
+   [X]Upload notarized MacOS app bundle.
 
-   [ ]Upload Linux executable.
+   [X]Upload Linux executable.
 
    [ ]Upload Windows executable.
 
    [ ]Get ready for Steam Deck verification.
 
       [ ]Make community post about intentions to be optimized for Steam Deck.
+   
+   [ ]Investigate executable update issue.
+
+      [ ]When uploading new Linux executable, the new version is not detected
+         as different than the existing one and won't trigger update.
 
 [X]Finish XBox controller implementation.
 
