@@ -1,6 +1,8 @@
 v1.3
 ----
 
+[ ]Achievements don't appear to be triggering properly.
+
 [X]Ensure achievements sync up to Steam.
 
    [X]Set flag in user data when it's time to store achievements. Even if Steam
