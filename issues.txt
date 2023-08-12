@@ -1,6 +1,20 @@
 v1.3
 ----
 
+[ ]Investigate MacOS launch issues. When launching the initial MacOS Steam
+   build, the music would play but there was no window. I believe this had to
+   do with the Info.plist incorrectly disabling high resolution support. Since
+   the game was being launched previously with high resolution support, the
+   window size might have been too large, causing it to fail to be created.
+   When high resolution support is disabled, the actual window dimensions are
+   automatically doubled.
+
+   To test this, we should launch the game from a bundle with high resolution
+   support enabled and close it. Create a new bundle with high resolution
+   support disabled and launch again. This should simulate the situation I
+   believe caused the launch issue. If the results check out, this issue can be
+   considered complete since we already fixed the Info.plist setting.
+
 [ ]Achievements don't appear to be triggering properly.
 
 [X]Ensure achievements sync up to Steam.
