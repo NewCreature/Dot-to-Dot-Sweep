@@ -987,7 +987,7 @@ void t3f_set_event_handler(void (*proc)(ALLEGRO_EVENT * event, void * data))
 bool t3f_save_config(void)
 {
 	const ALLEGRO_FILE_INTERFACE * old_interface;
-	bool ret;
+	bool ret = false;
 
 	if(t3f_config)
 	{
@@ -1003,7 +1003,7 @@ bool t3f_save_config(void)
 bool t3f_save_user_data(void)
 {
 	const ALLEGRO_FILE_INTERFACE * old_interface;
-	bool ret;
+	bool ret = false;
 
 	if(t3f_user_data)
 	{
