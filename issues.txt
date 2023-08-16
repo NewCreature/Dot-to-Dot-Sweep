@@ -1,7 +1,9 @@
 v1.3
 ----
 
-[ ]Investigate MacOS launch issues. When launching the initial MacOS Steam
+[ ]Investigate crash at game complete.
+
+[X]Investigate MacOS launch issues. When launching the initial MacOS Steam
    build, the music would play but there was no window. I believe this had to
    do with the Info.plist incorrectly disabling high resolution support. Since
    the game was being launched previously with high resolution support, the
@@ -15,7 +17,7 @@ v1.3
    believe caused the launch issue. If the results check out, this issue can be
    considered complete since we already fixed the Info.plist setting.
 
-[ ]Achievements don't appear to be triggering properly.
+[X]Achievements don't appear to be triggering properly.
 
 [X]Ensure achievements sync up to Steam.
 
