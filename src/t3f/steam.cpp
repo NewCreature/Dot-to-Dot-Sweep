@@ -1,4 +1,4 @@
-#include "t3f/t3f.h"
+#include "t3f.h"
 #include "steam/steam_api_flat.h"
 
 #define T3F_STEAM_STORE_STATE_NONE        0
@@ -8,39 +8,10 @@
 
 #define T3F_STEAM_STATS_STORE_INTERVAL 10.0
 
-class _t3f_steam_stats_class
-{
-  private:
-	  STEAM_CALLBACK(_t3f_steam_stats_class, OnUserStatsReceived, UserStatsReceived_t);
-	  STEAM_CALLBACK(_t3f_steam_stats_class, OnUserStatsStored, UserStatsStored_t);
-};
-
 static bool _t3f_steam_integration_enabled = false;
 static bool _t3f_steam_stats_ready = false;
 static bool _t3f_steam_stats_store_state = T3F_STEAM_STORE_STATE_NONE;
-static _t3f_steam_stats_class * _t3f_steam_stats = NULL;
 static double _t3f_steam_store_time = 0.0;
-
-void _t3f_steam_stats_class::OnUserStatsReceived(UserStatsReceived_t * callback)
-{
-	if(callback->m_eResult == k_EResultOK)
-  {
-    _t3f_steam_stats_ready = true;
-  }
-}
-
-void _t3f_steam_stats_class::OnUserStatsStored(UserStatsStored_t * callback)
-{
-	if(callback->m_eResult == k_EResultOK)
-  {
-    _t3f_steam_stats_store_state = T3F_STEAM_STORE_STATE_DONE;
-    al_remove_config_key(t3f_user_data, "Achievements", "Stored");
-  }
-  else
-  {
-    _t3f_steam_stats_store_state = T3F_STEAM_STORE_STATE_ERROR;
-  }
-}
 
 bool t3f_init_steam_integration(void)
 {
@@ -49,12 +20,8 @@ bool t3f_init_steam_integration(void)
     {
       goto fail;
     }
+    SteamAPI_ManualDispatch_Init();
     _t3f_steam_integration_enabled = true;
-    _t3f_steam_stats = new _t3f_steam_stats_class;
-    if(_t3f_steam_stats == NULL)
-    {
-      goto fail;
-    }
     SteamAPI_ISteamUserStats_RequestCurrentStats(SteamUserStats());
     return true;
 
@@ -73,10 +40,6 @@ void t3f_shutdown_steam_integration(void)
   #ifdef T3F_ENABLE_STEAM_INTEGRATION
     if(_t3f_steam_integration_enabled)
     {
-      if(_t3f_steam_stats)
-      {
-        delete _t3f_steam_stats;
-      }
       SteamAPI_Shutdown();
       _t3f_steam_integration_enabled = false;
     }
@@ -128,6 +91,44 @@ const char * t3f_get_steam_user_display_name(void)
   return NULL;
 }
 
+static void _t3f_run_steam_callbacks(void)
+{
+  HSteamPipe hSteamPipe = SteamAPI_GetHSteamPipe();
+	SteamAPI_ManualDispatch_RunFrame(hSteamPipe);
+	CallbackMsg_t callback;
+	while(SteamAPI_ManualDispatch_GetNextCallback(hSteamPipe, &callback))
+	{
+		// Check for dispatching API call results
+		if(callback.m_iCallback == SteamAPICallCompleted_t::k_iCallback)
+		{
+			SteamAPICallCompleted_t *pCallCompleted = (SteamAPICallCompleted_t *)&callback;
+			void * pTmpCallResult = malloc(pCallCompleted->m_cubParam);
+			bool bFailed;
+			if ( SteamAPI_ManualDispatch_GetAPICallResult( hSteamPipe, pCallCompleted->m_hAsyncCall, pTmpCallResult, pCallCompleted->m_cubParam, pCallCompleted->m_iCallback, &bFailed ) )
+			{
+				// Dispatch the call result to the registered handler(s) for the
+				// call identified by pCallCompleted->m_hAsyncCall
+			}
+			free(pTmpCallResult);
+		}
+		else
+		{
+			// Look at callback.m_iCallback to see what kind of callback it is,
+			// and dispatch to appropriate handler(s)
+      if(callback.m_iCallback == UserStatsReceived_t::k_iCallback)
+      {
+        _t3f_steam_stats_ready = true;
+      }
+      else if(callback.m_iCallback == UserStatsStored_t::k_iCallback)
+      {
+        _t3f_steam_stats_store_state = T3F_STEAM_STORE_STATE_DONE;
+      }
+		}
+		SteamAPI_ManualDispatch_FreeLastCallback( hSteamPipe );
+	}
+}
+
+
 void t3f_steam_integration_logic(void)
 {
   #ifdef T3F_ENABLE_STEAM_INTEGRATION
@@ -135,7 +136,7 @@ void t3f_steam_integration_logic(void)
 
     if(_t3f_steam_integration_enabled)
     {
-      SteamAPI_ISteamNetworkingSockets_RunCallbacks(SteamNetworkingSockets());
+      _t3f_run_steam_callbacks();
 
       /* attempt to store current achievements if it is needed and store isn't currently processing */
       if(_t3f_steam_stats_store_state != T3F_STEAM_STORE_STATE_IN_PROGRESS)
