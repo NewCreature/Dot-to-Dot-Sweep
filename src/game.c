@@ -178,7 +178,6 @@ void dot_game_exit(void * data)
 
 	char buf[256] = {0};
 	const char * val;
-	const char * val2;
 	bool upload = false;
 
 	/* determine if we need to upload */
@@ -189,7 +188,7 @@ void dot_game_exit(void * data)
 		upload = true;
 	}
 	val = al_get_config_value(t3f_user_data, "Game Data", "Score Uploaded");
-	if(val && !strcmp(val, false))
+	if(val && !strcmp(val, "false"))
 	{
 		upload = true;
 	}
