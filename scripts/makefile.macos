@@ -123,7 +123,7 @@ mac_sign_bundle: $(APP_PACKAGE_DIR)/$(APP_TITLE).app ../macos/entitlements.plist
 mac_notarize_bundle:
 	ditto -c -k --keepParent $(APP_PACKAGE_DIR)/$(APP_TITLE).app $(APP_PACKAGE_DIR)/$(APP_TITLE).zip
 	xcode-select -p > _xcode_dir.txt
-	xcode-select -s /Applications/Xcode.app
+	xcode-select -s $(MACOS_CONFIG_XCODE_PATH)
 	xcrun notarytool submit $(APP_PACKAGE_DIR)/$(APP_TITLE).zip --apple-id $(MACOS_CONFIG_APPLE_ID) --team-id $(MACOS_CONFIG_APPLE_TEAM_ID) --password $(MACOS_CONFIG_APPLE_ID_PASSWORD) --wait
 	xcrun stapler staple $(APP_PACKAGE_DIR)/$(APP_TITLE).app
 	xcode-select -s `cat _xcode_dir.txt`

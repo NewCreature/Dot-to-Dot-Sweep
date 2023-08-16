@@ -60,6 +60,7 @@ MACOS_CONFIG_DEPEND_LIBS = -lsharpyuv
 #MACOS_CONFIG_APPLE_ID =
 #MACOS_CONFIG_APPLE_ID_PASSWORD =
 #MACOS_CONFIG_APPLE_TEAM_ID =
+MACOS_CONFIG_XCODE_PATH = /Applications/Xcode.app
 
 ###################
 # iPhone Settings #
