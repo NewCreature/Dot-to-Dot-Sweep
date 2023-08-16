@@ -81,6 +81,7 @@ bool t3f_set_achievement_details(T3F_ACHIEVEMENTS_LIST * achievements_list, int 
     return false;
   }
   strcpy(achievements_list->entry[entry].description, description);
+  achievements_list->entry[entry].steps = steps;
   achievements_list->entry[entry].hidden = hidden;
 
   return true;
