@@ -266,10 +266,12 @@ void app_logic(void * data)
 		}
 		dot_particle_logic(&app->particle[i]);
 	}
-	if(app->sync_achievements)
+	if(app->sync_achievements && app->steam_running)
 	{
-		t3f_synchronize_achievements_with_steam(app->achievements);
-		app->sync_achievements = false;
+		if(t3f_synchronize_achievements_with_steam(app->achievements))
+		{
+			app->sync_achievements = false;
+		}
 	}
 	t3f_steam_integration_logic();
 }
@@ -1094,7 +1096,8 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		t3f_set_option(T3F_OPTION_RENDER_MODE, T3F_RENDER_MODE_ALWAYS_CLEAR);
 	}
-	if(!t3f_init_steam_integration())
+	app->steam_running = t3f_init_steam_integration();
+	if(!app->steam_running)
 	{
 		printf("Steam not running!\n");
 	}

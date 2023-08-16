@@ -11,7 +11,7 @@
 static bool _t3f_steam_integration_enabled = false;
 static bool _t3f_steam_stats_ready = false;
 static bool _t3f_steam_stats_store_state = T3F_STEAM_STORE_STATE_NONE;
-static double _t3f_steam_store_time = 0.0;
+static double _t3f_steam_store_time = -T3F_STEAM_STATS_STORE_INTERVAL;
 
 bool t3f_init_steam_integration(void)
 {
@@ -139,7 +139,7 @@ void t3f_steam_integration_logic(void)
       _t3f_run_steam_callbacks();
 
       /* attempt to store current achievements if it is needed and store isn't currently processing */
-      if(_t3f_steam_stats_store_state != T3F_STEAM_STORE_STATE_IN_PROGRESS)
+      if(_t3f_steam_stats_ready && _t3f_steam_stats_store_state != T3F_STEAM_STORE_STATE_IN_PROGRESS)
       {
         val = al_get_config_value(t3f_user_data, "Achievements", "Stored");
         if(val && !strcmp(val, "false"))
