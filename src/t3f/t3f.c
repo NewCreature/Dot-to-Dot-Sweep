@@ -989,10 +989,13 @@ bool t3f_save_config(void)
 	const ALLEGRO_FILE_INTERFACE * old_interface;
 	bool ret;
 
-	old_interface = al_get_new_file_interface();
-	al_set_standard_file_interface();
-	ret = al_save_config_file(t3f_config_filename, t3f_config);
-	al_set_new_file_interface(old_interface);
+	if(t3f_config)
+	{
+		old_interface = al_get_new_file_interface();
+		al_set_standard_file_interface();
+		ret = al_save_config_file(t3f_config_filename, t3f_config);
+		al_set_new_file_interface(old_interface);
+	}
 
 	return ret;
 }
@@ -1002,10 +1005,13 @@ bool t3f_save_user_data(void)
 	const ALLEGRO_FILE_INTERFACE * old_interface;
 	bool ret;
 
-	old_interface = al_get_new_file_interface();
-	al_set_standard_file_interface();
-	ret = al_save_config_file(t3f_user_data_filename, t3f_user_data);
-	al_set_new_file_interface(old_interface);
+	if(t3f_user_data)
+	{
+		old_interface = al_get_new_file_interface();
+		al_set_standard_file_interface();
+		ret = al_save_config_file(t3f_user_data_filename, t3f_user_data);
+		al_set_new_file_interface(old_interface);
+	}
 
 	return ret;
 }

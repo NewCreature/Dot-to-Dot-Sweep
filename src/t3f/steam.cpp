@@ -46,6 +46,11 @@ void t3f_shutdown_steam_integration(void)
   #endif
 }
 
+bool t3f_restart_through_steam(uint32_t app_id)
+{
+  return SteamAPI_RestartAppIfNecessary(app_id);
+}
+
 bool t3f_show_steam_text_input(int x, int y, int width, int height)
 {
   #ifdef T3F_ENABLE_STEAM_INTEGRATION
