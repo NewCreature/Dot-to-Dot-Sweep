@@ -601,6 +601,21 @@ void t3f_set_option(int option, int value)
 	al_set_config_value(t3f_config, "Options", buf, vbuf);
 }
 
+bool t3f_option_is_set(int option)
+{
+	char buf[64] = {0};
+	const char * val;
+
+	sprintf(buf, "Key %d", option);
+	val = al_get_config_value(t3f_config, "Options", buf);
+
+	if(val)
+	{
+		return true;
+	}
+	return false;
+}
+
 static void handle_view_resize(void)
 {
 	t3f_adjust_view(t3f_default_view, 0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display), t3f_virtual_display_width / 2, t3f_virtual_display_height / 2, t3f_flags);

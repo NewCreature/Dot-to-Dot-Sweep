@@ -128,6 +128,7 @@ extern ALLEGRO_COLOR t3f_color_black;
 
 int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_proc)(void * data), void (*render_proc)(void * data), int flags, void * data);
 void t3f_set_option(int option, int value);
+bool t3f_option_is_set(int option);
 int t3f_set_gfx_mode(int w, int h, int flags);
 void t3f_set_clipping_rectangle(int x, int y, int w, int h);
 void t3f_set_event_handler(void (*proc)(ALLEGRO_EVENT * event, void * data));

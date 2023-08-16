@@ -1090,6 +1090,10 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Error initializing T3F\n");
 		return false;
 	}
+	if(!t3f_option_is_set(T3F_OPTION_RENDER_MODE))
+	{
+		t3f_set_option(T3F_OPTION_RENDER_MODE, T3F_RENDER_MODE_ALWAYS_CLEAR);
+	}
 	if(!t3f_init_steam_integration())
 	{
 		printf("Steam not running!\n");
