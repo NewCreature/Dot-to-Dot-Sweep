@@ -1,7 +1,7 @@
 v1.3
 ----
 
-[ ]Investigate crash at game complete.
+[X]Investigate crash at game complete.
 
 [X]Investigate MacOS launch issues. When launching the initial MacOS Steam
    build, the music would play but there was no window. I believe this had to
