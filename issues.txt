@@ -1,6 +1,8 @@
 v1.3
 ----
 
+[ ]Ensure touch screen can't be used to skip around the board.
+
 [X]Investigate crash at game complete.
 
 [X]Investigate MacOS launch issues. When launching the initial MacOS Steam
