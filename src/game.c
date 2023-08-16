@@ -194,7 +194,7 @@ void dot_game_exit(void * data)
 	}
 	
 	/* save high score */
-	if(app->game.score > app->game.high_score)
+	if(app->game.score >= app->game.high_score)
 	{
 		sprintf(buf, "%d", app->game.high_score);
 		al_set_config_value(t3f_user_data, "Game Data", "High Score", buf);
