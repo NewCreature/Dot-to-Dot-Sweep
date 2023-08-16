@@ -1097,6 +1097,10 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	if(!val2 || !strcmp(val2, "false"))
 	{
 		t3f_restart_through_steam(T3F_APP_STEAM_ID);
+		al_destroy_config(t3f_config);
+		t3f_config = NULL;
+		al_destroy_config(t3f_user_data);
+		t3f_user_data = NULL;
 		return false;
 	}
 	if(!t3f_option_is_set(T3F_OPTION_RENDER_MODE))
