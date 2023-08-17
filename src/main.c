@@ -1093,16 +1093,6 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Error initializing T3F\n");
 		return false;
 	}
-	val2 = al_get_config_value(t3f_user_data, "Game Data", "Setup Done");
-	if(!val2 || !strcmp(val2, "false"))
-	{
-		t3f_restart_through_steam(T3F_APP_STEAM_ID);
-		al_destroy_config(t3f_config);
-		t3f_config = NULL;
-		al_destroy_config(t3f_user_data);
-		t3f_user_data = NULL;
-		return false;
-	}
 	if(!t3f_option_is_set(T3F_OPTION_RENDER_MODE))
 	{
 		t3f_set_option(T3F_OPTION_RENDER_MODE, T3F_RENDER_MODE_ALWAYS_CLEAR);
