@@ -1,7 +1,7 @@
 v1.3
 ----
 
-[ ]Ensure game can be launched if Steam doesn't exist on the user's system.
+[X]Ensure game can be launched if Steam doesn't exist on the user's system.
    Currently, the game will attempt to relaunch through Steam the first time
    it is run.
 
