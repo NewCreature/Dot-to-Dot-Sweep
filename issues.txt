@@ -1,7 +1,23 @@
 v1.3
 ----
 
+[ ]Ensure game can be launched if Steam doesn't exist on the user's system.
+   Currently, the game will attempt to relaunch through Steam the first time
+   it is run.
+
 [ ]Ensure touch screen can't be used to skip around the board.
+
+   [ ]The SteamWorks setting for touch screen is set to touch API passthrough
+      which should fix the problem. Need to test on Steam Deck.
+
+   [ ]Touch controls should be enabled through Allegro's touch API if it is
+      available on Linux.
+
+   [ ]Ensure in-game touch input switches the input mode so we get the correct
+      pause behavior.
+
+   [ ]Pressing a controller button when in the mouse/touch pause screen should
+      bring up the pause menu.
 
 [X]Investigate crash at game complete.
 
