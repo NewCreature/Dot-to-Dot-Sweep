@@ -94,26 +94,22 @@ void dot_read_input(DOT_INPUT_DATA * ip)
   if(t3f_key[ALLEGRO_KEY_UP] || t3f_key[ALLEGRO_KEY_W])
   {
     ip->axis_y = -1.0;
-    t3f_key[ALLEGRO_KEY_UP] = 0;
-    t3f_key[ALLEGRO_KEY_W] = 0;
+    ip->axis_y_pressed = true;
   }
   if(t3f_key[ALLEGRO_KEY_DOWN] || t3f_key[ALLEGRO_KEY_S])
   {
     ip->axis_y = 1.0;
-    t3f_key[ALLEGRO_KEY_DOWN] = 0;
-    t3f_key[ALLEGRO_KEY_S] = 0;
+    ip->axis_y_pressed = true;
   }
   if(t3f_key[ALLEGRO_KEY_LEFT] || t3f_key[ALLEGRO_KEY_A])
   {
     ip->axis_x = -1.0;
-    t3f_key[ALLEGRO_KEY_LEFT] = 0;
-    t3f_key[ALLEGRO_KEY_A] = 0;
+    ip->axis_x_pressed = true;
   }
   if(t3f_key[ALLEGRO_KEY_RIGHT] || t3f_key[ALLEGRO_KEY_D])
   {
     ip->axis_x = 1.0;
-    t3f_key[ALLEGRO_KEY_RIGHT] = 0;
-    t3f_key[ALLEGRO_KEY_D] = 0;
+    ip->axis_x_pressed = true;
   }
   for(i = 0; i < ALLEGRO_KEY_MAX; i++)
   {
