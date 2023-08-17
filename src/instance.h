@@ -41,6 +41,7 @@ typedef struct
     /* input state */
     bool using_controller;
     bool want_disable_controller;
+    bool using_mouse;
     int touch_id;
     float touch_x;
     float touch_y;

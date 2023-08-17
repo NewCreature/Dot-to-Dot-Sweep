@@ -84,22 +84,27 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 void app_touch_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	bool need_click = false;
 	int i;
 
 	app->touch_id = -1;
-	if(app->touch_id < 0)
+	for(i = 0; i < T3F_MAX_TOUCHES; i++)
 	{
-		for(i = 0; i < T3F_MAX_TOUCHES; i++)
+		if(t3f_touch[i].active)
 		{
-			if(t3f_touch[i].active)
-			{
-				app->touch_id = i;
-				break;
-			}
+			app->touch_id = i;
+			break;
 		}
 	}
-	if(app->touch_id >= 0)
+	if(app->touch_id == 0)
+	{
+		app->using_mouse = true;
+	}
+	if(app->touch_id <= 0)
+	{
+		app->touch_x = t3f_mouse_x;
+		app->touch_y = t3f_mouse_y;
+	}
+	else if(app->touch_id > 0)
 	{
 		app->touch_x = t3f_touch[app->touch_id].x;
 		app->touch_y = t3f_touch[app->touch_id].y;
@@ -108,9 +113,8 @@ void app_touch_logic(void * data)
 			app->touch_y -= 520;
 		}
 		disable_controller(app);
+		app->using_mouse = false;
 	}
-	app->touch_x = t3f_mouse_x;
-	app->touch_y = t3f_mouse_y;
 }
 
 static int particle_qsort_helper(const void * p1, const void * p2)
@@ -1062,7 +1066,6 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
 	int i;
 	char * val;
-	const char * val2;
 
 	/* detect game type */
 	app->desktop_mode = false;

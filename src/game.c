@@ -591,6 +591,24 @@ void dot_game_check_player_collisions(void * data)
 	}
 }
 
+static void update_player_position(APP_INSTANCE * app)
+{
+	app->game.player.ball.x = app->touch_x + app->game.player.touch_offset_x;
+	app->game.player.ball.y = app->touch_y + app->game.player.touch_offset_y;
+}
+
+static void maybe_activate_shield(APP_INSTANCE * app)
+{
+	if(app->game.player.want_shield)
+	{
+		app->game.shield.x = app->game.player.ball.x;
+		app->game.shield.y = app->game.player.ball.y;
+		app->game.shield.r = app->game.player.ball.r + 1.0;
+		app->game.shield.active = true;
+		app->game.player.want_shield = false;
+	}
+}
+
 /* handle player movement */
 void dot_game_move_player(void * data)
 {
@@ -607,18 +625,11 @@ void dot_game_move_player(void * data)
 		{
 			app->game.player.ball.x += app->controller.axis_x * 4.0;
 			app->game.player.ball.y += app->controller.axis_y * 4.0;
-			if(app->game.player.want_shield)
-			{
-				app->game.shield.x = app->game.player.ball.x;
-				app->game.shield.y = app->game.player.ball.y;
-				app->game.shield.r = app->game.player.ball.r + 1.0;
-				app->game.shield.active = true;
-				app->game.player.want_shield = false;
-			}
+			maybe_activate_shield(app);
 		}
 		else
 		{
-			if(app->touch_id >= 0)
+			if(app->touch_id > 0)
 			{
 				if(app->game.player.lost_touch)
 				{
@@ -629,17 +640,14 @@ void dot_game_move_player(void * data)
 				}
 				if(!app->game.player.lost_touch)
 				{
-					app->game.player.ball.x = app->touch_x + app->game.player.touch_offset_x;
-					app->game.player.ball.y = app->touch_y + app->game.player.touch_offset_y;
+					update_player_position(app);
 				}
-				if(app->game.player.want_shield)
-				{
-					app->game.shield.x = app->game.player.ball.x;
-					app->game.shield.y = app->game.player.ball.y;
-					app->game.shield.r = app->game.player.ball.r + 1.0;
-					app->game.shield.active = true;
-					app->game.player.want_shield = false;
-				}
+				maybe_activate_shield(app);
+			}
+			else if(app->using_mouse)
+			{
+				update_player_position(app);
+				maybe_activate_shield(app);
 			}
 			else
 			{
@@ -868,6 +876,7 @@ void dot_game_logic(void * data)
 						al_hide_mouse_cursor(t3f_display);
 						app->game.block_click = true;
 					}
+					t3f_touch[0].active = false;
 				}
 				else if(app->controller.button)
 				{
@@ -925,6 +934,7 @@ void dot_game_logic(void * data)
 						al_hide_mouse_cursor(t3f_display);
 						app->game.block_click = true;
 					}
+					t3f_touch[0].active = false;
 				}
 				else if(app->controller.button)
 				{
@@ -1006,13 +1016,14 @@ void dot_game_logic(void * data)
 		/* normal game state */
 		default:
 		{
-			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.current_joy_disconnected)
+			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.current_joy_disconnected || app->touch_id == 0)
 			{
 				app->game.pause_state = app->game.state;
 				app->game.state = DOT_GAME_STATE_PAUSE;
 				al_show_mouse_cursor(t3f_display);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				app->controller.button = false;
+				t3f_touch[0].active = false;
 			}
 			else if(app->controller.button)
 			{

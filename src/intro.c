@@ -563,10 +563,10 @@ void dot_intro_logic(void * data)
 	}
 	if(!app->menu_showing)
 	{
-		if(t3f_mouse_button[0] || app->controller.button)
+		if(app->touch_id > 0 || t3f_touch[0].active || app->controller.button)
 		{
 			app->menu_showing = true;
-			t3f_mouse_button[0] = false;
+			t3f_touch[0].active = false;
 			app->controller.button = false;
 		}
 	}
