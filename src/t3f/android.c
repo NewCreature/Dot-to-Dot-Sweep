@@ -255,6 +255,7 @@ JNI_FUNC(void, MainActivity, nativeOnEditComplete, (JNIEnv *env, jobject obj, js
 
 	char * t3f_run_url(const char * url)
 	{
+		return NULL;
 	}
 
 #endif

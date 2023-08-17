@@ -36,8 +36,17 @@ void dot_privacy_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	bool m = false;
+	int i;
 
 	dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
+	for(i = 0; i < T3F_MAX_TOUCHES; i++)
+	{
+		if(t3f_touch[i].active)
+		{
+			m = true;
+			t3f_touch[i].active = false;
+		}
+	}
 	if(app->desktop_mode && t3f_mouse_button[0])
 	{
 		m = true;

@@ -87,46 +87,30 @@ void app_touch_logic(void * data)
 	bool need_click = false;
 	int i;
 
-	if(!app->desktop_mode)
+	app->touch_id = -1;
+	if(app->touch_id < 0)
 	{
-		app->touch_id = -1;
-		if(app->touch_id < 0)
+		for(i = 0; i < T3F_MAX_TOUCHES; i++)
 		{
-			for(i = 0; i < T3F_MAX_TOUCHES; i++)
+			if(t3f_touch[i].active)
 			{
-				if(t3f_touch[i].active)
-				{
-					app->touch_id = i;
-					break;
-				}
+				app->touch_id = i;
+				break;
 			}
 		}
-		if(app->touch_id >= 0)
-		{
-			app->touch_x = t3f_touch[app->touch_id].x;
-			app->touch_y = t3f_touch[app->touch_id].y - 520;
-			disable_controller(app);
-		}
 	}
-	else
+	if(app->touch_id >= 0)
 	{
-		app->touch_id = -1;
-		if(t3f_mouse_button[1] && app->game.state == DOT_GAME_STATE_PLAY)
+		app->touch_x = t3f_touch[app->touch_id].x;
+		app->touch_y = t3f_touch[app->touch_id].y;
+		if(!app->desktop_mode)
 		{
-			app->game.state = DOT_GAME_STATE_PAUSE;
-			al_show_mouse_cursor(t3f_display);
+			app->touch_y -= 520;
 		}
-		if(app->state == DOT_STATE_GAME && (app->game.state == DOT_GAME_STATE_PAUSE || app->game.state == DOT_GAME_STATE_START))
-		{
-			need_click = true;
-		}
-		if(!t3f_mouse_hidden && (!need_click || t3f_mouse_button[0]))
-		{
-			app->touch_id = 0;
-		}
-		app->touch_x = t3f_mouse_x;
-		app->touch_y = t3f_mouse_y;
+		disable_controller(app);
 	}
+	app->touch_x = t3f_mouse_x;
+	app->touch_y = t3f_mouse_y;
 }
 
 static int particle_qsort_helper(const void * p1, const void * p2)
