@@ -22,7 +22,7 @@ v1.3
    seems to activate a touch interaction. When trying to use the touchpad to
    control the game, the game goes into touch mode after click.
 
-[ ]Investigate leaderboards not working on Steam Deck.
+[X]Investigate leaderboards not working on Steam Deck.
 
 [X]Ensure game can be launched if Steam doesn't exist on the user's system.
    Currently, the game will attempt to relaunch through Steam the first time
@@ -66,7 +66,7 @@ v1.3
       integration is off at the moment, the user may launch the game from Steam
       later. We should check the flag at startup to store any unstored
       achievements.
-   
+
    [X]Clear the flag when storage is successful.
 
    [X]This process should be automated as much as possible. We might handle
@@ -107,7 +107,7 @@ v1.3
          better than the existing one for that user key, game, mode, etc.
          before replacing. We need a way to specify if lower or higher is
          better.
-      
+
       [X]Consider removing backwards compatibility since the games have to be
          updated anyway to work with the new site.
 
@@ -128,7 +128,7 @@ v1.3
    [ ]Get ready for Steam Deck verification.
 
       [ ]Make community post about intentions to be optimized for Steam Deck.
-   
+
    [ ]Investigate executable update issue.
 
       [ ]When uploading new Linux executable, the new version is not detected
@@ -160,7 +160,7 @@ v1.3
 
       [X]Fixed by making the default dead zone a bit larger and only selecting
          a stick on a gamepad with axis events if it exceeds the dead zone.
-   
+
    [X]Implement new input module in T3F (see 'T3F/issues.txt' for more info).
 
    [X]Steam will map input from controllers to XBox mapping for us. We need to
@@ -172,7 +172,7 @@ v1.3
          initialize. We should try to do this during t3f_initialize() so we
          can make informed decisions from our game's init code about input
          configuration.
-      
+
       [X]Make XBox-style input default in the new input module. We might
          consider just assuming XBox and letting the user override the settings
          if it's not working for them.
