@@ -22,7 +22,11 @@ v1.3
    seems to activate a touch interaction. When trying to use the touchpad to
    control the game, the game goes into touch mode after click.
 
-[X]Investigate leaderboards not working on Steam Deck.
+[ ]Investigate leaderboards not working on Steam Deck.
+
+   [ ]We need to delete the temp file after getting the information out of it.
+      If curl fails at some point in the future, the user will get outdated
+      data left over from a previous curl call.
 
 [X]Ensure game can be launched if Steam doesn't exist on the user's system.
    Currently, the game will attempt to relaunch through Steam the first time
