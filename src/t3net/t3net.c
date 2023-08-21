@@ -109,7 +109,11 @@ const char * t3net_get_curl_command(void)
 	#ifdef ALLEGRO_WINDOWS
 		strcpy(_t3net_curl_command, "curl");
 	#else
-		strcpy(_t3net_curl_command, "/usr/bin/curl");
+		#ifdef ALLEGRO_MACOSX
+			strcpy(_t3net_curl_command, "/usr/bin/curl");
+		#else
+			strcpy(_t3net_curl_command, "curl");
+		#endif
 	#endif
 	return _t3net_curl_command;
 }
