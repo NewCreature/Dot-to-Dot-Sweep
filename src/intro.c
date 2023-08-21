@@ -69,6 +69,7 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 		app->state = DOT_STATE_LEADERBOARD;
 		app->current_menu = DOT_MENU_LEADERBOARD;
 	}
+	t3f_mouse_button[0] = false;
 	al_resume_timer(t3f_timer);
 	return 1;
 }

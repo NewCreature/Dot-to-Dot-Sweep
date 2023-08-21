@@ -16,22 +16,22 @@ unsigned long dot_leaderboard_unobfuscate_score(unsigned long score)
 
 void dot_upload_current_high_score(void * data)
 {
-    APP_INSTANCE * app = (APP_INSTANCE *)data;
+  APP_INSTANCE * app = (APP_INSTANCE *)data;
 	const char * val;
 	const char * val2;
 
-    val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
-    if(val)
+  val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
+  if(val)
+  {
+    val2 = al_get_config_value(t3f_user_data, "Game Data", "High Score Level");
+    if(val2)
     {
-        val2 = al_get_config_value(t3f_user_data, "Game Data", "High Score Level");
-        if(val2)
-        {
-            if(t3net_upload_score(app->leaderboard_submit_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_key, dot_leaderboard_obfuscate_score(atoi(val)), val2))
-            {
-                al_remove_config_key(t3f_user_data, "Game Data", "Score Uploaded");
-            }
-        }
-    }    
+      if(t3net_upload_score(app->leaderboard_submit_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_key, dot_leaderboard_obfuscate_score(atoi(val)), val2))
+      {
+        al_remove_config_key(t3f_user_data, "Game Data", "Score Uploaded");
+      }
+    }
+  }
 }
 
 int dot_get_leaderboard_spot(T3NET_LEADERBOARD * lp, const char * name, unsigned long score)
@@ -50,40 +50,52 @@ int dot_get_leaderboard_spot(T3NET_LEADERBOARD * lp, const char * name, unsigned
 
 void dot_leaderboard_logic(void * data)
 {
-    APP_INSTANCE * app = (APP_INSTANCE *)data;
-    bool m = false;
+  APP_INSTANCE * app = (APP_INSTANCE *)data;
+  bool m = false;
+  int i;
 
-    if(app->current_menu == DOT_MENU_LEADERBOARD && t3f_mouse_button[0])
+  if(app->current_menu == DOT_MENU_LEADERBOARD)
+  {
+    for(i = 0; i < T3F_MAX_TOUCHES; i++)
     {
+      if(t3f_touch[i].active)
+      {
         m = true;
+        t3f_touch[i].active = false;
+      }
     }
-    dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
-    if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || m || app->controller.button)
+    if(app->desktop_mode && t3f_mouse_button[0])
     {
-        if(app->current_menu == DOT_MENU_LEADERBOARD_2)
-        {
-            dot_menu_proc_leaderboard_main_menu(data, 0, NULL);
-        }
-        else
-        {
-            dot_menu_proc_leaderboard_back(data, 0, NULL);
-        }
-        t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-        t3f_key[ALLEGRO_KEY_BACK] = 0;
-        t3f_mouse_button[0] = false;
-        app->controller.button = false;
+      m = true;
     }
-    else if(app->current_menu == DOT_MENU_LEADERBOARD_2 && t3f_mouse_button[0])
+  }
+  dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
+  if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || m || app->controller.button)
+  {
+    if(app->current_menu == DOT_MENU_LEADERBOARD_2)
     {
-        dot_menu_proc_leaderboard_back(data, 0, NULL);
-        app->current_menu = DOT_MENU_LEADERBOARD_2;
-        t3f_mouse_button[0] = false;
+      dot_menu_proc_leaderboard_main_menu(data, 0, NULL);
     }
-    app->tick++;
-    if(!app->desktop_mode)
+    else
     {
-        t3f_process_gui(app->menu[app->current_menu], app);
+      dot_menu_proc_leaderboard_back(data, 0, NULL);
     }
+    t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+    t3f_key[ALLEGRO_KEY_BACK] = 0;
+    t3f_mouse_button[0] = false;
+    app->controller.button = false;
+  }
+  else if(app->current_menu == DOT_MENU_LEADERBOARD_2 && t3f_mouse_button[0])
+  {
+    dot_menu_proc_leaderboard_back(data, 0, NULL);
+    app->current_menu = DOT_MENU_LEADERBOARD_2;
+    t3f_mouse_button[0] = false;
+  }
+  app->tick++;
+  if(!app->desktop_mode)
+  {
+    t3f_process_gui(app->menu[app->current_menu], app);
+  }
 }
 
 void dot_leaderboard_render(void * data)
