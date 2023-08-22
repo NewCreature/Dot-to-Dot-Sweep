@@ -27,6 +27,9 @@ v1.3
    [ ]We need to delete the temp file after getting the information out of it.
       If curl fails at some point in the future, the user will get outdated
       data left over from a previous curl call.
+   
+   [ ]Curl seems to be failing to run. We should temporarily replace the
+      executable on Steam Deck with a debug program that tests curl.
 
 [X]Ensure game can be launched if Steam doesn't exist on the user's system.
    Currently, the game will attempt to relaunch through Steam the first time
