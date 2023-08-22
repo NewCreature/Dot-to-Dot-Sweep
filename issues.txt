@@ -15,6 +15,8 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Research crash on Steam Deck after score upload/download combo.
+
 [ ]In-game overlays don't extend all the way to the right edge under certain
    display resolutions.
 
@@ -22,14 +24,18 @@ v1.3
    seems to activate a touch interaction. When trying to use the touchpad to
    control the game, the game goes into touch mode after click.
 
-[ ]Investigate leaderboards not working on Steam Deck.
+[X]Investigate leaderboards not working on Steam Deck.
 
-   [ ]We need to delete the temp file after getting the information out of it.
+   [X]We need to delete the temp file after getting the information out of it.
       If curl fails at some point in the future, the user will get outdated
       data left over from a previous curl call.
-   
-   [ ]Curl seems to be failing to run. We should temporarily replace the
+
+   [X]curl seems to be failing to run. We should temporarily replace the
       executable on Steam Deck with a debug program that tests curl.
+
+      [X]curl wasn't running due to missing shared objects. This was solved by
+         explicitly setting the library load path as part of the command used to
+         run curl.
 
 [X]Ensure game can be launched if Steam doesn't exist on the user's system.
    Currently, the game will attempt to relaunch through Steam the first time
