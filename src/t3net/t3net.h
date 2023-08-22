@@ -49,6 +49,7 @@ extern char t3net_server_message[1024];
 int t3net_setup(char * (*url_runner)(const char * url), const char * temp_dir);
 const char * t3net_get_curl_command(void);
 char * t3net_escape(const char * s);
+char * t3net_load_file(const char * fn);
 
 /* internet operations */
 T3NET_ARGUMENTS * t3net_create_arguments(void);

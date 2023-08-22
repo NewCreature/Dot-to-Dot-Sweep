@@ -64,6 +64,7 @@ char * t3net_load_file(const char * fn)
 	fread(data, 1, size, fp);
 	fclose(fp);
 	data[size] = 0;
+	remove(fn);
 	return data;
 
 	fail:
@@ -112,7 +113,7 @@ const char * t3net_get_curl_command(void)
 		#ifdef ALLEGRO_MACOSX
 			strcpy(_t3net_curl_command, "/usr/bin/curl");
 		#else
-			strcpy(_t3net_curl_command, "curl");
+			strcpy(_t3net_curl_command, "LD_LIBRARY_PATH=\"/lib\" curl");
 		#endif
 	#endif
 	return _t3net_curl_command;
