@@ -24,7 +24,9 @@ v1.3
    seems to activate a touch interaction. When trying to use the touchpad to
    control the game, the game goes into touch mode after click.
 
-   [ ]Clicking the right touchpad does an R3 joystick press.
+   [ ]Clicking the right touchpad does an R3 joystick press. We should not
+      allow L3 and R3 to be used as buttons in the game. Treat R3 as mouse
+      click.
 
 [X]Investigate leaderboards not working on Steam Deck.
 
