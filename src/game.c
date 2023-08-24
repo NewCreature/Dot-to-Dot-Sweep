@@ -1136,12 +1136,12 @@ void dot_game_render_hud(void * data)
 		al_hold_bitmap_drawing(false);
 	}
 
-	al_draw_filled_rectangle(0, DOT_GAME_PLAYFIELD_HEIGHT, 540, DOT_GAME_PLAYFIELD_HEIGHT + 80, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+	al_draw_filled_rectangle(0, DOT_GAME_PLAYFIELD_HEIGHT, 540 + 0.5, DOT_GAME_PLAYFIELD_HEIGHT + 80 + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 	if(app->desktop_mode)
 	{
 		if(app->state == DOT_STATE_GAME && (app->game.state == DOT_GAME_STATE_PAUSE || app->game.state == DOT_GAME_STATE_START))
 		{
-			al_draw_filled_rectangle(0, DOT_GAME_PLAYFIELD_HEIGHT, 540, DOT_GAME_PLAYFIELD_HEIGHT + 80, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+			al_draw_filled_rectangle(0, DOT_GAME_PLAYFIELD_HEIGHT, 540 + 0.5, DOT_GAME_PLAYFIELD_HEIGHT + 80 + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		}
 	}
 	al_hold_bitmap_drawing(true);
@@ -1355,7 +1355,7 @@ void dot_game_render(void * data)
 		{
 			t3f_set_clipping_rectangle(0, 0, DOT_GAME_PLAYFIELD_WIDTH, DOT_GAME_PLAYFIELD_HEIGHT);
 		}
-		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, touch_effect_y, 0.0, DOT_GAME_PLAYFIELD_WIDTH, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
+		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, touch_effect_y, 0.0, DOT_GAME_PLAYFIELD_WIDTH + 0.5, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
 		if(app->desktop_mode)
 		{
 			al_hold_bitmap_drawing(false);
@@ -1382,7 +1382,7 @@ void dot_game_render(void * data)
 		{
 			t3f_set_clipping_rectangle(0, 0, DOT_GAME_PLAYFIELD_WIDTH, DOT_GAME_PLAYFIELD_HEIGHT);
 		}
-		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, touch_effect_y, 0.0, DOT_GAME_PLAYFIELD_WIDTH, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
+		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, touch_effect_y, 0.0, DOT_GAME_PLAYFIELD_WIDTH + 0.5, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
 		if(app->desktop_mode)
 		{
 			al_hold_bitmap_drawing(false);
