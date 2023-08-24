@@ -17,7 +17,7 @@ v1.3
 
 [ ]Research crash on Steam Deck after score upload/download combo.
 
-[ ]In-game overlays don't extend all the way to the right edge under certain
+[X]In-game overlays don't extend all the way to the right edge under certain
    display resolutions.
 
 [ ]Investigate right touchpad issue on Steam Deck. Touching the right touchpad
