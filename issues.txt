@@ -17,6 +17,9 @@ v1.3
 
 [ ]Hide mouse cursor when switching to mouse mode.
 
+   [ ]To reproduce the issue. Start the game with mouse. Pause with keyboard
+      key. Unpause with keyboard then switch back to mouse by moving the mouse.
+
 [ ]Research crash on Steam Deck after score upload/download combo.
 
 [X]In-game overlays don't extend all the way to the right edge under certain
