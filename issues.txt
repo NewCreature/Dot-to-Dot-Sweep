@@ -15,18 +15,22 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Hide mouse cursor when switching to mouse mode.
+
 [ ]Research crash on Steam Deck after score upload/download combo.
 
 [X]In-game overlays don't extend all the way to the right edge under certain
    display resolutions.
 
-[ ]Investigate right touchpad issue on Steam Deck. Touching the right touchpad
+[X]Investigate right touchpad issue on Steam Deck. Touching the right touchpad
    seems to activate a touch interaction. When trying to use the touchpad to
    control the game, the game goes into touch mode after click.
 
-   [ ]Clicking the right touchpad does an R3 joystick press. We should not
+   [X]Clicking the right touchpad does an R3 joystick press. We should not
       allow L3 and R3 to be used as buttons in the game. Treat R3 as mouse
       click.
+   
+   [X]Fixed by publishing an official layout on Steam.
 
 [X]Investigate leaderboards not working on Steam Deck.
 
