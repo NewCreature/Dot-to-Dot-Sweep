@@ -6,6 +6,7 @@
 #include "color.h"
 #include "intro.h"
 #include "leaderboard.h"
+#include "mouse.h"
 
 static void select_first_element(APP_INSTANCE * app)
 {
@@ -313,7 +314,7 @@ int dot_menu_proc_pause_quit(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	dot_intro_setup(app);
-	al_show_mouse_cursor(t3f_display);
+	dot_enable_mouse_cursor(true);
 	app->state = DOT_STATE_INTRO;
 	if(app->music_enabled)
 	{

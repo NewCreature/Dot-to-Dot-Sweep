@@ -12,6 +12,7 @@
 #include "leaderboard.h"
 #include "privacy.h"
 #include "input.h"
+#include "mouse.h"
 
 static bool dot_show_touch_hand = false;
 static int dot_screenshot_count = 0;
@@ -244,6 +245,7 @@ void app_logic(void * data)
 			break;
 		}
 	}
+	dot_mouse_cursor_logic();
 	app->active_particles = 0;
 	for(i = 0; i < DOT_MAX_PARTICLES; i++)
 	{

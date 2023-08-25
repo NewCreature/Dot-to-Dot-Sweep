@@ -11,6 +11,7 @@
 #include "bg_object.h"
 #include "intro.h"
 #include "leaderboard.h"
+#include "mouse.h"
 
 static void dot_game_target_balls(void * data, int type)
 {
@@ -582,7 +583,7 @@ void dot_game_check_player_collisions(void * data)
 							app->game.state = DOT_GAME_STATE_DONE;
 						}
 					}
-					al_show_mouse_cursor(t3f_display);
+					dot_enable_mouse_cursor(true);
 					break;
 				}
 				app->game.a_bob_and_weave_ticks = 0;
@@ -653,7 +654,7 @@ void dot_game_move_player(void * data)
 			{
 				app->game.player.lost_touch = true;
 				app->game.state = DOT_GAME_STATE_PAUSE;
-				al_show_mouse_cursor(t3f_display);
+				dot_enable_mouse_cursor(true);
 			}
 		}
 
@@ -815,7 +816,7 @@ void dot_game_emo_logic(void * data)
 static void exit_to_title(APP_INSTANCE * app)
 {
 	dot_intro_setup(app);
-	al_show_mouse_cursor(t3f_display);
+	dot_enable_mouse_cursor(true);
 	app->state = DOT_STATE_INTRO;
 	if(app->music_enabled)
 	{
@@ -873,7 +874,7 @@ void dot_game_logic(void * data)
 						app->game.player.touch_offset_x = 0;
 						app->game.player.touch_offset_y = 0;
 						app->game.level_start = false;
-						al_hide_mouse_cursor(t3f_display);
+						dot_enable_mouse_cursor(false);
 						app->game.block_click = true;
 					}
 					t3f_touch[0].active = false;
@@ -893,7 +894,7 @@ void dot_game_logic(void * data)
 						app->game.player.ball.x = DOT_GAME_PLAYFIELD_WIDTH / 2;
 						app->game.player.ball.y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
 						app->game.level_start = false;
-						al_hide_mouse_cursor(t3f_display);
+						dot_enable_mouse_cursor(false);
 						app->game.block_click = true;
 					}
 					app->controller.button = false;
@@ -931,7 +932,7 @@ void dot_game_logic(void * data)
 						app->game.player.touch_offset_x = app->game.player.ball.x - app->touch_x;
 						app->game.player.touch_offset_y = app->game.player.ball.y - app->touch_y;
 						app->game.state = DOT_GAME_STATE_PLAY;
-						al_hide_mouse_cursor(t3f_display);
+						dot_enable_mouse_cursor(false);
 						app->game.block_click = true;
 					}
 					t3f_touch[0].active = false;
@@ -942,7 +943,7 @@ void dot_game_logic(void * data)
 					{
 						app->game.state = DOT_GAME_STATE_PLAY;
 						app->controller.button = false;
-						al_hide_mouse_cursor(t3f_display);
+						dot_enable_mouse_cursor(false);
 					}
 				}
 				else
@@ -1018,11 +1019,12 @@ void dot_game_logic(void * data)
 		/* normal game state */
 		default:
 		{
+			dot_enable_mouse_cursor(false);
 			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.current_joy_disconnected || app->touch_id == 0)
 			{
 				app->game.pause_state = app->game.state;
 				app->game.state = DOT_GAME_STATE_PAUSE;
-				al_show_mouse_cursor(t3f_display);
+				dot_enable_mouse_cursor(true);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				app->controller.button = false;
 				t3f_touch[0].active = false;
@@ -1034,7 +1036,7 @@ void dot_game_logic(void * data)
 				app->menu[DOT_MENU_PAUSE]->hover_element = -1;
 				t3f_select_next_gui_element(app->menu[DOT_MENU_PAUSE]);
 				app->controller.axis_y_pressed = false;
-				al_show_mouse_cursor(t3f_display);
+				dot_enable_mouse_cursor(true);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				app->controller.button = false;
 			}
@@ -1091,7 +1093,7 @@ void dot_game_logic(void * data)
 				{
 					t3f_touch[app->touch_id].active = false;
 				}
-				al_show_mouse_cursor(t3f_display);
+				dot_enable_mouse_cursor(true);
 				app->game.old_bg_color = app->game.bg_color;
 				dot_game_setup_level(data, app->game.level + 1);
 				app->game.bg_color_fade = 0.0;
