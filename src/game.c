@@ -1020,7 +1020,7 @@ void dot_game_logic(void * data)
 		default:
 		{
 			dot_enable_mouse_cursor(false);
-			if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.current_joy_disconnected || app->touch_id == 0)
+			if((t3f_key[ALLEGRO_KEY_ESCAPE] && !app->using_controller) || app->controller.current_joy_disconnected || app->touch_id == 0)
 			{
 				app->game.pause_state = app->game.state;
 				app->game.state = DOT_GAME_STATE_PAUSE;
@@ -1029,7 +1029,7 @@ void dot_game_logic(void * data)
 				app->controller.button = false;
 				t3f_touch[0].active = false;
 			}
-			else if(app->controller.button)
+			else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.button)
 			{
 				app->game.pause_state = app->game.state;
 				app->game.state = DOT_GAME_STATE_PAUSE_MENU;
