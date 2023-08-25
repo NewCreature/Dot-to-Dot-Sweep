@@ -15,6 +15,14 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]WHen switching from controller to mouse we get inconistent behavior.
+   Sometimes the game pauses, sometimes it doesn't. The correct bahavior is to
+   let the player take over the game with mouse without pausing.
+
+[ ]When switching from controller to mouse, the player character's position
+   sometimes jumps back to the last mouse position for a frame before going
+   to the correct position.
+
 [X]Hide mouse cursor when switching to mouse mode.
 
    [X]To reproduce the issue. Start the game with mouse. Pause with keyboard
