@@ -813,15 +813,14 @@ void dot_game_emo_logic(void * data)
 	}
 }
 
-static void exit_to_title(APP_INSTANCE * app)
+static void open_pause_menu(APP_INSTANCE * app)
 {
-	dot_intro_setup(app);
+	app->game.pause_state = app->game.state;
+	app->game.state = DOT_GAME_STATE_PAUSE_MENU;
+	t3f_reset_gui_input(app->menu[DOT_MENU_PAUSE]);
+	t3f_select_next_gui_element(app->menu[DOT_MENU_PAUSE]);
+	app->controller.axis_y_pressed = false;
 	dot_enable_mouse_cursor(true);
-	app->state = DOT_STATE_INTRO;
-	if(app->music_enabled)
-	{
-		t3f_play_music(DOT_MUSIC_TITLE);
-	}
 }
 
 /* the main game logic function */
@@ -855,8 +854,7 @@ void dot_game_logic(void * data)
 			app->game.state_tick++;
 			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 			{
-				app->game.pause_state = app->game.state;
-				app->game.state = DOT_GAME_STATE_PAUSE_MENU;
+				open_pause_menu(app);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				t3f_key[ALLEGRO_KEY_BACK] = 0;
 			}
@@ -920,8 +918,7 @@ void dot_game_logic(void * data)
 		{
 			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 			{
-				app->game.pause_state = app->game.state;
-				app->game.state = DOT_GAME_STATE_PAUSE_MENU;
+				open_pause_menu(app);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				t3f_key[ALLEGRO_KEY_BACK] = 0;
 			}
@@ -943,7 +940,7 @@ void dot_game_logic(void * data)
 				{
 					if(!app->game.block_click)
 					{
-						app->game.state = DOT_GAME_STATE_PAUSE_MENU;
+						open_pause_menu(app);
 						app->controller.button = false;
 					}
 				}
@@ -1021,7 +1018,7 @@ void dot_game_logic(void * data)
 		default:
 		{
 			dot_enable_mouse_cursor(false);
-			if((t3f_key[ALLEGRO_KEY_ESCAPE] && !app->using_controller) || app->controller.current_joy_disconnected || app->touch_id == 0)
+			if(app->touch_id == 0)
 			{
 				app->game.pause_state = app->game.state;
 				app->game.state = DOT_GAME_STATE_PAUSE;
@@ -1030,14 +1027,9 @@ void dot_game_logic(void * data)
 				app->controller.button = false;
 				t3f_touch[0].active = false;
 			}
-			else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.button)
+			else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.button || app->controller.current_joy_disconnected || app->touch_id == 0)
 			{
-				app->game.pause_state = app->game.state;
-				app->game.state = DOT_GAME_STATE_PAUSE_MENU;
-				app->menu[DOT_MENU_PAUSE]->hover_element = -1;
-				t3f_select_next_gui_element(app->menu[DOT_MENU_PAUSE]);
-				app->controller.axis_y_pressed = false;
-				dot_enable_mouse_cursor(true);
+				open_pause_menu(app);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				app->controller.button = false;
 			}
