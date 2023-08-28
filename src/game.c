@@ -193,7 +193,7 @@ void dot_game_exit(void * data)
 	{
 		upload = true;
 	}
-	
+
 	/* save high score */
 	if(app->game.score >= app->game.high_score)
 	{

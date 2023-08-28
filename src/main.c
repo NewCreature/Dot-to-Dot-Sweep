@@ -187,12 +187,11 @@ void app_logic(void * data)
 		t3f_key[104] = 0;
 	}
 
-	if(app->want_disable_controller)
+	if(app->want_disable_controller && app->using_controller)
 	{
 		disable_controller(app);
 		app->want_disable_controller = false;
 		app->using_mouse = true;
-		t3f_select_input_view(t3f_current_view);
 	}
 	app_touch_logic(data);
 	if(!app->entering_name)
@@ -202,6 +201,7 @@ void app_logic(void * data)
 	if(app->controller.axis_x != 0.0 || app->controller.axis_y != 0.0 || app->controller.button)
 	{
 		app->using_controller = true;
+		app->using_mouse = false;
 	}
 /*	if(app->button)
 	{
