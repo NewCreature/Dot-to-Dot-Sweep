@@ -15,9 +15,7 @@ Steam Release Checklist
 v1.3
 ----
 
-[ ]Pause menu overlay doesn't extend all the way to the right on Steam Deck.
-
-[ ]HUD is rendered incorrectly. Text should be on top of overlay.
+[X]Pause menu overlay doesn't extend all the way to the right on Steam Deck.
 
 [X]Leaderboard upload/download screen overlay doesn't extend all the way to the
    right on Steam Deck.
