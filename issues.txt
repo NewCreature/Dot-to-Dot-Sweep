@@ -17,13 +17,27 @@ v1.3
 
 [X]Game should pause when pressing Escape at start screen.
 
-[X]WHen switching from controller to mouse we get inconistent behavior.
-   Sometimes the game pauses, sometimes it doesn't. The correct bahavior is to
+[X]When switching from controller to mouse we get inconsistent behavior.
+   Sometimes the game pauses, sometimes it doesn't. The correct behavior is to
    let the player take over the game with mouse without pausing.
 
-[ ]When switching from controller to mouse, the player character's position
+[X]When switching from controller to mouse, the player character's position
    sometimes jumps back to the last mouse position for a frame before going
    to the correct position.
+
+   [X]This was being caused by mouse events building up in the queue during the
+      game's logic and causing the framework's mouse coordinates to be updated
+      with outdated mouse coordinates. On occasion, these outdated coordinates
+      would be applied to the game logic if the timer happened to tick again
+      before all of the old coordinates were flushed out.
+
+      The fix was to separate the event logic from the user logic and keep a
+      copy of the warp coordinates to reapply on the next set of user logic
+      frames. This ensures the mouse won't jump all the way back to an outdated
+      location, but does potentially open us up to some slight jitter if there
+      are newer coordinates in the event queue that occurred after the warp. In
+      practice, I haven't seen any jitter issues, but just wanted to mention it
+      here in case it comes up in the future.
 
 [X]Hide mouse cursor when switching to mouse mode.
 
@@ -42,7 +56,7 @@ v1.3
    [X]Clicking the right touchpad does an R3 joystick press. We should not
       allow L3 and R3 to be used as buttons in the game. Treat R3 as mouse
       click.
-   
+
    [X]Fixed by publishing an official layout on Steam.
 
 [X]Investigate leaderboards not working on Steam Deck.
