@@ -1364,7 +1364,7 @@ void dot_game_render(void * data)
 	}
 	if(app->game.state == DOT_GAME_STATE_PAUSE_MENU)
 	{
-		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width, t3f_virtual_display_height, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width + 0.5, t3f_virtual_display_height + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_hold_bitmap_drawing(true);
 		t3f_render_gui(app->menu[DOT_MENU_PAUSE]);
 	}
