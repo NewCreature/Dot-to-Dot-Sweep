@@ -471,6 +471,16 @@ static bool check_mouse_moved(void)
 	return true;
 }
 
+void t3f_reset_gui_input(T3F_GUI * pp)
+{
+	if(pp)
+	{
+		pp->hover_element = -1;
+	}
+	t3f_gui_mouse_x = t3f_mouse_x;
+	t3f_gui_mouse_y = t3f_mouse_y;
+}
+
 void t3f_process_gui(T3F_GUI * pp, void * data)
 {
 	int i;
