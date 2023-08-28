@@ -191,6 +191,7 @@ void app_logic(void * data)
 	{
 		disable_controller(app);
 		app->want_disable_controller = false;
+		app->using_mouse = true;
 		t3f_select_input_view(t3f_current_view);
 	}
 	app_touch_logic(data);
