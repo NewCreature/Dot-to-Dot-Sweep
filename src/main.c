@@ -34,7 +34,7 @@ static void disable_controller(APP_INSTANCE * app)
 {
 	if(app->using_controller)
 	{
-		if(app->state == DOT_STATE_GAME)
+		if(app->state == DOT_STATE_GAME && app->game.state == DOT_GAME_STATE_PLAY)
 		{
 			t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
 		}
