@@ -15,12 +15,14 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Cannot touch to resume from pause screen.
+
 [X]Pause menu overlay doesn't extend all the way to the right on Steam Deck.
 
 [X]Leaderboard upload/download screen overlay doesn't extend all the way to the
    right on Steam Deck.
 
-[ ]Switching from touch to controller doesn't work properly on Steam Deck.
+[X]Switching from touch to controller doesn't work properly on Steam Deck.
    Resume menu item goes back to pause screen after touch controls have been
    used.
 
