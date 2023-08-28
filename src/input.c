@@ -131,6 +131,19 @@ void dot_read_input(DOT_INPUT_DATA * ip)
       {
         break;
       }
+      /* work around MacOS shift key issue */
+      #ifdef ALLEGRO_MACOSX
+        case ALLEGRO_KEY_LSHIFT:
+        case ALLEGRO_KEY_RSHIFT:
+        {
+          if(t3f_key[i])
+          {
+            ip->button = true;
+            t3f_key[i] = 0;
+          }
+          break;
+        }
+      #endif
       default:
       {
         if(t3f_key[i])
