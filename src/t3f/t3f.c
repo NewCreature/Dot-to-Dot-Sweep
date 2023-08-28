@@ -77,6 +77,10 @@ bool t3f_quit = false;
 int t3f_requested_flags = 0;
 int t3f_flags = 0;
 int t3f_option[T3F_MAX_OPTIONS] = {0};
+static int _t3f_logic_ticks = 0;
+static bool _t3f_mouse_warped = false;
+static float _t3f_mouse_warp_x = 0.0;
+static float _t3f_mouse_warp_y = 0.0;
 
 void (*t3f_logic_proc)(void * data) = NULL;
 void (*t3f_render_proc)(void * data) = NULL;
@@ -1107,16 +1111,24 @@ bool t3f_get_mouse_mickeys(int * x, int * y, int * z)
 	return false;
 }
 
-/* set the mouse coordinate to (x, y) in the currently active view */
-void t3f_set_mouse_xy(float x, float y)
+static void _t3f_update_mouse_xy(float x, float y)
 {
-	al_transform_coordinates(&t3f_current_view->transform, &x, &y);
-	al_set_mouse_xy(t3f_display, x, y);
 	t3f_real_mouse_x = x;
 	t3f_real_mouse_y = y;
 	t3f_touch[0].real_x = x;
 	t3f_touch[0].real_y = y;
 	t3f_select_input_view(t3f_current_view);
+}
+
+/* set the mouse coordinate to (x, y) in the currently active view */
+void t3f_set_mouse_xy(float x, float y)
+{
+	al_transform_coordinates(&t3f_current_view->transform, &x, &y);
+	al_set_mouse_xy(t3f_display, x, y);
+	_t3f_update_mouse_xy(x, y);
+	_t3f_mouse_warped = true;
+	_t3f_mouse_warp_x = x;
+	_t3f_mouse_warp_y = y;
 }
 
 void t3f_clear_touch_data(void)
@@ -1463,16 +1475,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 		/* this keeps your program running */
 		case ALLEGRO_EVENT_TIMER:
 		{
-			t3f_android_support_helper();
-			#ifndef ALLEGRO_ANDROID
-				t3f_update_menus(t3f_app_data);
-			#endif
-			if(!(t3f_flags & T3F_NO_DISPLAY))
-			{
-				t3f_select_input_view(t3f_default_view);
-			}
-			t3f_logic_proc(t3f_app_data);
-			t3f_need_redraw = true;
+			_t3f_logic_ticks++;
 			break;
 		}
 	}
@@ -1527,6 +1530,7 @@ void t3f_process_events(bool ignore)
 void t3f_run(void)
 {
 	ALLEGRO_EVENT event;
+	int i;
 
 	al_start_timer(t3f_timer);
 	while(!t3f_quit)
@@ -1547,6 +1551,26 @@ void t3f_run(void)
 		{
 			t3f_event_handler(&event);
 		}
+
+		if(_t3f_mouse_warped)
+		{
+			_t3f_update_mouse_xy(_t3f_mouse_warp_x, _t3f_mouse_warp_y);
+			_t3f_mouse_warped = false;
+		}
+		for(i = 0; i < _t3f_logic_ticks && !t3f_quit; i++)
+		{
+			t3f_android_support_helper();
+			#ifndef ALLEGRO_ANDROID
+				t3f_update_menus(t3f_app_data);
+			#endif
+			if(!(t3f_flags & T3F_NO_DISPLAY))
+			{
+				t3f_select_input_view(t3f_default_view);
+			}
+			t3f_logic_proc(t3f_app_data);
+			t3f_need_redraw = true;
+		}
+		_t3f_logic_ticks = 0;
 
        	/* draw after we have run all the logic */
 		if(t3f_need_redraw && al_event_queue_is_empty(t3f_queue))

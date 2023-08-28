@@ -37,7 +37,6 @@ static void disable_controller(APP_INSTANCE * app)
 		if(app->state == DOT_STATE_GAME && app->game.state == DOT_GAME_STATE_PLAY)
 		{
 			t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
-			app->mouse_warp_tick = app->mouse_warp_ticks;
 		}
 		app->using_controller = false;
 	}
@@ -193,10 +192,6 @@ void app_logic(void * data)
 		disable_controller(app);
 		app->want_disable_controller = false;
 		app->using_mouse = true;
-	}
-	if(app->mouse_warp_tick > 0)
-	{
-		app->mouse_warp_tick--;
 	}
 	app_touch_logic(data);
 	if(!app->entering_name)
@@ -802,18 +797,6 @@ void app_read_config(APP_INSTANCE * app)
 	if(val)
 	{
 		app->controller.dead_zone = atof(val);
-	}
-
-	app->mouse_warp_ticks = 1;
-	#ifdef ALLEGRO_UNIX
-		#ifndef ALLEGRO_MACOSX
-			app->mouse_warp_ticks = 3;
-		#endif
-	#endif
-	val = al_get_config_value(t3f_config, "Game Data", "Mouse Warp Ticks");
-	if(val)
-	{
-		app->mouse_warp_ticks = atoi(val);
 	}
 }
 
