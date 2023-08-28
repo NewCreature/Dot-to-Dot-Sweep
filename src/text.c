@@ -20,9 +20,8 @@ void dot_show_message(void * data, const char * message)
 
 	t3f_render(false);
 	al_hold_bitmap_drawing(false);
-	al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width, t3f_virtual_display_height, al_map_rgba_f(0.0, 0.0, 0.0, 0.75));
+	al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width + 0.5, t3f_virtual_display_height + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.75));
 	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - t3f_get_font_line_height(app->font[DOT_FONT_16]) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, T3F_FONT_ALIGN_CENTER, message);
-	al_draw_filled_rectangle(0.0, t3f_virtual_display_width, 0.0, t3f_virtual_display_height, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 	al_flip_display();
 }
 
