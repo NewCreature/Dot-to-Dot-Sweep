@@ -62,6 +62,8 @@ typedef struct
   float device_element_dir; // for mapping axes to buttons
   float dead_zone;    // dead zone for analog inputs
   float threshold;    // threshold for analog input to register pressed/released
+  float offset;       // offset element values by this amount
+  float scale;        // scale element values by this amount
 
   /* state */
   bool held;
