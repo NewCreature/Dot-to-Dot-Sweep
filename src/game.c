@@ -813,9 +813,12 @@ void dot_game_emo_logic(void * data)
 	}
 }
 
-static void open_pause_menu(APP_INSTANCE * app)
+static void open_pause_menu(APP_INSTANCE * app, bool convert)
 {
-	app->game.pause_state = app->game.state;
+	if(!convert)
+	{
+		app->game.pause_state = app->game.state;
+	}
 	app->game.state = DOT_GAME_STATE_PAUSE_MENU;
 	t3f_reset_gui_input(app->menu[DOT_MENU_PAUSE]);
 	t3f_select_next_gui_element(app->menu[DOT_MENU_PAUSE]);
@@ -854,7 +857,7 @@ void dot_game_logic(void * data)
 			app->game.state_tick++;
 			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 			{
-				open_pause_menu(app);
+				open_pause_menu(app, false);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				t3f_key[ALLEGRO_KEY_BACK] = 0;
 			}
@@ -918,7 +921,7 @@ void dot_game_logic(void * data)
 		{
 			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 			{
-				open_pause_menu(app);
+				open_pause_menu(app, true);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				t3f_key[ALLEGRO_KEY_BACK] = 0;
 			}
@@ -940,7 +943,7 @@ void dot_game_logic(void * data)
 				{
 					if(!app->game.block_click)
 					{
-						open_pause_menu(app);
+						open_pause_menu(app, true);
 						app->controller.button = false;
 					}
 				}
@@ -1029,7 +1032,7 @@ void dot_game_logic(void * data)
 			}
 			else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.button || app->controller.current_joy_disconnected || app->touch_id == 0)
 			{
-				open_pause_menu(app);
+				open_pause_menu(app, false);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				app->controller.button = false;
 			}
