@@ -15,6 +15,13 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Leaderboard upload/download screen overlay doesn't extend all the way to the
+   right on Steam Deck.
+
+[ ]Switching from touch to controller doesn't work properly on Steam Deck.
+   Resume menu item goes back to pause screen after touch controls have been
+   used.
+
 [X]Game should pause when pressing Escape at start screen.
 
 [X]When switching from controller to mouse we get inconsistent behavior.
@@ -162,25 +169,6 @@ v1.3
 [X]Store user save data in separate INI file to enable proper cloud synching.
 
 [X]Find a way to separate config and user data on Windows.
-
-[ ]Prepare Steam release.
-
-   [X]Set up store page.
-
-   [X]Upload notarized MacOS app bundle.
-
-   [X]Upload Linux executable.
-
-   [ ]Upload Windows executable.
-
-   [ ]Get ready for Steam Deck verification.
-
-      [ ]Make community post about intentions to be optimized for Steam Deck.
-
-   [ ]Investigate executable update issue.
-
-      [ ]When uploading new Linux executable, the new version is not detected
-         as different than the existing one and won't trigger update.
 
 [X]Finish XBox controller implementation.
 
