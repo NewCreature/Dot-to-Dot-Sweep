@@ -15,7 +15,7 @@ Steam Release Checklist
 v1.3
 ----
 
-[ ]Game should pause when pressing Escape at start screen.
+[X]Game should pause when pressing Escape at start screen.
 
 [ ]WHen switching from controller to mouse we get inconistent behavior.
    Sometimes the game pauses, sometimes it doesn't. The correct bahavior is to
