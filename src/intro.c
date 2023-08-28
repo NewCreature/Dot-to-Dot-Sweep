@@ -302,7 +302,14 @@ int dot_menu_proc_pause_resume(void * data, int i, void * pp)
 	}
 	else
 	{
-		app->game.state = DOT_GAME_STATE_PAUSE;
+		if(app->game.pause_state == DOT_GAME_STATE_START)
+		{
+			app->game.state = DOT_GAME_STATE_START;
+		}
+		else
+		{
+			app->game.state = DOT_GAME_STATE_PAUSE;
+		}
 		app->game.block_click = true;
 	}
 
