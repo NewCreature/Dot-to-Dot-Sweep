@@ -904,13 +904,43 @@ void _t3f_input_handle_joystick_event(ALLEGRO_EVENT * event)
       else if(event->joystick.stick == 2)
       {
         joy_num = t3f_get_joystick_number(event->joystick.id);
-        _input_state_fudging_helper[joy_num].stick[2].axis[0] = 0.0;
+        if(joy_num >= 0)
+        {
+          _input_state_fudging_helper[joy_num].stick[2].axis[0] = 0.0;
+        }
       }
       else if(event->joystick.stick == 3)
       {
         joy_num = t3f_get_joystick_number(event->joystick.id);
-        _input_state_fudging_helper[joy_num].stick[3].axis[0] = 0.0;
+        if(joy_num >= 0)
+        {
+          _input_state_fudging_helper[joy_num].stick[3].axis[0] = 0.0;
+        }
       }
     }
+    return;
+  #endif
+
+  #ifdef ALLEGRO_UNIX
+    if(event->type == ALLEGRO_EVENT_JOYSTICK_AXIS)
+    {
+      if(event->joystick.stick == 1 && event->joystick.axis == 0)
+      {
+        joy_num = t3f_get_joystick_number(event->joystick.id);
+        if(joy_num >= 0)
+        {
+          _input_state_fudging_helper[joy_num].stick[1].axis[0] = 0.0;
+        }
+      }
+      else if(event->joystick.stick == 2 && event->joystick.axis == 1))
+      {
+        joy_num = t3f_get_joystick_number(event->joystick.id);
+        if(joy_num >= 0)
+        {
+          _input_state_fudging_helper[joy_num].stick[2].axis[1] = 0.0;
+        }
+      }
+    }
+    return;
   #endif
 }
