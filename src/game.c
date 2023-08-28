@@ -941,9 +941,8 @@ void dot_game_logic(void * data)
 				{
 					if(!app->game.block_click)
 					{
-						app->game.state = DOT_GAME_STATE_PLAY;
+						app->game.state = DOT_GAME_STATE_PAUSE_MENU;
 						app->controller.button = false;
-						dot_enable_mouse_cursor(false);
 					}
 				}
 				else
