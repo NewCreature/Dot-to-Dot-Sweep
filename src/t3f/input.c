@@ -932,7 +932,7 @@ void _t3f_input_handle_joystick_event(ALLEGRO_EVENT * event)
           _input_state_fudging_helper[joy_num].stick[1].axis[0] = 0.0;
         }
       }
-      else if(event->joystick.stick == 2 && event->joystick.axis == 1))
+      else if(event->joystick.stick == 2 && event->joystick.axis == 1)
       {
         joy_num = t3f_get_joystick_number(event->joystick.id);
         if(joy_num >= 0)
