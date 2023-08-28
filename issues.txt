@@ -17,7 +17,7 @@ v1.3
 
 [ ]Pause menu overlay doesn't extend all the way to the right on Steam Deck.
 
-[ ]Leaderboard upload/download screen overlay doesn't extend all the way to the
+[X]Leaderboard upload/download screen overlay doesn't extend all the way to the
    right on Steam Deck.
 
 [ ]Switching from touch to controller doesn't work properly on Steam Deck.
