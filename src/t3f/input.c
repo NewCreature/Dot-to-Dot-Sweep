@@ -191,15 +191,15 @@ bool t3f_map_input_for_xbox_controller(T3F_INPUT_HANDLER * input_handler, int jo
   input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
   input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].dead_zone = 0.0;
   input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].threshold = 0.5;
-  input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].scale = 0.5;
-  input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].offset = 1.0;
+//  input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].scale = 0.5;
+//  input_handler->element[T3F_GAMEPAD_LEFT_TRIGGER].offset = 1.0;
 
   /* Right Trigger */
   input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
   input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].dead_zone = 0.0;
   input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].threshold = 0.5;
-  input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].scale = 0.5;
-  input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].offset = 1.0;
+//  input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].scale = 0.5;
+//  input_handler->element[T3F_GAMEPAD_RIGHT_TRIGGER].offset = 1.0;
 
   /* A */
   input_handler->element[T3F_GAMEPAD_A].device_type = T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK;
@@ -900,6 +900,16 @@ void _t3f_input_handle_joystick_event(ALLEGRO_EVENT * event)
           _input_state_fudging_helper[joy_num].stick[4].axis[0] = 0.0;
           _input_state_fudging_helper[joy_num].stick[4].axis[1] = 0.0;
         }
+      }
+      else if(event->joystick.stick == 2)
+      {
+        joy_num = t3f_get_joystick_number(event->joystick.id);
+        _input_state_fudging_helper[joy_num].stick[2].axis[0] = 0.0;
+      }
+      else if(event->joystick.stick == 3)
+      {
+        joy_num = t3f_get_joystick_number(event->joystick.id);
+        _input_state_fudging_helper[joy_num].stick[3].axis[0] = 0.0;
       }
     }
   #endif
