@@ -939,17 +939,10 @@ void dot_game_logic(void * data)
 					}
 					t3f_touch[0].active = false;
 				}
-				else if(app->controller.button)
+				else if(app->using_controller)
 				{
-					if(!app->game.block_click)
-					{
-						open_pause_menu(app, true);
-						app->controller.button = false;
-					}
-				}
-				else
-				{
-					app->game.block_click = false;
+					app->game.state = DOT_GAME_STATE_PLAY;
+					app->controller.button = false;
 				}
 			}
 			break;
