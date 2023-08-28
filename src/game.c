@@ -594,8 +594,11 @@ void dot_game_check_player_collisions(void * data)
 
 static void update_player_position(APP_INSTANCE * app)
 {
-	app->game.player.ball.x = app->touch_x + app->game.player.touch_offset_x;
-	app->game.player.ball.y = app->touch_y + app->game.player.touch_offset_y;
+	if(!app->mouse_warp_tick)
+	{
+		app->game.player.ball.x = app->touch_x + app->game.player.touch_offset_x;
+		app->game.player.ball.y = app->touch_y + app->game.player.touch_offset_y;
+	}
 }
 
 static void maybe_activate_shield(APP_INSTANCE * app)
