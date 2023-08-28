@@ -855,7 +855,8 @@ void dot_game_logic(void * data)
 			app->game.state_tick++;
 			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 			{
-				exit_to_title(app);
+				app->game.pause_state = app->game.state;
+				app->game.state = DOT_GAME_STATE_PAUSE_MENU;
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				t3f_key[ALLEGRO_KEY_BACK] = 0;
 			}
