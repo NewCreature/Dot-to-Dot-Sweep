@@ -1,7 +1,6 @@
 #include "t3f.h"
 #include "gui.h"
 
-static bool t3f_gui_left_clicked = 0;
 T3F_GUI_DRIVER t3f_gui_allegro_driver;
 static T3F_GUI_DRIVER * t3f_gui_current_driver = NULL;
 static bool t3f_gui_check_hover_y(T3F_GUI * pp, int i, float y);
@@ -486,11 +485,10 @@ void t3f_process_gui(T3F_GUI * pp, void * data)
 	int i;
 	bool mouse_moved = false;
 	bool touched = false;
-	int touch_id = 0;
 	float mouse_x = 0.0, mouse_y = 0.0;
 
 	/* check if the mouse has been moved */
-	if(check_mouse_moved() || t3f_mouse_button[0])
+	if(check_mouse_moved())
 	{
 		mouse_x = t3f_mouse_x;
 		mouse_y = t3f_mouse_y;
@@ -499,19 +497,15 @@ void t3f_process_gui(T3F_GUI * pp, void * data)
 	t3f_gui_mouse_x = t3f_mouse_x;
 	t3f_gui_mouse_y = t3f_mouse_y;
 
-	if(t3f_mouse_button[0])
-	{
-		touch_id = 0;
-	}
 	for(i = 0; i < T3F_MAX_TOUCHES; i++)
 	{
-		if(t3f_touch[i].active)
+		if(t3f_touch[i].pressed)
 		{
 			mouse_x = t3f_touch[i].x;
 			mouse_y = t3f_touch[i].y;
 			mouse_moved = true;
 			touched = true;
-			t3f_touch[i].active = false;
+			t3f_touch[i].pressed = false;
 			break;
 		}
 	}
@@ -534,15 +528,9 @@ void t3f_process_gui(T3F_GUI * pp, void * data)
 		{
 			t3f_gui_hover_y = pp->oy + pp->element[pp->hover_element].oy;
 		}
-		if(touched && !t3f_gui_left_clicked && pp->hover_element >= 0)
+		if(touched && pp->hover_element >= 0)
 		{
 			t3f_activate_selected_gui_element(pp, data);
-			t3f_gui_left_clicked = true;
-			t3f_touch[touch_id].released = false;
-		}
-		if(!t3f_mouse_button[0] && !touched)
-		{
-			t3f_gui_left_clicked = false;
 		}
 	}
 }

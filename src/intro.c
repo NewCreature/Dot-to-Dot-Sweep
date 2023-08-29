@@ -68,23 +68,13 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 		app->state = DOT_STATE_LEADERBOARD;
 		app->current_menu = DOT_MENU_LEADERBOARD;
 	}
-	if(app->touch_id >= 0)
-	{
-		t3f_touch[app->touch_id].pressed = false;
-	}
 	al_resume_timer(t3f_timer);
 	return 1;
 }
 
 int dot_menu_proc_exit(void * data, int i, void * pp)
 {
-	APP_INSTANCE * app = (APP_INSTANCE *)data;
-
 	t3f_exit();
-	if(app->touch_id >= 0)
-	{
-		t3f_touch[app->touch_id].pressed = false;
-	}
 
 	return 1;
 }
@@ -146,10 +136,6 @@ int dot_menu_proc_privacy(void * data, int i, void * pp)
 	remember_element(app);
 	app->current_menu = DOT_MENU_PRIVACY;
 	app->state = DOT_STATE_PRIVACY;
-	if(app->touch_id >= 0)
-	{
-		t3f_touch[app->touch_id].pressed = false;
-	}
 	return 1;
 }
 
