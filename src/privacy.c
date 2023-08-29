@@ -41,22 +41,17 @@ void dot_privacy_logic(void * data)
 	dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
 	for(i = 0; i < T3F_MAX_TOUCHES; i++)
 	{
-		if(t3f_touch[i].active)
+		if(t3f_touch[i].pressed)
 		{
 			m = true;
-			t3f_touch[i].active = false;
+			t3f_touch[i].pressed = false;
 		}
-	}
-	if(app->desktop_mode && t3f_mouse_button[0])
-	{
-		m = true;
 	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || m || app->controller.button)
 	{
 		dot_menu_proc_privacy_back(data, 0, NULL);
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 		t3f_key[ALLEGRO_KEY_BACK] = 0;
-		t3f_mouse_button[0] = false;
 		app->controller.button = false;
 	}
 	app->tick++;

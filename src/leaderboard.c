@@ -54,42 +54,38 @@ void dot_leaderboard_logic(void * data)
   bool m = false;
   int i;
 
-  if(app->current_menu == DOT_MENU_LEADERBOARD)
+  for(i = 0; i < T3F_MAX_TOUCHES; i++)
   {
-    for(i = 0; i < T3F_MAX_TOUCHES; i++)
-    {
-      if(t3f_touch[i].active)
-      {
-        m = true;
-        t3f_touch[i].active = false;
-      }
-    }
-    if(app->desktop_mode && t3f_mouse_button[0])
+    if(t3f_touch[i].pressed)
     {
       m = true;
+      t3f_touch[i].pressed = false;
     }
   }
-  dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
-  if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || m || app->controller.button)
+  if(app->controller.button)
   {
-    if(app->current_menu == DOT_MENU_LEADERBOARD_2)
-    {
-      dot_menu_proc_leaderboard_main_menu(data, 0, NULL);
-    }
-    else
-    {
-      dot_menu_proc_leaderboard_back(data, 0, NULL);
-    }
-    t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-    t3f_key[ALLEGRO_KEY_BACK] = 0;
-    t3f_mouse_button[0] = false;
+    m = true;
     app->controller.button = false;
   }
-  else if(app->current_menu == DOT_MENU_LEADERBOARD_2 && t3f_mouse_button[0])
+  if(t3f_key[ALLEGRO_KEY_ESCAPE])
+  {
+    m = true;
+    t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+  }
+  if(t3f_key[ALLEGRO_KEY_BACK])
+  {
+    m = true;
+    t3f_key[ALLEGRO_KEY_BACK] = 0;
+  }
+  dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
+  if(m && app->current_menu == DOT_MENU_LEADERBOARD_2)
   {
     dot_menu_proc_leaderboard_back(data, 0, NULL);
     app->current_menu = DOT_MENU_LEADERBOARD_2;
-    t3f_mouse_button[0] = false;
+  }
+  else if(m)
+  {
+    dot_menu_proc_leaderboard_back(data, 0, NULL);
   }
   app->tick++;
   if(!app->desktop_mode)

@@ -540,10 +540,6 @@ void dot_game_check_player_collisions(void * data)
 							app->sync_achievements = true;
 						}
 					}
-					if(app->touch_id >= 0)
-					{
-						t3f_touch[app->touch_id].active = false;
-					}
 					dot_game_create_splash_effect(data, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.r, app->dot_color[app->game.player.ball.type]);
 					t3f_play_sample(app->sample[DOT_SAMPLE_LOSE], 1.0, 0.0, 1.0);
 					dot_game_accumulate_score(data);
@@ -926,9 +922,8 @@ void dot_game_logic(void * data)
 						app->game.player.touch_offset_y = app->game.player.ball.y - app->touch_y;
 						app->game.state = DOT_GAME_STATE_PLAY;
 						dot_enable_mouse_cursor(false);
-						t3f_touch[app->touch_id].pressed = false;
 					}
-					t3f_touch[0].active = false;
+					t3f_touch[app->touch_id].pressed = false;
 				}
 				else if(app->using_controller)
 				{
@@ -1068,10 +1063,7 @@ void dot_game_logic(void * data)
 						dot_game_create_splash_effect(data, app->game.ball[i].x, app->game.ball[i].y, app->game.ball[i].r, app->dot_color[app->game.ball[i].type]);
 					}
 				}
-				if(app->touch_id >= 0)
-				{
-					t3f_touch[app->touch_id].active = false;
-				}
+				t3f_clear_touch_data();
 				dot_enable_mouse_cursor(true);
 				app->game.old_bg_color = app->game.bg_color;
 				dot_game_setup_level(data, app->game.level + 1);

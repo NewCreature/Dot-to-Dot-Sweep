@@ -155,7 +155,6 @@ void app_logic(void * data)
 				t3f_touch[0].y = al_fread16le(app->demo_file);
 				t3f_mouse_x = t3f_touch[0].x;
 				t3f_mouse_y = t3f_touch[0].y;
-				t3f_mouse_button[0] = t3f_touch[0].active;
 			}
 			else
 			{
@@ -323,7 +322,7 @@ void app_render(void * data)
 			ox = 12.0;
 			oy = -12.0;
 			t3f_draw_rotated_bitmap(app->bitmap[DOT_BITMAP_HAND], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 92, 24, t3f_mouse_x, t3f_mouse_y, 0, 0, 0);
-			al_draw_rotated_bitmap(t3f_mouse_button[0] ? app->bitmap[DOT_BITMAP_HAND_DOWN] : app->bitmap[DOT_BITMAP_HAND], 92, 24, t3f_mouse_x + ox, t3f_mouse_y + oy, 0, 0);
+			al_draw_rotated_bitmap(t3f_touch[0].active ? app->bitmap[DOT_BITMAP_HAND_DOWN] : app->bitmap[DOT_BITMAP_HAND], 92, 24, t3f_mouse_x + ox, t3f_mouse_y + oy, 0, 0);
 		}
 	}
 	al_hold_bitmap_drawing(false);

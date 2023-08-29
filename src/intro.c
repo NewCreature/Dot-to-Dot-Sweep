@@ -38,8 +38,6 @@ int dot_menu_proc_play(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	dot_game_initialize(data, app->demo_file ? true : false);
-	t3f_touch[app->touch_id].active = false;
-	t3f_mouse_button[0] = false;
 
 	return 1;
 }
@@ -70,7 +68,10 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 		app->state = DOT_STATE_LEADERBOARD;
 		app->current_menu = DOT_MENU_LEADERBOARD;
 	}
-	t3f_mouse_button[0] = false;
+	if(app->touch_id >= 0)
+	{
+		t3f_touch[app->touch_id].pressed = false;
+	}
 	al_resume_timer(t3f_timer);
 	return 1;
 }
@@ -80,8 +81,10 @@ int dot_menu_proc_exit(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	t3f_exit();
-	t3f_touch[app->touch_id].active = false;
-	t3f_mouse_button[0] = false;
+	if(app->touch_id >= 0)
+	{
+		t3f_touch[app->touch_id].pressed = false;
+	}
 
 	return 1;
 }
@@ -143,7 +146,10 @@ int dot_menu_proc_privacy(void * data, int i, void * pp)
 	remember_element(app);
 	app->current_menu = DOT_MENU_PRIVACY;
 	app->state = DOT_STATE_PRIVACY;
-	t3f_mouse_button[0] = false;
+	if(app->touch_id >= 0)
+	{
+		t3f_touch[app->touch_id].pressed = false;
+	}
 	return 1;
 }
 
@@ -474,6 +480,7 @@ void dot_intro_logic(void * data)
 	const char * val;
 	int r;
 	bool upload_user_name = false;
+	bool m = false;
 
 	if(app->entering_name)
 	{
@@ -572,11 +579,19 @@ void dot_intro_logic(void * data)
 	}
 	if(!app->menu_showing)
 	{
-		if(app->touch_id > 0 || t3f_touch[0].active || app->controller.button)
+		if(app->touch_id >= 0 && t3f_touch[app->touch_id].pressed)
+		{
+			m = true;
+			t3f_touch[app->touch_id].pressed = false;
+		}
+		if(app->controller.button)
+		{
+			m = true;
+			app->controller.button = false;
+		}
+		if(m)
 		{
 			app->menu_showing = true;
-			t3f_touch[0].active = false;
-			app->controller.button = false;
 		}
 	}
 	else
