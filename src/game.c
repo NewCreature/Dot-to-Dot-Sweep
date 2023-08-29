@@ -167,7 +167,7 @@ void dot_game_initialize(void * data, bool demo_seed)
 		t3f_play_music(DOT_MUSIC_BGM);
 	}
 	app->game.tick = 0;
-	app->game.block_click = false;
+	t3f_clear_touch_data();
 	compute_bg_color(app);
 	app->state = DOT_STATE_GAME;
 }
@@ -865,7 +865,7 @@ void dot_game_logic(void * data)
 			{
 				if(app->touch_id >= 0)
 				{
-					if(!app->game.block_click && app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
+					if(t3f_touch[app->touch_id].pressed && app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
 					{
 						t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
 						app->game.state = DOT_GAME_STATE_PLAY;
@@ -877,33 +877,24 @@ void dot_game_logic(void * data)
 						app->game.player.touch_offset_y = 0;
 						app->game.level_start = false;
 						dot_enable_mouse_cursor(false);
-						app->game.block_click = true;
 					}
-					t3f_touch[0].active = false;
+					t3f_touch[app->touch_id].pressed = false;
 				}
 				else if(app->controller.button)
 				{
-					if(!app->game.block_click)
-					{
-						t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
-						app->game.state = DOT_GAME_STATE_PLAY;
-						app->game.state_tick = 0;
-						app->game.player.lost_touch = false;
-						app->game.player.ball.active = true;
-						app->game.player.want_shield = true;
-						app->game.player.touch_offset_x = 0;
-						app->game.player.touch_offset_y = 0;
-						app->game.player.ball.x = DOT_GAME_PLAYFIELD_WIDTH / 2;
-						app->game.player.ball.y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
-						app->game.level_start = false;
-						dot_enable_mouse_cursor(false);
-						app->game.block_click = true;
-					}
+					t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
+					app->game.state = DOT_GAME_STATE_PLAY;
+					app->game.state_tick = 0;
+					app->game.player.lost_touch = false;
+					app->game.player.ball.active = true;
+					app->game.player.want_shield = true;
+					app->game.player.touch_offset_x = 0;
+					app->game.player.touch_offset_y = 0;
+					app->game.player.ball.x = DOT_GAME_PLAYFIELD_WIDTH / 2;
+					app->game.player.ball.y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
+					app->game.level_start = false;
+					dot_enable_mouse_cursor(false);
 					app->controller.button = false;
-				}
-				else
-				{
-					app->game.block_click = false;
 				}
 				if(app->game.state == DOT_GAME_STATE_PLAY)
 				{
@@ -929,13 +920,13 @@ void dot_game_logic(void * data)
 			{
 				if(app->touch_id >= 0)
 				{
-					if(!app->game.block_click && t3f_distance(app->touch_x, app->touch_y, app->game.player.ball.x, app->game.player.ball.y) < DOT_GAME_GRAB_SPOT_SIZE)
+					if(t3f_touch[app->touch_id].pressed && t3f_distance(app->touch_x, app->touch_y, app->game.player.ball.x, app->game.player.ball.y) < DOT_GAME_GRAB_SPOT_SIZE)
 					{
 						app->game.player.touch_offset_x = app->game.player.ball.x - app->touch_x;
 						app->game.player.touch_offset_y = app->game.player.ball.y - app->touch_y;
 						app->game.state = DOT_GAME_STATE_PLAY;
 						dot_enable_mouse_cursor(false);
-						app->game.block_click = true;
+						t3f_touch[app->touch_id].pressed = false;
 					}
 					t3f_touch[0].active = false;
 				}
@@ -1014,16 +1005,15 @@ void dot_game_logic(void * data)
 		default:
 		{
 			dot_enable_mouse_cursor(false);
-			if(app->touch_id == 0)
+			if(app->touch_id == 0 && t3f_touch[app->touch_id].pressed)
 			{
 				app->game.pause_state = app->game.state;
 				app->game.state = DOT_GAME_STATE_PAUSE;
 				dot_enable_mouse_cursor(true);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-				app->controller.button = false;
-				t3f_touch[0].active = false;
+				t3f_touch[app->touch_id].pressed = false;
 			}
-			else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.button || app->controller.current_joy_disconnected || app->touch_id == 0)
+			else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.button || app->controller.current_joy_disconnected)
 			{
 				open_pause_menu(app, false);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;

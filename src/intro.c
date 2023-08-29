@@ -310,7 +310,7 @@ int dot_menu_proc_pause_resume(void * data, int i, void * pp)
 		{
 			app->game.state = DOT_GAME_STATE_PAUSE;
 		}
-		app->game.block_click = true;
+		t3f_clear_touch_data();
 	}
 
 	return 1;

@@ -101,7 +101,6 @@ typedef struct
 	ALLEGRO_COLOR old_bg_color;
 	float bg_color_fade;
 	int tick;
-	bool block_click;
 
 	/* player data */
 	int lives;

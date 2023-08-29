@@ -55,6 +55,7 @@ typedef struct
 {
 
 	bool active; // is this touch active?
+	bool pressed;
 	bool released;
   float real_x, real_y; // the actual screen coordinates
 	float x, y; // coordinates transformed to for a view

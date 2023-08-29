@@ -1138,6 +1138,7 @@ void t3f_clear_touch_data(void)
 	for(i = 0; i < T3F_MAX_TOUCHES; i++)
 	{
 		t3f_touch[i].active = false;
+		t3f_touch[i].pressed = false;
 		t3f_touch[i].released = false;
 	}
 }
@@ -1322,6 +1323,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			t3f_mouse_z = event->mouse.z;
 
 			t3f_touch[0].active = true;
+			t3f_touch[0].pressed = true;
 			t3f_touch[0].real_x = t3f_real_mouse_x;
 			t3f_touch[0].real_y = t3f_real_mouse_y;
 			t3f_touch[0].primary = true;
@@ -1415,6 +1417,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			t3f_touch[event->touch.id + 1].real_x = event->touch.x;
 			t3f_touch[event->touch.id + 1].real_y = event->touch.y;
 			t3f_touch[event->touch.id + 1].primary = event->touch.primary;
+			t3f_touch[event->touch.id + 1].pressed = true;
 			break;
 		}
 
