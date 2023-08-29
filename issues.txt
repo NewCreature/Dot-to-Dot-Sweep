@@ -17,6 +17,9 @@ v1.3
 
 [ ]Cannot touch to resume from pause screen.
 
+[ ]Investigate player character jump on switch from controller to mouse
+   further. I saw this happen again on the Steam Deck.
+
 [X]Pause menu overlay doesn't extend all the way to the right on Steam Deck.
 
 [X]Leaderboard upload/download screen overlay doesn't extend all the way to the
