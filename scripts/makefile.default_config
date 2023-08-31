@@ -85,6 +85,8 @@ INNO_SETUP_COMPILER = ~/.wine/drive_c/Program\ Files/Inno\ Setup\ 5/Compil32.exe
 #################
 # MSYS Settings #
 #################
+MSYS_CONFIG_CC = gcc
+MSYS_CONFIG_CXX = g++
 #MSYS_CONFIG_CFLAGS =
 #MSYS_CONFIG_CXXFLAGS =
 MSYS_CONFIG_LFLAGS = -mwindows
