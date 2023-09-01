@@ -128,5 +128,5 @@ data_package:
 	cd ../bin && zip -9 -r $(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-data.zip data -x data/.\*
 
 steam_binary_package: $(APP_EXE_NAME)
-	rm -f $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-$(SYSTEM)-binaries.zip
-	cd ../bin && zip -9 $(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-$(SYSTEM)-binaries.zip * -x data\*
+	rm -f $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-$(T3F_PLATFORM_NAME)-binaries.zip
+	cd ../bin && zip -9 $(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-$(T3F_PLATFORM_NAME)-binaries.zip * -x data\*; cd ../$(T3F_PLATFORM_NAME)/blobs && zip -9 -r ../$(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-$(T3F_PLATFORM_NAME)-binaries.zip *
