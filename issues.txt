@@ -22,7 +22,7 @@ v1.3
 
    [ ]Linux.
 
-   [ ]MacOS.
+   [X]MacOS.
 
 [ ]Show message when retrieving/updating user key.
 
