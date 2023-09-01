@@ -90,7 +90,7 @@ demo_gp:
 	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts demo_gp
 
 makeicon:
-	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts ../win32/makeicon
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts ../windows/makeicon
 
 reset_config:
 	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts reset_config
