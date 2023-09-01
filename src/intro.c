@@ -509,6 +509,7 @@ void dot_intro_logic(void * data)
 		al_set_config_value(t3f_user_data, "Game Data", "User Name", app->user_name);
 		t3f_save_user_data();
 		al_stop_timer(t3f_timer);
+		dot_show_message(data, "Synchronizing User Key Data...");
 		if(t3net_update_leaderboard_user_name(app->leaderboard_set_user_name_url, app->user_key, app->user_name))
 		{
 			al_remove_config_key(t3f_user_data, "Game Data", "User Name Uploaded");

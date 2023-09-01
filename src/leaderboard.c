@@ -23,7 +23,7 @@ bool dot_get_leaderboard_user_key(void * data)
   val = al_get_config_value(t3f_user_data, "Game Data", "User Key");
   if(!val)
   {
-    dot_show_message(data, "Retrieving User Key");
+    dot_show_message(data, "Retrieving User Key...");
     new_val = t3net_get_new_leaderboard_user_key(app->leaderboard_get_user_key_url, NULL);
     if(new_val)
     {
