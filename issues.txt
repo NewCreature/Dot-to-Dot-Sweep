@@ -15,6 +15,9 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Make 'steam_binary_package' target include binary blobs for the current
+   platform in the ZIP file.
+
 [ ]Show message when retrieving/updating user key.
 
 [X]Cannot touch to resume from pause screen.
