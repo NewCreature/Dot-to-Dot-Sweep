@@ -1,5 +1,7 @@
 #include "t3f.h"
-#include "steam/steam_api_flat.h"
+#ifdef T3F_ENABLE_STEAM_INTEGRATION
+  #include "steam/steam_api_flat.h"
+#endif
 
 #define T3F_STEAM_STORE_STATE_NONE        0
 #define T3F_STEAM_STORE_STATE_IN_PROGRESS 1
@@ -8,10 +10,12 @@
 
 #define T3F_STEAM_STATS_STORE_INTERVAL 10.0
 
-static bool _t3f_steam_integration_enabled = false;
-static bool _t3f_steam_stats_ready = false;
-static bool _t3f_steam_stats_store_state = T3F_STEAM_STORE_STATE_NONE;
-static double _t3f_steam_store_time = -T3F_STEAM_STATS_STORE_INTERVAL;
+#ifdef T3F_ENABLE_STEAM_INTEGRATION
+  static bool _t3f_steam_integration_enabled = false;
+  static bool _t3f_steam_stats_ready = false;
+  static bool _t3f_steam_stats_store_state = T3F_STEAM_STORE_STATE_NONE;
+  static double _t3f_steam_store_time = -T3F_STEAM_STATS_STORE_INTERVAL;
+#endif
 
 bool t3f_init_steam_integration(void)
 {
@@ -99,42 +103,44 @@ const char * t3f_get_steam_user_display_name(void)
   return NULL;
 }
 
-static void _t3f_run_steam_callbacks(void)
-{
-  HSteamPipe hSteamPipe = SteamAPI_GetHSteamPipe();
-	SteamAPI_ManualDispatch_RunFrame(hSteamPipe);
-	CallbackMsg_t callback;
-	while(SteamAPI_ManualDispatch_GetNextCallback(hSteamPipe, &callback))
-	{
-		// Check for dispatching API call results
-		if(callback.m_iCallback == SteamAPICallCompleted_t::k_iCallback)
-		{
-			SteamAPICallCompleted_t *pCallCompleted = (SteamAPICallCompleted_t *)&callback;
-			void * pTmpCallResult = malloc(pCallCompleted->m_cubParam);
-			bool bFailed;
-			if ( SteamAPI_ManualDispatch_GetAPICallResult( hSteamPipe, pCallCompleted->m_hAsyncCall, pTmpCallResult, pCallCompleted->m_cubParam, pCallCompleted->m_iCallback, &bFailed ) )
-			{
-				// Dispatch the call result to the registered handler(s) for the
-				// call identified by pCallCompleted->m_hAsyncCall
-			}
-			free(pTmpCallResult);
-		}
-		else
-		{
-			// Look at callback.m_iCallback to see what kind of callback it is,
-			// and dispatch to appropriate handler(s)
-      if(callback.m_iCallback == UserStatsReceived_t::k_iCallback)
+#ifdef T3F_ENABLE_STEAM_INTEGRATION
+  static void _t3f_run_steam_callbacks(void)
+  {
+    HSteamPipe hSteamPipe = SteamAPI_GetHSteamPipe();
+    SteamAPI_ManualDispatch_RunFrame(hSteamPipe);
+    CallbackMsg_t callback;
+    while(SteamAPI_ManualDispatch_GetNextCallback(hSteamPipe, &callback))
+    {
+      // Check for dispatching API call results
+      if(callback.m_iCallback == SteamAPICallCompleted_t::k_iCallback)
       {
-        _t3f_steam_stats_ready = true;
+        SteamAPICallCompleted_t *pCallCompleted = (SteamAPICallCompleted_t *)&callback;
+        void * pTmpCallResult = malloc(pCallCompleted->m_cubParam);
+        bool bFailed;
+        if ( SteamAPI_ManualDispatch_GetAPICallResult( hSteamPipe, pCallCompleted->m_hAsyncCall, pTmpCallResult, pCallCompleted->m_cubParam, pCallCompleted->m_iCallback, &bFailed ) )
+        {
+          // Dispatch the call result to the registered handler(s) for the
+          // call identified by pCallCompleted->m_hAsyncCall
+        }
+        free(pTmpCallResult);
       }
-      else if(callback.m_iCallback == UserStatsStored_t::k_iCallback)
+      else
       {
-        _t3f_steam_stats_store_state = T3F_STEAM_STORE_STATE_DONE;
+        // Look at callback.m_iCallback to see what kind of callback it is,
+        // and dispatch to appropriate handler(s)
+        if(callback.m_iCallback == UserStatsReceived_t::k_iCallback)
+        {
+          _t3f_steam_stats_ready = true;
+        }
+        else if(callback.m_iCallback == UserStatsStored_t::k_iCallback)
+        {
+          _t3f_steam_stats_store_state = T3F_STEAM_STORE_STATE_DONE;
+        }
       }
-		}
-		SteamAPI_ManualDispatch_FreeLastCallback( hSteamPipe );
-	}
-}
+      SteamAPI_ManualDispatch_FreeLastCallback( hSteamPipe );
+    }
+  }
+#endif
 
 
 void t3f_steam_integration_logic(void)
