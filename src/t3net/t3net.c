@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+	#include <windows.h>
+#endif
 #include "t3net.h"
 #include "internal.h"
 
@@ -15,6 +18,52 @@ static char t3net_temp_dir[1024] = {0};
 static char * _t3net_default_url_runner(const char * url);
 
 static char * (*_t3net_url_runner)(const char * url) = _t3net_default_url_runner;
+
+static int run_system_command(char * command, const char * log_file)
+{
+	int ret;
+
+	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+	
+		STARTUPINFO si = {0};
+		PROCESS_INFORMATION pi = {0};
+		SECURITY_ATTRIBUTES sa;
+		DWORD retvalue;
+		sa.nLength = sizeof(sa);
+		sa.lpSecurityDescriptor = NULL;
+		sa.bInheritHandle = TRUE;
+		HANDLE log_handle = CreateFile(log_file, GENERIC_WRITE, FILE_SHARE_WRITE | FILE_SHARE_READ, &sa, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		si.cb = sizeof(si);
+		si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+		si.hStdInput = NULL;
+		si.hStdOutput = log_handle;
+		si.hStdError = log_handle;
+		si.wShowWindow = SW_HIDE;
+		ret = CreateProcess(NULL, command, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi);
+		WaitForSingleObject(pi.hProcess, INFINITE);
+		GetExitCodeProcess(pi.hProcess, &retvalue);
+		if(log_handle)
+		{
+			CloseHandle(log_handle);
+		}
+		ret = retvalue;
+
+	#else
+
+		char final_command[1024];
+		strcpy(final_command, command);
+		if(log_file)
+		{
+			strcat(final_command, " > \"");
+			strcat(final_command, log_file);
+			strcat(final_command, "\"");
+		}
+		ret = system(final_command);
+
+	#endif
+
+	return ret;
+}
 
 void t3net_strcpy(char * dest, const char * src, int size)
 {
@@ -107,14 +156,12 @@ int t3net_setup(char * (*url_runner)(const char * url), const char * temp_dir)
 
 const char * t3net_get_curl_command(void)
 {
-	#ifdef ALLEGRO_WINDOWS
-		strcpy(_t3net_curl_command, "curl");
+	#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+		strcpy(_t3net_curl_command, "./curl.exe");
+	#elif __APPLE__
+		strcpy(_t3net_curl_command, "/usr/bin/curl");
 	#else
-		#ifdef ALLEGRO_MACOSX
-			strcpy(_t3net_curl_command, "/usr/bin/curl");
-		#else
-			strcpy(_t3net_curl_command, "LD_LIBRARY_PATH=\"/lib\" curl");
-		#endif
+		strcpy(_t3net_curl_command, "LD_LIBRARY_PATH=\"/lib\" curl");
 	#endif
 	return _t3net_curl_command;
 }
@@ -396,7 +443,7 @@ static char * _t3net_default_url_runner(const char * url)
 	{
 		sprintf(temp_path, "%st3net.out", t3net_temp_dir);
 		sprintf(curl_command, "%s --connect-timeout %d \"%s\" --silent --output \"%s\"", t3net_get_curl_command(), T3NET_TIMEOUT_TIME, url, temp_path);
-		system(curl_command);
+		run_system_command(curl_command, NULL);
 		free(curl_command);
 		return t3net_load_file(temp_path);
 	}
