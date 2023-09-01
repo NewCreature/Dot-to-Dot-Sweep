@@ -14,6 +14,32 @@ unsigned long dot_leaderboard_unobfuscate_score(unsigned long score)
   return (score - 's' - 'd' - '2') / 'd';
 }
 
+bool dot_get_leaderboard_user_key(void * data)
+{
+  APP_INSTANCE * app = (APP_INSTANCE *)data;
+  const char * val;
+	char * new_val;
+
+  val = al_get_config_value(t3f_user_data, "Game Data", "User Key");
+  if(!val)
+  {
+    dot_show_message(data, "Retrieving User Key");
+    new_val = t3net_get_new_leaderboard_user_key(app->leaderboard_get_user_key_url, NULL);
+    if(new_val)
+    {
+      al_set_config_value(t3f_user_data, "Game Data", "User Key", new_val);
+      free(new_val);
+      t3f_save_user_data();
+      return true;
+    }
+  }
+  else
+  {
+    return true;
+  }
+  return false;
+}
+
 void dot_upload_current_high_score(void * data)
 {
   APP_INSTANCE * app = (APP_INSTANCE *)data;

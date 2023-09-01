@@ -1067,7 +1067,6 @@ void dot_deinitialize_achievements(APP_INSTANCE * app)
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
 	int i;
-	char * val;
 
 	/* detect game type */
 	app->desktop_mode = false;
@@ -1125,16 +1124,6 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 
 	app_read_config(app);
 	app_read_user_data(app);
-	if(app->upload_scores && strlen(app->user_key) < 1)
-	{
-		val = t3net_get_new_leaderboard_user_key(app->leaderboard_get_user_key_url, NULL);
-		if(val)
-		{
-			al_set_config_value(t3f_user_data, "Game Data", "User Key", val);
-			free(val);
-			t3f_save_user_data();
-		}
-	}
 
 	if(!dot_intro_initialize(app))
 	{
