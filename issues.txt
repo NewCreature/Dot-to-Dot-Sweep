@@ -24,7 +24,7 @@ v1.3
 
    [X]MacOS.
 
-[ ]Show message when retrieving/updating user key.
+[X]Show message when retrieving/updating user key.
 
 [X]Cannot touch to resume from pause screen.
 
