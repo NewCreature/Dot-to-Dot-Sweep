@@ -15,12 +15,12 @@ Steam Release Checklist
 v1.3
 ----
 
-[ ]Make 'steam_binary_package' target include binary blobs for the current
+[X]Make 'steam_binary_package' target include binary blobs for the current
    platform in the ZIP file.
 
    [X]Windows.
 
-   [ ]Linux.
+   [X]Linux.
 
    [X]MacOS.
 
