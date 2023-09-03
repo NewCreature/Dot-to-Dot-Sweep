@@ -75,9 +75,9 @@ MINGW_PLATFORM_LIBS = -lcurl -lwldap32
 ##############
 # MSYS stuff #
 ##############
-#MSYS_CFLAGS = -DT3F_ENABLE_STEAM_INTEGRATION
+#MSYS_CFLAGS =
 #MSYS_PLATFORM_OBJECTS =
-MSYS_PLATFORM_LIBS = ../windows/libraries/steam_api.lib
+#MSYS_PLATFORM_LIBS =
 #MSYS_PLATFORM_TARGET =
 
 #################
