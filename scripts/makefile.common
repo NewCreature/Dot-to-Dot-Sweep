@@ -81,7 +81,9 @@ binary_package_temp: $(APP_EXE_NAME)
 	@mkdir ../temp
 	@mkdir ../temp/$(APP_PACKAGE_NAME)
 	@echo "Copy app data..."
-	@rsync -avq --exclude=".*" --exclude="src/" --exclude="android/" --exclude="debian/" --exclude="iphone/" --exclude="macos/" --exclude="misc/" --exclude="packages/" --exclude="scripts/" --exclude="temp/" --exclude="windows/" --exclude="changes.txt" --exclude="issues.txt" ../ ../temp/$(APP_PACKAGE_NAME)
+	@rsync -avq --exclude=".*" --exclude="src/" --exclude="android/" --exclude="debian/" --exclude="iphone/" --exclude="linux/" --exclude="macos/" --exclude="misc/" --exclude="packages/" --exclude="scripts/" --exclude="temp/" --exclude="windows/" --exclude="graphics_src/" --exclude="changes.txt" --exclude="issues.txt" ../ ../temp/$(APP_PACKAGE_NAME)
+	@cp ../$(T3F_PLATFORM_NAME)/blobs/$(T3F_PLATFORM_ARCHITECTURE)/* ../temp/$(APP_PACKAGE_NAME)/bin
+	@rm -f ../temp/$(APP_PACKAGE_NAME)/bin/binaries.here
 	@echo "Make install script..."
 	@cp ../misc/binary_install.sh ../temp/$(APP_PACKAGE_NAME)/install.sh
 	@$(SED_COMMAND) 's|T3F_APP_TITLE|$(APP_TITLE)|' ../temp/$(APP_PACKAGE_NAME)/install.sh
