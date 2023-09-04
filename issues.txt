@@ -15,6 +15,10 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Update license.
+
+[ ]Update README.
+
 [ ]Make game start message relevant to the current control scheme.
 
 [X]Make 'steam_binary_package' target include binary blobs for the current
