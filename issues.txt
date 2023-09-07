@@ -11,6 +11,15 @@ Steam Release Checklist
 
 [ ]Create and upload trailer.
 
+   [ ]Show T Cubed Software Logo with music in background.
+
+   [ ]Beat kicks in when cutting to gameplay.
+
+   [ ]Overlay game mechanic descriptions over cuts of gameplay that show off
+      each mechanic.
+   
+   [ ]Show game logo on last screen.
+
 
 v1.3
 ----
