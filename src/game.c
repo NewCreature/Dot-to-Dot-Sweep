@@ -1237,14 +1237,28 @@ void dot_game_render(void * data)
 	float touch_effect_y = 0;
 	float level_y = 8;
 	float start_y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
-	char * touch_text = "Click";
+	char * touch_text[2];
 
+	if(app->using_mouse)
+	{
+		touch_text[0] = "Click";
+		touch_text[1] = "Here";
+	}
+	else if(app->using_controller)
+	{
+		touch_text[0] = "Press";
+		touch_text[1] = "Button";
+	}
+	else
+	{
+		touch_text[0] = "Touch";
+		touch_text[1] = "Here";
+	}
 	if(!app->desktop_mode)
 	{
 		touch_effect_y = t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT;
 		level_y = DOT_GAME_PLAYFIELD_HEIGHT / 2 - t3f_get_font_line_height(app->font[DOT_FONT_32]) / 2;
 		start_y = t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT / 2;
-		touch_text = "Touch";
 	}
 	al_clear_to_color(app->game.bg_color);
 	al_hold_bitmap_drawing(true);
@@ -1367,8 +1381,8 @@ void dot_game_render(void * data)
 			sprintf(buf, "Level %d", app->game.level + 1);
 			dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, level_y, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, buf);
 		}
-		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, start_y - t3f_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, touch_text);
-		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, start_y, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, "Here");
+		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, start_y - t3f_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, touch_text[0]);
+		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, start_y, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, touch_text[1]);
 	}
 	al_hold_bitmap_drawing(false);
 }
