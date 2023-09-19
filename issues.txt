@@ -44,7 +44,9 @@ v1.3
    [ ]Store obfuscated score in user data.
 
    [ ]Scores that don't pass verification will silently not upload. The user
-      will still see their unobfuscated score as if nothing is amiss.
+      will still see their unobfuscated score as if nothing is amiss. The
+      'Score Uploaded' key will be removed so no future attempt will be made to
+      upload the fraudulent score.
 
 [ ]Add 'source_only' packaging target. This will package the source code
    without the game data.
