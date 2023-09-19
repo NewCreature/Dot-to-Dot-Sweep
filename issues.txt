@@ -24,12 +24,29 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Restart through Steam on first run.
+
+   [ ]Detect whether the user owns the Steam version.
+
+      [ ]Generate 'bin/data/steam.dat' that sits next to 'bin/data/t3f.dat' when
+         building the 'data_package' target. We'll use the existence of this
+         file to determine if the user has the Steam release.
+
+         [ ]Put a premade 'steam.dat' in the 'misc' folder and copy that to the
+            package.
+
 [ ]Investigate leaderboard crash.
 
 [ ]Add 'source_only' packaging target. This will package the source code
    without the game data.
 
+   [ ]Source only package should include everything except the files in the
+      'bin/data' folder.
+
 [ ]Include source code package in 'steam_binary_package' target.
+
+[ ]Audit source code packaging code to ensure it is packaging the whole source
+   tree. Currently, it is missing the 'windows' folder at least.
 
 [ ]Update license.
 
