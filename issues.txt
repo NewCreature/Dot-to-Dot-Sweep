@@ -24,7 +24,24 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Investigate leaderboard crash.
+
+[ ]Add 'source_only' packaging target. This will package the source code
+   without the game data.
+
+[ ]Include source code package in 'steam_binary_package' target.
+
 [ ]Update license.
+
+   [ ]Finalize T Cubed Software Standard Software License.
+
+      [ ]Codify user ownership details.
+
+      [ ]Codify dual-license setup.
+
+      [ ]Codify GPL fallback.
+
+[ ]Add 'source.txt' to documentation to explain source code.
 
 [ ]Update README.
 
