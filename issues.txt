@@ -24,6 +24,8 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]See about keeping mouse inside the play area with set_mouse_xy().
+
 [X]Restart through Steam on first run.
 
    [X]Detect whether the user owns the Steam version.
