@@ -66,7 +66,7 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 		val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
 		if(val)
 		{
-			app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, dot_leaderboard_obfuscate_score(atoi(val)));
+			app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, atoi(val));
 		}
 		app->state = DOT_STATE_LEADERBOARD;
 		app->current_menu = DOT_MENU_LEADERBOARD;

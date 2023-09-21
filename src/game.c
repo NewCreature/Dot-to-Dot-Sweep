@@ -183,7 +183,7 @@ void dot_game_exit(void * data)
 
 	/* determine if we need to upload */
 	val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
-	if(!val || atoi(val) < app->game.score)
+	if(!val || dot_leaderboard_unobfuscate_score(atoi(val)) < app->game.score)
 	{
 		al_set_config_value(t3f_user_data, "Game Data", "Score Uploaded", "false");
 		upload = true;
@@ -197,7 +197,7 @@ void dot_game_exit(void * data)
 	/* save high score */
 	if(app->game.score >= app->game.high_score)
 	{
-		sprintf(buf, "%d", app->game.high_score);
+		sprintf(buf, "%lu", dot_leaderboard_obfuscate_score(app->game.high_score));
 		al_set_config_value(t3f_user_data, "Game Data", "High Score", buf);
 		sprintf(buf, "%d", app->game.level + 1);
 		al_set_config_value(t3f_user_data, "Game Data", "High Score Level", buf);

@@ -665,7 +665,7 @@ void app_read_user_data(APP_INSTANCE * app)
 	val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
 	if(val)
 	{
-		app->game.high_score = atoi(val);
+		app->game.high_score = dot_leaderboard_unobfuscate_score(atoi(val));
 	}
 	else
 	{

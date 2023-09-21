@@ -1,17 +1,23 @@
 #include "t3f/t3f.h"
 #include "instance.h"
+#include "defines.h"
 #include "text.h"
 #include "color.h"
 #include "intro.h"
 
 unsigned long dot_leaderboard_obfuscate_score(unsigned long score)
 {
-  return score * 'd' + '2' + 'd' + 's';
+  return score * DOT_LEADERBOARD_FACTOR + '2' + 'd' + 's';
 }
 
 unsigned long dot_leaderboard_unobfuscate_score(unsigned long score)
 {
-  return (score - 's' - 'd' - '2') / 'd';
+  return (score - 's' - 'd' - '2') / DOT_LEADERBOARD_FACTOR;
+}
+
+bool dot_verify_leaderboard_score(unsigned long score)
+{
+  return !((score - 's' - 'd' - '2') % DOT_LEADERBOARD_FACTOR);
 }
 
 bool dot_get_leaderboard_user_key(void * data)
@@ -45,6 +51,7 @@ void dot_upload_current_high_score(void * data)
   APP_INSTANCE * app = (APP_INSTANCE *)data;
 	const char * val;
 	const char * val2;
+  unsigned long score;
 
   val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
   if(val)
@@ -52,7 +59,15 @@ void dot_upload_current_high_score(void * data)
     val2 = al_get_config_value(t3f_user_data, "Game Data", "High Score Level");
     if(val2)
     {
-      if(t3net_upload_score(app->leaderboard_submit_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_key, dot_leaderboard_obfuscate_score(atoi(val)), val2))
+      score = atoi(val);
+      if(dot_verify_leaderboard_score(score))
+      {
+        if(t3net_upload_score(app->leaderboard_submit_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_key, score, val2))
+        {
+          al_remove_config_key(t3f_user_data, "Game Data", "Score Uploaded");
+        }
+      }
+      else
       {
         al_remove_config_key(t3f_user_data, "Game Data", "Score Uploaded");
       }

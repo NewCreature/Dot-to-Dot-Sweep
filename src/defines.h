@@ -83,4 +83,6 @@
 #define DOT_ACHIEVEMENT_SO_CLOSE        6
 #define DOT_ACHIEVEMENT_GOOD_GAME       7
 
+#define DOT_LEADERBOARD_FACTOR         67
+
 #endif
