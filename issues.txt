@@ -34,6 +34,10 @@ v1.3
 
 [ ]Investigate leaderboard crash.
 
+   [ ]It seems to be something to do with the T3Net text parser. We should log
+      the raw data T3Net gets from the server so we can investigate in the
+      evenet of a crash.
+
 [ ]Prevent casual cheating.
 
    [ ]Rewrite obfuscation to make it harder to accidentally pass verification.
