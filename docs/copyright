@@ -1,16 +1,53 @@
 Dot to Dot Sweep
-----------------
+Copyright (C) 2023 T Cubed Software LLC.
+----------------------------------------
 
-Copyright (C) 2016 T³ Software <todd@t3-i.com>.
+This software is provided as-is and without warranty. T Cubed Software LLC makes
+no gaurantees regarding this software. We take no responsibility for any damages
+the software may cause to you or your property, though it has not been known to
+cause any damage. Please contact us if you have any trouble with the software and
+we'll see if we can resolve the issue.
 
-Dot to Dot Sweep is provided as-is and without warranty. You may distribute Dot to Dot Sweep freely (without charge) provided you include this license with any
-redistributed package. Any modified version created using the source code must
-also include this license. If you would like to distribute Dot to Dot Sweep as
-part of a compilation or some other form that is profitable monetarily, you must
-contact the author for permission before doing so.
+This license is intended to gaurantee access to your copy of the software in
+perpetuity. It is a dual-phase license, which means the license will morph
+under certain conditions.
 
-T³ Software makes no gaurantees regarding the Dot to Dot Sweep software. We take
-no responsibility for any damages the software may cause to you or your
-equipment, though it has not been known to cause any problems. Please contact us
-if you have any trouble with the software and we'll see if we can resolve the
-problem.
+If you received your authorized copy of the software under another license
+agreement (e.g. a Steam license), you must comply with the terms of that
+license. If there is a conflict, that license takes precedence over this one.
+
+
+Phase 1 License Details
+-----------------------
+
+Your copy of this software is licensed for use by you and your immediate
+family, defined as your spouse/partner and all of your dependents. If you are a
+dependent, this license applies to you as a dependent of your parent/guardian
+and all members of your immediate family as described previously. All members
+of your immediate family may use the software as long as you retain ownership
+of your copy.
+
+You may make multiple copies of the software provided your use of the software
+complies with the terms outlined previously.
+
+You may transfer ownership of your copy of the software by providing an
+unaltered copy of the original distribution package to the receiving party.
+Once they have secured their copy, you relinquish your license to use the
+software. The receiving party becomes the licensed user and you are no longer
+licensed to use the software.
+
+
+Phase 2 License Details
+-----------------------
+
+When the conditions for phase 2 of the license are met, the software becomes
+free software licensed under the terms of the GNU General Public License. See
+the included 'gpl-3.0.txt' for details on this phase of the license.
+
+
+License Phase Transition
+------------------------
+
+In the event that T Cubed Software LLC is legally disbanded or ceases to exist
+as an independent entity, this license will shift from Phase 1 to Phase 2. This
+shift is meant to gaurantee your access to the software going into the future.
