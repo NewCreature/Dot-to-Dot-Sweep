@@ -3,6 +3,8 @@ Steam Release Checklist
 
 [ ]Prepare final 1.3 version by fixing all the remaining issues.
 
+[ ]Add avatars to Steam.
+
 [ ]Create and upload final MacOS build.
 
 [ ]Create and upload final Linux build.
