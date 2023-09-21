@@ -60,15 +60,15 @@ v1.3
 [X]Audit source code packaging code to ensure it is packaging the whole source
    tree. Currently, it is missing the 'windows' folder at least.
 
-[ ]Update license.
+[X]Update license.
 
-   [ ]Finalize T Cubed Software Standard Software License.
+   [X]Finalize T Cubed Software Standard Software License.
 
-      [ ]Codify user ownership details.
+      [X]Codify user ownership details.
 
-      [ ]Codify dual-license setup.
+      [X]Codify dual-license setup.
 
-      [ ]Codify GPL fallback.
+      [X]Codify GPL fallback.
 
 [ ]Add 'source.txt' to documentation to explain source code.
 
