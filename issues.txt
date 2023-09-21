@@ -48,13 +48,13 @@ v1.3
       'Score Uploaded' key will be removed so no future attempt will be made to
       upload the fraudulent score.
 
-[ ]Add 'source_only' packaging target. This will package the source code
+[X]Add 'source_only' packaging target. This will package the source code
    without the game data.
 
-   [ ]Source only package should include everything except the files in the
+   [X]Source only package should include everything except the files in the
       'bin/data' folder.
 
-[ ]Include source code package in 'steam_binary_package' target.
+[X]Include source code package in 'steam_binary_package' target.
 
 [ ]Audit source code packaging code to ensure it is packaging the whole source
    tree. Currently, it is missing the 'windows' folder at least.
