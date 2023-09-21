@@ -53,7 +53,10 @@ void t3f_shutdown_steam_integration(void)
 bool t3f_restart_through_steam(uint32_t app_id)
 {
   #ifdef T3F_ENABLE_STEAM_INTEGRATION
-    return SteamAPI_RestartAppIfNecessary(app_id);
+    if(al_filename_exists("data/steam.dat"))
+    {
+      return SteamAPI_RestartAppIfNecessary(app_id);
+    }
   #endif
   return false;
 }

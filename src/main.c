@@ -1079,17 +1079,12 @@ static bool attempt_restart(void)
 {
 	const char * val;
 
-	if(!al_filename_exists("data/steam.dat"))
-	{
-		return false;
-	}
 	val = al_get_config_value(t3f_user_data, "Game Data", "Restarted with Steam");
 	if(!val || !strcmp(val, "false"))
 	{
 		al_set_config_value(t3f_user_data, "Game Data", "Restarted with Steam", "true");
 		t3f_save_user_data();
-		t3f_restart_through_steam(T3F_APP_STEAM_ID);
-		return true;
+		return t3f_restart_through_steam(T3F_APP_STEAM_ID);
 	}
 	return false;
 }
