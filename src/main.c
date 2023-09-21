@@ -1063,6 +1063,37 @@ void dot_deinitialize_achievements(APP_INSTANCE * app)
 	}
 }
 
+static bool first_run(void)
+{
+	const char * val;
+
+	val = al_get_config_value(t3f_user_data, "Game Data", "Setup Done");
+	if(!val || !strcmp(val, "false"))
+	{
+		return true;
+	}
+	return false;
+}
+
+static bool attempt_restart(void)
+{
+	const char * val;
+
+	if(!al_filename_exists("data/steam.dat"))
+	{
+		return false;
+	}
+	val = al_get_config_value(t3f_user_data, "Game Data", "Restarted with Steam");
+	if(!val || !strcmp(val, "false"))
+	{
+		al_set_config_value(t3f_user_data, "Game Data", "Restarted with Steam", "true");
+		t3f_save_user_data();
+		t3f_restart_through_steam(T3F_APP_STEAM_ID);
+		return true;
+	}
+	return false;
+}
+
 /* initialize our app, load graphics, etc. */
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
@@ -1081,6 +1112,16 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Error initializing T3F\n");
 		return false;
 	}
+	#ifdef T3F_ENABLE_STEAM_INTEGRATION
+		if(first_run())
+		{
+			if(attempt_restart())
+			{
+				printf("Attempting to restart game through Steam for first run setup.\n");
+				return false;
+			}
+		}
+	#endif
 	if(!t3f_option_is_set(T3F_OPTION_RENDER_MODE))
 	{
 		t3f_set_option(T3F_OPTION_RENDER_MODE, T3F_RENDER_MODE_ALWAYS_CLEAR);
@@ -1219,10 +1260,6 @@ int main(int argc, char * argv[])
 	if(app_initialize(&app, argc, argv))
 	{
 		t3f_run();
-	}
-	else
-	{
-		printf("Error: could not initialize game!\n");
 	}
 	app_exit(&app);
 	t3f_finish();
