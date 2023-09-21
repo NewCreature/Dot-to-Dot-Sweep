@@ -24,16 +24,13 @@ Steam Release Checklist
 v1.3
 ----
 
-[ ]Restart through Steam on first run.
+[X]Restart through Steam on first run.
 
-   [ ]Detect whether the user owns the Steam version.
+   [X]Detect whether the user owns the Steam version.
 
-      [ ]Generate 'bin/data/steam.dat' that sits next to 'bin/data/t3f.dat' when
+      [X]Generate 'bin/data/steam.dat' that sits next to 'bin/data/t3f.dat' when
          building the 'data_package' target. We'll use the existence of this
          file to determine if the user has the Steam release.
-
-         [ ]Put a premade 'steam.dat' in the 'misc' folder and copy that to the
-            package.
 
 [ ]Investigate leaderboard crash.
 
