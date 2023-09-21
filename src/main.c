@@ -1089,6 +1089,18 @@ static bool attempt_restart(void)
 	return false;
 }
 
+static void log_t3net(void)
+{
+	const char * val;
+	char buf[1024];
+
+	val = al_get_config_value(t3f_config, "Debug", "t3net_logging");
+	if(val && !strcmp(val, "true"))
+	{
+		t3net_open_log_file(t3f_get_filename(t3f_config_path, "t3net.log", buf, 1024));
+	}
+}
+
 /* initialize our app, load graphics, etc. */
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
@@ -1117,6 +1129,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 			}
 		}
 	#endif
+	log_t3net();
 	if(!t3f_option_is_set(T3F_OPTION_RENDER_MODE))
 	{
 		t3f_set_option(T3F_OPTION_RENDER_MODE, T3F_RENDER_MODE_ALWAYS_CLEAR);
