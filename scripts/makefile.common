@@ -141,7 +141,7 @@ demo_gp: demo demo_edit_gp
 
 data_package: source_only_package
 	rm -f $(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-data.zip
-	cd ../bin && zip -9 -r $(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-data.zip data -x data/.\* && cd ../ && zip -9 -r packages/$(APP_NAME)-$(APP_VERSION)-data.zip docs && cd packages && zip -9 $(APP_NAME)-$(APP_VERSION)-data.zip $(APP_NAME)-$(APP_VERSION)-src.tar.gz
+	cd ../bin && touch data/steam.dat && zip -9 -r $(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-data.zip data -x data/.\* && rm data/steam.dat && cd ../ && zip -9 -r packages/$(APP_NAME)-$(APP_VERSION)-data.zip docs && cd packages && zip -9 $(APP_NAME)-$(APP_VERSION)-data.zip $(APP_NAME)-$(APP_VERSION)-src.tar.gz
 
 steam_binary_package: $(APP_EXE_NAME)
 	rm -f $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-$(T3F_PLATFORM_NAME)-binaries.zip
