@@ -56,7 +56,7 @@ v1.3
 
 [X]Include source code package in 'steam_binary_package' target.
 
-[ ]Audit source code packaging code to ensure it is packaging the whole source
+[X]Audit source code packaging code to ensure it is packaging the whole source
    tree. Currently, it is missing the 'windows' folder at least.
 
 [ ]Update license.
