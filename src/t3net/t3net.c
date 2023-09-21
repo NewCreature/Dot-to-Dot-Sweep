@@ -15,6 +15,8 @@ char t3net_server_message[1024] = {0};
 
 static char t3net_temp_dir[1024] = {0};
 
+static FILE * _t3net_log_file = NULL;
+
 static char * _t3net_default_url_runner(const char * url);
 
 static char * (*_t3net_url_runner)(const char * url) = _t3net_default_url_runner;
@@ -127,6 +129,24 @@ char * t3net_load_file(const char * fn)
 			free(data);
 		}
 		return NULL;
+	}
+}
+
+int t3net_open_log_file(const char * fn)
+{
+	_t3net_log_file = fopen(fn, "wb");
+	if(_t3net_log_file)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+void t3met_close_log_file(void)
+{
+	if(_t3net_log_file)
+	{
+		fclose(_t3net_log_file);
 	}
 }
 
@@ -480,6 +500,12 @@ char * t3net_get_raw_data(const char * url, const T3NET_ARGUMENTS * arguments)
 			}
 		}
 		ret = _t3net_url_runner(final_url);
+		if(_t3net_log_file)
+		{
+			fwrite(ret, 1, strlen(ret), _t3net_log_file);
+			fputc('\n', _t3net_log_file);
+			fflush(_t3net_log_file);
+		}
 		free(final_url);
 		return ret;
 	}

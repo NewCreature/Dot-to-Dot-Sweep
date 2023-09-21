@@ -51,6 +51,9 @@ const char * t3net_get_curl_command(void);
 char * t3net_escape(const char * s);
 char * t3net_load_file(const char * fn);
 
+int t3net_open_log_file(const char * fn);
+void t3met_close_log_file(void);
+
 /* internet operations */
 T3NET_ARGUMENTS * t3net_create_arguments(void);
 void t3net_destroy_arguments(T3NET_ARGUMENTS * arguments);
