@@ -3,7 +3,7 @@ Steam Release Checklist
 
 [ ]Prepare final 1.3 version by fixing all the remaining issues.
 
-[ ]Add avatars to Steam.
+[X]Add avatars to Steam.
 
 [ ]Create and upload final MacOS build.
 
@@ -28,7 +28,7 @@ v1.3
 
 [ ]Test new achievements handling code.
 
-[ ]See about keeping mouse inside the play area with set_mouse_xy().
+[X]See about keeping mouse inside the play area with set_mouse_xy().
 
 [ ]Rework license to deal with conflicts.
 
