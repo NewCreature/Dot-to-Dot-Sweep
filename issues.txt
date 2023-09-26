@@ -28,6 +28,12 @@ v1.3
 
 [ ]See about keeping mouse inside the play area with set_mouse_xy().
 
+[ ]Rework license to deal with conflicts.
+
+   [ ]Bundled software and libraries should maintain their own license. We need
+      to find a license that is compatible with including bundled software that
+      is not open source.
+
 [X]Restart through Steam on first run.
 
    [X]Detect whether the user owns the Steam version.
