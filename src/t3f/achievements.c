@@ -90,6 +90,7 @@ bool t3f_set_achievement_details(T3F_ACHIEVEMENTS_LIST * achievements_list, int 
 void t3f_update_achievement_progress(T3F_ACHIEVEMENTS_LIST * achievements_list, int entry, int step)
 {
   achievements_list->entry[entry].step = step;
+  achievements_list->modified = true;
 }
 
 bool t3f_achievement_gotten(T3F_ACHIEVEMENTS_LIST * achievements_list, int entry)

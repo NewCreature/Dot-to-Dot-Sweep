@@ -325,7 +325,6 @@ void dot_game_accumulate_score(void * data)
 			if(app->game.score >= 100000)
 			{
 				t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GOOD_GAME, 1);
-				app->sync_achievements = true;
 			}
 		}
 		dot_game_create_score_effect(data, app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, app->game.ascore);
@@ -529,7 +528,6 @@ void dot_game_check_player_collisions(void * data)
 						if(app->game.a_oops_ticks <= 60)
 						{
 							t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_OOPS, 1);
-							app->sync_achievements = true;
 						}
 					}
 					if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_SO_CLOSE))
@@ -537,7 +535,6 @@ void dot_game_check_player_collisions(void * data)
 						if(app->game.a_colored_balls_remaining <= 1)
 						{
 							t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_SO_CLOSE, 1);
-							app->sync_achievements = true;
 						}
 					}
 					dot_game_create_splash_effect(data, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.r, app->dot_color[app->game.player.ball.type]);
@@ -1032,14 +1029,12 @@ void dot_game_logic(void * data)
 				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT))
 				{
 					t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT, 1);
-					app->sync_achievements = true;
 				}
 				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO))
 				{
 					if(!app->game.a_combo_broken)
 					{
 						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO, 1);
-						app->sync_achievements = true;
 					}
 				}
 				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GETTING_GOOD))
@@ -1047,7 +1042,6 @@ void dot_game_logic(void * data)
 					if(app->game.a_start_lives == app->game.lives)
 					{
 						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GETTING_GOOD, 1);
-						app->sync_achievements = true;
 					}
 				}
 				if(app->game.combo >= 10)
@@ -1075,7 +1069,6 @@ void dot_game_logic(void * data)
 					if(app->game.level >= 10)
 					{
 						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_SEE_IT_THROUGH, 1);
-						app->sync_achievements = true;
 					}
 				}
 			}
@@ -1089,7 +1082,6 @@ void dot_game_logic(void * data)
 		if(app->game.a_bob_and_weave_ticks >= 3600)
 		{
 			t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_BOB_AND_WEAVE, 1);
-			app->sync_achievements = true;
 		}
 	}
 	app->game.tick++;

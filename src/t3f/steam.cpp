@@ -15,9 +15,10 @@
   static bool _t3f_steam_stats_ready = false;
   static bool _t3f_steam_stats_store_state = T3F_STEAM_STORE_STATE_NONE;
   static double _t3f_steam_store_time = -T3F_STEAM_STATS_STORE_INTERVAL;
+  static T3F_ACHIEVEMENTS_LIST * _t3f_achievements_list = NULL;
 #endif
 
-bool t3f_init_steam_integration(void)
+bool t3f_init_steam_integration(T3F_ACHIEVEMENTS_LIST * achievements_list)
 {
   #ifdef T3F_ENABLE_STEAM_INTEGRATION
     if(!SteamAPI_Init())
@@ -25,6 +26,7 @@ bool t3f_init_steam_integration(void)
       goto fail;
     }
     SteamAPI_ManualDispatch_Init();
+    _t3f_achievements_list = achievements_list;
     _t3f_steam_integration_enabled = true;
     SteamAPI_ISteamUserStats_RequestCurrentStats(SteamUserStats());
     return true;
@@ -70,29 +72,6 @@ bool t3f_show_steam_text_input(int x, int y, int width, int height)
     }
   #endif
   return true;
-}
-
-bool t3f_synchronize_achievements_with_steam(T3F_ACHIEVEMENTS_LIST * achievements_list)
-{
-  #ifdef T3F_ENABLE_STEAM_INTEGRATION
-    int i;
-
-    if(_t3f_steam_integration_enabled && _t3f_steam_stats_ready)
-    {
-      for(i = 0; i < achievements_list->entries; i++)
-      {
-        if(achievements_list->entry[i].step >= achievements_list->entry[i].steps)
-        {
-          SteamAPI_ISteamUserStats_SetAchievement(SteamUserStats(), achievements_list->entry[i].steam_id);
-        }
-      }
-      SteamAPI_ISteamUserStats_StoreStats(SteamUserStats());
-      _t3f_steam_stats_store_state = T3F_STEAM_STORE_STATE_IN_PROGRESS;
-      al_set_config_value(t3f_user_data, "Achievements", "Stored", "false");
-      return true;
-    }
-  #endif
-  return false;
 }
 
 const char * t3f_get_steam_user_display_name(void)
@@ -143,6 +122,29 @@ const char * t3f_get_steam_user_display_name(void)
       SteamAPI_ManualDispatch_FreeLastCallback( hSteamPipe );
     }
   }
+
+  static bool _t3f_synchronize_achievements_with_steam(T3F_ACHIEVEMENTS_LIST * achievements_list)
+  {
+    int i;
+
+    if(_t3f_steam_integration_enabled && _t3f_achievements_list && _t3f_achievements_list->modified && _t3f_steam_stats_ready)
+    {
+      for(i = 0; i < achievements_list->entries; i++)
+      {
+        if(achievements_list->entry[i].step >= achievements_list->entry[i].steps)
+        {
+          SteamAPI_ISteamUserStats_SetAchievement(SteamUserStats(), achievements_list->entry[i].steam_id);
+        }
+      }
+      SteamAPI_ISteamUserStats_StoreStats(SteamUserStats());
+      _t3f_achievements_list->modified = false;
+      _t3f_steam_stats_store_state = T3F_STEAM_STORE_STATE_IN_PROGRESS;
+      al_set_config_value(t3f_user_data, "Achievements", "Stored", "false");
+      return true;
+    }
+    return false;
+  }
+
 #endif
 
 
@@ -153,6 +155,7 @@ void t3f_steam_integration_logic(void)
 
     if(_t3f_steam_integration_enabled)
     {
+      _t3f_synchronize_achievements_with_steam(_t3f_achievements_list);
       _t3f_run_steam_callbacks();
 
       /* attempt to store current achievements if it is needed and store isn't currently processing */

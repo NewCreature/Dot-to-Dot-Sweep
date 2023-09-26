@@ -18,6 +18,7 @@ typedef struct
 
   T3F_ACHIEVEMENT_ENTRY * entry;
   int entries;
+  bool modified; // note that something in the list has been modified
 
 } T3F_ACHIEVEMENTS_LIST;
 
