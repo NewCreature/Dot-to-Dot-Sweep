@@ -245,7 +245,7 @@ void app_logic(void * data)
 			break;
 		}
 	}
-	dot_mouse_cursor_logic();
+	dot_mouse_cursor_logic(app->state == DOT_STATE_GAME && app->game.state == DOT_GAME_STATE_PLAY);
 	app->active_particles = 0;
 	for(i = 0; i < DOT_MAX_PARTICLES; i++)
 	{

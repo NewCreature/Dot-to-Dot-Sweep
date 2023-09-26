@@ -603,6 +603,38 @@ static void maybe_activate_shield(APP_INSTANCE * app)
 	}
 }
 
+static void confine_mouse(APP_INSTANCE * app)
+{
+	float new_x = app->touch_x;
+	float new_y = app->touch_y;
+	bool update = false;
+
+	if(t3f_mouse_x + app->game.player.touch_offset_x < app->game.player.ball.r)
+	{
+		new_x = app->game.player.ball.r - app->game.player.touch_offset_x;
+		update = true;
+	}
+	else if(t3f_mouse_x + app->game.player.touch_offset_x + app->game.player.ball.r > DOT_GAME_PLAYFIELD_WIDTH + 0.5)
+	{
+		new_x = DOT_GAME_PLAYFIELD_WIDTH + 0.5 - app->game.player.ball.r - app->game.player.touch_offset_x;
+		update = true;
+	}
+	if(t3f_mouse_y + app->game.player.touch_offset_y < app->game.player.ball.r)
+	{
+		new_y = app->game.player.ball.r - app->game.player.touch_offset_y;
+		update = true;
+	}
+	else if(t3f_mouse_y + app->game.player.touch_offset_y + app->game.player.ball.r > DOT_GAME_PLAYFIELD_HEIGHT + 0.5)
+	{
+		new_y = DOT_GAME_PLAYFIELD_HEIGHT + 0.5 - app->game.player.ball.r - app->game.player.touch_offset_y;
+		update = true;
+	}
+	if(update)
+	{
+		t3f_set_mouse_xy(new_x, new_y);
+	}
+}
+
 /* handle player movement */
 void dot_game_move_player(void * data)
 {
@@ -640,6 +672,7 @@ void dot_game_move_player(void * data)
 			}
 			else if(app->using_mouse)
 			{
+				confine_mouse(app);
 				update_player_position(app);
 				maybe_activate_shield(app);
 			}
@@ -1125,6 +1158,7 @@ void dot_game_render_hud(void * data)
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_EMO_FG], t3f_color_white, t3f_virtual_display_width / 2 - 32, DOT_GAME_PLAYFIELD_HEIGHT + 40 - 32, 0, 64, 64, 0);
 	al_hold_bitmap_drawing(false);
 	al_hold_bitmap_drawing(held);
+	t3f_draw_textf(app->font[DOT_FONT_16], t3f_color_white, 0, 0, 0, 0, "(%f, %f) (%f, %f)", t3f_mouse_x, t3f_mouse_y, app->game.player.touch_offset_x, app->game.player.touch_offset_y);
 }
 
 static void dot_create_grab_spot_effect(void * data)
