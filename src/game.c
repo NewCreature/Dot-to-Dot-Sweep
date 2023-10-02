@@ -1158,7 +1158,6 @@ void dot_game_render_hud(void * data)
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_EMO_FG], t3f_color_white, t3f_virtual_display_width / 2 - 32, DOT_GAME_PLAYFIELD_HEIGHT + 40 - 32, 0, 64, 64, 0);
 	al_hold_bitmap_drawing(false);
 	al_hold_bitmap_drawing(held);
-	t3f_draw_textf(app->font[DOT_FONT_16], t3f_color_white, 0, 0, 0, 0, "(%f, %f) (%f, %f)", t3f_mouse_x, t3f_mouse_y, app->game.player.touch_offset_x, app->game.player.touch_offset_y);
 }
 
 static void dot_create_grab_spot_effect(void * data)
