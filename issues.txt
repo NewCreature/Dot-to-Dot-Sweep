@@ -7,9 +7,15 @@ Steam Release Checklist
 
 [ ]Create and upload final MacOS build.
 
+   [ ]Update dependencies before build.
+
 [ ]Create and upload final Linux build.
 
+   [ ]Update dependencies before build.
+
 [ ]Create and upload final Windows build.
+
+   [ ]Update dependencies before build.
 
 [ ]Create and upload trailer.
 
