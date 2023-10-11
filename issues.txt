@@ -3,13 +3,19 @@ Steam Release Checklist
 
 [ ]Prepare final 1.3 version by fixing all the remaining issues.
 
-[ ]Add avatars to Steam.
+[X]Add avatars to Steam.
 
 [ ]Create and upload final MacOS build.
 
+   [ ]Update dependencies before build.
+
 [ ]Create and upload final Linux build.
 
+   [ ]Update dependencies before build.
+
 [ ]Create and upload final Windows build.
+
+   [ ]Update dependencies before build.
 
 [ ]Create and upload trailer.
 
@@ -26,7 +32,15 @@ Steam Release Checklist
 v1.3
 ----
 
-[ ]See about keeping mouse inside the play area with set_mouse_xy().
+[ ]Test new achievements handling code.
+
+[X]See about keeping mouse inside the play area with set_mouse_xy().
+
+[ ]Rework license to deal with conflicts.
+
+   [ ]Bundled software and libraries should maintain their own license. We need
+      to find a license that is compatible with including bundled software that
+      is not open source.
 
 [X]Restart through Steam on first run.
 

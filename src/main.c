@@ -256,13 +256,6 @@ void app_logic(void * data)
 		}
 		dot_particle_logic(&app->particle[i]);
 	}
-	if(app->sync_achievements && app->steam_running)
-	{
-		if(t3f_synchronize_achievements_with_steam(app->achievements))
-		{
-			app->sync_achievements = false;
-		}
-	}
 	t3f_steam_integration_logic();
 }
 
@@ -1041,6 +1034,7 @@ bool dot_initialize_achievements(APP_INSTANCE * app)
 		goto fail;
 	}
 	t3f_load_achievements_data(app->achievements, t3f_user_data, "Achievements");
+	app->achievements->modified = true;
 	return true;
 
 	fail:
@@ -1129,12 +1123,17 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 			}
 		}
 	#endif
+	if(!dot_initialize_achievements(app))
+	{
+		printf("Error initializing achievements list!\n");
+		return false;
+	}
 	log_t3net();
 	if(!t3f_option_is_set(T3F_OPTION_RENDER_MODE))
 	{
 		t3f_set_option(T3F_OPTION_RENDER_MODE, T3F_RENDER_MODE_ALWAYS_CLEAR);
 	}
-	app->steam_running = t3f_init_steam_integration();
+	app->steam_running = t3f_init_steam_integration(app->achievements);
 	if(!app->steam_running)
 	{
 		printf("Steam not running!\n");
@@ -1144,12 +1143,6 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Error initializing input system!\n");
 		return false;
 	}
-	if(!dot_initialize_achievements(app))
-	{
-		printf("Error initializing achievements list!\n");
-		return false;
-	}
-	app->sync_achievements = true;
 	t3f_set_event_handler(dot_event_handler);
 	if(!(t3f_flags & T3F_USE_FULLSCREEN))
 	{

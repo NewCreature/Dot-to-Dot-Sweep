@@ -325,7 +325,6 @@ void dot_game_accumulate_score(void * data)
 			if(app->game.score >= 100000)
 			{
 				t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GOOD_GAME, 1);
-				app->sync_achievements = true;
 			}
 		}
 		dot_game_create_score_effect(data, app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, app->game.ascore);
@@ -529,7 +528,6 @@ void dot_game_check_player_collisions(void * data)
 						if(app->game.a_oops_ticks <= 60)
 						{
 							t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_OOPS, 1);
-							app->sync_achievements = true;
 						}
 					}
 					if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_SO_CLOSE))
@@ -537,7 +535,6 @@ void dot_game_check_player_collisions(void * data)
 						if(app->game.a_colored_balls_remaining <= 1)
 						{
 							t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_SO_CLOSE, 1);
-							app->sync_achievements = true;
 						}
 					}
 					dot_game_create_splash_effect(data, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.r, app->dot_color[app->game.player.ball.type]);
@@ -606,6 +603,38 @@ static void maybe_activate_shield(APP_INSTANCE * app)
 	}
 }
 
+static void confine_mouse(APP_INSTANCE * app)
+{
+	float new_x = app->touch_x;
+	float new_y = app->touch_y;
+	bool update = false;
+
+	if(t3f_mouse_x + app->game.player.touch_offset_x < app->game.player.ball.r)
+	{
+		new_x = app->game.player.ball.r - app->game.player.touch_offset_x;
+		update = true;
+	}
+	else if(t3f_mouse_x + app->game.player.touch_offset_x + app->game.player.ball.r > DOT_GAME_PLAYFIELD_WIDTH + 0.5)
+	{
+		new_x = DOT_GAME_PLAYFIELD_WIDTH + 0.5 - app->game.player.ball.r - app->game.player.touch_offset_x;
+		update = true;
+	}
+	if(t3f_mouse_y + app->game.player.touch_offset_y < app->game.player.ball.r)
+	{
+		new_y = app->game.player.ball.r - app->game.player.touch_offset_y;
+		update = true;
+	}
+	else if(t3f_mouse_y + app->game.player.touch_offset_y + app->game.player.ball.r > DOT_GAME_PLAYFIELD_HEIGHT + 0.5)
+	{
+		new_y = DOT_GAME_PLAYFIELD_HEIGHT + 0.5 - app->game.player.ball.r - app->game.player.touch_offset_y;
+		update = true;
+	}
+	if(update)
+	{
+		t3f_set_mouse_xy(new_x, new_y);
+	}
+}
+
 /* handle player movement */
 void dot_game_move_player(void * data)
 {
@@ -643,6 +672,7 @@ void dot_game_move_player(void * data)
 			}
 			else if(app->using_mouse)
 			{
+				confine_mouse(app);
 				update_player_position(app);
 				maybe_activate_shield(app);
 			}
@@ -1032,14 +1062,12 @@ void dot_game_logic(void * data)
 				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT))
 				{
 					t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT, 1);
-					app->sync_achievements = true;
 				}
 				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO))
 				{
 					if(!app->game.a_combo_broken)
 					{
 						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO, 1);
-						app->sync_achievements = true;
 					}
 				}
 				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GETTING_GOOD))
@@ -1047,7 +1075,6 @@ void dot_game_logic(void * data)
 					if(app->game.a_start_lives == app->game.lives)
 					{
 						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GETTING_GOOD, 1);
-						app->sync_achievements = true;
 					}
 				}
 				if(app->game.combo >= 10)
@@ -1075,7 +1102,6 @@ void dot_game_logic(void * data)
 					if(app->game.level >= 10)
 					{
 						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_SEE_IT_THROUGH, 1);
-						app->sync_achievements = true;
 					}
 				}
 			}
@@ -1089,7 +1115,6 @@ void dot_game_logic(void * data)
 		if(app->game.a_bob_and_weave_ticks >= 3600)
 		{
 			t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_BOB_AND_WEAVE, 1);
-			app->sync_achievements = true;
 		}
 	}
 	app->game.tick++;
