@@ -32,6 +32,8 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Update README.
+
 [ ]Test new achievements handling code.
 
 [X]See about keeping mouse inside the play area with set_mouse_xy().
