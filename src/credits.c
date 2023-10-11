@@ -43,6 +43,11 @@ void dot_setup_credits(DOT_CREDITS * cp)
     dot_add_credit_name(cp, "Travis Cope");
     dot_add_credit_name(cp, "Todd Cope");
 
+    dot_add_credit(cp, "Font");
+    dot_add_credit_name(cp, "Kongtext");
+    dot_add_credit_name(cp, "by");
+    dot_add_credit_name(cp, "Codeman38");
+
     dot_add_credit(cp, "Sound");
     dot_add_credit_name(cp, "Travis Cope");
     dot_add_credit_name(cp, "Todd Cope");
@@ -53,6 +58,7 @@ void dot_setup_credits(DOT_CREDITS * cp)
     dot_add_credit(cp, "Testing");
     dot_add_credit_name(cp, "Todd Cope");
     dot_add_credit_name(cp, "Travis Cope");
+    dot_add_credit_name(cp, "Mason Cope");
 }
 
 void dot_credits_logic(DOT_CREDITS * cp)
