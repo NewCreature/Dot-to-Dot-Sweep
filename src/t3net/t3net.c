@@ -502,8 +502,15 @@ char * t3net_get_raw_data(const char * url, const T3NET_ARGUMENTS * arguments)
 		ret = _t3net_url_runner(final_url);
 		if(_t3net_log_file)
 		{
-			fwrite(ret, 1, strlen(ret), _t3net_log_file);
-			fputc('\n', _t3net_log_file);
+			if(ret)
+			{
+				fwrite(ret, 1, strlen(ret), _t3net_log_file);
+				fputc('\n', _t3net_log_file);
+			}
+			else
+			{
+				fwrite("no text\n", 1, strlen("no text\n"), _t3net_log_file);
+			}
 			fflush(_t3net_log_file);
 		}
 		free(final_url);
