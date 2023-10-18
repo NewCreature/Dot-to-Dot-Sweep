@@ -34,11 +34,9 @@ Steam Release Checklist
 v1.3
 ----
 
-[ ]Update README.
+[X]Update README.
 
-   [ ]Mention controller support.
-
-   [ ]Add details about Steam version.
+   [X]Mention controller support.
 
 [ ]Test new achievements handling code.
 
