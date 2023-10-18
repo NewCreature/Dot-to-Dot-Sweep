@@ -42,9 +42,9 @@ v1.3
 
 [X]See about keeping mouse inside the play area with set_mouse_xy().
 
-[ ]Rework license to deal with conflicts.
+[X]Rework license to deal with conflicts.
 
-   [ ]Bundled software and libraries should maintain their own license. We need
+   [X]Bundled software and libraries should maintain their own license. We need
       to find a license that is compatible with including bundled software that
       is not open source.
 
