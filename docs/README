@@ -5,22 +5,15 @@ Description
 -----------
 
 Dot to Dot Sweep is an arcade-style color matching game. Collect dots that
-match your color while avoiding all other dots.
+match your color while avoiding all the others.
 
 The game is inspired by classic arcade games and takes cues from modern games.
 The simple gameplay mechanics coupled with increasingly difficult levels allows
 players of all skill levels to enjoy playing.
 
-Touchpad style controls allow you to maneuver your character quickly and
-precisely.
-
-Try to beat your personal best score or, optionally, compete for the top spot
-on the worldwide leaderboard.
-
-The mobile-centric design allows you to fit gameplay into your busy life. When
-playing you simply lift your finger to pause the game. Interact with your
-notifications and then get right back into the game by placing your finger back
-on the touchpad area.
+Keep your combo going to score massive points quickly or take the slow approach
+and carefully clear out each level. Try to beat your personal best score or,
+optionally, compete for the top spot on the worldwide leaderboard.
 
 
 Getting Started
@@ -33,9 +26,10 @@ input is handled by the bottom half. Menus are displayed on the bottom half of
 the screen and may be interacted with via touch. When in the game, the bottom
 half of the screen acts as a touch pad.
 
-The desktop version uses the mouse and keyboard. You can interact with menus by
-clicking on them. When in the game, you use the mouse to move your character
-around the play field.
+The desktop version uses the mouse, keyboard, or gamepad. You can interact with
+menus by clicking on them or using the keyboard/gamepad to select the desired
+item. When in the game, you use the mouse, keyboard (WASD or cursor keys), or
+gamepad (d-pad or analog sticks) to move your character around the play field.
 
 
 Playing the Game
@@ -70,6 +64,10 @@ E-mail:
 Facebook:
 
     https://www.facebook.com/pages/T%C2%B3-Software/135435253177843
+
+X:
+
+    @ToddBrandonCope
 
 Snail Mail:
 
