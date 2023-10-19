@@ -94,9 +94,9 @@ v1.3
 
       [X]Codify GPL fallback.
 
-[ ]Add 'source.txt' to documentation to explain source code.
+[X]Add 'source.txt' to documentation to explain source code.
 
-[ ]Update README.
+[X]Update README.
 
 [X]Make game start message relevant to the current control scheme.
 
