@@ -3,7 +3,7 @@
 ########################################################
 # Put any extra development environment settings here. #
 ########################################################
-#CONFIG_STEAMWORKS_SDK_PATH =
+#CONFIG_SETTING =
 
 ####################
 # Android Settings #
@@ -57,7 +57,7 @@ MACOS_CXX = g++
 ifndef MACOS_CXX_STDLIB
   MACOS_CXX_STDLIB = c++
 endif
-#MACOS_CONFIG_CFLAGS = -I$(CONFIG_STEAM_SDK_PATH)/public
+#MACOS_CONFIG_CFLAGS =
 #MACOS_CONFIG_CXXFLAGS =
 #MACOS_CONFIG_LFLAGS =
 MACOS_CONFIG_PKG_CONFIG_OPTIONS = --libs --static
