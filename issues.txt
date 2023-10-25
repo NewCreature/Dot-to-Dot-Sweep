@@ -56,11 +56,16 @@ v1.3
          building the 'data_package' target. We'll use the existence of this
          file to determine if the user has the Steam release.
 
-[ ]Investigate leaderboard crash.
+[X]Investigate leaderboard crash.
 
-   [ ]It seems to be something to do with the T3Net text parser. We should log
+   [X]It seems to be something to do with the T3Net text parser. We should log
       the raw data T3Net gets from the server so we can investigate in the
       evenet of a crash.
+
+      [X]I wasn't able to directly duplicate the crash, but I did find some
+         potential for crashing in the T3Net code. I was able to make it crash
+         by giving it malformed data. I reworked the code to handle malformed
+         data and gracefully fail.
 
 [X]Prevent casual cheating.
 
