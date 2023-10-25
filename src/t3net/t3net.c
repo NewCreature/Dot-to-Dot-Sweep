@@ -397,14 +397,41 @@ char * t3net_get_line(const char * data, int data_max, unsigned int * text_pos)
 	return text_line;
 }
 
-int t3net_get_element(const char * data, T3NET_TEMP_ELEMENT * element, int data_max)
+static void discard_temp_element(T3NET_TEMP_ELEMENT * element)
+{
+	if(element->name)
+	{
+		free(element->name);
+		element->name = NULL;
+	}
+	if(element->data)
+	{
+		free(element->data);
+		element->data = NULL;
+	}
+}
+
+static int get_temp_element(const char * data, T3NET_TEMP_ELEMENT * element, int data_max)
 {
 	int outpos = 0;
 	int c;
 	int read_pos = 1; // skip first byte
 
+	element->name = malloc(data_max);
+	if(!element->name)
+	{
+		goto fail;
+	}
+	element->data = malloc(data_max);
+	if(!element->data)
+	{
+		goto fail;
+	}
+	strcpy(element->name, "");
+	strcpy(element->data, "");
+
 	/* read element name */
-	while(1)
+	while(read_pos < data_max)
 	{
 		c = data[read_pos];
 
@@ -417,9 +444,12 @@ int t3net_get_element(const char * data, T3NET_TEMP_ELEMENT * element, int data_
 		{
 			element->name[outpos] = c;
 			outpos++;
-			element->name[outpos] = '\0';
 			read_pos++;
 		}
+	}
+	if(read_pos >= data_max)
+	{
+		goto fail;
 	}
 
 	/* read element data */
@@ -430,10 +460,15 @@ int t3net_get_element(const char * data, T3NET_TEMP_ELEMENT * element, int data_
 
 		element->data[outpos] = c;
 		outpos++;
-		element->data[outpos] = '\0';
 		read_pos++;
 	}
 	return 1;
+
+	fail:
+	{
+		discard_temp_element(element);
+		return 0;
+	}
 }
 
 static int get_arguments_length(const T3NET_ARGUMENTS * arguments)
@@ -709,9 +744,9 @@ T3NET_DATA * t3net_get_data_from_string(const char * raw_data)
 	}
 
 	text_pos = 0;
-    text_max = strlen(raw_data) + 1;
+	text_max = strlen(raw_data) + 1;
 
-    /* read header */
+	/* read header */
 	current_line = t3net_get_line(raw_data, text_max, &text_pos);
 	if(!current_line)
 	{
@@ -724,39 +759,29 @@ T3NET_DATA * t3net_get_data_from_string(const char * raw_data)
 		current_line = t3net_get_line(raw_data, text_max, &text_pos);
 		if(current_line)
 		{
+			/* empty line signifies new entry */
 			l = strlen(current_line);
 			if(l <= 0)
 			{
 				ecount++;
 				field = 0;
 			}
-			else
+
+			/* get fields of the current element */
+			else if(ecount >= 0 && ecount < data->entries && field < data->entry[ecount]->fields)
 			{
 				size = l + 1;
-				if(t3net_get_element(current_line, &element, size))
+				if(get_temp_element(current_line, &element, size))
 				{
-
 					/* copy field name */
-					size = strlen(element.name) + 1;
-					if(size > 0)
-					{
-						data->entry[ecount]->field[field]->name = malloc(size);
-						if(data->entry[ecount]->field[field]->name)
-						{
-							t3net_strcpy(data->entry[ecount]->field[field]->name, element.name, size);
-						}
-					}
+					size = strlen(element.name);
+					data->entry[ecount]->field[field]->name = strdup(element.name);
 
 					/* copy field data */
-					size = strlen(element.data) + 1;
-					if(size > 0)
-					{
-						data->entry[ecount]->field[field]->data = malloc(size);
-						if(data->entry[ecount]->field[field]->data)
-						{
-							t3net_strcpy(data->entry[ecount]->field[field]->data, element.data, size);
-						}
-					}
+					size = strlen(element.data);
+					data->entry[ecount]->field[field]->data = strdup(element.data);
+
+					discard_temp_element(&element);
 					field++;
 				}
 			}
