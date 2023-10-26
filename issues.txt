@@ -15,9 +15,11 @@ Steam Release Checklist
 
 [ ]Create and upload final Windows build.
 
-   [ ]Update dependencies before build.
+   [X]Update dependencies before build.
 
-   [ ]Update bundled curl.
+   [X]Update bundled curl.
+
+   [ ]Create Windows Steam binary package.
 
 [X]Create and upload trailer.
 
