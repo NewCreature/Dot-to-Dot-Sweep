@@ -36,6 +36,9 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Automatically pull Steam dynamic library from SDK for packaging. This should
+   prevent possible version mismatch issues.
+
 [X]Update README.
 
    [X]Mention controller support.
