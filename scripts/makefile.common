@@ -68,7 +68,6 @@ clean: app_clean
 ifdef APP_EXTRA_TARGET
 	@$(DEL_COMMAND) $(subst /,$(PATH_SEPARATOR),$(APP_EXTRA_TARGET))
 endif
-	@$(DEL_COMMAND) $(subst /,$(PATH_SEPARATOR),$(APP_PACKAGE_DIR)/$(APP_PACKAGE_FILENAME))
 	@echo Cleanup complete!
 
 clean_packages:
