@@ -147,6 +147,16 @@ const char * t3f_get_steam_user_display_name(void)
 
 #endif
 
+bool t3f_reset_steam_stats(void)
+{
+  #ifdef T3F_ENABLE_STEAM_INTEGRATION
+  if(_t3f_steam_integration_enabled && _t3f_steam_stats_ready)
+  {
+    return SteamAPI_ISteamUserStats_ResetAllStats(SteamUserStats(), true);
+  }
+  #endif
+  return false;
+}
 
 void t3f_steam_integration_logic(void)
 {
