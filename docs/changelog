@@ -1,4 +1,4 @@
-dot-to-dot-sweep (1.3) maverick; urgency=low
+dot-to-dot-sweep (1.3) stable; urgency=low
 
   * Make leaderboard URLs configurable for future-proofing.
   * Game now starts in full screen mode by default.
@@ -9,31 +9,32 @@ dot-to-dot-sweep (1.3) maverick; urgency=low
     incorrect sometimes.
   * Other graphical improvements.
   * Multi-architecture support for Android port.
+  * Add Steam port, including achievements and display name integration.
 
- -- Todd Cope <todd@t3-i.com>  Tue, 23 May 2023 18:54:21 +0000
+ -- Todd Cope <todd@tcubedsoftware.com>  Tue, 23 May 2023 18:54:21 +0000
 
-Dot to Dot Sweep (1.2.1) maverick; urgency=low
+Dot to Dot Sweep (1.2.1) stable; urgency=low
 
   * Fix issues with Android port that were preventing it from working on many
     devices.
 
- -- Todd Cope <todd@t3-i.com>  Tue, 19 Feb 2019 22:57:43 +0000
+ -- Todd Cope <todd@tcubedsoftware.com>  Tue, 19 Feb 2019 22:57:43 +0000
 
-dot-to-dot-sweep (1.2) maverick; urgency=low
+dot-to-dot-sweep (1.2) stable; urgency=low
 
   * Upgrade to latest T3F and T3Net frameworks.
 
- -- Todd Cope <todd@t3-i.com>  Sun, 09 Dec 2018 03:28:39 +0000
+ -- Todd Cope <todd@tcubedsoftware.com>  Sun, 09 Dec 2018 03:28:39 +0000
 
-dot-to-dot-sweep (1.1.1) maverick; urgency=low
+dot-to-dot-sweep (1.1.1) stable; urgency=low
 
   * Optimize score particle effects to eliminate in-game framerate stuttering.
   * Fix issue where the mouse cursor would not be displayed on the title screen
     if you exited the game state while it was hidden.
 
- -- Todd Cope <todd@t3-i.com>  Sun, 16 Apr 2017 15:19:25 +0000
+ -- Todd Cope <todd@tcubedsoftware.com>  Sun, 16 Apr 2017 15:19:25 +0000
 
-dot-to-dot-sweep (1.1) maverick; urgency=low
+dot-to-dot-sweep (1.1) stable; urgency=low
 
   * Implement desktop mode.
   * Rebalance scoring to ensure a better balance between cautious and aggressive
@@ -44,10 +45,10 @@ dot-to-dot-sweep (1.1) maverick; urgency=low
   * Add setup wizard to simplify and clarify settings.
   * Run setup wizard the first time the game is opened.
 
- -- Todd Cope <todd@t3-i.com>  Wed, 03 Aug 2016 18:34:00 +0000
+ -- Todd Cope <todd@tcubedsoftware.com>  Wed, 03 Aug 2016 18:34:00 +0000
 
-dot-to-dot-sweep (1.0) maverick; urgency=low
+dot-to-dot-sweep (1.0) stable; urgency=low
 
   * Initial release.
 
- -- Todd Cope <todd@t3-i.com>  Thu, 30 Jun 2016 20:24:00 +0000
+ -- Todd Cope <todd@tcubedsoftware.com>  Thu, 30 Jun 2016 20:24:00 +0000
