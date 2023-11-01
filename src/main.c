@@ -256,6 +256,17 @@ void app_logic(void * data)
 		}
 		dot_particle_logic(&app->particle[i]);
 	}
+	if(app->reset_steam_stats)
+	{
+		if(t3f_reset_steam_stats())
+		{
+			for(i = 0; i < app->achievements->entries; i++)
+			{
+				t3f_update_achievement_progress(app->achievements, i, 0);
+			}
+			app->reset_steam_stats = false;
+		}
+	}
 	t3f_steam_integration_logic();
 }
 
@@ -867,6 +878,10 @@ bool app_process_arguments(APP_INSTANCE * app, int argc, char * argv[])
 				printf("Capture failed!\n");
 				return false;
 			}
+		}
+		if(!strcmp(argv[i], "--reset-steam-stats"))
+		{
+			app->reset_steam_stats = true;
 		}
 	}
 	return true;

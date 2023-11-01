@@ -28,6 +28,7 @@ typedef struct
     int graphics_size_multiplier;
     T3F_ACHIEVEMENTS_LIST * achievements;
     bool steam_running;
+    bool reset_steam_stats;
 
     /* program state */
     int state;
