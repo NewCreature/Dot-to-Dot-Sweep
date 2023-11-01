@@ -36,14 +36,14 @@ Steam Release Checklist
 v1.3
 ----
 
-[ ]Automatically pull Steam dynamic library from SDK for packaging. This should
+[X]Automatically pull Steam dynamic library from SDK for packaging. This should
    prevent possible version mismatch issues.
 
 [X]Update README.
 
    [X]Mention controller support.
 
-[ ]Test new achievements handling code.
+[X]Test new achievements handling code.
 
 [X]See about keeping mouse inside the play area with set_mouse_xy().
 
