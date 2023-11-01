@@ -307,6 +307,14 @@ static void dot_game_create_splash_effect(void * data, float x, float y, float r
 	}
 }
 
+static void _dot_update_achievement_progress(APP_INSTANCE * app, int id, int progress)
+{
+	if(!app->game.cheats_enabled)
+	{
+		t3f_update_achievement_progress(app->achievements, id, progress);
+	}
+}
+
 /* function to add points to the score
  * used when combo timer reaches 0, level is completed, or player loses */
 void dot_game_accumulate_score(void * data)
@@ -324,7 +332,7 @@ void dot_game_accumulate_score(void * data)
 		{
 			if(app->game.score >= 100000)
 			{
-				t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GOOD_GAME, 1);
+				_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_GOOD_GAME, 1);
 			}
 		}
 		dot_game_create_score_effect(data, app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, app->game.ascore);
@@ -527,14 +535,14 @@ void dot_game_check_player_collisions(void * data)
 					{
 						if(app->game.a_oops_ticks <= 60)
 						{
-							t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_OOPS, 1);
+							_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_OOPS, 1);
 						}
 					}
 					if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_SO_CLOSE))
 					{
 						if(app->game.a_colored_balls_remaining <= 1)
 						{
-							t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_SO_CLOSE, 1);
+							_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_SO_CLOSE, 1);
 						}
 					}
 					dot_game_create_splash_effect(data, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.r, app->dot_color[app->game.player.ball.type]);
@@ -1061,20 +1069,20 @@ void dot_game_logic(void * data)
 			{
 				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT))
 				{
-					t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT, 1);
+					_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_GETTING_INTO_IT, 1);
 				}
 				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO))
 				{
 					if(!app->game.a_combo_broken)
 					{
-						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO, 1);
+						_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_FULL_COMBO, 1);
 					}
 				}
 				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GETTING_GOOD))
 				{
 					if(app->game.a_start_lives == app->game.lives)
 					{
-						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_GETTING_GOOD, 1);
+						_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_GETTING_GOOD, 1);
 					}
 				}
 				if(app->game.combo >= 10)
@@ -1101,7 +1109,7 @@ void dot_game_logic(void * data)
 				{
 					if(app->game.level >= 10)
 					{
-						t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_SEE_IT_THROUGH, 1);
+						_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_SEE_IT_THROUGH, 1);
 					}
 				}
 			}
@@ -1114,7 +1122,7 @@ void dot_game_logic(void * data)
 	{
 		if(app->game.a_bob_and_weave_ticks >= 3600)
 		{
-			t3f_update_achievement_progress(app->achievements, DOT_ACHIEVEMENT_BOB_AND_WEAVE, 1);
+			_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_BOB_AND_WEAVE, 1);
 		}
 	}
 	app->game.tick++;
