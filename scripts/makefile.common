@@ -151,5 +151,5 @@ else
 	cd $(CONFIG_STEAMWORKS_SDK_PATH)/redistributable_bin/$(CONFIG_STEAMWORKS_PLATFORM) && zip -9 -r "$(PWD)/$(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-$(T3F_PLATFORM_NAME)-binaries.zip" *.dll *.so *.dylib || true
 endif
 
-steam_packages: data_package all steam_binary_package
+steam_packages_common: data_package all steam_binary_package
 	@echo Successfully create Steam data and binary packages for the the current platform.
