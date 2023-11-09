@@ -36,6 +36,8 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Update license to include sharing clause.
+
 [ ]Investigate mouse warping bug. When moving the character to the top of the
    screen, the mouse position temporarily jumped to another location once on
    MacOS.
