@@ -42,6 +42,16 @@ v1.3
    screen, the mouse position temporarily jumped to another location once on
    MacOS.
 
+   [ ]I'm thinking this might be more issues related to al_set_mouse_xy() and
+      the event queue. It might be necessary to create a timestamp of when
+      al_set_mouse_xy() was called and ignore events that were generated before
+      it was called.
+
+      Looking at T3F's internal logic, I think it is possible for a timer tick
+      to happen between the time the mouse position is updated after the
+      al_set_mouse_xy() call and more mouse events from the unadjusted position
+      are generated. The timestamp method should fix this issue for good.
+
 [ ]Ensure level 10 can be finished.
 
 [X]Automatically pull Steam dynamic library from SDK for packaging. This should
