@@ -38,11 +38,13 @@ v1.3
 
 [ ]Update license to include sharing clause.
 
-[ ]Investigate mouse warping bug. When moving the character to the top of the
+[ ]Put some default scores on the leaderboard.
+
+[X]Investigate mouse warping bug. When moving the character to the top of the
    screen, the mouse position temporarily jumped to another location once on
    MacOS.
 
-   [ ]I'm thinking this might be more issues related to al_set_mouse_xy() and
+   [X]I'm thinking this might be more issues related to al_set_mouse_xy() and
       the event queue. It might be necessary to create a timestamp of when
       al_set_mouse_xy() was called and ignore events that were generated before
       it was called.
