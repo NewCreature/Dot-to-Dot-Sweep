@@ -142,3 +142,6 @@ mac_sign_package: $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-macos.dmg
 mac_steam_package: source_only_package mac_universal_bundle mac_sign_and_notarize_bundle
 	ditto -c -k --keepParent $(APP_PACKAGE_DIR)/$(APP_TITLE).app $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-macos-steam.zip
 	cd $(APP_PACKAGE_DIR) && zip -9 $(APP_PACKAGE_NAME)-macos-steam.zip $(APP_PACKAGE_FILENAME)
+
+steam_packages: mac_steam_package
+	@Sucessfully built Steam packages for the current platform.

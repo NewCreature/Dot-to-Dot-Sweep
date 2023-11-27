@@ -36,6 +36,26 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Update license to include sharing clause.
+
+[X]Put some default scores on the leaderboard.
+
+[X]Investigate mouse warping bug. When moving the character to the top of the
+   screen, the mouse position temporarily jumped to another location once on
+   MacOS.
+
+   [X]I'm thinking this might be more issues related to al_set_mouse_xy() and
+      the event queue. It might be necessary to create a timestamp of when
+      al_set_mouse_xy() was called and ignore events that were generated before
+      it was called.
+
+      Looking at T3F's internal logic, I think it is possible for a timer tick
+      to happen between the time the mouse position is updated after the
+      al_set_mouse_xy() call and more mouse events from the unadjusted position
+      are generated. The timestamp method should fix this issue for good.
+
+[ ]Ensure level 10 can be finished.
+
 [X]Automatically pull Steam dynamic library from SDK for packaging. This should
    prevent possible version mismatch issues.
 
@@ -123,8 +143,10 @@ v1.3
 
 [X]Cannot touch to resume from pause screen.
 
-[ ]Investigate player character jump on switch from controller to mouse
+[X]Investigate player character jump on switch from controller to mouse
    further. I saw this happen again on the Steam Deck.
+
+   [X]Could not reproduce.
 
 [X]Pause menu overlay doesn't extend all the way to the right on Steam Deck.
 
@@ -164,7 +186,7 @@ v1.3
    [X]To reproduce the issue. Start the game with mouse. Pause with keyboard
       key. Unpause with keyboard then switch back to mouse by moving the mouse.
 
-[ ]Research crash on Steam Deck after score upload/download combo.
+[X]Research crash on Steam Deck after score upload/download combo.
 
 [X]In-game overlays don't extend all the way to the right edge under certain
    display resolutions.
