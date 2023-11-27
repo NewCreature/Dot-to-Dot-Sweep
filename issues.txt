@@ -36,7 +36,7 @@ Steam Release Checklist
 v1.3
 ----
 
-[ ]Update license to include sharing clause.
+[X]Update license to include sharing clause.
 
 [X]Put some default scores on the leaderboard.
 
@@ -54,7 +54,7 @@ v1.3
       al_set_mouse_xy() call and more mouse events from the unadjusted position
       are generated. The timestamp method should fix this issue for good.
 
-[ ]Ensure level 10 can be finished.
+[X]Ensure level 10 can be finished.
 
 [X]Automatically pull Steam dynamic library from SDK for packaging. This should
    prevent possible version mismatch issues.
