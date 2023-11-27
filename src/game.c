@@ -1063,6 +1063,7 @@ void dot_game_logic(void * data)
 
 			app->game.a_colored_balls_remaining = colored;
 			dot_game_check_player_collisions(data);
+			app->game.a_oops_ticks++;
 
 			/* move on to next level */
 			if(colored == 0)
