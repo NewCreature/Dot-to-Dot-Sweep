@@ -263,6 +263,7 @@ void app_logic(void * data)
 			for(i = 0; i < app->achievements->entries; i++)
 			{
 				t3f_update_achievement_progress(app->achievements, i, 0);
+				app->achievements->entry[i].store_state = 0;
 			}
 			app->reset_steam_stats = false;
 		}
@@ -1049,7 +1050,7 @@ bool dot_initialize_achievements(APP_INSTANCE * app)
 		goto fail;
 	}
 	t3f_load_achievements_data(app->achievements, t3f_user_data, "Achievements");
-	app->achievements->modified = true;
+	app->achievements->updated = true;
 	return true;
 
 	fail:
