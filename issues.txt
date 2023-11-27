@@ -36,6 +36,8 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Oops achievement triggers incorrectly.
+
 [X]Update license to include sharing clause.
 
 [X]Put some default scores on the leaderboard.
