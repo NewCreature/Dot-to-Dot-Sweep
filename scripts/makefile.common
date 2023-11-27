@@ -77,6 +77,7 @@ clean_packages:
 	@rm -f $(APP_PACKAGE_DIR)/*.apk
 	@rm -f $(APP_PACKAGE_DIR)/*.dmg
 	@rm -rf $(APP_PACKAGE_DIR)/*.app
+	@rm -rf $(APP_PACKAGE_DIR)/*/
 
 #create tar.gz package for source code distribution
 package: clean clean_packages
