@@ -36,7 +36,7 @@ Steam Release Checklist
 v1.3
 ----
 
-[ ]Oops achievement triggers incorrectly.
+[X]Oops achievement triggers incorrectly.
 
 [X]Update license to include sharing clause.
 
