@@ -397,13 +397,13 @@ bool t3f_map_input_for_xbox_controller(T3F_INPUT_HANDLER * input_handler, int jo
     input_handler->element[T3F_GAMEPAD_R3].device_number = joystick;
     input_handler->element[T3F_GAMEPAD_R3].device_element = 12;
 
-    /* Start */
-    input_handler->element[T3F_GAMEPAD_START].device_number = joystick;
-    input_handler->element[T3F_GAMEPAD_START].device_element = 14;
-
     /* Select */
     input_handler->element[T3F_GAMEPAD_SELECT].device_number = joystick;
-    input_handler->element[T3F_GAMEPAD_SELECT].device_element = 15;
+    input_handler->element[T3F_GAMEPAD_SELECT].device_element = 14;
+
+    /* Start */
+    input_handler->element[T3F_GAMEPAD_START].device_number = joystick;
+    input_handler->element[T3F_GAMEPAD_START].device_element = 15;
 
     return true;
 
