@@ -36,7 +36,7 @@ Steam Release Checklist
 v1.3
 ----
 
-[ ]Update MacOS XBox controller implementation to work properly with the latest
+[X]Update MacOS XBox controller implementation to work properly with the latest
    version of Allegro.
 
 [X]Oops achievement triggers incorrectly.
