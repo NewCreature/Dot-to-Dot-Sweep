@@ -427,8 +427,8 @@ static int get_temp_element(const char * data, T3NET_TEMP_ELEMENT * element, int
 	{
 		goto fail;
 	}
-	strcpy(element->name, "");
-	strcpy(element->data, "");
+	memset(element->name, 0, data_max);
+	memset(element->data, 0, data_max);
 
 	/* read element name */
 	while(read_pos < data_max)
