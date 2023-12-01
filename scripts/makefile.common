@@ -153,4 +153,4 @@ else
 endif
 
 steam_packages_common: data_package all steam_binary_package
-	@echo Successfully create Steam data and binary packages for the the current platform.
+	@echo Successfully created Steam data and binary packages for the the current platform.
