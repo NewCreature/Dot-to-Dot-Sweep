@@ -52,4 +52,4 @@ windows_zip: $(APP_EXE_NAME)
 	@echo Windows package created!
 
 steam_packages: steam_packages_common
-	@Sucessfully built Steam packages for the current platform.
+	@echo Sucessfully built Steam packages for the current platform.
