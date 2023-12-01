@@ -91,4 +91,4 @@ install_flatpak:
 	@$(SED_COMMAND) 's|T3F_APP_URL|$(APP_URL)|' $(INSTALL_PREFIX)/share/metainfo/$(APP_ID).metainfo.xml
 
 steam_packages: steam_packages_common
-	@Sucessfully built Steam packages for the current platform.
+	@echo Sucessfully built Steam packages for the current platform.
