@@ -36,6 +36,17 @@ Steam Release Checklist
 v1.3
 ----
 
+[ ]Leaderboards are crashing on download.
+
+   [ ]We are getting 11 entries when the limit is supposed to be 10. This
+      suggests the leaderboard script on the site is broken.
+   
+   [ ]The 11th entry is what is causing the program to crash. We need to go
+      back over the leaderboard code in T3Net to see what's going on. It seems
+      like the leaderboard code is expecting the amount of data to amount to
+      10 entries but is trying to stuff 11 entries in. We should fix this first
+      to ensure the system can handle arbitrary amounts of data correctly.
+
 [X]Update MacOS XBox controller implementation to work properly with the latest
    version of Allegro.
 
