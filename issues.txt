@@ -47,6 +47,13 @@ v1.3
       10 entries but is trying to stuff 11 entries in. We should fix this first
       to ensure the system can handle arbitrary amounts of data correctly.
 
+      [ ]I've confirmed the leaderboard code in T3Net is trying to fill past
+         the end of a buffer. We need to respect the user entry count specified
+         when creating the leaderboard data. The update code should be modified
+         to only fill the available space, not assume the server is dishing out
+         the correct number of entries.
+
+
 [X]Update MacOS XBox controller implementation to work properly with the latest
    version of Allegro.
 
