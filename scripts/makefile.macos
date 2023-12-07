@@ -115,6 +115,12 @@ mac_universal_bundle:
 	rm $(APP_EXE_NAME)-i386 $(APP_EXE_NAME)-x86_64 $(APP_EXE_NAME)-arm64
 	make mac_bundle
 
+mac_steam_touch:
+	touch ../bin/data/steam.dat
+
+mac_steam_cleanup:
+	rm -rf ../bin/data/steam.dat
+
 mac_package: $(APP_PACKAGE_DIR)/$(APP_TITLE).app
 	rm -rf $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-macos.dmg
 	../macos/create-dmg --volname $(APP_TITLE) --volicon $(APP_PACKAGE_DIR)/$(APP_TITLE).app/Contents/Resources/$(APP_TITLE).icns --window-size 400 232 --icon-size 96 --icon "$(APP_TITLE)" 110 100 --app-drop-link 280 100 $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-macos.dmg $(APP_PACKAGE_DIR)/$(APP_TITLE).app
@@ -139,7 +145,7 @@ mac_sign_and_notarize_bundle: mac_sign_bundle mac_notarize_bundle
 mac_sign_package: $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-macos.dmg
 	codesign -s "$(MACOS_CONFIG_CERT_NAME)" --timestamp -i "$(APP_ANDROID_PACKAGE)" $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-macos.dmg
 
-mac_steam_package: source_only_package mac_universal_bundle mac_sign_and_notarize_bundle
+mac_steam_package: source_only_package mac_steam_touch mac_universal_bundle mac_steam_cleanup mac_sign_and_notarize_bundle
 	ditto -c -k --keepParent $(APP_PACKAGE_DIR)/$(APP_TITLE).app $(APP_PACKAGE_DIR)/$(APP_PACKAGE_NAME)-macos-steam.zip
 	cd $(APP_PACKAGE_DIR) && zip -9 $(APP_PACKAGE_NAME)-macos-steam.zip $(APP_PACKAGE_FILENAME)
 
