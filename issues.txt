@@ -1,53 +1,52 @@
+Standalone Release Checklist
+----------------------------
+
+[ ]Make non-Steam MacOS package.
+
+   [ ]Use same build from Steam release, just without the 'steam.dat' file.
+
+[ ]Make non-Steam Linux packages.
+
+   [ ]Use same build from Steam release, just without the 'steam.dat' file.
+
+   [ ]Produce 32-bit build.
+
+      [ ]Update dependencies for 32-bit build.
+
+[ ]Make non-Steam Windows package.
+
+   [ ]Use same build from Steam release, just without the 'steam.dat' file.
+
+
 Steam Release Checklist
 -----------------------
 
-[ ]Prepare final 1.3 version by fixing all the remaining issues.
+[ ]Upload v1.3 RC 6 MacOS package to fix missing 'steam.dat' file in bundle.
 
-[X]Add avatars to Steam.
+   [ ]Fix build script for 'mac_package' target to automatically clean up,
+      build, sign, and notarize to prevent mistakes from happening in the
+      future.
 
-[ ]Create and upload final MacOS build.
+[ ]Produce and upload v1.3 RC 6 Linux build.
 
-   [ ]Update dependencies before build.
-
-[ ]Create and upload final Linux build.
-
-   [ ]Update dependencies before build.
-
-[ ]Create and upload final Windows build.
-
-   [X]Update dependencies before build.
-
-   [X]Update bundled curl.
-
-   [ ]Create Windows Steam binary package.
-
-[X]Create and upload trailer.
-
-   [X]Show T Cubed Software Logo with music in background.
-
-   [X]Beat kicks in when cutting to gameplay.
-
-   [X]Overlay game mechanic descriptions over cuts of gameplay that show off
-      each mechanic.
-   
-   [X]Show game logo on last screen.
+[ ]Produce and upload v1.3 RC 6 Windows build.
 
 
 v1.3
 ----
 
-[ ]Leaderboards are crashing on download.
+[X]Leaderboards are crashing on download.
 
-   [ ]We are getting 11 entries when the limit is supposed to be 10. This
+   [X]We are getting 11 entries when the limit is supposed to be 10. This
       suggests the leaderboard script on the site is broken.
    
-   [ ]The 11th entry is what is causing the program to crash. We need to go
+   [X]The 11th entry is what is causing the program to crash. We need to go
       back over the leaderboard code in T3Net to see what's going on. It seems
       like the leaderboard code is expecting the amount of data to amount to
       10 entries but is trying to stuff 11 entries in. We should fix this first
       to ensure the system can handle arbitrary amounts of data correctly.
 
-      [ ]I've confirmed the leaderboard code in T3Net is trying to fill past
+      [X]I've confirmed the leaderboard code in T3Net is trying to fill past
          the end of a buffer. We need to respect the user entry count specified
          when creating the leaderboard data. The update code should be modified
          to only fill the available space, not assume the server is dishing out
