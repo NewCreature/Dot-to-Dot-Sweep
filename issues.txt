@@ -18,20 +18,6 @@ Standalone Release Checklist
    [ ]Use same build from Steam release, just without the 'steam.dat' file.
 
 
-Steam Release Checklist
------------------------
-
-[ ]Upload v1.3 RC 6 MacOS package to fix missing 'steam.dat' file in bundle.
-
-   [ ]Fix build script for 'mac_package' target to automatically clean up,
-      build, sign, and notarize to prevent mistakes from happening in the
-      future.
-
-[ ]Produce and upload v1.3 RC 6 Linux build.
-
-[ ]Produce and upload v1.3 RC 6 Windows build.
-
-
 v1.3
 ----
 
