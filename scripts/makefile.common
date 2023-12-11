@@ -71,7 +71,7 @@ endif
 	@echo Cleanup complete!
 
 clean_packages:
-	@echo Cleaning up old paclages...
+	@echo Cleaning up old packages...
 	@rm -f $(APP_PACKAGE_DIR)/*.tar.gz
 	@rm -f $(APP_PACKAGE_DIR)/*.zip
 	@rm -f $(APP_PACKAGE_DIR)/*.apk
