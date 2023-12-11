@@ -80,7 +80,7 @@ clean_packages:
 	@rm -rf $(APP_PACKAGE_DIR)/*/
 
 #create tar.gz package for source code distribution
-package: clean clean_packages
+source_package: clean clean_packages
 	$(shell rm -rf $(APP_TEMP_DIR); mkdir -p $(APP_TEMP_DIR); cp -a -R -L "../bin" $(APP_TEMP_DIR); cp -a -R -L "../src" $(APP_TEMP_DIR); cp -a -R -L "../scripts" $(APP_TEMP_DIR); cp -a -R -L "../docs" $(APP_TEMP_DIR); cp -a -R -L "../android" $(APP_TEMP_DIR); cp -a -R -L "../debian" $(APP_TEMP_DIR); cp -a -R -L "../linux" $(APP_TEMP_DIR);  cp -a -R -L "../macos" $(APP_TEMP_DIR); cp -a -R -L  "../windows" $(APP_TEMP_DIR); cp -a -R -L "../icons" $(APP_TEMP_DIR); cp -a -R -L "../iphone" $(APP_TEMP_DIR); cp -a -R -L "../graphics_src" $(APP_TEMP_DIR); cp -a -R -L "../packages" $(APP_TEMP_DIR); cp -a -R -L "../misc" $(APP_TEMP_DIR); cp "../changes.txt" $(APP_TEMP_DIR); cp "../issues.txt" $(APP_TEMP_DIR); cd ../temp; rm -f $(APP_PACKAGE_FILENAME); export COPY_EXTENDED_ATTRIBUTES_DISABLE=true; export COPYFILE_DISABLE=true; tar --exclude="." --exclude=".DS_Store" --exclude="old" --exclude="makefile.config" $(PACKAGE_EXCLUSIONS) --dereference -czf $(APP_PACKAGE_DIR)/$(APP_PACKAGE_FILENAME) $(APP_PACKAGE_NAME); cd ..; rm -rf temp)
 	@echo Package successfully created!
 

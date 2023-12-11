@@ -43,8 +43,8 @@ clean_all:
 release:
 	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts release
 
-package:
-	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts package
+source_package:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts source_package
 
 source_only_package:
 	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts source_only_package
