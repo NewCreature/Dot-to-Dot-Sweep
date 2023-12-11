@@ -61,6 +61,15 @@ android_install:
 android_debug:
 	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_debug
 
+mac_i386:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts mac_i386
+
+mac_x86_64:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts mac_x86_64
+
+mac_arm64:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts mac_arm64
+
 mac_universal_bundle:
 	$(MAKE) -f ../scripts/makefile.macos -I ../scripts mac_universal_bundle
 
