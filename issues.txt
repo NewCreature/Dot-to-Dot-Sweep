@@ -25,6 +25,8 @@ v1.3.1
    have the current difficulty level be hard mode and making the default mode
    a little easier.
 
+[ ]Add extra live sound effect.
+
 [ ]Look into revamping mouse controls to allow for modifying sensitivity.
 
 [ ]Look into leaderboard upload freeze and crash.
