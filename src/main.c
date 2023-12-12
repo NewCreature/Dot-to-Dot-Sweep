@@ -666,15 +666,24 @@ void app_read_user_data(APP_INSTANCE * app)
 		}
 	}
 
-	/* load high score */
+	/* load high scores */
 	val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
 	if(val)
 	{
-		app->game.high_score = dot_leaderboard_unobfuscate_score(atoi(val));
+		app->game.high_score[0] = dot_leaderboard_unobfuscate_score(atoi(val));
 	}
 	else
 	{
-		app->game.high_score = 0;
+		app->game.high_score[0] = 0;
+	}
+	val = al_get_config_value(t3f_user_data, "Game Data", "High Score Easy");
+	if(val)
+	{
+		app->game.high_score[1] = dot_leaderboard_unobfuscate_score(atoi(val));
+	}
+	else
+	{
+		app->game.high_score[1] = 0;
 	}
 
 	/* load user key */
@@ -730,6 +739,17 @@ void app_read_user_data(APP_INSTANCE * app)
 		}
 	}
 
+	app->game_mode = 1;
+	val = al_get_config_value(t3f_user_data, "Game Data", "Game Mode");
+	if(val)
+	{
+		app->game_mode = atoi(val);
+		if(app->game_mode != 0 && app->game_mode != 1)
+		{
+			app->game_mode = 1;
+		}
+	}
+
 	/* user cheat settings */
 	app->game.cheats_enabled = false;
 	app->game.speed_multiplier = 1.0;
@@ -749,15 +769,12 @@ void app_read_user_data(APP_INSTANCE * app)
 			app->game.cheats_enabled = true;
 		}
 	}
-	app->game.start_lives = 3;
+	app->game.start_lives = 0;
 	val = al_get_config_value(t3f_user_data, "Game Data", "start_lives");
 	if(val)
 	{
 		app->game.start_lives = atoi(val);
-		if(app->game.start_lives != 3)
-		{
-			app->game.cheats_enabled = true;
-		}
+		app->game.cheats_enabled = true;
 	}
 
 	/* set up leaderboard URLs */
@@ -1144,7 +1161,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Error initializing achievements list!\n");
 		return false;
 	}
-	log_t3net();
+//	log_t3net();
 	if(!t3f_option_is_set(T3F_OPTION_RENDER_MODE))
 	{
 		t3f_set_option(T3F_OPTION_RENDER_MODE, T3F_RENDER_MODE_ALWAYS_CLEAR);

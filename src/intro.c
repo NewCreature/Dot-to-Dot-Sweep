@@ -33,11 +33,45 @@ static void recall_element(APP_INSTANCE * app)
 	app->menu[app->current_menu]->hover_element = app->previous_element;
 }
 
+static void dot_update_first_run(void)
+{
+	al_set_config_value(t3f_user_data, "Game Data", "Setup Done", "true");
+	t3f_save_user_data();
+}
+
+int dot_menu_proc_game_mode_normal(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	app->game_mode = 1;
+	al_set_config_value(t3f_user_data, "Game Data", "Game Mode", "1");
+	t3f_save_user_data();
+	dot_update_first_run();
+	app->current_menu = DOT_MENU_MAIN;
+	recall_element(app);
+
+	return 1;
+}
+
+int dot_menu_proc_game_mode_hard(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	app->game_mode = 0;
+	al_set_config_value(t3f_user_data, "Game Data", "Game Mode", "0");
+	t3f_save_user_data();
+	dot_update_first_run();
+	app->current_menu = DOT_MENU_MAIN;
+	recall_element(app);
+
+	return 1;
+}
+
 int dot_menu_proc_play(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	dot_game_initialize(data, app->demo_file ? true : false);
+	dot_game_initialize(data, app->demo_file ? true : false, app->game_mode);
 
 	return 1;
 }
@@ -58,12 +92,12 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 		}
 	}
 	dot_show_message(data, "Downloading leaderboard...");
-	app->leaderboard = t3net_get_leaderboard(app->leaderboard_retrieve_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", 10, 0);
+	app->leaderboard = t3net_get_leaderboard(app->leaderboard_retrieve_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, app->game_mode == 0 ? "normal" : "easy", "none", 10, 0);
 	if(app->leaderboard)
 	{
 		remember_element(app);
 		app->leaderboard_spot = -1;
-		val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
+		val = al_get_config_value(t3f_user_data, "Game Data", app->game_mode == 0 ? "High Score" : "High Score Easy");
 		if(val)
 		{
 			app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, atoi(val));
@@ -92,12 +126,6 @@ int dot_menu_proc_setup(void * data, int i, void * pp)
 	return 1;
 }
 
-static void dot_update_first_run(void)
-{
-	al_set_config_value(t3f_user_data, "Game Data", "Setup Done", "true");
-	t3f_save_user_data();
-}
-
 int dot_menu_proc_music_yes(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -108,9 +136,7 @@ int dot_menu_proc_music_yes(void * data, int i, void * pp)
 	{
 		t3f_play_music(DOT_MUSIC_TITLE);
 	}
-	app->current_menu = DOT_MENU_MAIN;
-	recall_element(app);
-	dot_update_first_run();
+	app->current_menu = DOT_MENU_GAME_MODE;
 	return 1;
 }
 
@@ -126,9 +152,7 @@ int dot_menu_proc_music_no(void * data, int i, void * pp)
 		t3f_stop_music();
 		al_resume_timer(t3f_timer);
 	}
-	app->current_menu = DOT_MENU_MAIN;
-	recall_element(app);
-	dot_update_first_run();
+	app->current_menu = DOT_MENU_GAME_MODE;
 	return 1;
 }
 
@@ -347,6 +371,21 @@ bool dot_intro_initialize(void * data)
 	}
 
 	/* create menus */
+	app->menu[DOT_MENU_GAME_MODE] = t3f_create_gui(0, 0);
+	if(!app->menu[DOT_MENU_GAME_MODE])
+	{
+		return false;
+	}
+	t3f_add_gui_text_element(app->menu[DOT_MENU_GAME_MODE], NULL, "Difficulty", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	pos_y += 64;
+	t3f_add_gui_text_element(app->menu[DOT_MENU_GAME_MODE], dot_menu_proc_game_mode_hard, "Hard", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	pos_y += 64;
+	t3f_add_gui_text_element(app->menu[DOT_MENU_GAME_MODE], dot_menu_proc_game_mode_normal, "Normal", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(app->menu[DOT_MENU_GAME_MODE], top, bottom);
+	t3f_set_gui_shadow(app->menu[DOT_MENU_GAME_MODE], -2, 2);
+  t3f_set_gui_hover_lift(app->menu[DOT_MENU_GAME_MODE], 2, -2);
+
+	pos_y = 0;
 	app->menu[DOT_MENU_MAIN] = t3f_create_gui(0, 0);
 	if(!app->menu[DOT_MENU_MAIN])
 	{
@@ -670,7 +709,7 @@ void dot_intro_render_split(void * data)
 	al_hold_bitmap_drawing(true);
 	sprintf(buffer, "High Score");
 	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, t3f_virtual_display_width / 2, 440 + 40 - t3f_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, buffer);
-	sprintf(buffer, "%d", app->game.high_score);
+	sprintf(buffer, "%d", app->game.high_score[app->game_mode]);
 	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, t3f_virtual_display_width / 2, 440 + 40, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, buffer);
 	al_hold_bitmap_drawing(false);
 	al_hold_bitmap_drawing(held);

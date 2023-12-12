@@ -29,6 +29,7 @@ typedef struct
     T3F_ACHIEVEMENTS_LIST * achievements;
     bool steam_running;
     bool reset_steam_stats;
+    int game_mode;
 
     /* program state */
     int state;

@@ -54,6 +54,7 @@
 #define DOT_MENU_PROFILE       5
 #define DOT_MENU_MUSIC         6
 #define DOT_MENU_PAUSE         7
+#define DOT_MENU_GAME_MODE     8
 
 #define DOT_MENU_COLOR_ENABLED  t3f_color_white
 #define DOT_MENU_COLOR_DISABLED al_map_rgba_f(0.75, 0.75, 0.75, 1.0)

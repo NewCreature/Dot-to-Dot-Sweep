@@ -52,13 +52,15 @@ typedef struct
 
 } DOT_PARTICLE_LIST;
 
-#define DOT_GAME_MAX_LEVELS    10
-#define DOT_GAME_COMBO_TIME   120
-#define DOT_GAME_BASE_POINTS 1000
-#define DOT_GAME_COMBO_POINTS 250
-#define DOT_GAME_TARGET_TICKS  30
+#define DOT_GAME_MAX_LEVELS            10
+#define DOT_GAME_COMBO_TIME           120
+#define DOT_GAME_BASE_POINTS         1000
+#define DOT_GAME_COMBO_POINTS         250
+#define DOT_GAME_TARGET_TICKS          30
+#define DOT_GAME_EXTRA_LIFE_POINTS 100000
+#define DOT_GAME_MAX_MODES              2
 
-#define DOT_GAME_MAX_BALLS   256
+#define DOT_GAME_MAX_BALLS      256
 #define DOT_GAME_STATE_START      0
 #define DOT_GAME_STATE_PLAY       1
 #define DOT_GAME_STATE_PAUSE      2
@@ -103,9 +105,11 @@ typedef struct
 	int tick;
 
 	/* player data */
+	int mode;
+	int lives_up_threshold;
 	int lives;
 	int level;
-	int ascore, score, high_score;
+	int ascore, score, high_score[DOT_GAME_MAX_MODES];
 	int combo;
 	bool level_start;
 	int emo_state;
@@ -129,7 +133,7 @@ typedef struct
 
 } DOT_GAME;
 
-void dot_game_initialize(void * data, bool demo_seed);
+void dot_game_initialize(void * data, bool demo_seed, int mode);
 void dot_game_emo_logic(void * data);
 void dot_game_logic(void * data);
 void dot_game_render_hud(void * data);

@@ -143,7 +143,7 @@ static void compute_bg_color(APP_INSTANCE * app)
 }
 
 /* start the game from level 0 */
-void dot_game_initialize(void * data, bool demo_seed)
+void dot_game_initialize(void * data, bool demo_seed, int mode)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
@@ -155,9 +155,32 @@ void dot_game_initialize(void * data, bool demo_seed)
 	{
 			t3f_srand(&app->rng_state, time(0));
 	}
+	app->game.mode = mode;
 	app->game.score = 0;
 	app->game.combo = 0;
-	app->game.lives = app->game.start_lives;
+	if(app->game.start_lives > 0)
+	{
+		app->game.lives = app->game.start_lives;
+	}
+	else
+	{
+		if(mode == 0)
+		{
+			app->game.lives = 3;
+		}
+		else
+		{
+			app->game.lives = 5;
+		}
+	}
+	if(mode == 1)
+	{
+		app->game.lives_up_threshold = DOT_GAME_EXTRA_LIFE_POINTS;
+	}
+	else
+	{
+		app->game.lives_up_threshold = 0;
+	}
 	app->game.shield.active = false;
 	dot_game_setup_level(data, app->game.start_level);
 	app->game.old_bg_color = app->level_color[0];
@@ -182,25 +205,25 @@ void dot_game_exit(void * data)
 	bool upload = false;
 
 	/* determine if we need to upload */
-	val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
+	val = al_get_config_value(t3f_user_data, "Game Data", app->game.mode == 0 ? "High Score" : "High Score Easy");
 	if(!val || dot_leaderboard_unobfuscate_score(atoi(val)) < app->game.score)
 	{
-		al_set_config_value(t3f_user_data, "Game Data", "Score Uploaded", "false");
+		al_set_config_value(t3f_user_data, "Game Data", app->game.mode == 0 ? "Score Uploaded" : "Easy Score Uploaded", "false");
 		upload = true;
 	}
-	val = al_get_config_value(t3f_user_data, "Game Data", "Score Uploaded");
+	val = al_get_config_value(t3f_user_data, "Game Data", app->game.mode == 0 ? "Score Uploaded" : "Easy Score Uploaded");
 	if(val && !strcmp(val, "false"))
 	{
 		upload = true;
 	}
 
 	/* save high score */
-	if(app->game.score >= app->game.high_score)
+	if(app->game.score >= app->game.high_score[app->game.mode])
 	{
-		sprintf(buf, "%lu", dot_leaderboard_obfuscate_score(app->game.high_score));
-		al_set_config_value(t3f_user_data, "Game Data", "High Score", buf);
+		sprintf(buf, "%lu", dot_leaderboard_obfuscate_score(app->game.high_score[app->game.mode]));
+		al_set_config_value(t3f_user_data, "Game Data", app->game.mode == 0 ? "High Score" : "High Score Easy", buf);
 		sprintf(buf, "%d", app->game.level + 1);
-		al_set_config_value(t3f_user_data, "Game Data", "High Score Level", buf);
+		al_set_config_value(t3f_user_data, "Game Data", app->game.mode == 0 ? "High Score Level" : "High Score Level Easy", buf);
 		t3f_save_user_data();
 	}
 
@@ -214,7 +237,7 @@ void dot_game_exit(void * data)
 			dot_upload_current_high_score(app);
 		}
 		dot_show_message(data, "Downloading leaderboard...");
-		app->leaderboard = t3net_get_leaderboard(app->leaderboard_retrieve_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", 10, 0);
+		app->leaderboard = t3net_get_leaderboard(app->leaderboard_retrieve_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, app->game.mode == 0 ? "normal" : "easy", "none", 10, 0);
 		if(app->leaderboard)
 		{
 			app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, dot_leaderboard_obfuscate_score(app->game.score));
@@ -324,9 +347,14 @@ void dot_game_accumulate_score(void * data)
 	if(app->game.ascore > 0)
 	{
 		app->game.score += app->game.ascore;
-		if(app->game.score > app->game.high_score)
+		if(app->game.lives_up_threshold > 0 && app->game.score >= app->game.lives_up_threshold)
 		{
-			app->game.high_score = app->game.score;
+			app->game.lives++;
+			app->game.lives_up_threshold += DOT_GAME_EXTRA_LIFE_POINTS;
+		}
+		if(app->game.score > app->game.high_score[app->game.mode])
+		{
+			app->game.high_score[app->game.mode] = app->game.score;
 		}
 		if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GOOD_GAME))
 		{
@@ -561,7 +589,7 @@ void dot_game_check_player_collisions(void * data)
 					/* change ball color to match the ball that is hit unless it is black */
 					if(app->game.ball[i].type != DOT_BITMAP_BALL_BLACK)
 					{
-						if(app->game.lives > 0 || app->game.start_lives <= 0)
+						if(app->game.lives > 0)
 						{
 							dot_game_drop_player(data, app->game.ball[i].type);
 							dot_game_target_balls(data, app->game.player.ball.type);
@@ -574,7 +602,7 @@ void dot_game_check_player_collisions(void * data)
 					}
 					else
 					{
-						if(app->game.lives > 0 || app->game.start_lives <= 0)
+						if(app->game.lives > 0)
 						{
 							dot_game_drop_player(data, app->game.player.ball.type);
 						}
