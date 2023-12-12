@@ -21,7 +21,7 @@ Standalone Release Checklist
 v1.3.1
 ------
 
-[ ]Users seem to think the game is too difficult. It might be a good idea to
+[X]Users seem to think the game is too difficult. It might be a good idea to
    have the current difficulty level be hard mode and making the default mode
    a little easier.
 
