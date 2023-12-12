@@ -18,6 +18,18 @@ Standalone Release Checklist
    [ ]Use same build from Steam release, just without the 'steam.dat' file.
 
 
+v1.3.1
+------
+
+[ ]Users seem to think the game is too difficult. It might be a good idea to
+   have the current difficulty level be hard mode and making the default mode
+   a little easier.
+
+[ ]Look into revamping mouse controls to allow for modifying sensitivity.
+
+[ ]Look into leaderboard upload freeze and crash.
+
+
 v1.3
 ----
 
