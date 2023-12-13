@@ -25,6 +25,9 @@ v1.3.1
    have the current difficulty level be hard mode and making the default mode
    a little easier.
 
+[ ]Tweak extra life threshold for normal mode. The target should be 4 1-ups by
+   level 10 without combos.
+
 [ ]Add extra life sound effect.
 
 [ ]Look into revamping mouse controls to allow for modifying sensitivity.
