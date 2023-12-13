@@ -1288,14 +1288,21 @@ void app_exit(APP_INSTANCE * app)
 
 int main(int argc, char * argv[])
 {
-	APP_INSTANCE app;
+	APP_INSTANCE * app;
 
-	memset(&app, 0, sizeof(APP_INSTANCE));
-	if(app_initialize(&app, argc, argv))
+	app = malloc(sizeof(APP_INSTANCE));
+	if(!app)
+	{
+		printf("Could not allocation memory for applicartion instance.\n");
+		return 1;
+	}
+	memset(app, 0, sizeof(APP_INSTANCE));
+	if(app_initialize(app, argc, argv))
 	{
 		t3f_run();
 	}
-	app_exit(&app);
+	app_exit(app);
+	free(app);
 	t3f_finish();
 	return 0;
 }
