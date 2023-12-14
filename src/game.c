@@ -639,36 +639,13 @@ static void maybe_activate_shield(APP_INSTANCE * app)
 	}
 }
 
-static void confine_mouse(APP_INSTANCE * app)
+static void move_player_with_mouse(APP_INSTANCE * app)
 {
-	float new_x = app->touch_x;
-	float new_y = app->touch_y;
-	bool update = false;
+	int dx, dy;
 
-	if(t3f_mouse_x + app->game.player.touch_offset_x < app->game.player.ball.r)
-	{
-		new_x = app->game.player.ball.r - app->game.player.touch_offset_x;
-		update = true;
-	}
-	else if(t3f_mouse_x + app->game.player.touch_offset_x + app->game.player.ball.r > DOT_GAME_PLAYFIELD_WIDTH + 0.5)
-	{
-		new_x = DOT_GAME_PLAYFIELD_WIDTH + 0.5 - app->game.player.ball.r - app->game.player.touch_offset_x;
-		update = true;
-	}
-	if(t3f_mouse_y + app->game.player.touch_offset_y < app->game.player.ball.r)
-	{
-		new_y = app->game.player.ball.r - app->game.player.touch_offset_y;
-		update = true;
-	}
-	else if(t3f_mouse_y + app->game.player.touch_offset_y + app->game.player.ball.r > DOT_GAME_PLAYFIELD_HEIGHT + 0.5)
-	{
-		new_y = DOT_GAME_PLAYFIELD_HEIGHT + 0.5 - app->game.player.ball.r - app->game.player.touch_offset_y;
-		update = true;
-	}
-	if(update)
-	{
-		t3f_set_mouse_xy(new_x, new_y);
-	}
+	t3f_get_mouse_mickeys(&dx, &dy, NULL);
+	app->game.player.ball.x += ((float)dx / t3f_current_view->scale_x);
+	app->game.player.ball.y += ((float)dy / t3f_current_view->scale_y);
 }
 
 /* handle player movement */
@@ -708,8 +685,7 @@ void dot_game_move_player(void * data)
 			}
 			else if(app->using_mouse)
 			{
-				confine_mouse(app);
-				update_player_position(app);
+				move_player_with_mouse(app);
 				maybe_activate_shield(app);
 			}
 			else
@@ -939,6 +915,7 @@ void dot_game_logic(void * data)
 						app->game.player.touch_offset_y = 0;
 						app->game.level_start = false;
 						dot_enable_mouse_cursor(false);
+						t3f_get_mouse_mickeys(&i, &i, &i);
 					}
 					t3f_touch[app->touch_id].pressed = false;
 				}
@@ -988,6 +965,7 @@ void dot_game_logic(void * data)
 						app->game.player.touch_offset_y = app->game.player.ball.y - app->touch_y;
 						app->game.state = DOT_GAME_STATE_PLAY;
 						dot_enable_mouse_cursor(false);
+						t3f_get_mouse_mickeys(&i, &i, &i);
 					}
 					t3f_touch[app->touch_id].pressed = false;
 				}
@@ -1070,6 +1048,7 @@ void dot_game_logic(void * data)
 			{
 				app->game.pause_state = app->game.state;
 				app->game.state = DOT_GAME_STATE_PAUSE;
+				t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
 				dot_enable_mouse_cursor(true);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				t3f_touch[app->touch_id].pressed = false;
