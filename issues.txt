@@ -32,6 +32,10 @@ v1.3.1
 
 [ ]Look into revamping mouse controls to allow for modifying sensitivity.
 
+   [ ]Tweak default mouse sensitivity to match the original controls.
+
+   [ ]Add mouse sensitivity to setup.
+
 [ ]Look into leaderboard upload freeze and crash.
 
 
