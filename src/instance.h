@@ -46,6 +46,7 @@ typedef struct
     int touch_id;
     float touch_x;
     float touch_y;
+    float mouse_sensitivity;
     DOT_INPUT_DATA controller;
 
     /* game state */

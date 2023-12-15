@@ -644,8 +644,8 @@ static void move_player_with_mouse(APP_INSTANCE * app)
 	int dx, dy;
 
 	t3f_get_mouse_mickeys(&dx, &dy, NULL);
-	app->game.player.ball.x += ((float)dx / t3f_current_view->scale_x);
-	app->game.player.ball.y += ((float)dy / t3f_current_view->scale_y);
+	app->game.player.ball.x += ((float)dx / t3f_current_view->scale_x) * app->mouse_sensitivity;
+	app->game.player.ball.y += ((float)dy / t3f_current_view->scale_y) * app->mouse_sensitivity;
 }
 
 /* handle player movement */

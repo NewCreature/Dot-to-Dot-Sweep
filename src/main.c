@@ -819,6 +819,12 @@ void app_read_config(APP_INSTANCE * app)
 	{
 		app->controller.dead_zone = atof(val);
 	}
+	app->mouse_sensitivity = 1.0;
+	val = al_get_config_value(t3f_config, "Game Data", "Mouse Sensitivity");
+	if(val)
+	{
+		app->mouse_sensitivity = atof(val);
+	}
 }
 
 bool app_process_arguments(APP_INSTANCE * app, int argc, char * argv[])
