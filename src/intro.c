@@ -46,9 +46,7 @@ int dot_menu_proc_game_mode_normal(void * data, int i, void * pp)
 	app->game_mode = 1;
 	al_set_config_value(t3f_user_data, "Game Data", "Game Mode", "1");
 	t3f_save_user_data();
-	dot_update_first_run();
-	app->current_menu = DOT_MENU_MAIN;
-	recall_element(app);
+	app->current_menu = DOT_MENU_MOUSE;
 
 	return 1;
 }
@@ -60,6 +58,46 @@ int dot_menu_proc_game_mode_hard(void * data, int i, void * pp)
 	app->game_mode = 0;
 	al_set_config_value(t3f_user_data, "Game Data", "Game Mode", "0");
 	t3f_save_user_data();
+	app->current_menu = DOT_MENU_MOUSE;
+
+	return 1;
+}
+
+int dot_menu_proc_mouse_sensitivity_down(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	if(app->mouse_sensitivity > 0.1)
+	{
+		app->mouse_sensitivity -= 0.1;
+	}
+
+	return 1;
+}
+
+int dot_menu_proc_mouse_sensitivity_up(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	if(app->mouse_sensitivity < 2.0)
+	{
+		app->mouse_sensitivity += 0.1;
+	}
+
+	return 1;
+}
+
+int dot_menu_proc_mouse_sensitivity_ok(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	char buf[32];
+
+	if(app->mouse_sensitivity < 2.0)
+	{
+		app->mouse_sensitivity += 0.1;
+	}
+	sprintf(buf, "%1.2f", app->mouse_sensitivity);
+	al_set_config_value(t3f_user_data, "Game Data", "Game Mode", buf);
 	dot_update_first_run();
 	app->current_menu = DOT_MENU_MAIN;
 	recall_element(app);
@@ -386,6 +424,26 @@ bool dot_intro_initialize(void * data)
   t3f_set_gui_hover_lift(app->menu[DOT_MENU_GAME_MODE], 2, -2);
 
 	pos_y = 0;
+	sprintf(app->mouse_menu_sensitivity_text, "--------------");
+	app->menu[DOT_MENU_MOUSE] = t3f_create_gui(0, 0);
+	if(!app->menu[DOT_MENU_MOUSE])
+	{
+		return false;
+	}
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], NULL, "Mouse", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	pos_y += 32;
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], NULL, "Sensitivity", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	pos_y += 64;
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], NULL, app->mouse_menu_sensitivity_text, (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], dot_menu_proc_mouse_sensitivity_down, "<", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2 - t3f_get_text_width(app->font[DOT_FONT_32], app->mouse_menu_sensitivity_text) / 2 - t3f_get_text_width(app->font[DOT_FONT_32], "<"), pos_y, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], dot_menu_proc_mouse_sensitivity_up, ">", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2 + t3f_get_text_width(app->font[DOT_FONT_32], app->mouse_menu_sensitivity_text) / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	pos_y += 64;
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], dot_menu_proc_mouse_sensitivity_ok, "Okay", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(app->menu[DOT_MENU_MOUSE], top, bottom);
+	t3f_set_gui_shadow(app->menu[DOT_MENU_MOUSE], -2, 2);
+  t3f_set_gui_hover_lift(app->menu[DOT_MENU_MOUSE], 2, -2);
+
+	pos_y = 0;
 	app->menu[DOT_MENU_MAIN] = t3f_create_gui(0, 0);
 	if(!app->menu[DOT_MENU_MAIN])
 	{
@@ -511,6 +569,17 @@ void dot_intro_logic(void * data)
 	bool upload_user_name = false;
 	bool m = false;
 
+	strcpy(app->mouse_menu_sensitivity_text, "--------------");
+	r = app->mouse_sensitivity * 7.0;
+	if(r < 0)
+	{
+		r = 0;
+	}
+	if(r > 13)
+	{
+		r = 13;
+	}
+	app->mouse_menu_sensitivity_text[r] = '|';
 	if(app->entering_name)
 	{
 		r = dot_text_entry_logic();

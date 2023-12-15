@@ -75,6 +75,7 @@ typedef struct
 
     /* menu data */
     T3F_GUI * menu[DOT_MAX_MENUS];
+    char mouse_menu_sensitivity_text[32];
     int current_menu;
     int intro_state;
     float logo_ox;
