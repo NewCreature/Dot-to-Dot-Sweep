@@ -895,6 +895,7 @@ void dot_game_logic(void * data)
 			app->game.state_tick++;
 			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 			{
+				t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
 				open_pause_menu(app, false);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				t3f_key[ALLEGRO_KEY_BACK] = 0;
@@ -1055,6 +1056,7 @@ void dot_game_logic(void * data)
 			}
 			else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.button || app->controller.current_joy_disconnected)
 			{
+				t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
 				open_pause_menu(app, false);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				app->controller.button = false;
