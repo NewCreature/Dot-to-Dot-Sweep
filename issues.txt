@@ -34,7 +34,15 @@ v1.3.1
 
    [ ]Tweak default mouse sensitivity to match the original controls.
 
+      [ ]This is not possible, at least on MacOS, due to implicity scaling of
+         mouse coordinates. We'll default the sensitivity to 0 and reimplement
+         the old mouse controls for when the setting is 0. Adjusting the
+         sensitivity up will switch to relative mode.
+
    [ ]Add mouse sensitivity to setup.
+
+      [ ]Use multiplier instead of slider. We'll make the multiplier go up by
+         0.1 up to a maximum of 2.0 probably.
 
 [ ]Look into leaderboard upload freeze and crash.
 
