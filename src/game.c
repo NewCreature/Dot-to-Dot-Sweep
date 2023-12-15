@@ -639,13 +639,53 @@ static void maybe_activate_shield(APP_INSTANCE * app)
 	}
 }
 
+static void confine_mouse(APP_INSTANCE * app)
+{
+	float new_x = app->touch_x;
+	float new_y = app->touch_y;
+	bool update = false;
+
+	if(t3f_mouse_x + app->game.player.touch_offset_x < app->game.player.ball.r)
+	{
+		new_x = app->game.player.ball.r - app->game.player.touch_offset_x;
+		update = true;
+	}
+	else if(t3f_mouse_x + app->game.player.touch_offset_x + app->game.player.ball.r > DOT_GAME_PLAYFIELD_WIDTH + 0.5)
+	{
+		new_x = DOT_GAME_PLAYFIELD_WIDTH + 0.5 - app->game.player.ball.r - app->game.player.touch_offset_x;
+		update = true;
+	}
+	if(t3f_mouse_y + app->game.player.touch_offset_y < app->game.player.ball.r)
+	{
+		new_y = app->game.player.ball.r - app->game.player.touch_offset_y;
+		update = true;
+	}
+	else if(t3f_mouse_y + app->game.player.touch_offset_y + app->game.player.ball.r > DOT_GAME_PLAYFIELD_HEIGHT + 0.5)
+	{
+		new_y = DOT_GAME_PLAYFIELD_HEIGHT + 0.5 - app->game.player.ball.r - app->game.player.touch_offset_y;
+		update = true;
+	}
+	if(update)
+	{
+		t3f_set_mouse_xy(new_x, new_y);
+	}
+}
+
 static void move_player_with_mouse(APP_INSTANCE * app)
 {
 	int dx, dy;
 
-	t3f_get_mouse_mickeys(&dx, &dy, NULL);
-	app->game.player.ball.x += ((float)dx / t3f_current_view->scale_x) * app->mouse_sensitivity;
-	app->game.player.ball.y += ((float)dy / t3f_current_view->scale_y) * app->mouse_sensitivity;
+	if(app->mouse_sensitivity <= 0.0)
+	{
+		confine_mouse(app);
+		update_player_position(app);
+	}
+	else
+	{
+		t3f_get_mouse_mickeys(&dx, &dy, NULL);
+		app->game.player.ball.x += ((float)dx / t3f_current_view->scale_x) * app->mouse_sensitivity;
+		app->game.player.ball.y += ((float)dy / t3f_current_view->scale_y) * app->mouse_sensitivity;
+	}
 }
 
 /* handle player movement */

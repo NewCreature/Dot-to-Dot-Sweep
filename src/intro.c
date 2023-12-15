@@ -67,9 +67,13 @@ int dot_menu_proc_mouse_sensitivity_down(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	if(app->mouse_sensitivity > 0.1)
+	if(app->mouse_sensitivity > 0.0)
 	{
-		app->mouse_sensitivity -= 0.1;
+		app->mouse_sensitivity -= 0.05;
+	}
+	if(app->mouse_sensitivity < 0.05)
+	{
+		app->mouse_sensitivity = 0.0;
 	}
 
 	return 1;
@@ -81,7 +85,11 @@ int dot_menu_proc_mouse_sensitivity_up(void * data, int i, void * pp)
 
 	if(app->mouse_sensitivity < 2.0)
 	{
-		app->mouse_sensitivity += 0.1;
+		app->mouse_sensitivity += 0.05;
+	}
+	if(app->mouse_sensitivity > 2.0)
+	{
+		app->mouse_sensitivity = 2.0;
 	}
 
 	return 1;
@@ -92,12 +100,9 @@ int dot_menu_proc_mouse_sensitivity_ok(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	char buf[32];
 
-	if(app->mouse_sensitivity < 2.0)
-	{
-		app->mouse_sensitivity += 0.1;
-	}
 	sprintf(buf, "%1.2f", app->mouse_sensitivity);
-	al_set_config_value(t3f_user_data, "Game Data", "Game Mode", buf);
+	al_set_config_value(t3f_config, "App Config", "Mouse Sensitivity", buf);
+	t3f_save_config();
 	dot_update_first_run();
 	app->current_menu = DOT_MENU_MAIN;
 	recall_element(app);
@@ -424,7 +429,7 @@ bool dot_intro_initialize(void * data)
   t3f_set_gui_hover_lift(app->menu[DOT_MENU_GAME_MODE], 2, -2);
 
 	pos_y = 0;
-	sprintf(app->mouse_menu_sensitivity_text, "--------------");
+	sprintf(app->mouse_menu_sensitivity_text, "-------");
 	app->menu[DOT_MENU_MOUSE] = t3f_create_gui(0, 0);
 	if(!app->menu[DOT_MENU_MOUSE])
 	{
@@ -569,17 +574,14 @@ void dot_intro_logic(void * data)
 	bool upload_user_name = false;
 	bool m = false;
 
-	strcpy(app->mouse_menu_sensitivity_text, "--------------");
-	r = app->mouse_sensitivity * 7.0;
-	if(r < 0)
+	if(app->mouse_sensitivity <= 0.0)
 	{
-		r = 0;
+		strcpy(app->mouse_menu_sensitivity_text, "1:1");
 	}
-	if(r > 13)
+	else
 	{
-		r = 13;
+		sprintf(app->mouse_menu_sensitivity_text, "%1.2f", app->mouse_sensitivity);
 	}
-	app->mouse_menu_sensitivity_text[r] = '|';
 	if(app->entering_name)
 	{
 		r = dot_text_entry_logic();
