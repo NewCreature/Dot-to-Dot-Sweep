@@ -95,6 +95,15 @@ int dot_menu_proc_mouse_sensitivity_up(void * data, int i, void * pp)
 	return 1;
 }
 
+int dot_menu_proc_mouse_sensitivity_default(void * data, int i, void * pp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	
+	app->mouse_sensitivity = 0.0;
+
+	return 1;
+}
+
 int dot_menu_proc_mouse_sensitivity_ok(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -429,7 +438,7 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_GAME_MODE], dot_menu_proc_game_mode_normal, "Normal", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(app->menu[DOT_MENU_GAME_MODE], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_GAME_MODE], -2, 2);
-  t3f_set_gui_hover_lift(app->menu[DOT_MENU_GAME_MODE], 2, -2);
+	t3f_set_gui_hover_lift(app->menu[DOT_MENU_GAME_MODE], 2, -2);
 
 	pos_y = 0;
 	sprintf(app->mouse_menu_sensitivity_text, "-------");
@@ -445,6 +454,8 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], NULL, app->mouse_menu_sensitivity_text, (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], dot_menu_proc_mouse_sensitivity_down, "<", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2 - t3f_get_text_width(app->font[DOT_FONT_32], app->mouse_menu_sensitivity_text) / 2 - t3f_get_text_width(app->font[DOT_FONT_32], "<"), pos_y, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], dot_menu_proc_mouse_sensitivity_up, ">", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2 + t3f_get_text_width(app->font[DOT_FONT_32], app->mouse_menu_sensitivity_text) / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_SHADOW);
+	pos_y += 64;
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], dot_menu_proc_mouse_sensitivity_default, "Default", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	pos_y += 64;
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], dot_menu_proc_mouse_sensitivity_ok, "Okay", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(app->menu[DOT_MENU_MOUSE], top, bottom);
