@@ -1,3 +1,12 @@
+dot-to-dot-sweep (1.4.1) stable; urgency=low
+
+  * Fix issue where setting mouse sensitivity could confine the player to a
+    smaller portion of the playfield on Windows and Linux.
+  * Fix issue where some mouse inputs could be ignored for a bit shortly after
+    touching the edge of the playfield.
+
+ -- Todd Cope <todd@tcubedsoftware.com>  Mon, 18 Dec 2023 21:04:30 +0000
+
 dot-to-dot-sweep (1.4) stable; urgency=low
 
   * Add difficulty selection.
