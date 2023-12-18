@@ -647,6 +647,12 @@ bool app_load_data(APP_INSTANCE * app)
 		printf("Failed to load sound %d!\n", DOT_SAMPLE_SCORE);
 		return false;
 	}
+	app->sample[DOT_SAMPLE_EXTRA_LIFE] = al_load_sample("data/sounds/sfx0008.wav");
+	if(!app->sample[DOT_SAMPLE_EXTRA_LIFE])
+	{
+		printf("Failed to load sound %d!\n", DOT_SAMPLE_EXTRA_LIFE);
+		return false;
+	}
 	return true;
 }
 

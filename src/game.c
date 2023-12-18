@@ -373,6 +373,7 @@ void dot_game_accumulate_score(void * data)
 		app->game.score += app->game.ascore;
 		if(app->game.lives_up_threshold > 0 && app->game.score >= app->game.lives_up_threshold)
 		{
+			t3f_play_sample(app->sample[DOT_SAMPLE_EXTRA_LIFE], 1.0, 0.0, 1.0);
 			app->game.lives++;
 			app->game.lives_up_threshold += DOT_GAME_EXTRA_LIFE_POINTS;
 			dot_game_create_extra_life_effect(data, app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r + 16.0 + 8.0);
