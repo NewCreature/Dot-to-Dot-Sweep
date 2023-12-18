@@ -1334,7 +1334,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 		}
 		case ALLEGRO_EVENT_MOUSE_AXES:
 		{
-			if(event->any.timestamp > _t3f_mouse_warp_time)
+			if(event->any.timestamp >= _t3f_mouse_warp_time)
 			{
 				t3f_real_mouse_x = event->mouse.x;
 				t3f_real_mouse_y = event->mouse.y;
@@ -1352,7 +1352,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 		}
 		case ALLEGRO_EVENT_MOUSE_WARPED:
 		{
-			if(event->any.timestamp > _t3f_mouse_warp_time)
+			if(event->any.timestamp >= _t3f_mouse_warp_time)
 			{
 				t3f_real_mouse_x = event->mouse.x;
 				t3f_real_mouse_y = event->mouse.y;
