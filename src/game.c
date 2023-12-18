@@ -713,7 +713,10 @@ static void move_player_with_mouse(APP_INSTANCE * app)
 		app->game.player.ball.x += ((float)dx / t3f_current_view->scale_x) * app->mouse_sensitivity;
 		app->game.player.ball.y += ((float)dy / t3f_current_view->scale_y) * app->mouse_sensitivity;
 		#ifndef ALLEGRO_MACOSX
-			t3f_set_mouse_xy(t3f_virtual_display_width / 2, t3f_virtual_display_height / 2);
+			if(app->game.state == DOT_GAME_STATE_PLAY)
+			{
+				t3f_set_mouse_xy(t3f_virtual_display_width / 2, t3f_virtual_display_height / 2);
+			}
 		#endif
 	}
 }
@@ -971,7 +974,6 @@ void dot_game_logic(void * data)
 			app->game.state_tick++;
 			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 			{
-				t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
 				open_pause_menu(app, false);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				t3f_key[ALLEGRO_KEY_BACK] = 0;
