@@ -310,6 +310,29 @@ static void dot_game_create_score_effect(void * data, float x, float y, int numb
 	}
 }
 
+static void dot_game_create_extra_life_effect(void * data, float x, float y)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	char buf[16] = {0};
+	int i, j;
+	float ox, px;
+	float w, cw;
+
+	strcpy(buf, DOT_EXTRA_LIFE_TEXT);
+	w = t3f_get_text_width(app->font[DOT_FONT_16], buf);
+	ox = w / 2;
+	px = 0.0;
+	for(j = 0; j < app->extra_life_particle_list.items; j++)
+	{
+		dot_create_particle(&app->particle[app->current_particle], x + (float)app->extra_life_particle_list.item[j].x + px - ox, y + app->extra_life_particle_list.item[j].y, 0.0, dot_spread_effect_particle(app->extra_life_particle_list.item[j].x + px, w, strlen(buf) * 2.5), dot_spread_effect_particle(app->extra_life_particle_list.item[j].y, t3f_get_font_line_height(app->font[DOT_FONT_16]), 4.0), -10.0, 0.0, 3.0, 45, app->bitmap[DOT_BITMAP_PARTICLE], t3f_color_white);
+		app->current_particle++;
+		if(app->current_particle >= DOT_MAX_PARTICLES)
+		{
+			app->current_particle = 0;
+		}
+	}
+}
+
 static void dot_game_create_splash_effect(void * data, float x, float y, float r, ALLEGRO_COLOR color)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -351,6 +374,7 @@ void dot_game_accumulate_score(void * data)
 		{
 			app->game.lives++;
 			app->game.lives_up_threshold += DOT_GAME_EXTRA_LIFE_POINTS;
+			dot_game_create_extra_life_effect(data, app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r + 16.0 + 8.0);
 		}
 		if(app->game.score > app->game.high_score[app->game.mode])
 		{

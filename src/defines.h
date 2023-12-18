@@ -4,6 +4,8 @@
 #define DOT_DISPLAY_WIDTH  540
 #define DOT_DISPLAY_HEIGHT (app->desktop_mode ? 520 : 960)
 
+#define DOT_EXTRA_LIFE_TEXT   "1-Up"
+
 #define DOT_MAX_BITMAPS          256
 #define DOT_BITMAP_BALL_RED        0
 #define DOT_BITMAP_BALL_GREEN      1

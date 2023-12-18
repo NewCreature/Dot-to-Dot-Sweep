@@ -41,7 +41,7 @@ typedef struct
 
 } DOT_PARTICLE_LIST_ITEM;
 
-#define DOT_MAX_PARTICLE_LIST_ITEMS 256
+#define DOT_MAX_PARTICLE_LIST_ITEMS 384
 
 /* store a list of particle positions to generate particles from */
 typedef struct
