@@ -39,7 +39,7 @@ static void dot_update_first_run(void)
 	t3f_save_user_data();
 }
 
-int dot_menu_proc_game_mode_normal(void * data, int i, void * pp)
+int dot_menu_proc_game_mode_easy(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
@@ -51,7 +51,7 @@ int dot_menu_proc_game_mode_normal(void * data, int i, void * pp)
 	return 1;
 }
 
-int dot_menu_proc_game_mode_hard(void * data, int i, void * pp)
+int dot_menu_proc_game_mode_normal(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
@@ -125,13 +125,16 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 	const char * val;
 
 	al_stop_timer(t3f_timer);
-	if(dot_get_leaderboard_user_key(data))
+	if(app->upload_scores)
 	{
-		val = al_get_config_value(t3f_user_data, "Game Data", "Score Uploaded");
-		if(val && !strcmp(val, "false"))
+		if(dot_get_leaderboard_user_key(data))
 		{
-			dot_show_message(data, "Uploading current high score...");
-			dot_upload_current_high_score(data);
+			val = al_get_config_value(t3f_user_data, "Game Data", "Score Uploaded");
+			if(val && !strcmp(val, "false"))
+			{
+				dot_show_message(data, "Uploading current high score...");
+				dot_upload_current_high_score(data);
+			}
 		}
 	}
 	dot_show_message(data, "Downloading leaderboard...");
@@ -421,7 +424,7 @@ bool dot_intro_initialize(void * data)
 	}
 	t3f_add_gui_text_element(app->menu[DOT_MENU_GAME_MODE], NULL, "Difficulty", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	pos_y += 64;
-	t3f_add_gui_text_element(app->menu[DOT_MENU_GAME_MODE], dot_menu_proc_game_mode_hard, "Hard", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_GAME_MODE], dot_menu_proc_game_mode_easy, "Easy", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	pos_y += 64;
 	t3f_add_gui_text_element(app->menu[DOT_MENU_GAME_MODE], dot_menu_proc_game_mode_normal, "Normal", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(app->menu[DOT_MENU_GAME_MODE], top, bottom);
