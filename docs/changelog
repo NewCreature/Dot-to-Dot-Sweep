@@ -1,3 +1,12 @@
+dot-to-dot-sweep (1.4) stable; urgency=low
+
+  * Add difficulty selection.
+  * Add mouse sensitivity settings.
+  * Fix bug which caused high score to upload even if the upload scores option
+    was turned off.
+
+ -- Todd Cope <todd@tcubedsoftware>  Mon, 18 Dec 2023 18:39:15 +0000
+
 dot-to-dot-sweep (1.3) stable; urgency=low
 
   * Make leaderboard URLs configurable for future-proofing.
