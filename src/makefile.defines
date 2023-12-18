@@ -105,6 +105,6 @@ DEBIAN_MENU_SECTION = Games
 DEBIAN_DESKTOP_CATEGORIES = Game
 DEBIAN_DIR = games
 DEBIAN_DEPENDS = libc6
-DEBIAN_MAINTAINER = Todd\ Cope\ \<todd\@t3-i.com\>
+DEBIAN_MAINTAINER = Todd\ Cope\ \<todd\@tcubedsoftware.com\>
 DEBIAN_DESCRIPTION = Color\ matching\ arcade\ action.
 DEBIAN_LONG_DESCRIPTION = Dot\ to\ Dot\ Sweep\ is\ an\ arcade-style\ color\ matching\ game.\ Collect\ dots\ that\ match\ your\ color\ while\ avoiding\ all\ other\ dots.\ The\ game\ is\ inspired\ by\ classic\ arcade\ games\ and\ takes\ cues\ from\ modern\ games.\ The\ simple\ gameplay\ mechanics\ coupled\ with\ increasingly\ difficult\ levels\ allows\ players\ of\ all\ skill\ levels\ to\ enjoy\ playing.\ Try\ to\ beat\ your\ personal\ best\ score\ or,\ optionally,\ compete\ for\ the\ top\ spot\ on\ the\ worldwide\ leaderboard.
