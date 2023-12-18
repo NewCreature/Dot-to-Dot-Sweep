@@ -190,6 +190,7 @@ void dot_game_initialize(void * data, bool demo_seed, int mode)
 		t3f_play_music(DOT_MUSIC_BGM);
 	}
 	app->game.tick = 0;
+	app->game.extra_life_tick = 0;
 	t3f_clear_touch_data();
 	compute_bg_color(app);
 	app->state = DOT_STATE_GAME;
@@ -375,6 +376,7 @@ void dot_game_accumulate_score(void * data)
 			app->game.lives++;
 			app->game.lives_up_threshold += DOT_GAME_EXTRA_LIFE_POINTS;
 			dot_game_create_extra_life_effect(data, app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r + 16.0 + 8.0);
+			app->game.extra_life_tick = 120;
 		}
 		if(app->game.score > app->game.high_score[app->game.mode])
 		{
@@ -946,6 +948,12 @@ void dot_game_logic(void * data)
 		}
 	}
 
+	/* make lives flash for a certain amount of time */
+	if(app->game.extra_life_tick)
+	{
+		app->game.extra_life_tick--;
+	}
+
 	compute_bg_color(app);
 
 	dot_game_emo_logic(data);
@@ -1206,6 +1214,7 @@ void dot_game_logic(void * data)
 void dot_game_render_hud(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	ALLEGRO_COLOR text_color;
 
 	char buffer[256] = {0};
 	ALLEGRO_COLOR shadow = al_map_rgba_f(0.0, 0.0, 0.0, 0.25);
@@ -1232,7 +1241,15 @@ void dot_game_render_hud(void * data)
 	sprintf(buffer, "Lives");
 	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, 8, 440 + 40 - t3f_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, 0, buffer);
 	sprintf(buffer, "%d", app->game.lives);
-	dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, shadow, 8, 440 + 40, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, 0, buffer);
+	if(app->game.extra_life_tick && (app->game.extra_life_tick / 6) % 2)
+	{
+		text_color = al_map_rgba_f(1.0, 1.0, 0.0, 1.0);
+	}
+	else
+	{
+		text_color = t3f_color_white;
+	}
+	dot_shadow_text(app->font[DOT_FONT_32], text_color, shadow, 8, 440 + 40, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, 0, buffer);
 
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_EMO_BG], shadow, t3f_virtual_display_width / 2 - 32 + DOT_SHADOW_OX * 2, DOT_GAME_PLAYFIELD_HEIGHT + 40 - 32 + DOT_SHADOW_OY * 2, 0, 64, 64, 0);
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_EMO_BG], app->dot_color[app->game.player.ball.type], t3f_virtual_display_width / 2 - 32, DOT_GAME_PLAYFIELD_HEIGHT + 40 - 32, 0, 64, 64, 0);

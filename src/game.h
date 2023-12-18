@@ -103,6 +103,7 @@ typedef struct
 	ALLEGRO_COLOR old_bg_color;
 	float bg_color_fade;
 	int tick;
+	int extra_life_tick;
 
 	/* player data */
 	int mode;
