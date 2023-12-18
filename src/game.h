@@ -57,7 +57,7 @@ typedef struct
 #define DOT_GAME_BASE_POINTS         1000
 #define DOT_GAME_COMBO_POINTS         250
 #define DOT_GAME_TARGET_TICKS          30
-#define DOT_GAME_EXTRA_LIFE_POINTS 100000
+#define DOT_GAME_EXTRA_LIFE_POINTS  75000
 #define DOT_GAME_MAX_MODES              2
 
 #define DOT_GAME_MAX_BALLS      256
