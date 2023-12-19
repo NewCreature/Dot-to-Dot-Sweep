@@ -143,7 +143,7 @@ data_package_helper:
 	rm -f $(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-data.zip
 	cd ../bin && touch data/steam.dat && zip -9 -r $(APP_PACKAGE_DIR)/$(APP_NAME)-$(APP_VERSION)-data.zip data -x data/.\* && rm data/steam.dat && cd ../ && zip -9 -r packages/$(APP_NAME)-$(APP_VERSION)-data.zip docs && cd packages && zip -9 $(APP_NAME)-$(APP_VERSION)-data.zip $(APP_NAME)-$(APP_VERSION)-src.tar.gz
 
-data_package: source_only_package steam_touch data_package_helper stean_cleanup
+data_package: source_only_package steam_touch data_package_helper steam_cleanup
 	@echo Data backage successfully created.
 
 steam_touch:
