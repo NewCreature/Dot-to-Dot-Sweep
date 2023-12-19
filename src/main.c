@@ -1042,7 +1042,7 @@ static bool create_particle_lists(APP_INSTANCE * app)
 			al_unmap_rgba(c, &r, &g, &b, &a);
 			if(a > 192)
 			{
-				add_particle_list_item(&app->number_particle_list[i], j, k);
+				add_particle_list_item(&app->extra_life_particle_list, j, k);
 			}
 		}
 	}

@@ -135,6 +135,7 @@ typedef struct
 } DOT_GAME;
 
 void dot_game_initialize(void * data, bool demo_seed, int mode);
+void dot_game_exit(void * data);
 void dot_game_emo_logic(void * data);
 void dot_game_logic(void * data);
 void dot_game_render_hud(void * data);
