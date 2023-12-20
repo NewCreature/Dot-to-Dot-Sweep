@@ -1044,8 +1044,17 @@ void dot_game_logic(void * data)
 				{
 					if(t3f_touch[app->touch_id].pressed && t3f_distance(app->touch_x, app->touch_y, app->game.player.ball.x, app->game.player.ball.y) < DOT_GAME_GRAB_SPOT_SIZE)
 					{
-						app->game.player.touch_offset_x = app->game.player.ball.x - app->touch_x;
-						app->game.player.touch_offset_y = app->game.player.ball.y - app->touch_y;
+						if(app->using_mouse)
+						{
+							app->game.player.touch_offset_x = 0;
+							app->game.player.touch_offset_y = 0;
+							t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+						}
+						else
+						{
+							app->game.player.touch_offset_x = app->game.player.ball.x - app->touch_x;
+							app->game.player.touch_offset_y = app->game.player.ball.y - app->touch_y;
+						}
 						app->game.state = DOT_GAME_STATE_PLAY;
 						dot_enable_mouse_cursor(false);
 						t3f_get_mouse_mickeys(&i, &i, &i);
