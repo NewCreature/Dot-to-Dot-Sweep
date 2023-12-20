@@ -32,11 +32,14 @@ static ALLEGRO_BITMAP * dot_create_scratch_bitmap(int w, int h)
 
 static void disable_controller(APP_INSTANCE * app)
 {
+	int i;
+
 	if(app->using_controller)
 	{
 		if(app->state == DOT_STATE_GAME && app->game.state == DOT_GAME_STATE_PLAY)
 		{
 			t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+			app->mickey_ticks = 6;
 		}
 		app->using_controller = false;
 	}
@@ -193,6 +196,11 @@ void app_logic(void * data)
 		app->using_mouse = true;
 	}
 	app_touch_logic(data);
+	if(app->mickey_ticks)
+	{
+		t3f_get_mouse_mickeys(&i, &i, &i);
+		app->mickey_ticks--;
+	}
 	if(!app->entering_name)
 	{
 		dot_read_input(&app->controller);
