@@ -612,6 +612,10 @@ void dot_game_check_player_collisions(void * data)
 					app->game.emo_tick = 60;
 					app->game.emo_state = DOT_GAME_EMO_STATE_DEAD;
 					app->game.a_combo_broken = true;
+					if(app->using_mouse)
+					{
+						t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+					}
 
 					/* change ball color to match the ball that is hit unless it is black */
 					if(app->game.ball[i].type != DOT_BITMAP_BALL_BLACK)
@@ -1134,7 +1138,10 @@ void dot_game_logic(void * data)
 			}
 			else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.button || app->controller.current_joy_disconnected)
 			{
-				t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+				if(app->using_mouse)
+				{
+					t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+				}
 				open_pause_menu(app, false);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				app->controller.button = false;
