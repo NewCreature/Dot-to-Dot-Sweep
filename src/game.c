@@ -315,9 +315,9 @@ static void dot_game_create_extra_life_effect(void * data, float x, float y)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	char buf[16] = {0};
-	int i, j;
+	int j;
 	float ox, px;
-	float w, cw;
+	float w;
 
 	strcpy(buf, DOT_EXTRA_LIFE_TEXT);
 	w = t3f_get_text_width(app->font[DOT_FONT_16], buf);
