@@ -2,7 +2,7 @@ dot-to-dot-sweep (1.4.2) stable; urgency=low
 
   * Fix bug which could cause achievements to randomly trigger the first time
     the game us run.
-  * Fix minor issues with mouse input when mouse sensitivity not set to 1:1.
+  * Fix issues with mouse input.
 
  -- Todd Cope <todd@tcubedsoftware.com>  Tue, 19 Dec 2023 18:24:11 +0000
 
