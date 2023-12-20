@@ -1112,12 +1112,14 @@ void dot_game_logic(void * data)
 					{
 						t3f_select_previous_gui_element(app->menu[DOT_MENU_PAUSE]);
 						t3f_key[ALLEGRO_KEY_UP] = 0;
+						t3f_key[ALLEGRO_KEY_W] = 0;
 						app->controller.axis_y_pressed = false;
 					}
 					else
 					{
 						t3f_select_next_gui_element(app->menu[DOT_MENU_PAUSE]);
 						t3f_key[ALLEGRO_KEY_DOWN] = 0;
+						t3f_key[ALLEGRO_KEY_S] = 0;
 						app->controller.axis_y_pressed = false;
 					}
 				}
