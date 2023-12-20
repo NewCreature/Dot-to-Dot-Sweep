@@ -1049,6 +1049,7 @@ void dot_game_logic(void * data)
 							app->game.player.touch_offset_x = 0;
 							app->game.player.touch_offset_y = 0;
 							t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+							app->mickey_ticks = 3;
 						}
 						else
 						{

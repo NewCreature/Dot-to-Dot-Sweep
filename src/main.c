@@ -39,7 +39,7 @@ static void disable_controller(APP_INSTANCE * app)
 		if(app->state == DOT_STATE_GAME && app->game.state == DOT_GAME_STATE_PLAY)
 		{
 			t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
-			app->mickey_ticks = 6;
+			app->mickey_ticks = 3;
 		}
 		app->using_controller = false;
 	}
@@ -135,7 +135,7 @@ static int particle_qsort_helper(const void * p1, const void * p2)
 void app_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	int i;
+	int i, x, y;
 	short touch_x, touch_y;
 	bool frame;
 
@@ -198,8 +198,11 @@ void app_logic(void * data)
 	app_touch_logic(data);
 	if(app->mickey_ticks)
 	{
-		t3f_get_mouse_mickeys(&i, &i, &i);
-		app->mickey_ticks--;
+		t3f_get_mouse_mickeys(&x, &y, &i);
+		if(x != 0 || y != 0)
+		{
+			app->mickey_ticks--;
+		}
 	}
 	if(!app->entering_name)
 	{
