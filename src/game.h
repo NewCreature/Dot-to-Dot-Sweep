@@ -23,6 +23,7 @@ typedef struct
 	bool want_shield;
 	float touch_offset_x, touch_offset_y;
 	float target_angle, old_target_angle;
+	float old_mouse_x, old_mouse_y;
 
 } DOT_PLAYER;
 

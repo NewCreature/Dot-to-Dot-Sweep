@@ -678,24 +678,38 @@ static void confine_mouse(APP_INSTANCE * app)
 
 	if(t3f_mouse_x + app->game.player.touch_offset_x < app->game.player.ball.r)
 	{
-		new_x = app->game.player.ball.r - app->game.player.touch_offset_x;
-		update = true;
+		if(t3f_mouse_x > app->game.player.old_mouse_x)
+		{
+			new_x = app->game.player.ball.x + (t3f_mouse_x - app->game.player.old_mouse_x);
+			update = true;
+		}
 	}
 	else if(t3f_mouse_x + app->game.player.touch_offset_x + app->game.player.ball.r > DOT_GAME_PLAYFIELD_WIDTH + 0.5)
 	{
-		new_x = DOT_GAME_PLAYFIELD_WIDTH + 0.5 - app->game.player.ball.r - app->game.player.touch_offset_x;
-		update = true;
+		if(t3f_mouse_x < app->game.player.old_mouse_x)
+		{
+			new_x = app->game.player.ball.x - (app->game.player.old_mouse_x - t3f_mouse_x);
+			update = true;
+		}
 	}
-	if(t3f_mouse_y + app->game.player.touch_offset_y < app->game.player.ball.r)
+	if(t3f_mouse_y + app->game.player.touch_offset_y + 0.5 < app->game.player.ball.r)
 	{
-		new_y = app->game.player.ball.r - app->game.player.touch_offset_y;
-		update = true;
+		if(t3f_mouse_y > app->game.player.old_mouse_y)
+		{
+			new_y = app->game.player.ball.y + (t3f_mouse_y - app->game.player.old_mouse_y);
+			update = true;
+		}
 	}
 	else if(t3f_mouse_y + app->game.player.touch_offset_y + app->game.player.ball.r > DOT_GAME_PLAYFIELD_HEIGHT + 0.5)
 	{
-		new_y = DOT_GAME_PLAYFIELD_HEIGHT + 0.5 - app->game.player.ball.r - app->game.player.touch_offset_y;
-		update = true;
+		if(t3f_mouse_y < app->game.player.old_mouse_y)
+		{
+			new_y = app->game.player.ball.y - (app->game.player.old_mouse_y - t3f_mouse_y);
+			update = true;
+		}
 	}
+	app->game.player.old_mouse_x = t3f_mouse_x;
+	app->game.player.old_mouse_y = t3f_mouse_y;
 	if(update)
 	{
 		t3f_set_mouse_xy(new_x, new_y);
