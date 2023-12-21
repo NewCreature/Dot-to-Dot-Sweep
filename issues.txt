@@ -18,6 +18,17 @@ Standalone Release Checklist
    [ ]Use same build from Steam release, just without the 'steam.dat' file.
 
 
+v1.4.3
+------
+
+[ ]Look into leaderboard key issue. Upon loading the game up for the first time
+   on a fresh account, the game said it was retrieving a key. The score didn't
+   upload to the leaderboard. Reloading the game gave the retrieving a key
+   message again. The current high score uploaded but didn't show up in the
+   list. Reloading the game didn't retrieve a key again but the previously
+   obtained high score didn't attempt to upload again.
+
+
 v1.3.1
 ------
 
@@ -44,7 +55,7 @@ v1.3.1
       [X]Use multiplier instead of slider. We'll make the multiplier go up by
          0.1 up to a maximum of 2.0 probably.
 
-[ ]Look into leaderboard upload freeze and crash.
+[X]Look into leaderboard upload freeze and crash.
 
 
 v1.3
