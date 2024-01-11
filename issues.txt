@@ -28,6 +28,20 @@ v1.4.3
    list. Reloading the game didn't retrieve a key again but the previously
    obtained high score didn't attempt to upload again.
 
+   [ ]It appears the leaderboard score upload code utilizes a cached copy of
+      the user key. This cached copy is only updated when the game is initially
+      launched, thus the newly retrieved key won't be cached and be able to be
+      used until the game is exited and relaunched.
+
+      [ ]A simple fix would be to cache the key immediately after it is
+         retrieved. It's possible the user could enable score uploads but not
+         have a key when it's time to upload a score. We should ensure the user
+         is required to have a key before a score gets uploaded.
+
+         We can probably cache the key in dot_get_leaderboard_user_key() and
+         call dot_get_leaderboard_user_key() in dot_upload_current_high_score()
+         to check for the key before attempting the upload.
+
 
 v1.3.1
 ------
