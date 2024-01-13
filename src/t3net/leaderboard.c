@@ -19,7 +19,7 @@ char * t3net_get_new_leaderboard_user_key(const char * url, const char * user_na
 	{
 		goto fail;
 	}
-	if(user_name)
+	if(user_name && strlen(user_name) > 0)
 	{
 		if(!t3net_add_argument(args, "user_name", user_name))
 		{
