@@ -21,19 +21,19 @@ Standalone Release Checklist
 v1.4.3
 ------
 
-[ ]Look into leaderboard key issue. Upon loading the game up for the first time
+[X]Look into leaderboard key issue. Upon loading the game up for the first time
    on a fresh account, the game said it was retrieving a key. The score didn't
    upload to the leaderboard. Reloading the game gave the retrieving a key
    message again. The current high score uploaded but didn't show up in the
    list. Reloading the game didn't retrieve a key again but the previously
    obtained high score didn't attempt to upload again.
 
-   [ ]It appears the leaderboard score upload code utilizes a cached copy of
+   [X]It appears the leaderboard score upload code utilizes a cached copy of
       the user key. This cached copy is only updated when the game is initially
       launched, thus the newly retrieved key won't be cached and be able to be
       used until the game is exited and relaunched.
 
-      [ ]A simple fix would be to cache the key immediately after it is
+      [X]A simple fix would be to cache the key immediately after it is
          retrieved. It's possible the user could enable score uploads but not
          have a key when it's time to upload a score. We should ensure the user
          is required to have a key before a score gets uploaded.
