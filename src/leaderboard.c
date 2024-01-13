@@ -20,28 +20,42 @@ bool dot_verify_leaderboard_score(unsigned long score)
   return !((score - 's' - 'd' - '2') % DOT_LEADERBOARD_FACTOR);
 }
 
+/* Get user key from local storage or grab a new one. If we are able to get a
+   valid key with either method, cache it in APP_INSTANCE->user_key and return
+   true. Otherwise return false. */
 bool dot_get_leaderboard_user_key(void * data)
 {
   APP_INSTANCE * app = (APP_INSTANCE *)data;
   const char * val;
 	char * new_val;
+  bool ret = false;
 
+  strcpy(app->user_key, "");
   val = al_get_config_value(t3f_user_data, "Game Data", "User Key");
   if(!val)
   {
     dot_show_message(data, "Retrieving User Key...");
-    new_val = t3net_get_new_leaderboard_user_key(app->leaderboard_get_user_key_url, NULL);
+    new_val = t3net_get_new_leaderboard_user_key(app->leaderboard_get_user_key_url, app->user_name);
     if(new_val)
     {
-      al_set_config_value(t3f_user_data, "Game Data", "User Key", new_val);
+      if(strlen(new_val) < 128)
+      {
+        strcpy(app->user_key, new_val);
+        al_set_config_value(t3f_user_data, "Game Data", "User Key", new_val);
+        t3f_save_user_data();
+        ret = true;
+      }
       free(new_val);
-      t3f_save_user_data();
-      return true;
+      return ret;
     }
   }
   else
   {
-    return true;
+    if(strlen(val) < 128)
+    {
+      strcpy(app->user_key, val);
+      return true;
+    }
   }
   return false;
 }
@@ -53,44 +67,47 @@ void dot_upload_current_high_score(void * data)
 	const char * val2;
   unsigned long score;
 
-  val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
-  if(val)
+  if(dot_get_leaderboard_user_key(data))
   {
-    val2 = al_get_config_value(t3f_user_data, "Game Data", "High Score Level");
-    if(val2)
+    val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
+    if(val)
     {
-      score = atoi(val);
-      if(dot_verify_leaderboard_score(score))
+      val2 = al_get_config_value(t3f_user_data, "Game Data", "High Score Level");
+      if(val2)
       {
-        if(t3net_upload_score(app->leaderboard_submit_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_key, score, val2))
+        score = atoi(val);
+        if(dot_verify_leaderboard_score(score))
+        {
+          if(t3net_upload_score(app->leaderboard_submit_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_key, score, val2))
+          {
+            al_remove_config_key(t3f_user_data, "Game Data", "Score Uploaded");
+          }
+        }
+        else
         {
           al_remove_config_key(t3f_user_data, "Game Data", "Score Uploaded");
         }
       }
-      else
-      {
-        al_remove_config_key(t3f_user_data, "Game Data", "Score Uploaded");
-      }
     }
-  }
 
-  val = al_get_config_value(t3f_user_data, "Game Data", "High Score Easy");
-  if(val)
-  {
-    val2 = al_get_config_value(t3f_user_data, "Game Data", "High Score Level Easy");
-    if(val2)
+    val = al_get_config_value(t3f_user_data, "Game Data", "High Score Easy");
+    if(val)
     {
-      score = atoi(val);
-      if(dot_verify_leaderboard_score(score))
+      val2 = al_get_config_value(t3f_user_data, "Game Data", "High Score Level Easy");
+      if(val2)
       {
-        if(t3net_upload_score(app->leaderboard_submit_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "easy", "none", app->user_key, score, val2))
+        score = atoi(val);
+        if(dot_verify_leaderboard_score(score))
+        {
+          if(t3net_upload_score(app->leaderboard_submit_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "easy", "none", app->user_key, score, val2))
+          {
+            al_remove_config_key(t3f_user_data, "Game Data", "Easy Score Uploaded");
+          }
+        }
+        else
         {
           al_remove_config_key(t3f_user_data, "Game Data", "Easy Score Uploaded");
         }
-      }
-      else
-      {
-        al_remove_config_key(t3f_user_data, "Game Data", "Easy Score Uploaded");
       }
     }
   }
