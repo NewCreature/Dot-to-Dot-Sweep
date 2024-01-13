@@ -1,3 +1,10 @@
+dot-to-dot-sweep (1.4.3) stable; urgency=low
+
+  * Fix bug which made submitting scores to the leaderboards fail the first
+    time the game is run.
+
+ -- Todd Cope <todd@tcubedsoftware.com>  Sat, 13 Jan 2024 02:30:37 +0000
+
 dot-to-dot-sweep (1.4.2) stable; urgency=low
 
   * Fix bug which could cause achievements to randomly trigger the first time
