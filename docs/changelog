@@ -2,6 +2,8 @@ dot-to-dot-sweep (1.4.3) stable; urgency=low
 
   * Fix bug which made submitting scores to the leaderboards fail the first
     time the game is run.
+  * Fix issues in server-side leaderboard code which could prevent scores from
+    uploading properly.
 
  -- Todd Cope <todd@tcubedsoftware.com>  Sat, 13 Jan 2024 02:30:37 +0000
 
