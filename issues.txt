@@ -1,6 +1,30 @@
 Standalone Release Checklist
 ----------------------------
 
+[ ]Make Android packages.
+
+   [ ]Fix Android port. It's surely broken after all the changes for the Steam
+      release.
+   
+   [ ]Automate detection of Play Store build.
+
+      [ ]Add compiler flag to define 'T3F_ANDROID_GP' when building the AAB for
+         the Play Store.
+   
+   [ ]Create 'android_packages' target that builds all Android packages we need
+      for distributing a release.
+   
+   [ ]Look into possible signature issue.
+
+   [ ]Look into '-DDEBUGMODE' flag. Not sure what this is for, but we might
+      want to remove it if it could impact performance in the release. We might
+      make an 'android_debug' target that produces a build with that flag set
+      if we need it to get debugging features.
+   
+   [ ]See about making our Allegro build release optimized. We shouldn't need
+      to debug inside Allegro for the most part. We should be able to get
+      logging for our own code if we need it during development.
+
 [ ]Make non-Steam MacOS package.
 
    [ ]Use same build from Steam release, just without the 'steam.dat' file.
