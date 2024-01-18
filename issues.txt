@@ -5,6 +5,15 @@ Standalone Release Checklist
 
    [ ]Fix Android port. It's surely broken after all the changes for the Steam
       release.
+
+      [ ]Fix joystick input. The accelerometer generates joystick events which
+         are trying to be interpreted as XBox controller inputs. We need to
+         detect only externally connected controllers and ignore the built-in
+         controller if possible. Otherwise, we should just disable controller
+         support completely.
+      
+      [ ]Don't show menus that aren't relevant to the current platform during
+         setup.
    
    [ ]Automate detection of Play Store build.
 
