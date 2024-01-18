@@ -11,6 +11,14 @@ Standalone Release Checklist
          detect only externally connected controllers and ignore the built-in
          controller if possible. Otherwise, we should just disable controller
          support completely.
+
+         [ ]It looks like the Android port of Allegro always has a joystick in
+            slot 0 for the accelerometer. We should be able to ignore this slot
+            when setting up our input.
+
+         [ ]Controller compatibility seems to be handled by the OS. We should
+            update the input system with a section for Android that maps
+            Android's standard mapping to XBox mapping.
       
       [ ]Don't show menus that aren't relevant to the current platform during
          setup.
