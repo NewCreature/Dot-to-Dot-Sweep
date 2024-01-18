@@ -14,6 +14,10 @@ Standalone Release Checklist
       
       [ ]Don't show menus that aren't relevant to the current platform during
          setup.
+      
+      [ ]Investigate startup issues. When starting the app, it seems to click
+         through the menu to gameplay without any input from the user. This
+         might be related to the joystick input issue listed above.
    
    [ ]Automate detection of Play Store build.
 
