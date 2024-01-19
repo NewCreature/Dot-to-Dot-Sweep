@@ -37,11 +37,16 @@ static void remap_controller(T3F_INPUT_HANDLER * input_handler, int device_index
 void dot_handle_joystick_event(DOT_INPUT_DATA * ip, ALLEGRO_EVENT * ep)
 {
   int new_joy;
+  int min_joystick = 0;
+
+  #ifdef ALLEGRO_ANDROID
+    min_joystick = 1;
+  #endif
 
   if(ep->type == ALLEGRO_EVENT_JOYSTICK_AXIS)
   {
     new_joy = t3f_get_joystick_number(ep->joystick.id);
-    if(new_joy >= 0 && new_joy != ip->current_joy && fabs(ep->joystick.pos) >= ip->dead_zone)
+    if(new_joy >= min_joystick && new_joy != ip->current_joy && fabs(ep->joystick.pos) >= ip->dead_zone)
     {
       remap_controller(ip->input_handler, new_joy, ip->dead_zone);
       ip->current_joy = new_joy;
@@ -51,7 +56,7 @@ void dot_handle_joystick_event(DOT_INPUT_DATA * ip, ALLEGRO_EVENT * ep)
   else if(ep->type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)
   {
     new_joy = t3f_get_joystick_number(ep->joystick.id);
-    if(new_joy >= 0 && new_joy != ip->current_joy)
+    if(new_joy >= min_joystick && new_joy != ip->current_joy)
     {
       remap_controller(ip->input_handler, new_joy, ip->dead_zone);
       ip->current_joy = new_joy;
