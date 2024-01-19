@@ -6,7 +6,7 @@ Standalone Release Checklist
    [ ]Fix Android port. It's surely broken after all the changes for the Steam
       release.
 
-      [ ]Resuming from pause brings up the game start screen when it should go
+      [X]Resuming from pause brings up the game start screen when it should go
          to the touch pause screen.
 
       [ ]Fix joystick input. The accelerometer generates joystick events which
