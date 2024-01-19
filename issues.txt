@@ -6,6 +6,9 @@ Standalone Release Checklist
    [ ]Fix Android port. It's surely broken after all the changes for the Steam
       release.
 
+      [ ]Resuming from pause brings up the game start screen when it should go
+         to the touch pause screen.
+
       [ ]Fix joystick input. The accelerometer generates joystick events which
          are trying to be interpreted as XBox controller inputs. We need to
          detect only externally connected controllers and ignore the built-in
