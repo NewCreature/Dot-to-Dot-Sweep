@@ -782,6 +782,7 @@ void dot_game_move_player(void * data)
 			else
 			{
 				app->game.player.lost_touch = true;
+				app->game.pause_state = app->game.state;
 				app->game.state = DOT_GAME_STATE_PAUSE;
 				dot_enable_mouse_cursor(true);
 			}
