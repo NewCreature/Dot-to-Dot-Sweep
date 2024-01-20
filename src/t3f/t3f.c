@@ -699,6 +699,13 @@ static int t3f_set_new_gfx_mode(int w, int h, int flags)
 	/* update settings if we successfully set the new mode */
 	if(ret == 1)
 	{
+		if(flags & T3F_RESET_DISPLAY)
+		{
+			t3f_default_view->virtual_width = w;
+			t3f_default_view->virtual_height = h;
+			t3f_virtual_display_width = w;
+			t3f_virtual_display_height = h;
+		}
 		handle_view_resize();
 		if(t3f_flags & T3F_USE_FULLSCREEN)
 		{
@@ -775,15 +782,23 @@ int t3f_set_gfx_mode(int w, int h, int flags)
 		{
 			t3f_flags |= T3F_NO_SCALE;
 		}
-		/* if we are using console (for a server, for instance) don't create display */
-		if(w > h)
+		if(flags & T3F_ANY_ORIENTATION)
 		{
-			al_set_new_display_option(ALLEGRO_SUPPORTED_ORIENTATIONS, ALLEGRO_DISPLAY_ORIENTATION_LANDSCAPE, ALLEGRO_REQUIRE);
+			al_set_new_display_option(ALLEGRO_SUPPORTED_ORIENTATIONS, ALLEGRO_DISPLAY_ORIENTATION_ALL, ALLEGRO_REQUIRE);
+			t3f_flags |= T3F_ANY_ORIENTATION;
 		}
 		else
 		{
-			al_set_new_display_option(ALLEGRO_SUPPORTED_ORIENTATIONS, ALLEGRO_DISPLAY_ORIENTATION_PORTRAIT, ALLEGRO_REQUIRE);
+			if(w > h)
+			{
+				al_set_new_display_option(ALLEGRO_SUPPORTED_ORIENTATIONS, ALLEGRO_DISPLAY_ORIENTATION_LANDSCAPE, ALLEGRO_REQUIRE);
+			}
+			else
+			{
+				al_set_new_display_option(ALLEGRO_SUPPORTED_ORIENTATIONS, ALLEGRO_DISPLAY_ORIENTATION_PORTRAIT, ALLEGRO_REQUIRE);
+			}
 		}
+		/* if we are using console (for a server, for instance) don't create display */
 		cvalue = al_get_config_value(t3f_config, "T3F", "force_fullscreen");
 		cvalue2 = al_get_config_value(t3f_config, "T3F", "force_window");
 		if(((flags & T3F_USE_FULLSCREEN || (cvalue && !strcmp(cvalue, "true"))) && !(cvalue2 && !strcmp(cvalue2, "true"))) || no_windowed)
@@ -1262,6 +1277,11 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 			t3f_unload_resources();
 			t3f_reload_resources();
 			t3f_rebuild_atlases();
+			break;
+		}
+
+		case ALLEGRO_EVENT_DISPLAY_ORIENTATION:
+		{
 			break;
 		}
 
