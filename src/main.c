@@ -67,6 +67,27 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 			al_restore_state(&old_state);
 			break;
 		}
+		case ALLEGRO_EVENT_DISPLAY_ORIENTATION:
+		{
+			ALLEGRO_MONITOR_INFO info;
+			int w, h;
+
+			al_get_monitor_info(0, &info);
+			w = info.x2 - info.x1;
+			h = info.y2 - info.y1;
+			if(w > h)
+			{
+				app->desktop_mode = true;
+			}
+			else
+			{
+				app->desktop_mode = false;
+			}
+			t3f_set_gfx_mode(DOT_DISPLAY_WIDTH, DOT_DISPLAY_HEIGHT, t3f_flags | T3F_RESET_DISPLAY);
+			t3f_adjust_view(t3f_current_view, t3f_current_view->offset_x, t3f_current_view->offset_y, t3f_current_view->width, t3f_current_view->height, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, t3f_current_view->flags);
+			dot_intro_center_menus(data);
+			break;
+		}
 		case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
 		case ALLEGRO_EVENT_MOUSE_AXES:
 		{
@@ -282,19 +303,6 @@ void app_logic(void * data)
 	t3f_steam_integration_logic();
 }
 
-static void show_joystick_data(void * data)
-{
-	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	int i;
-	int pos_y = 0;
-
-	for(i = 0; i < app->controller.input_handler->elements; i++)
-	{
-		t3f_draw_textf(app->font[DOT_FONT_8], t3f_color_white, 0, pos_y, 0, 0, "%1.1f %d", app->controller.input_handler->element[i].val, app->controller.input_handler->element[i].held);
-		pos_y += t3f_get_font_line_height(app->font[DOT_FONT_8]);
-	}
-}
-
 void app_render(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -342,7 +350,6 @@ void app_render(void * data)
 		}
 	}
 	al_hold_bitmap_drawing(false);
-//	show_joystick_data(app);
 }
 
 static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn, int size)
@@ -1197,10 +1204,14 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	app_check_mobile_argument(app, argc, argv);
 
 	/* initialize T3F */
-	if(!t3f_initialize(T3F_APP_TITLE, DOT_DISPLAY_WIDTH, DOT_DISPLAY_HEIGHT, 60.0, app_logic, app_render, T3F_DEFAULT | T3F_USE_FIXED_PIPELINE | T3F_USE_FULLSCREEN, app))
+	if(!t3f_initialize(T3F_APP_TITLE, DOT_DISPLAY_WIDTH, DOT_DISPLAY_HEIGHT, 60.0, app_logic, app_render, T3F_DEFAULT | T3F_USE_FIXED_PIPELINE | T3F_USE_FULLSCREEN | T3F_ANY_ORIENTATION, app))
 	{
 		printf("Error initializing T3F\n");
 		return false;
+	}
+	if(al_get_display_width(t3f_display) > al_get_display_height(t3f_display))
+	{
+		app->desktop_mode = true;
 	}
 	#ifdef T3F_ENABLE_STEAM_INTEGRATION
 		if(first_run())

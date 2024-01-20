@@ -406,13 +406,11 @@ int dot_menu_proc_pause_quit(void * data, int i, void * pp)
 	return 1;
 }
 
-bool dot_intro_initialize(void * data)
+void dot_intro_center_menus(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	float top, bottom;
-	int pos_y = 0;
-
-	t3f_set_gui_driver(NULL);
+	int i;
 
 	if(app->desktop_mode)
 	{
@@ -425,6 +423,22 @@ bool dot_intro_initialize(void * data)
 		bottom = t3f_virtual_display_height;
 	}
 
+	for(i = 0; i < DOT_MAX_MENUS; i++)
+	{
+		if(app->menu[i])
+		{
+			t3f_center_gui(app->menu[i], top, bottom);
+		}
+	}
+}
+
+bool dot_intro_initialize(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int pos_y = 0;
+
+	t3f_set_gui_driver(NULL);
+
 	/* create menus */
 	app->menu[DOT_MENU_GAME_MODE] = t3f_create_gui(0, 0);
 	if(!app->menu[DOT_MENU_GAME_MODE])
@@ -436,7 +450,6 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_GAME_MODE], dot_menu_proc_game_mode_easy, "Easy", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	pos_y += 64;
 	t3f_add_gui_text_element(app->menu[DOT_MENU_GAME_MODE], dot_menu_proc_game_mode_normal, "Normal", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_GAME_MODE], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_GAME_MODE], -2, 2);
 	t3f_set_gui_hover_lift(app->menu[DOT_MENU_GAME_MODE], 2, -2);
 
@@ -458,7 +471,6 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], dot_menu_proc_mouse_sensitivity_default, "Default", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	pos_y += 64;
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], dot_menu_proc_mouse_sensitivity_ok, "Okay", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_MOUSE], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_MOUSE], -2, 2);
 	t3f_set_gui_hover_lift(app->menu[DOT_MENU_MOUSE], 2, -2);
 
@@ -477,7 +489,6 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_privacy, "Privacy", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, DOT_MENU_COLOR_ENABLED, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	pos_y += 64;
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MAIN], dot_menu_proc_play, "Play", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_MAIN], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_MAIN], -2, 2);
 	t3f_set_gui_hover_lift(app->menu[DOT_MENU_MAIN], 2, -2);
 
@@ -487,7 +498,6 @@ bool dot_intro_initialize(void * data)
 		return false;
 	}
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PRIVACY], dot_menu_proc_privacy_back, "Back", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_PRIVACY], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_PRIVACY], -2, 2);
 	t3f_set_gui_hover_lift(app->menu[DOT_MENU_PRIVACY], 2, -2);
 
@@ -497,7 +507,6 @@ bool dot_intro_initialize(void * data)
 		return false;
 	}
 	t3f_add_gui_text_element(app->menu[DOT_MENU_LEADERBOARD], dot_menu_proc_leaderboard_back, "Back", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_LEADERBOARD], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_LEADERBOARD], -2, 2);
 	t3f_set_gui_hover_lift(app->menu[DOT_MENU_LEADERBOARD], 2, -2);
 
@@ -509,7 +518,6 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_LEADERBOARD_2], NULL, "Play Again?", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_LEADERBOARD_2], dot_menu_proc_play, "Yes", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_LEADERBOARD_2], dot_menu_proc_leaderboard_main_menu, "No", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_LEADERBOARD_2], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_LEADERBOARD_2], -2, 2);
 	t3f_set_gui_hover_lift(app->menu[DOT_MENU_LEADERBOARD_2], 2, -2);
 
@@ -521,7 +529,6 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_UPLOAD_SCORES], NULL, "Upload Scores?", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_UPLOAD_SCORES], dot_menu_proc_upload_yes, "Yes", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_UPLOAD_SCORES], dot_menu_proc_upload_no, "No", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_UPLOAD_SCORES], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_UPLOAD_SCORES], -2, 2);
 	t3f_set_gui_hover_lift(app->menu[DOT_MENU_UPLOAD_SCORES], 2, -2);
 
@@ -533,7 +540,6 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], NULL, "User Name", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_name, app->user_name, (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PROFILE], dot_menu_proc_profile_okay, "Okay", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_PROFILE], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_PROFILE], -2, 2);
 	t3f_set_gui_hover_lift(app->menu[DOT_MENU_PROFILE], 2, -2);
 
@@ -545,7 +551,6 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MUSIC], NULL, "Enable Music?", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MUSIC], dot_menu_proc_music_yes, "Yes", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MUSIC], dot_menu_proc_music_no, "No", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_MUSIC], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_MUSIC], -2, 2);
 	t3f_set_gui_hover_lift(app->menu[DOT_MENU_MUSIC], 2, -2);
 
@@ -557,9 +562,10 @@ bool dot_intro_initialize(void * data)
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PAUSE], NULL, "Paused", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PAUSE], dot_menu_proc_pause_resume, "Resume", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(app->menu[DOT_MENU_PAUSE], dot_menu_proc_pause_quit, "Quit", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_center_gui(app->menu[DOT_MENU_PAUSE], top, bottom);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_PAUSE], -2, 2);
   	t3f_set_gui_hover_lift(app->menu[DOT_MENU_PAUSE], 2, -2);
+	
+	dot_intro_center_menus(data);
 	app->current_menu = DOT_MENU_MAIN;
 
 	return true;
