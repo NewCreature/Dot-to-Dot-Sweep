@@ -693,7 +693,6 @@ static void confine_mouse(APP_INSTANCE * app)
 	{
 		if(t3f_mouse_x > app->game.player.old_mouse_x)
 		{
-			printf("reset left %f %f\n", t3f_mouse_x, app->game.player.old_mouse_x);
 			new_x = app->game.player.ball.x + (t3f_mouse_x - app->game.player.old_mouse_x);
 			update = true;
 		}
