@@ -100,6 +100,14 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 			break;
 		}
 
+		case ALLEGRO_EVENT_TOUCH_BEGIN:
+		case ALLEGRO_EVENT_TOUCH_MOVE:
+		{
+			t3f_event_handler(event);
+			app->using_mouse = false;
+			break;
+		}
+
 		/* pass the event through to T3F for handling by default */
 		default:
 		{
