@@ -64,6 +64,7 @@ bool t3f_joystick_state_updated[T3F_MAX_JOYSTICKS] = {false};
 
 /* touch data */
 T3F_TOUCH t3f_touch[T3F_MAX_TOUCHES];
+static int _t3f_touch_slot = 1; // reserve slot 0 for mouse
 
 //ALLEGRO_TRANSFORM t3f_base_transform;
 ALLEGRO_TRANSFORM t3f_current_transform;
@@ -1240,6 +1241,20 @@ bool t3f_copy_file(const char * src, const char * dest)
 	return true;
 }
 
+static int _get_touch_slot_by_id(int id)
+{
+	int i;
+
+	for(i = 0; i < T3F_MAX_TOUCHES; i++)
+	{
+		if(t3f_touch[i].id == id)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
 void t3f_event_handler(ALLEGRO_EVENT * event)
 {
 	switch(event->type)
@@ -1430,28 +1445,42 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 
 		case ALLEGRO_EVENT_TOUCH_BEGIN:
 		{
-			t3f_touch[event->touch.id + 1].active = true;
-			t3f_touch[event->touch.id + 1].real_x = event->touch.x;
-			t3f_touch[event->touch.id + 1].real_y = event->touch.y;
-			t3f_touch[event->touch.id + 1].primary = event->touch.primary;
-			t3f_touch[event->touch.id + 1].pressed = true;
+			t3f_touch[_t3f_touch_slot].id = event->touch.id;
+			t3f_touch[_t3f_touch_slot].active = true;
+			t3f_touch[_t3f_touch_slot].real_x = event->touch.x;
+			t3f_touch[_t3f_touch_slot].real_y = event->touch.y;
+			t3f_touch[_t3f_touch_slot].primary = event->touch.primary;
+			t3f_touch[_t3f_touch_slot].pressed = true;
+			_t3f_touch_slot++;
+			if(_t3f_touch_slot >= T3F_MAX_TOUCHES)
+			{
+				_t3f_touch_slot = 1;
+			}
 			break;
 		}
 
 		case ALLEGRO_EVENT_TOUCH_MOVE:
 		{
-			t3f_touch[event->touch.id + 1].real_x = event->touch.x;
-			t3f_touch[event->touch.id + 1].real_y = event->touch.y;
+			int touch_slot = _get_touch_slot_by_id(event->touch.id);
+			if(touch_slot >= 0)
+			{
+				t3f_touch[touch_slot].real_x = event->touch.x;
+				t3f_touch[touch_slot].real_y = event->touch.y;
+			}
 			break;
 		}
 
 		case ALLEGRO_EVENT_TOUCH_END:
 		case ALLEGRO_EVENT_TOUCH_CANCEL:
 		{
-			t3f_touch[event->touch.id + 1].active = false;
-			t3f_touch[event->touch.id + 1].real_x = event->touch.x;
-			t3f_touch[event->touch.id + 1].real_y = event->touch.y;
-			t3f_touch[event->touch.id + 1].released = true;
+			int touch_slot = _get_touch_slot_by_id(event->touch.id);
+			if(touch_slot >= 0)
+			{
+				t3f_touch[touch_slot].active = false;
+				t3f_touch[touch_slot].real_x = event->touch.x;
+				t3f_touch[touch_slot].real_y = event->touch.y;
+				t3f_touch[touch_slot].released = true;
+			}
 			break;
 		}
 

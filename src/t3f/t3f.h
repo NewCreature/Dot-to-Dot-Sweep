@@ -49,17 +49,20 @@
 
 #define T3F_MAX_JOYSTICKS 16
 
-#define T3F_MAX_TOUCHES   64
+#define T3F_MAX_TOUCHES   16
 
 #define T3F_MAX_STACK     16
 
 typedef struct
 {
 
+	int id; // track which id this touch is associated with
+
+	/* user-facing members */
 	bool active; // is this touch active?
 	bool pressed;
 	bool released;
-  float real_x, real_y; // the actual screen coordinates
+	float real_x, real_y; // the actual screen coordinates
 	float x, y; // coordinates transformed to for a view
 	bool primary;
 
