@@ -101,6 +101,12 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 		}
 
 		case ALLEGRO_EVENT_TOUCH_BEGIN:
+		{
+			t3f_event_handler(event);
+			app->start_touch = true;
+			app->using_mouse = false;
+			break;
+		}
 		case ALLEGRO_EVENT_TOUCH_MOVE:
 		{
 			t3f_event_handler(event);
@@ -123,10 +129,6 @@ void app_touch_logic(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	int i;
 
-	if(app->touch_id > 0 && !t3f_touch[app->touch_id].active)
-	{
-		app->start_touch = true;
-	}
 	app->touch_id = -1;
 	for(i = 0; i < T3F_MAX_TOUCHES; i++)
 	{
@@ -142,7 +144,7 @@ void app_touch_logic(void * data)
 	}
 	app->old_touch_x = app->touch_x;
 	app->old_touch_y = app->touch_y;
-	if(app->touch_id <= 0)
+	if(app->using_mouse && app->touch_id <= 0)
 	{
 		app->touch_x = t3f_mouse_x;
 		app->touch_y = t3f_mouse_y;
@@ -156,10 +158,6 @@ void app_touch_logic(void * data)
 			app->old_touch_x = app->touch_x;
 			app->old_touch_y = app->touch_y;
 			app->start_touch = false;
-		}
-		if(!app->desktop_mode)
-		{
-			app->touch_y -= 520;
 		}
 		disable_controller(app);
 		app->using_mouse = false;
