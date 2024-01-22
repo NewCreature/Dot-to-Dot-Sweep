@@ -9,17 +9,17 @@ Standalone Release Checklist
       [X]Resuming from pause brings up the game start screen when it should go
          to the touch pause screen.
 
-      [ ]Fix joystick input. The accelerometer generates joystick events which
+      [X]Fix joystick input. The accelerometer generates joystick events which
          are trying to be interpreted as XBox controller inputs. We need to
          detect only externally connected controllers and ignore the built-in
          controller if possible. Otherwise, we should just disable controller
          support completely.
 
-         [ ]It looks like the Android port of Allegro always has a joystick in
+         [X]It looks like the Android port of Allegro always has a joystick in
             slot 0 for the accelerometer. We should be able to ignore this slot
             when setting up our input.
 
-         [ ]Controller compatibility seems to be handled by the OS. We should
+         [X]Controller compatibility seems to be handled by the OS. We should
             update the input system with a section for Android that maps
             Android's standard mapping to XBox mapping.
       
