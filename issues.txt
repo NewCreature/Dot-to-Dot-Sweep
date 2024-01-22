@@ -1,6 +1,11 @@
 Standalone Release Checklist
 ----------------------------
 
+[ ]Look into issue on Windows where mouse keeps trying to be reactivated when
+   using touch input.
+
+[ ]Open pause menu on click instead of going to pause state.
+
 [ ]Make Android packages.
 
    [ ]Fix Android port. It's surely broken after all the changes for the Steam
