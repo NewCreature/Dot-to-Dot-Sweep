@@ -504,6 +504,10 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 		{
 			t3f_flags |= T3F_USE_TOUCH;
 		}
+		for(i = 0; i < T3F_MAX_TOUCHES; i++)
+		{
+			t3f_touch[i].id = -1;
+		}
 	}
 	al_init_primitives_addon();
 	#ifndef ALLEGRO_ANDROID
@@ -1480,6 +1484,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 				t3f_touch[touch_slot].real_x = event->touch.x;
 				t3f_touch[touch_slot].real_y = event->touch.y;
 				t3f_touch[touch_slot].released = true;
+				t3f_touch[touch_slot].id = -1; // invalidate slot
 			}
 			break;
 		}
