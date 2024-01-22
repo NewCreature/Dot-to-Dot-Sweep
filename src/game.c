@@ -616,6 +616,10 @@ void dot_game_check_player_collisions(void * data)
 					{
 						t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
 					}
+					if(app->touch_id >= 0)
+					{
+						t3f_clear_touch_data();
+					}
 
 					/* change ball color to match the ball that is hit unless it is black */
 					if(app->game.ball[i].type != DOT_BITMAP_BALL_BLACK)
@@ -1036,8 +1040,8 @@ void dot_game_logic(void * data)
 						app->game.level_start = false;
 						dot_enable_mouse_cursor(false);
 						t3f_get_mouse_mickeys(&i, &i, &i);
+						t3f_touch[app->touch_id].pressed = false;
 					}
-					t3f_touch[app->touch_id].pressed = false;
 				}
 				else if(app->touch_id > 0)
 				{
@@ -1056,8 +1060,8 @@ void dot_game_logic(void * data)
 						app->game.level_start = false;
 						dot_enable_mouse_cursor(false);
 						t3f_get_mouse_mickeys(&i, &i, &i);
+						t3f_touch[app->touch_id].pressed = false;
 					}
-					t3f_touch[app->touch_id].pressed = false;
 				}
 				else if(app->controller.button)
 				{
