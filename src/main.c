@@ -244,6 +244,7 @@ void app_logic(void * data)
 	}
 	if(app->want_mouse)
 	{
+		t3f_get_mouse_mickeys(&x, &y, &i);
 		app->using_mouse = true;
 		app->want_mouse = false;
 		if(app->state == DOT_STATE_GAME)

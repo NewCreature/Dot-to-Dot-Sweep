@@ -101,4 +101,6 @@
 
 #define DOT_LEADERBOARD_FACTOR         67
 
+#define DOT_TOUCH_MOUSE_DELAY         120
+
 #endif
