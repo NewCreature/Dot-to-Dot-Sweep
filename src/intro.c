@@ -577,6 +577,7 @@ void dot_intro_setup(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
+	t3f_clear_touch_data();
 	app->logo_ox = 0;
 	app->intro_state = DOT_INTRO_STATE_LOGO;
 	app->credits_ox = t3f_virtual_display_width;
