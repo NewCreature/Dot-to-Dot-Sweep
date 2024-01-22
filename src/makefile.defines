@@ -19,6 +19,7 @@ APP_ANDROID_PACKAGE = com.tcubedsoftware.dottodotsweep
 APP_ORIENTATION = unspecified
 APP_URL = https://www.tcubedsoftware.com
 APP_STEAM_ID = 2494790
+APP_BG_COLOR = \#FF2F97DA
 APP_OBJECTS = t3net/t3net.o t3net/leaderboard.o avc/avc.o main.o game.o intro.o leaderboard.o text.o particle.o color.o bg_object.o credits.o privacy.o input.o mouse.o
 #APP_LIBS =
 APP_CFLAGS = -O2 -Wall -I.
