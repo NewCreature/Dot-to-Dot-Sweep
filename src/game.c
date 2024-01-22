@@ -652,10 +652,22 @@ void dot_game_check_player_collisions(void * data)
 	}
 }
 
-static void update_player_position(APP_INSTANCE * app)
+static void update_player_position_touch(APP_INSTANCE * app)
 {
-	app->game.player.ball.x = app->touch_x + app->game.player.touch_offset_x;
-	app->game.player.ball.y = app->touch_y + app->game.player.touch_offset_y;
+	float scale = 1.0;
+
+	if(app->mouse_sensitivity > 0.0)
+	{
+		scale = app->mouse_sensitivity;
+	}
+	app->game.player.ball.x += (app->touch_x - app->old_touch_x) * scale;
+	app->game.player.ball.y += (app->touch_y - app->old_touch_y) * scale;
+}
+
+static void update_player_position_mouse(APP_INSTANCE * app)
+{
+	app->game.player.ball.x = app->touch_x;
+	app->game.player.ball.y = app->touch_y;
 }
 
 static void maybe_activate_shield(APP_INSTANCE * app)
@@ -676,14 +688,18 @@ static void confine_mouse(APP_INSTANCE * app)
 	float new_y = app->touch_y;
 	bool update = false;
 
+	/* check left edge */
 	if(t3f_mouse_x + app->game.player.touch_offset_x < app->game.player.ball.r)
 	{
 		if(t3f_mouse_x > app->game.player.old_mouse_x)
 		{
+			printf("reset left %f %f\n", t3f_mouse_x, app->game.player.old_mouse_x);
 			new_x = app->game.player.ball.x + (t3f_mouse_x - app->game.player.old_mouse_x);
 			update = true;
 		}
 	}
+
+	/* check right edge */
 	else if(t3f_mouse_x + app->game.player.touch_offset_x + app->game.player.ball.r > DOT_GAME_PLAYFIELD_WIDTH + 0.5)
 	{
 		if(t3f_mouse_x < app->game.player.old_mouse_x)
@@ -692,6 +708,8 @@ static void confine_mouse(APP_INSTANCE * app)
 			update = true;
 		}
 	}
+
+	/* check top edge */
 	if(t3f_mouse_y + app->game.player.touch_offset_y + 0.5 < app->game.player.ball.r)
 	{
 		if(t3f_mouse_y > app->game.player.old_mouse_y)
@@ -700,6 +718,8 @@ static void confine_mouse(APP_INSTANCE * app)
 			update = true;
 		}
 	}
+
+	/* check bottom edge */
 	else if(t3f_mouse_y + app->game.player.touch_offset_y + app->game.player.ball.r > DOT_GAME_PLAYFIELD_HEIGHT + 0.5)
 	{
 		if(t3f_mouse_y < app->game.player.old_mouse_y)
@@ -723,7 +743,7 @@ static void move_player_with_mouse(APP_INSTANCE * app)
 	if(app->mouse_sensitivity <= 0.0)
 	{
 		confine_mouse(app);
-		update_player_position(app);
+		update_player_position_mouse(app);
 	}
 	else
 	{
@@ -770,7 +790,7 @@ void dot_game_move_player(void * data)
 				}
 				if(!app->game.player.lost_touch)
 				{
-					update_player_position(app);
+					update_player_position_touch(app);
 				}
 				maybe_activate_shield(app);
 			}
@@ -779,13 +799,13 @@ void dot_game_move_player(void * data)
 				move_player_with_mouse(app);
 				maybe_activate_shield(app);
 			}
-			else
-			{
-				app->game.player.lost_touch = true;
-				app->game.pause_state = app->game.state;
-				app->game.state = DOT_GAME_STATE_PAUSE;
-				dot_enable_mouse_cursor(true);
-			}
+//			else
+//			{
+//				app->game.player.lost_touch = true;
+//				app->game.pause_state = app->game.state;
+//				app->game.state = DOT_GAME_STATE_PAUSE;
+//				dot_enable_mouse_cursor(true);
+//			}
 		}
 
 		/* prevent player from moving past the edge */
@@ -949,6 +969,7 @@ static void open_pause_menu(APP_INSTANCE * app, bool convert)
 	{
 		app->game.pause_state = app->game.state;
 	}
+	t3f_clear_touch_data();
 	app->game.state = DOT_GAME_STATE_PAUSE_MENU;
 	t3f_reset_gui_input(app->menu[DOT_MENU_PAUSE]);
 	t3f_select_next_gui_element(app->menu[DOT_MENU_PAUSE]);
@@ -999,7 +1020,7 @@ void dot_game_logic(void * data)
 			}
 			else
 			{
-				if(app->touch_id >= 0)
+				if(app->touch_id == 0)
 				{
 					if(t3f_touch[app->touch_id].pressed && app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
 					{
@@ -1011,6 +1032,28 @@ void dot_game_logic(void * data)
 						app->game.player.want_shield = true;
 						app->game.player.touch_offset_x = 0;
 						app->game.player.touch_offset_y = 0;
+						app->game.player.ball.x = t3f_mouse_x;
+						app->game.player.ball.y = t3f_mouse_y;
+						app->game.level_start = false;
+						dot_enable_mouse_cursor(false);
+						t3f_get_mouse_mickeys(&i, &i, &i);
+					}
+					t3f_touch[app->touch_id].pressed = false;
+				}
+				else if(app->touch_id > 0)
+				{
+					if(t3f_touch[app->touch_id].pressed)
+					{
+						t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
+						app->game.state = DOT_GAME_STATE_PLAY;
+						app->game.state_tick = 0;
+						app->game.player.lost_touch = false;
+						app->game.player.ball.active = true;
+						app->game.player.want_shield = true;
+						app->game.player.touch_offset_x = 0;
+						app->game.player.touch_offset_y = 0;
+						app->game.player.ball.x = DOT_GAME_PLAYFIELD_WIDTH / 2;
+						app->game.player.ball.y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
 						app->game.level_start = false;
 						dot_enable_mouse_cursor(false);
 						t3f_get_mouse_mickeys(&i, &i, &i);
@@ -1163,7 +1206,7 @@ void dot_game_logic(void * data)
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 				t3f_touch[app->touch_id].pressed = false;
 			}
-			else if(t3f_key[ALLEGRO_KEY_ESCAPE] || app->controller.button || app->controller.current_joy_disconnected)
+			else if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller.button || app->controller.current_joy_disconnected)
 			{
 				if(app->using_mouse)
 				{
@@ -1171,6 +1214,7 @@ void dot_game_logic(void * data)
 				}
 				open_pause_menu(app, false);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+				t3f_key[ALLEGRO_KEY_BACK] = 0;
 				app->controller.button = false;
 			}
 			/* handle shield logic */
@@ -1416,7 +1460,7 @@ void dot_game_render(void * data)
 	else
 	{
 		touch_text[0] = "Touch";
-		touch_text[1] = "Here";
+		touch_text[1] = "Screen";
 	}
 	if(!app->desktop_mode)
 	{

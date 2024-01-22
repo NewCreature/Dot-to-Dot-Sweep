@@ -371,22 +371,23 @@ int dot_menu_proc_pause_resume(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	if(app->controller.button)
+	/* allow touch that resumes game to continue to be used to play */
+	if(app->game.pause_state == DOT_GAME_STATE_START)
 	{
-		app->game.state = app->game.pause_state;
+		t3f_clear_touch_data();
 	}
 	else
 	{
-		if(app->game.pause_state == DOT_GAME_STATE_START)
+		/* move mouse to player position if playing with mouse */
+		if(app->using_mouse)
 		{
-			app->game.state = DOT_GAME_STATE_START;
+			app->game.player.touch_offset_x = 0;
+			app->game.player.touch_offset_y = 0;
+			t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+			app->mickey_ticks = 3;
 		}
-		else
-		{
-			app->game.state = DOT_GAME_STATE_PAUSE;
-		}
-		t3f_clear_touch_data();
 	}
+	app->game.state = app->game.pause_state;
 
 	return 1;
 }

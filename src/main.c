@@ -111,6 +111,10 @@ void app_touch_logic(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	int i;
 
+	if(app->touch_id > 0 && !t3f_touch[app->touch_id].active)
+	{
+		app->start_touch = true;
+	}
 	app->touch_id = -1;
 	for(i = 0; i < T3F_MAX_TOUCHES; i++)
 	{
@@ -124,6 +128,8 @@ void app_touch_logic(void * data)
 	{
 		app->using_mouse = true;
 	}
+	app->old_touch_x = app->touch_x;
+	app->old_touch_y = app->touch_y;
 	if(app->touch_id <= 0)
 	{
 		app->touch_x = t3f_mouse_x;
@@ -133,6 +139,12 @@ void app_touch_logic(void * data)
 	{
 		app->touch_x = t3f_touch[app->touch_id].x;
 		app->touch_y = t3f_touch[app->touch_id].y;
+		if(app->start_touch)
+		{
+			app->old_touch_x = app->touch_x;
+			app->old_touch_y = app->touch_y;
+			app->start_touch = false;
+		}
 		if(!app->desktop_mode)
 		{
 			app->touch_y -= 520;

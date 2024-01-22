@@ -44,8 +44,9 @@ typedef struct
     bool want_disable_controller;
     bool using_mouse;
     int touch_id;
-    float touch_x;
-    float touch_y;
+    float touch_x, touch_y;
+    float old_touch_x, old_touch_y;
+    bool start_touch;
     float mouse_sensitivity;
     DOT_INPUT_DATA controller;
     int mickey_ticks;
