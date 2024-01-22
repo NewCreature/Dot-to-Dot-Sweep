@@ -60,8 +60,19 @@
 #define DOT_MENU_GAME_MODE     8
 #define DOT_MENU_MOUSE         9
 
+/* color definitions */
 #define DOT_MENU_COLOR_ENABLED  t3f_color_white
 #define DOT_MENU_COLOR_DISABLED al_map_rgba_f(0.75, 0.75, 0.75, 1.0)
+#define DOT_LEVEL_COLOR_0 al_map_rgb(47, 151, 218)
+#define DOT_LEVEL_COLOR_1 al_map_rgb(48, 196, 218)
+#define DOT_LEVEL_COLOR_2 al_map_rgb(48, 218, 192)
+#define DOT_LEVEL_COLOR_3 al_map_rgb(48, 218, 134)
+#define DOT_LEVEL_COLOR_4 al_map_rgb(147, 186, 33)
+#define DOT_LEVEL_COLOR_5 al_map_rgb(186, 178, 33)
+#define DOT_LEVEL_COLOR_6 al_map_rgb(218, 175, 48)
+#define DOT_LEVEL_COLOR_7 al_map_rgb(218, 123, 48)
+#define DOT_LEVEL_COLOR_8 al_map_rgb(218, 48, 48)
+#define DOT_LEVEL_COLOR_9 al_map_rgb(204, 48, 218)
 
 #define DOT_STATE_INTRO        0
 #define DOT_STATE_GAME         1

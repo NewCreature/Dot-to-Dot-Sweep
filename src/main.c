@@ -1209,6 +1209,8 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Error initializing T3F\n");
 		return false;
 	}
+	al_clear_to_color(DOT_LEVEL_COLOR_0);
+	al_flip_display();
 	if(al_get_display_width(t3f_display) > al_get_display_height(t3f_display))
 	{
 		app->desktop_mode = true;
@@ -1281,16 +1283,16 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		app->dot_color[i] = dot_get_ball_color(app->bitmap[i]);
 	}
-	app->level_color[0] = al_map_rgb(47, 151, 218);
-	app->level_color[1] = al_map_rgb(48, 196, 218);
-	app->level_color[2] = al_map_rgb(48, 218, 192);
-	app->level_color[3] = al_map_rgb(48, 218, 134);
-	app->level_color[4] = al_map_rgb(147, 186, 33);
-	app->level_color[5] = al_map_rgb(186, 178, 33);
-	app->level_color[6] = al_map_rgb(218, 175, 48);
-	app->level_color[7] = al_map_rgb(218, 123, 48);
-	app->level_color[8] = al_map_rgb(218, 48, 48);
-	app->level_color[9] = al_map_rgb(204, 48, 218);
+	app->level_color[0] = DOT_LEVEL_COLOR_0;
+	app->level_color[1] = DOT_LEVEL_COLOR_1;
+	app->level_color[2] = DOT_LEVEL_COLOR_2;
+	app->level_color[3] = DOT_LEVEL_COLOR_3;
+	app->level_color[4] = DOT_LEVEL_COLOR_4;
+	app->level_color[5] = DOT_LEVEL_COLOR_5;
+	app->level_color[6] = DOT_LEVEL_COLOR_6;
+	app->level_color[7] = DOT_LEVEL_COLOR_7;
+	app->level_color[8] = DOT_LEVEL_COLOR_8;
+	app->level_color[9] = DOT_LEVEL_COLOR_9;
 	app->controller.current_joy = -1;
 	app->controller.current_joy_handle = NULL;
 
