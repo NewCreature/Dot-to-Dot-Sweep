@@ -461,7 +461,7 @@ bool dot_intro_initialize(void * data)
 	{
 		return false;
 	}
-	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], NULL, "Mouse", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], NULL, "Mouse/Touch", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	pos_y += 32;
 	t3f_add_gui_text_element(app->menu[DOT_MENU_MOUSE], NULL, "Sensitivity", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, pos_y, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	pos_y += 64;
