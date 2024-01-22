@@ -23,9 +23,16 @@ Standalone Release Checklist
             update the input system with a section for Android that maps
             Android's standard mapping to XBox mapping.
       
-      [ ]Don't show menus that aren't relevant to the current platform during
-         setup.
-      
+      [ ]Revamp touch controls.
+
+         [ ]Users should be able to treat the touch screen as if it were a
+            trackpad.
+
+         [ ]Mouse sensitivity option should also apply to touch input.
+
+         [ ]Mouse sensitivity setup should mention touch as well since it
+            there. 
+
       [ ]Investigate startup issues. When starting the app, it seems to click
          through the menu to gameplay without any input from the user. This
          might be related to the joystick input issue listed above.
