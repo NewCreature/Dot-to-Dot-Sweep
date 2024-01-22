@@ -93,6 +93,10 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 		{
 			t3f_event_handler(event);
 			app->want_disable_controller = true;
+			if(!app->using_mouse)
+			{
+				app->want_mouse = true;
+			}
 			break;
 		}
 
@@ -222,11 +226,22 @@ void app_logic(void * data)
 		t3f_key[104] = 0;
 	}
 
-	if(app->want_disable_controller && app->using_controller)
+	if(app->want_disable_controller)
 	{
-		disable_controller(app);
+		if(app->using_controller)
+		{
+			disable_controller(app);
+		}
 		app->want_disable_controller = false;
+	}
+	if(app->want_mouse)
+	{
 		app->using_mouse = true;
+		app->want_mouse = false;
+		if(app->state == DOT_STATE_GAME)
+		{
+			t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+		}
 	}
 	app_touch_logic(data);
 	if(app->mickey_ticks)

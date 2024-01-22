@@ -43,6 +43,7 @@ typedef struct
     bool using_controller;
     bool want_disable_controller;
     bool using_mouse;
+    bool want_mouse;
     int touch_id;
     float touch_x, touch_y;
     float old_touch_x, old_touch_y;
