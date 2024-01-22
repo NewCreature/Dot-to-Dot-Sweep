@@ -23,14 +23,14 @@ Standalone Release Checklist
             update the input system with a section for Android that maps
             Android's standard mapping to XBox mapping.
       
-      [ ]Revamp touch controls.
+      [X]Revamp touch controls.
 
-         [ ]Users should be able to treat the touch screen as if it were a
+         [X]Users should be able to treat the touch screen as if it were a
             trackpad.
 
-         [ ]Mouse sensitivity option should also apply to touch input.
+         [X]Mouse sensitivity option should also apply to touch input.
 
-         [ ]Mouse sensitivity setup should mention touch as well since it
+         [X]Mouse sensitivity setup should mention touch as well since it
             there. 
 
       [X]Investigate startup issues. When starting the app, it seems to click
