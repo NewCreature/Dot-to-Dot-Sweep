@@ -13,6 +13,7 @@
 #include "privacy.h"
 #include "input.h"
 #include "mouse.h"
+#include "text.h"
 
 static bool dot_show_touch_hand = false;
 static int dot_screenshot_count = 0;
@@ -494,6 +495,33 @@ static bool load_graphics(APP_INSTANCE * app)
 	char fn_buf[1024];
 	int i;
 
+	/* load fonts first so we can show loading message */
+	sprintf(fn_buf, "data/fonts/kongtext_%dx.ini", app->graphics_size_multiplier);
+	if(!dot_load_font(app, DOT_FONT_16, fn_buf, 16))
+	{
+		printf("Failed to load font %d!\n", DOT_FONT_16);
+		goto fail;
+	}
+	al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width + 0.5, t3f_virtual_display_height + 0.5, DOT_LEVEL_COLOR_0);
+	al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width + 0.5, t3f_virtual_display_height + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.75), t3f_virtual_display_width / 2, t3f_virtual_display_height / 2 - t3f_get_font_line_height(app->font[DOT_FONT_16]) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, T3F_FONT_ALIGN_CENTER, "Loading resources...");
+	al_flip_display();
+	if(!dot_load_font(app, DOT_FONT_14, fn_buf, 14))
+	{
+		printf("Failed to load font %d!\n", DOT_FONT_8);
+		goto fail;
+	}
+	if(!dot_load_font(app, DOT_FONT_8, fn_buf, 8))
+	{
+		printf("Failed to load font %d!\n", DOT_FONT_8);
+		goto fail;
+	}
+	if(!dot_load_font(app, DOT_FONT_32, fn_buf, 32))
+	{
+		printf("Failed to load font %d!\n", DOT_FONT_32);
+		goto fail;
+	}
+
 	/* load graphics set */
 	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_RED, "ball_red.png", app->graphics_size_multiplier))
 	{
@@ -590,29 +618,6 @@ static bool load_graphics(APP_INSTANCE * app)
 		{
 			t3f_add_bitmap_to_atlas(app->atlas, &app->bitmap[i], T3F_ATLAS_SPRITE);
 		}
-	}
-
-	/* load fonts */
-	sprintf(fn_buf, "data/fonts/kongtext_%dx.ini", app->graphics_size_multiplier);
-	if(!dot_load_font(app, DOT_FONT_14, fn_buf, 14))
-	{
-		printf("Failed to load font %d!\n", DOT_FONT_8);
-		goto fail;
-	}
-	if(!dot_load_font(app, DOT_FONT_8, fn_buf, 8))
-	{
-		printf("Failed to load font %d!\n", DOT_FONT_8);
-		goto fail;
-	}
-	if(!dot_load_font(app, DOT_FONT_16, fn_buf, 16))
-	{
-		printf("Failed to load font %d!\n", DOT_FONT_16);
-		goto fail;
-	}
-	if(!dot_load_font(app, DOT_FONT_32, fn_buf, 32))
-	{
-		printf("Failed to load font %d!\n", DOT_FONT_32);
-		goto fail;
 	}
 
 	return true;
