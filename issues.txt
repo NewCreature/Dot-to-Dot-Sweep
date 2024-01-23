@@ -42,10 +42,10 @@ Standalone Release Checklist
          through the menu to gameplay without any input from the user. This
          might be related to the joystick input issue listed above.
       
-      [ ]Add background color for Android so icon and startup screen look
+      [X]Add background color for Android so icon and startup screen look
          right.
          
-         [ ]Support adaptive and legacy icons.
+         [X]Support adaptive and legacy icons.
 
       [X]Clear the display to the background color used for the Android port
          before loading assets. This should provide the most seamless
