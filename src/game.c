@@ -1272,39 +1272,6 @@ void dot_game_render_hud(void * data)
 	al_hold_bitmap_drawing(held);
 }
 
-static void dot_create_touch_dots_effect(void * data)
-{
-	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	ALLEGRO_STATE old_state;
-	ALLEGRO_TRANSFORM identity;
-	float sx = 512.0 / (float)t3f_virtual_display_width;
-	int i;
-	bool held = al_is_bitmap_drawing_held();
-
-	if(held)
-	{
-		al_hold_bitmap_drawing(false);
-	}
-	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM);
-	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
-	al_identity_transform(&identity);
-	al_use_transform(&identity);
-	al_set_clipping_rectangle(0, 0, 512, 512);
-	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
-	al_hold_bitmap_drawing(true);
-	for(i = 0; i < app->game.ball_count; i++)
-	{
-		if(app->game.ball[i].active)
-		{
-			t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.ball[i].type], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), (app->game.ball[i].x - app->game.ball[i].r) * sx, app->game.ball[i].y - app->game.ball[i].r, app->game.ball[i].z, (app->game.ball[i].r * 2.0) * sx, app->game.ball[i].r * 2.0, 0);
-		}
-	}
-	al_hold_bitmap_drawing(false);
-	al_restore_state(&old_state);
-	al_hold_bitmap_drawing(held);
-	t3f_set_clipping_rectangle(0.0, 0.0, 0.0, 0.0);
-}
-
 static void dot_create_touch_start_effect(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -1408,11 +1375,6 @@ void dot_game_render(void * data)
 				t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_TARGET], app->game.ball[i].obscured ? al_map_rgba_f(a, a, 0.5 * a, a) : al_map_rgba_f(a, a, a, a), app->game.ball[i].x - r, app->game.ball[i].y - r, app->game.ball[i].z, r * 2.0, r * 2.0, 0);
 			}
 		}
-	}
-	if(!app->desktop_mode)
-	{
-		dot_create_touch_dots_effect(data);
-		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, 0.0, DOT_GAME_PLAYFIELD_WIDTH, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
 	}
 	if(app->game.player.ball.active)
 	{
