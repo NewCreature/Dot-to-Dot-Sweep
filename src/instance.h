@@ -51,6 +51,7 @@ typedef struct
     float mouse_sensitivity;
     DOT_INPUT_DATA controller;
     int mickey_ticks;
+    int touch_cooldown_ticks;
 
     /* game state */
     DOT_GAME game;
