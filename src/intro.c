@@ -10,17 +10,23 @@
 
 static void select_first_element(APP_INSTANCE * app)
 {
-	app->menu[app->current_menu]->hover_element = 0;
-	if(!app->menu[app->current_menu]->element[app->menu[app->current_menu]->hover_element].proc)
+	if(app->input_type == DOT_INPUT_CONTROLLER)
 	{
-		t3f_select_next_gui_element(app->menu[app->current_menu]);
+		app->menu[app->current_menu]->hover_element = 0;
+		if(!app->menu[app->current_menu]->element[app->menu[app->current_menu]->hover_element].proc)
+		{
+			t3f_select_next_gui_element(app->menu[app->current_menu]);
+		}
 	}
 }
 
 static void select_last_element(APP_INSTANCE * app)
 {
-	app->menu[app->current_menu]->hover_element = -1;
-	t3f_select_previous_gui_element(app->menu[app->current_menu]);
+	if(app->input_type == DOT_INPUT_CONTROLLER)
+	{
+		app->menu[app->current_menu]->hover_element = -1;
+		t3f_select_previous_gui_element(app->menu[app->current_menu]);
+	}
 }
 
 static void remember_element(APP_INSTANCE * app)
