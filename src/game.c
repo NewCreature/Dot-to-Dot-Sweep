@@ -1006,7 +1006,7 @@ void dot_game_logic(void * data)
 			}
 			else
 			{
-				if(app->touch_id == 0)
+				if(app->touch_id == 0 && app->desktop_mode)
 				{
 					if(t3f_touch[app->touch_id].pressed && app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
 					{
@@ -1023,7 +1023,7 @@ void dot_game_logic(void * data)
 						t3f_touch[app->touch_id].pressed = false;
 					}
 				}
-				else if(app->touch_id > 0)
+				else if(app->touch_id >= 0)
 				{
 					if(t3f_touch[app->touch_id].pressed)
 					{
@@ -1034,6 +1034,10 @@ void dot_game_logic(void * data)
 						app->game.player.want_shield = true;
 						app->game.player.ball.x = DOT_GAME_PLAYFIELD_WIDTH / 2;
 						app->game.player.ball.y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
+						if(app->using_mouse)
+						{
+							t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+						}
 						app->game.level_start = false;
 						dot_enable_mouse_cursor(false);
 						t3f_get_mouse_mickeys(&i, &i, &i);
@@ -1316,8 +1320,16 @@ void dot_game_render(void * data)
 
 	if(app->using_mouse)
 	{
-		touch_text[0] = "Click";
-		touch_text[1] = "Here";
+		if(app->desktop_mode)
+		{
+			touch_text[0] = "Click";
+			touch_text[1] = "Here";
+		}
+		else
+		{
+			touch_text[0] = "Click";
+			touch_text[1] = "Anywhere";
+		}
 	}
 	else if(app->using_controller)
 	{
