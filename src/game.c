@@ -693,7 +693,7 @@ static void confine_mouse(APP_INSTANCE * app)
 	bool update = false;
 
 	/* check left edge */
-	if(t3f_mouse_x + app->game.player.touch_offset_x < app->game.player.ball.r)
+	if(t3f_mouse_x < app->game.player.ball.r)
 	{
 		if(t3f_mouse_x > app->game.player.old_mouse_x)
 		{
@@ -703,7 +703,7 @@ static void confine_mouse(APP_INSTANCE * app)
 	}
 
 	/* check right edge */
-	else if(t3f_mouse_x + app->game.player.touch_offset_x + app->game.player.ball.r > DOT_GAME_PLAYFIELD_WIDTH + 0.5)
+	else if(t3f_mouse_x + app->game.player.ball.r > DOT_GAME_PLAYFIELD_WIDTH + 0.5)
 	{
 		if(t3f_mouse_x < app->game.player.old_mouse_x)
 		{
@@ -713,7 +713,7 @@ static void confine_mouse(APP_INSTANCE * app)
 	}
 
 	/* check top edge */
-	if(t3f_mouse_y + app->game.player.touch_offset_y + 0.5 < app->game.player.ball.r)
+	if(t3f_mouse_y + 0.5 < app->game.player.ball.r)
 	{
 		if(t3f_mouse_y > app->game.player.old_mouse_y)
 		{
@@ -723,7 +723,7 @@ static void confine_mouse(APP_INSTANCE * app)
 	}
 
 	/* check bottom edge */
-	else if(t3f_mouse_y + app->game.player.touch_offset_y + app->game.player.ball.r > DOT_GAME_PLAYFIELD_HEIGHT + 0.5)
+	else if(t3f_mouse_y + app->game.player.ball.r > DOT_GAME_PLAYFIELD_HEIGHT + 0.5)
 	{
 		if(t3f_mouse_y < app->game.player.old_mouse_y)
 		{
@@ -784,17 +784,7 @@ void dot_game_move_player(void * data)
 		{
 			if(app->touch_id > 0)
 			{
-				if(app->game.player.lost_touch)
-				{
-					if(t3f_distance(app->touch_x, app->touch_y, app->game.player.ball.x, app->game.player.ball.y) < DOT_GAME_GRAB_SPOT_SIZE)
-					{
-						app->game.player.lost_touch = false;
-					}
-				}
-				if(!app->game.player.lost_touch)
-				{
-					update_player_position_touch(app);
-				}
+				update_player_position_touch(app);
 				maybe_activate_shield(app);
 			}
 			else if(app->using_mouse)
@@ -802,13 +792,6 @@ void dot_game_move_player(void * data)
 				move_player_with_mouse(app);
 				maybe_activate_shield(app);
 			}
-//			else
-//			{
-//				app->game.player.lost_touch = true;
-//				app->game.pause_state = app->game.state;
-//				app->game.state = DOT_GAME_STATE_PAUSE;
-//				dot_enable_mouse_cursor(true);
-//			}
 		}
 
 		/* prevent player from moving past the edge */
@@ -1030,11 +1013,8 @@ void dot_game_logic(void * data)
 						t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
 						app->game.state = DOT_GAME_STATE_PLAY;
 						app->game.state_tick = 0;
-						app->game.player.lost_touch = false;
 						app->game.player.ball.active = true;
 						app->game.player.want_shield = true;
-						app->game.player.touch_offset_x = 0;
-						app->game.player.touch_offset_y = 0;
 						app->game.player.ball.x = t3f_mouse_x;
 						app->game.player.ball.y = t3f_mouse_y;
 						app->game.level_start = false;
@@ -1050,11 +1030,8 @@ void dot_game_logic(void * data)
 						t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
 						app->game.state = DOT_GAME_STATE_PLAY;
 						app->game.state_tick = 0;
-						app->game.player.lost_touch = false;
 						app->game.player.ball.active = true;
 						app->game.player.want_shield = true;
-						app->game.player.touch_offset_x = 0;
-						app->game.player.touch_offset_y = 0;
 						app->game.player.ball.x = DOT_GAME_PLAYFIELD_WIDTH / 2;
 						app->game.player.ball.y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
 						app->game.level_start = false;
@@ -1068,11 +1045,8 @@ void dot_game_logic(void * data)
 					t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
 					app->game.state = DOT_GAME_STATE_PLAY;
 					app->game.state_tick = 0;
-					app->game.player.lost_touch = false;
 					app->game.player.ball.active = true;
 					app->game.player.want_shield = true;
-					app->game.player.touch_offset_x = 0;
-					app->game.player.touch_offset_y = 0;
 					app->game.player.ball.x = DOT_GAME_PLAYFIELD_WIDTH / 2;
 					app->game.player.ball.y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
 					app->game.level_start = false;
@@ -1296,35 +1270,6 @@ void dot_game_render_hud(void * data)
 	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_EMO_FG], t3f_color_white, t3f_virtual_display_width / 2 - 32, DOT_GAME_PLAYFIELD_HEIGHT + 40 - 32, 0, 64, 64, 0);
 	al_hold_bitmap_drawing(false);
 	al_hold_bitmap_drawing(held);
-}
-
-static void dot_create_grab_spot_effect(void * data)
-{
-	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	ALLEGRO_STATE old_state;
-	ALLEGRO_TRANSFORM identity;
-	float s;
-	float sx = 512.0 / (float)t3f_virtual_display_width;
-	bool held = al_is_bitmap_drawing_held();
-
-	if(held)
-	{
-		al_hold_bitmap_drawing(false);
-	}
-
-	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM | ALLEGRO_STATE_BLENDER);
-	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
-	al_identity_transform(&identity);
-	al_use_transform(&identity);
-	al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
-	al_set_clipping_rectangle(0, 0, 512, 512);
-	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 1.0));
-	al_set_blender(ALLEGRO_ADD, ALLEGRO_ZERO, ALLEGRO_INVERSE_ALPHA);
-	s = DOT_GAME_GRAB_SPOT_SIZE;
-	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_COMBO], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), (float)(app->game.player.ball.x - DOT_GAME_GRAB_SPOT_SIZE) * sx, app->game.player.ball.y - DOT_GAME_GRAB_SPOT_SIZE, 0.0, (s * 2.0) * sx, s * 2, 0);
-	al_restore_state(&old_state);
-	al_hold_bitmap_drawing(held);
-	t3f_set_clipping_rectangle(0, 0, 0, 0);
 }
 
 static void dot_create_touch_dots_effect(void * data)

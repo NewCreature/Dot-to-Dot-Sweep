@@ -19,9 +19,7 @@ typedef struct
 {
 
 	DOT_BALL ball;
-	bool lost_touch;
 	bool want_shield;
-	float touch_offset_x, touch_offset_y;
 	float target_angle, old_target_angle;
 	float old_mouse_x, old_mouse_y;
 
@@ -84,8 +82,6 @@ typedef struct
 
 #define DOT_GAME_SHIELD_MAX_SIZE        96
 #define DOT_GAME_BALL_SIZE            16.0
-
-#define DOT_GAME_GRAB_SPOT_SIZE 48
 
 #define DOT_GAME_TOUCH_START_X (DOT_GAME_SHIELD_MAX_SIZE + DOT_GAME_BALL_SIZE * 2)
 #define DOT_GAME_TOUCH_START_Y (DOT_GAME_SHIELD_MAX_SIZE + DOT_GAME_BALL_SIZE * 2)

@@ -381,8 +381,6 @@ int dot_menu_proc_pause_resume(void * data, int i, void * pp)
 		/* move mouse to player position if playing with mouse */
 		if(app->using_mouse)
 		{
-			app->game.player.touch_offset_x = 0;
-			app->game.player.touch_offset_y = 0;
 			t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
 			app->mickey_ticks = 3;
 		}
