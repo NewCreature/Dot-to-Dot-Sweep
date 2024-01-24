@@ -4,11 +4,23 @@ Standalone Release Checklist
 [ ]Look into issue on Windows where mouse keeps trying to be reactivated when
    using touch input.
 
+   [ ]For some reason, touching the screen on my Windows machine occasionally
+      generates mouse axis events. I think we can work around this issue by
+      adding a touch cooldown timer that resets every time we get a touch
+      event. Users probably won't be switching between touch and mouse
+      frequently so this should prevent mouse from activating when the user is
+      trying to use touch controls.
+
 [ ]Open pause menu on click instead of going to pause state.
+
+   [ ]I think we should probably remove the pause state and only use the pause
+      menu state.
+
+[ ]Quitting the game should not bring up the leaderboard.
 
 [ ]Make Android packages.
 
-   [ ]Fix Android port. It's surely broken after all the changes for the Steam
+   [X]Fix Android port. It's surely broken after all the changes for the Steam
       release.
 
       [X]Resuming from pause brings up the game start screen when it should go
@@ -55,6 +67,9 @@ Standalone Release Checklist
 
       [ ]Add compiler flag to define 'T3F_ANDROID_GP' when building the AAB for
          the Play Store.
+
+         [ ]We'll probably add a 'CL_CFLAGS' variable for passing extra flags
+            to the compiler through the command line.
    
    [ ]Create 'android_packages' target that builds all Android packages we need
       for distributing a release.
