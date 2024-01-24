@@ -90,6 +90,15 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 			break;
 		}
 		case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+		{
+			t3f_event_handler(event);
+			app->want_disable_controller = true;
+			if(!app->using_mouse)
+			{
+				app->want_mouse = true;
+			}
+			break;
+		}
 		case ALLEGRO_EVENT_MOUSE_AXES:
 		{
 			t3f_event_handler(event);
@@ -122,6 +131,7 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 		case ALLEGRO_EVENT_TOUCH_CANCEL:
 		case ALLEGRO_EVENT_TOUCH_END:
 		{
+			t3f_event_handler(event);
 			app->touch_cooldown_ticks = DOT_TOUCH_COOLDOWN_TICKS;
 			break;
 		}

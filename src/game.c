@@ -1091,47 +1091,6 @@ void dot_game_logic(void * data)
 			break;
 		}
 
-		case DOT_GAME_STATE_PAUSE:
-		{
-			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
-			{
-				open_pause_menu(app, true);
-				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-				t3f_key[ALLEGRO_KEY_BACK] = 0;
-			}
-			else
-			{
-				if(app->touch_id >= 0)
-				{
-					if(t3f_touch[app->touch_id].pressed && t3f_distance(app->touch_x, app->touch_y, app->game.player.ball.x, app->game.player.ball.y) < DOT_GAME_GRAB_SPOT_SIZE)
-					{
-						if(app->using_mouse)
-						{
-							app->game.player.touch_offset_x = 0;
-							app->game.player.touch_offset_y = 0;
-							t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
-							app->mickey_ticks = 3;
-						}
-						else
-						{
-							app->game.player.touch_offset_x = app->game.player.ball.x - app->touch_x;
-							app->game.player.touch_offset_y = app->game.player.ball.y - app->touch_y;
-						}
-						app->game.state = DOT_GAME_STATE_PLAY;
-						dot_enable_mouse_cursor(false);
-						t3f_get_mouse_mickeys(&i, &i, &i);
-					}
-					t3f_touch[app->touch_id].pressed = false;
-				}
-				else if(app->using_controller)
-				{
-					app->game.state = DOT_GAME_STATE_PLAY;
-					app->controller.button = false;
-				}
-			}
-			break;
-		}
-
 		case DOT_GAME_STATE_PAUSE_MENU:
 		{
 			ALLEGRO_COLOR text_color;
@@ -1200,20 +1159,13 @@ void dot_game_logic(void * data)
 		default:
 		{
 			dot_enable_mouse_cursor(false);
-			if(app->touch_id == 0 && t3f_touch[app->touch_id].pressed)
-			{
-				app->game.pause_state = app->game.state;
-				app->game.state = DOT_GAME_STATE_PAUSE;
-				t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
-				dot_enable_mouse_cursor(true);
-				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-				t3f_touch[app->touch_id].pressed = false;
-			}
-			else if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller.button || app->controller.current_joy_disconnected)
+			if((app->touch_id == 0 && t3f_touch[app->touch_id].pressed) || t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller.button || app->controller.current_joy_disconnected)
 			{
 				if(app->using_mouse)
 				{
 					t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+					dot_enable_mouse_cursor(true);
+					t3f_touch[app->touch_id].pressed = false;
 				}
 				open_pause_menu(app, false);
 				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
@@ -1315,7 +1267,7 @@ void dot_game_render_hud(void * data)
 	al_draw_filled_rectangle(0, DOT_GAME_PLAYFIELD_HEIGHT, 540 + 0.5, DOT_GAME_PLAYFIELD_HEIGHT + 80 + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 	if(app->desktop_mode)
 	{
-		if(app->state == DOT_STATE_GAME && (app->game.state == DOT_GAME_STATE_PAUSE || app->game.state == DOT_GAME_STATE_START))
+		if(app->state == DOT_STATE_GAME && app->game.state == DOT_GAME_STATE_START)
 		{
 			al_draw_filled_rectangle(0, DOT_GAME_PLAYFIELD_HEIGHT, 540 + 0.5, DOT_GAME_PLAYFIELD_HEIGHT + 80 + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		}
@@ -1540,28 +1492,6 @@ void dot_game_render(void * data)
 		text_color = al_map_rgba_f(1.0, 1.0, 0.0, 1.0);
 	}
 	al_hold_bitmap_drawing(false);
-	if(app->game.state == DOT_GAME_STATE_PAUSE)
-	{
-		if(!app->desktop_mode)
-		{
-			al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width, t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
-		}
-		al_hold_bitmap_drawing(true);
-		s = DOT_GAME_GRAB_SPOT_SIZE;
-		dot_create_grab_spot_effect(data);
-		if(app->desktop_mode)
-		{
-			t3f_set_clipping_rectangle(0, 0, DOT_GAME_PLAYFIELD_WIDTH, DOT_GAME_PLAYFIELD_HEIGHT);
-		}
-		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, touch_effect_y, 0.0, DOT_GAME_PLAYFIELD_WIDTH + 0.5, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
-		if(app->desktop_mode)
-		{
-			al_hold_bitmap_drawing(false);
-			al_hold_bitmap_drawing(true);
-			t3f_set_clipping_rectangle(0, 0, 0, 0);
-		}
-//		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2 - t3f_get_font_line_height(app->font[DOT_FONT_32]) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, T3F_FONT_ALIGN_CENTER, "Paused");
-	}
 	if(app->game.state == DOT_GAME_STATE_PAUSE_MENU)
 	{
 		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width + 0.5, t3f_virtual_display_height + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
