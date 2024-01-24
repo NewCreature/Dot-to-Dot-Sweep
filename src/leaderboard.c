@@ -133,44 +133,68 @@ void dot_leaderboard_logic(void * data)
   bool m = false;
   int i;
 
-  for(i = 0; i < T3F_MAX_TOUCHES; i++)
+  dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
+  if(app->desktop_mode)
   {
-    if(t3f_touch[i].pressed)
+    for(i = 0; i < T3F_MAX_TOUCHES; i++)
+    {
+      if(t3f_touch[i].pressed)
+      {
+        m = true;
+        t3f_touch[i].pressed = false;
+      }
+    }
+    if(app->controller.button)
     {
       m = true;
-      t3f_touch[i].pressed = false;
+      app->controller.button = false;
+    }
+    if(t3f_key[ALLEGRO_KEY_ESCAPE])
+    {
+      m = true;
+      t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+    }
+    if(t3f_key[ALLEGRO_KEY_BACK])
+    {
+      m = true;
+      t3f_key[ALLEGRO_KEY_BACK] = 0;
+    }
+    if(m && app->current_menu == DOT_MENU_LEADERBOARD_2)
+    {
+      dot_menu_proc_leaderboard_back(data, 0, NULL);
+      app->current_menu = DOT_MENU_LEADERBOARD_2;
+    }
+    else if(m)
+    {
+      dot_menu_proc_leaderboard_back(data, 0, NULL);
     }
   }
-  if(app->controller.button)
+  else
   {
-    m = true;
-    app->controller.button = false;
-  }
-  if(t3f_key[ALLEGRO_KEY_ESCAPE])
-  {
-    m = true;
-    t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-  }
-  if(t3f_key[ALLEGRO_KEY_BACK])
-  {
-    m = true;
-    t3f_key[ALLEGRO_KEY_BACK] = 0;
-  }
-  dot_bg_objects_logic(data, DOT_GAME_LEVEL_BASE_SPEED);
-  if(m && app->current_menu == DOT_MENU_LEADERBOARD_2)
-  {
-    dot_menu_proc_leaderboard_back(data, 0, NULL);
-    app->current_menu = DOT_MENU_LEADERBOARD_2;
-  }
-  else if(m)
-  {
-    dot_menu_proc_leaderboard_back(data, 0, NULL);
+    if(!dot_intro_process_menu(app, app->menu[app->current_menu]))
+    {
+      if(t3f_key[ALLEGRO_KEY_ESCAPE])
+      {
+        m = true;
+        t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+      }
+      if(t3f_key[ALLEGRO_KEY_BACK])
+      {
+        m = true;
+        t3f_key[ALLEGRO_KEY_BACK] = 0;
+      }
+      if(m && app->current_menu == DOT_MENU_LEADERBOARD_2)
+      {
+        dot_menu_proc_leaderboard_back(data, 0, NULL);
+        app->current_menu = DOT_MENU_LEADERBOARD_2;
+      }
+      else if(m)
+      {
+        dot_menu_proc_leaderboard_back(data, 0, NULL);
+      }
+    }
   }
   app->tick++;
-  if(!app->desktop_mode)
-  {
-    t3f_process_gui(app->menu[app->current_menu], app);
-  }
 }
 
 void dot_leaderboard_render(void * data)

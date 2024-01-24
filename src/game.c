@@ -1104,30 +1104,8 @@ void dot_game_logic(void * data)
 			}
 			else
 			{
-				if(app->controller.axis_y_pressed)
-				{
-					if(app->controller.axis_y < 0.0)
-					{
-						t3f_select_previous_gui_element(app->menu[DOT_MENU_PAUSE]);
-						t3f_key[ALLEGRO_KEY_UP] = 0;
-						t3f_key[ALLEGRO_KEY_W] = 0;
-						app->controller.axis_y_pressed = false;
-					}
-					else
-					{
-						t3f_select_next_gui_element(app->menu[DOT_MENU_PAUSE]);
-						t3f_key[ALLEGRO_KEY_DOWN] = 0;
-						t3f_key[ALLEGRO_KEY_S] = 0;
-						app->controller.axis_y_pressed = false;
-					}
-				}
-				if(app->controller.button)
-				{
-					t3f_activate_selected_gui_element(app->menu[DOT_MENU_PAUSE], app);
-					app->controller.button = false;
-				}
+				dot_intro_process_menu(app, app->menu[DOT_MENU_PAUSE]);
 			}
-			t3f_process_gui(app->menu[DOT_MENU_PAUSE], app);
 			break;
 		}
 

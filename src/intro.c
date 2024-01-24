@@ -25,7 +25,10 @@ static void select_last_element(APP_INSTANCE * app)
 
 static void remember_element(APP_INSTANCE * app)
 {
-	app->previous_element = app->menu[app->current_menu]->hover_element;
+	if(app->touch_id < 0)
+	{
+		app->previous_element = app->menu[app->current_menu]->hover_element;
+	}
 }
 
 static void recall_element(APP_INSTANCE * app)
@@ -431,6 +434,61 @@ void dot_intro_center_menus(void * data)
 	}
 }
 
+bool dot_intro_process_menu(void * data, T3F_GUI * mp)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	bool ret;
+
+	/* only process GUI using alternate means if default processing
+	   doesn't result in a callback */
+	ret = t3f_process_gui(mp, app);
+	if(!ret)
+	{
+		if(app->using_controller)
+		{
+			if(mp->hover_element < 0)
+			{
+				t3f_select_previous_gui_element(mp);
+			}
+		}
+		if(app->controller.axis_y < 0.0 && app->controller.axis_y_pressed)
+		{
+			t3f_select_previous_gui_element(mp);
+			t3f_key[ALLEGRO_KEY_UP] = 0;
+			t3f_key[ALLEGRO_KEY_W] = 0;
+			app->controller.axis_y_pressed = false;
+		}
+		if(app->controller.axis_y > 0.0 && app->controller.axis_y_pressed)
+		{
+			t3f_select_next_gui_element(mp);
+			t3f_key[ALLEGRO_KEY_DOWN] = 0;
+			t3f_key[ALLEGRO_KEY_S] = 0;
+			app->controller.axis_y_pressed = false;
+		}
+		if(app->controller.button)
+		{
+			t3f_activate_selected_gui_element(mp, app);
+			app->controller.button = false;
+			ret = true;
+		}
+	}
+
+	/* reset hover element when using touch, we don't want elements to
+	   pop up in this particular game */
+	else if(app->touch_id > 0)
+	{
+		mp->hover_element = -1;
+	}
+
+	/* reset hover element if we are in touch cooldown */
+	if(app->touch_cooldown_ticks > 0)
+	{
+		mp->hover_element = -1;
+	}
+
+	return ret;
+}
+
 bool dot_intro_initialize(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -696,59 +754,9 @@ void dot_intro_logic(void * data)
 	app->tick++;
 	if(app->menu_showing)
 	{
-		t3f_process_gui(app->menu[app->current_menu], app);
-	}
-	if(!app->menu_showing)
-	{
-		if(app->touch_id >= 0 && t3f_touch[app->touch_id].pressed)
+		if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 		{
-			m = true;
-			t3f_touch[app->touch_id].pressed = false;
-		}
-		if(app->controller.button)
-		{
-			m = true;
-			app->controller.button = false;
-		}
-		if(m)
-		{
-			app->menu_showing = true;
-		}
-	}
-	else
-	{
-		if(app->using_controller)
-		{
-			if(app->menu[app->current_menu]->hover_element < 0)
-			{
-				t3f_select_previous_gui_element(app->menu[app->current_menu]);
-			}
-		}
-		if(app->controller.axis_y < 0.0 && app->controller.axis_y_pressed)
-		{
-			t3f_select_previous_gui_element(app->menu[app->current_menu]);
-			t3f_key[ALLEGRO_KEY_UP] = 0;
-			t3f_key[ALLEGRO_KEY_W] = 0;
-			app->controller.axis_y_pressed = false;
-		}
-		if(app->controller.axis_y > 0.0 && app->controller.axis_y_pressed)
-		{
-			t3f_select_next_gui_element(app->menu[app->current_menu]);
-			t3f_key[ALLEGRO_KEY_DOWN] = 0;
-			t3f_key[ALLEGRO_KEY_S] = 0;
-			app->controller.axis_y_pressed = false;
-		}
-		if(app->controller.button)
-		{
-			t3f_activate_selected_gui_element(app->menu[app->current_menu], app);
-			app->controller.button = false;
-		}
-	}
-	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
-	{
-		if(app->desktop_mode)
-		{
-			if(app->menu_showing)
+			if(app->desktop_mode)
 			{
 				if(app->current_menu == DOT_MENU_MAIN)
 				{
@@ -766,22 +774,48 @@ void dot_intro_logic(void * data)
 			}
 			else
 			{
-				t3f_exit();
+				if(app->current_menu == DOT_MENU_MAIN)
+				{
+					t3f_exit();
+				}
+				else
+				{
+					app->current_menu = DOT_MENU_MAIN;
+				}
 			}
+			t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+			t3f_key[ALLEGRO_KEY_BACK] = 0;
 		}
 		else
 		{
-			if(app->current_menu == DOT_MENU_MAIN)
+			dot_intro_process_menu(app, app->menu[app->current_menu]);
+		}
+	}
+	else
+	{
+		if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
+		{
+			t3f_exit();
+			t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+			t3f_key[ALLEGRO_KEY_BACK] = 0;
+		}
+		else
+		{
+			if(app->touch_id >= 0 && t3f_touch[app->touch_id].pressed)
 			{
-				t3f_exit();
+				m = true;
+				t3f_touch[app->touch_id].pressed = false;
 			}
-			else
+			if(app->controller.button)
 			{
-				app->current_menu = DOT_MENU_MAIN;
+				m = true;
+				app->controller.button = false;
+			}
+			if(m)
+			{
+				app->menu_showing = true;
 			}
 		}
-		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-		t3f_key[ALLEGRO_KEY_BACK] = 0;
 	}
 }
 

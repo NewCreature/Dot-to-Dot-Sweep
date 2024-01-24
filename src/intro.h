@@ -13,6 +13,8 @@ int dot_menu_proc_leaderboard_main_menu(void * data, int i, void * pp);
 int dot_menu_proc_leaderboard_back(void * data, int i, void * pp);
 int dot_menu_proc_privacy_back(void * data, int i, void * pp);
 
+bool dot_intro_process_menu(void * data, T3F_GUI * mp);
+
 void dot_intro_center_menus(void * data);
 bool dot_intro_initialize(void * data);
 void dot_intro_setup(void * data);
