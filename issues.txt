@@ -16,7 +16,7 @@ Standalone Release Checklist
    [X]I think we should probably remove the pause state and only use the pause
       menu state.
 
-[ ]Quitting the game should not bring up the leaderboard.
+[X]Quitting the game should not bring up the leaderboard.
 
 [ ]Make Android packages.
 
