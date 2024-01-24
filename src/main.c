@@ -1279,6 +1279,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		app->desktop_mode = true;
 	}
+	app_check_mobile_argument(app, argc, argv);
 	#ifdef T3F_ENABLE_STEAM_INTEGRATION
 		if(first_run())
 		{
