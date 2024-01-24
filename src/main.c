@@ -294,19 +294,6 @@ void app_logic(void * data)
 		app->using_controller = true;
 		app->using_mouse = false;
 	}
-/*	if(app->button)
-	{
-		if(app->controller.axis_x != 0.0 || app->controller.axis_y != 0.0)
-		{
-			app->controller.dead_zone = fabs(app->controller.axis_x);
-			if(fabs(app->controller.axis_y) > app->controller.dead_zone)
-			{
-				app->controller.dead_zone = fabs(app->controller.axis_y);
-			}
-			app->controller.dead_zone += 0.05;
-			printf("dead zone: %f\n", app->controller.dead_zone);
-		}
-	} */
 	for(i = 0; i < T3F_MAX_TOUCHES; i++)
 	{
 		if(t3f_touch[i].active)
