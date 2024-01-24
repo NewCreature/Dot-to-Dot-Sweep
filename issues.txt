@@ -1,19 +1,19 @@
 Standalone Release Checklist
 ----------------------------
 
-[ ]Look into issue on Windows where mouse keeps trying to be reactivated when
+[X]Look into issue on Windows where mouse keeps trying to be reactivated when
    using touch input.
 
-   [ ]For some reason, touching the screen on my Windows machine occasionally
+   [X]For some reason, touching the screen on my Windows machine occasionally
       generates mouse axis events. I think we can work around this issue by
       adding a touch cooldown timer that resets every time we get a touch
       event. Users probably won't be switching between touch and mouse
       frequently so this should prevent mouse from activating when the user is
       trying to use touch controls.
 
-[ ]Open pause menu on click instead of going to pause state.
+[X]Open pause menu on click instead of going to pause state.
 
-   [ ]I think we should probably remove the pause state and only use the pause
+   [X]I think we should probably remove the pause state and only use the pause
       menu state.
 
 [ ]Quitting the game should not bring up the leaderboard.
