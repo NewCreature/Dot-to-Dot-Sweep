@@ -1,4 +1,4 @@
-dot-to-dot-sweep (1.4.4) stable; urgency=low
+dot-to-dot-sweep (1.5) stable; urgency=low
 
   * Add support for controllers to Android port.
   * Add support for keyboard to Android port.
