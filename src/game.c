@@ -254,9 +254,20 @@ void dot_game_exit(void * data, bool from_menu)
 	if(!app->leaderboard)
 	{
 		app->state = DOT_STATE_INTRO;
-		if(app->music_enabled)
+		if(!from_menu)
 		{
-			t3f_play_music(DOT_MUSIC_TITLE);
+			if(app->music_enabled)
+			{
+				t3f_stop_music();
+			}
+			app->current_menu = DOT_MENU_LEADERBOARD_2;
+		}
+		else
+		{
+			if(app->music_enabled)
+			{
+				t3f_play_music(DOT_MUSIC_TITLE);
+			}
 		}
 	}
 	else
