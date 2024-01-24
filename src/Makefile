@@ -49,11 +49,14 @@ binary_package:
 debian_package:
 	$(MAKE) -f ../scripts/makefile.debian -I ../scripts debian_package
 
-android_package:
-	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_package
+android_apk:
+	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_apk
 
-android_bundle:
-	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_bundle
+android_aab:
+	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_aab
+
+android_packages:
+	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_packages
 
 android_install:
 	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_install

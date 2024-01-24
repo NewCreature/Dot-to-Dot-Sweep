@@ -7,8 +7,7 @@ include makefile.common
 prepare_platform:
 	@echo Ready to build...
 
-#generate Android package
-android_package: clean_packages build_android $(ANDROID_PLATFORM_TARGET)
+build_android_apk: build_android $(ANDROID_PLATFORM_TARGET)
 ifdef ANDROID_SIGNING_SETTINGS
 	$(ANDROID_JAVA_HOME)/bin/jarsigner $(ANDROID_SIGNING_SETTINGS) ../packages/$(APP_PACKAGE_NAME)-android-unsigned.apk $(ANDROID_SIGNING_KEY)
 	mv ../packages/$(APP_PACKAGE_NAME)-android-unsigned.apk ../packages/$(APP_PACKAGE_NAME)-android-unaligned.apk
@@ -19,8 +18,11 @@ ifdef ANDROID_SIGNING_SETTINGS
 endif
 	@echo Done.
 
-#generate Android app bundle
-android_bundle: clean_packages build_android_bundle $(ANDROID_PLATFORM_TARGET)
+#generate Android package
+android_apk:
+	make -f ../scripts/makefile.android -I ../scripts build_android_apk
+
+build_android_aab: build_android_bundle $(ANDROID_PLATFORM_TARGET)
 ifdef ANDROID_SIGNING_SETTINGS
 	$(ANDROID_JAVA_HOME)/bin/jarsigner $(ANDROID_SIGNING_SETTINGS) ../packages/$(APP_PACKAGE_NAME)-android-unsigned.aab $(ANDROID_SIGNING_KEY)
 	mv ../packages/$(APP_PACKAGE_NAME)-android-unsigned.aab ../packages/$(APP_PACKAGE_NAME)-android.aab
@@ -29,6 +31,10 @@ else
 	@echo "Android app bundle not signed! Must be signed for distribution through Play Store."
 endif
 	@echo Done.
+
+#generate Android app bundle
+android_aab:
+	make -f ../scripts/makefile.android -I ../scripts build_android_aab CL_CFLAGS=-DT3F_ANDROID_GP
 
 android_install: ../packages/$(APP_PACKAGE_NAME)-android.apk
 	$(ANDROID_SDK_ROOT)/platform-tools/adb -d install -r ../packages/$(APP_PACKAGE_NAME)-android.apk
@@ -109,5 +115,5 @@ build_android_bundle: create_android_temp edit_project copy_resources copy_libs 
 	rm -rf ../android_temp
 	@echo Unsigned AAB generated.
 
-clean_packages:
-	rm -rf ../packages/$(APP_PACKAGE_NAME)-$(ANDROID_ARCHITECTURE)-unsigned.apk ../packages/$(APP_PACKAGE_NAME)-$(ANDROID_ARCHITECTURE).apk
+android_packages: clean_packages android_apk android_aab
+	@echo Successfully built packages for Android Google Play Store and standalone distribution.
