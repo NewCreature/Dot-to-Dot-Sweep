@@ -1,6 +1,9 @@
 Standalone Release Checklist
 ----------------------------
 
+[ ]Ensure switching between mobile and desktop mode works properly for 'Play
+   Again?' menu.
+
 [X]Look into issue on Windows where mouse keeps trying to be reactivated when
    using touch input.
 
