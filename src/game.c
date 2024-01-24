@@ -197,7 +197,7 @@ void dot_game_initialize(void * data, bool demo_seed, int mode)
 }
 
 /* finish the game */
-void dot_game_exit(void * data)
+void dot_game_exit(void * data, bool from_menu)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
@@ -231,17 +231,20 @@ void dot_game_exit(void * data)
 	/* upload score */
 	if(app->upload_scores && !app->demo_file && !app->game.cheats_enabled)
 	{
+		al_stop_timer(t3f_timer);
 		if(upload)
 		{
-			al_stop_timer(t3f_timer);
 			dot_show_message(data, "Uploading score...");
 			dot_upload_current_high_score(app);
 		}
-		dot_show_message(data, "Downloading leaderboard...");
-		app->leaderboard = t3net_get_leaderboard(app->leaderboard_retrieve_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, app->game.mode == 0 ? "normal" : "easy", "none", 10, 0);
-		if(app->leaderboard)
+		if(!from_menu)
 		{
-			app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, dot_leaderboard_obfuscate_score(app->game.score));
+			dot_show_message(data, "Downloading leaderboard...");
+			app->leaderboard = t3net_get_leaderboard(app->leaderboard_retrieve_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, app->game.mode == 0 ? "normal" : "easy", "none", 10, 0);
+			if(app->leaderboard)
+			{
+				app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, dot_leaderboard_obfuscate_score(app->game.score));
+			}
 		}
 		al_resume_timer(t3f_timer);
 	}
@@ -1128,7 +1131,7 @@ void dot_game_logic(void * data)
 			}
 			if(i == DOT_MAX_PARTICLES)
 			{
-				dot_game_exit(data);
+				dot_game_exit(data, false);
 			}
 			break;
 		}

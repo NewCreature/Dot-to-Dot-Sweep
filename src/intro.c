@@ -394,7 +394,7 @@ int dot_menu_proc_pause_quit(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	dot_game_exit(data);
+	dot_game_exit(data, true);
 	dot_enable_mouse_cursor(true);
 	app->state = DOT_STATE_INTRO;
 	if(app->music_enabled)
