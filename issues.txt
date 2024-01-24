@@ -66,12 +66,12 @@ Standalone Release Checklist
          before loading assets. This should provide the most seamless
          experience for the user.
    
-   [ ]Automate detection of Play Store build.
+   [X]Automate detection of Play Store build.
 
-      [ ]Add compiler flag to define 'T3F_ANDROID_GP' when building the AAB for
+      [X]Add compiler flag to define 'T3F_ANDROID_GP' when building the AAB for
          the Play Store.
 
-         [ ]We'll probably add a 'CL_CFLAGS' variable for passing extra flags
+         [X]We'll probably add a 'CL_CFLAGS' variable for passing extra flags
             to the compiler through the command line.
    
    [ ]Create 'android_packages' target that builds all Android packages we need
