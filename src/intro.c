@@ -450,10 +450,6 @@ bool dot_intro_process_menu(void * data, T3F_GUI * mp)
 	ret = t3f_process_gui(mp, app);
 	if(!ret && app->input_type == DOT_INPUT_CONTROLLER)
 	{
-		if(mp->hover_element < 0)
-		{
-			t3f_select_previous_gui_element(mp);
-		}
 		if(app->controller.axis_y < 0.0 && app->controller.axis_y_pressed)
 		{
 			t3f_select_previous_gui_element(mp);
@@ -467,6 +463,10 @@ bool dot_intro_process_menu(void * data, T3F_GUI * mp)
 			t3f_key[ALLEGRO_KEY_DOWN] = 0;
 			t3f_key[ALLEGRO_KEY_S] = 0;
 			app->controller.axis_y_pressed = false;
+		}
+		if(mp->hover_element < 0)
+		{
+			t3f_select_previous_gui_element(mp);
 		}
 		if(app->controller.button)
 		{
@@ -484,7 +484,7 @@ bool dot_intro_process_menu(void * data, T3F_GUI * mp)
 	}
 
 	/* reset hover element if we are in touch cooldown */
-	if(app->touch_cooldown_ticks > 0)
+	if(app->touch_cooldown_ticks > 0 && app->input_type != DOT_INPUT_CONTROLLER)
 	{
 		mp->hover_element = -1;
 	}
