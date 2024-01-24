@@ -103,4 +103,9 @@
 
 #define DOT_TOUCH_COOLDOWN_TICKS       60
 
+#define DOT_INPUT_NONE                  0
+#define DOT_INPUT_MOUSE                 1
+#define DOT_INPUT_TOUCH                 2
+#define DOT_INPUT_CONTROLLER            3
+
 #endif

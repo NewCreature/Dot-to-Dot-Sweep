@@ -31,21 +31,6 @@ static ALLEGRO_BITMAP * dot_create_scratch_bitmap(int w, int h)
 	return bp;
 }
 
-static void disable_controller(APP_INSTANCE * app)
-{
-	int i;
-
-	if(app->using_controller)
-	{
-		if(app->state == DOT_STATE_GAME && app->game.state == DOT_GAME_STATE_PLAY)
-		{
-			t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
-			app->mickey_ticks = 3;
-		}
-		app->using_controller = false;
-	}
-}
-
 static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 {
 	ALLEGRO_STATE old_state;
@@ -92,8 +77,7 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 		case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
 		{
 			t3f_event_handler(event);
-			app->want_disable_controller = true;
-			if(!app->using_mouse)
+			if(app->input_type != DOT_INPUT_MOUSE)
 			{
 				app->want_mouse = true;
 			}
@@ -104,8 +88,7 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 			t3f_event_handler(event);
 			if(app->touch_cooldown_ticks <= 0)
 			{
-				app->want_disable_controller = true;
-				if(!app->using_mouse)
+				if(app->input_type != DOT_INPUT_MOUSE)
 				{
 					app->want_mouse = true;
 				}
@@ -117,14 +100,16 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 		{
 			t3f_event_handler(event);
 			app->start_touch = true;
-			app->using_mouse = false;
+			app->want_touch = true;
+			app->input_type = DOT_INPUT_NONE;
 			app->touch_cooldown_ticks = DOT_TOUCH_COOLDOWN_TICKS;
 			break;
 		}
 		case ALLEGRO_EVENT_TOUCH_MOVE:
 		{
 			t3f_event_handler(event);
-			app->using_mouse = false;
+			app->want_touch = true;
+			app->input_type = DOT_INPUT_NONE;
 			app->touch_cooldown_ticks = DOT_TOUCH_COOLDOWN_TICKS;
 			break;
 		}
@@ -146,13 +131,23 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 	}
 }
 
+void app_mouse_logic(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+
+	app->old_touch_x = app->touch_x;
+	app->old_touch_y = app->touch_y;
+	app->touch_x = t3f_mouse_x;
+	app->touch_y = t3f_mouse_y;
+}
+
 void app_touch_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	int i;
 
 	app->touch_id = -1;
-	for(i = 0; i < T3F_MAX_TOUCHES; i++)
+	for(i = 1; i < T3F_MAX_TOUCHES; i++)
 	{
 		if(t3f_touch[i].active)
 		{
@@ -160,18 +155,9 @@ void app_touch_logic(void * data)
 			break;
 		}
 	}
-	if(app->touch_id == 0)
-	{
-		app->using_mouse = true;
-	}
 	app->old_touch_x = app->touch_x;
 	app->old_touch_y = app->touch_y;
-	if(app->using_mouse && app->touch_id <= 0)
-	{
-		app->touch_x = t3f_mouse_x;
-		app->touch_y = t3f_mouse_y;
-	}
-	else if(app->touch_id > 0)
+	if(app->touch_id > 0)
 	{
 		app->touch_x = t3f_touch[app->touch_id].x;
 		app->touch_y = t3f_touch[app->touch_id].y;
@@ -181,8 +167,6 @@ void app_touch_logic(void * data)
 			app->old_touch_y = app->touch_y;
 			app->start_touch = false;
 		}
-		disable_controller(app);
-		app->using_mouse = false;
 	}
 }
 
@@ -258,25 +242,59 @@ void app_logic(void * data)
 	{
 		app->touch_cooldown_ticks--;
 	}
-	if(app->want_disable_controller)
+
+	/* read keyboard and controller state */
+	if(!app->entering_name)
 	{
-		if(app->using_controller)
-		{
-			disable_controller(app);
-		}
-		app->want_disable_controller = false;
+		dot_read_input(&app->controller);
 	}
-	if(app->want_mouse)
+	if(app->controller.axis_x != 0.0 || app->controller.axis_y != 0.0 || app->controller.button)
+	{
+		app->want_controller = true;
+	}
+
+	/* handle input type switching */
+	if(app->want_controller)
+	{
+		app->input_type = DOT_INPUT_CONTROLLER;
+		app->want_controller = false;
+	}
+	else if(app->want_mouse)
 	{
 		t3f_get_mouse_mickeys(&x, &y, &i);
-		app->using_mouse = true;
-		app->want_mouse = false;
-		if(app->state == DOT_STATE_GAME)
+		if(app->state == DOT_STATE_GAME && app->game.state == DOT_GAME_STATE_PLAY)
 		{
 			t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+			app->mickey_ticks = 3;
+		}
+		app->input_type = DOT_INPUT_MOUSE;
+		app->want_mouse = false;
+	}
+	else if(app->want_touch)
+	{
+		app->input_type = DOT_INPUT_TOUCH;
+		app->want_touch = false;
+	}
+
+	/* read input state */
+	switch(app->input_type)
+	{
+		case DOT_INPUT_MOUSE:
+		{
+			app_mouse_logic(data);
+			break;
+		}
+		case DOT_INPUT_TOUCH:
+		{
+			app_touch_logic(data);
+			break;
+		}
+		case DOT_INPUT_CONTROLLER:
+		{
+			break;
 		}
 	}
-	app_touch_logic(data);
+
 	if(app->mickey_ticks)
 	{
 		t3f_get_mouse_mickeys(&x, &y, &i);
@@ -285,22 +303,7 @@ void app_logic(void * data)
 			app->mickey_ticks--;
 		}
 	}
-	if(!app->entering_name)
-	{
-		dot_read_input(&app->controller);
-	}
-	if(app->controller.axis_x != 0.0 || app->controller.axis_y != 0.0 || app->controller.button)
-	{
-		app->using_controller = true;
-		app->using_mouse = false;
-	}
-	for(i = 0; i < T3F_MAX_TOUCHES; i++)
-	{
-		if(t3f_touch[i].active)
-		{
-			disable_controller(app);
-		}
-	}
+
 	switch(app->state)
 	{
 		case DOT_STATE_INTRO:

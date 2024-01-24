@@ -626,7 +626,7 @@ void dot_game_check_player_collisions(void * data)
 					app->game.emo_tick = 60;
 					app->game.emo_state = DOT_GAME_EMO_STATE_DEAD;
 					app->game.a_combo_broken = true;
-					if(app->using_mouse)
+					if(app->input_type == DOT_INPUT_MOUSE)
 					{
 						t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
 					}
@@ -788,7 +788,7 @@ void dot_game_move_player(void * data)
 		ox = app->game.player.ball.x;
 		oy = app->game.player.ball.y;
 
-		if(app->using_controller)
+		if(app->input_type == DOT_INPUT_CONTROLLER)
 		{
 			app->game.player.ball.x += app->controller.axis_x * 4.0;
 			app->game.player.ball.y += app->controller.axis_y * 4.0;
@@ -801,7 +801,7 @@ void dot_game_move_player(void * data)
 				update_player_position_touch(app);
 				maybe_activate_shield(app);
 			}
-			else if(app->using_mouse)
+			else if(app->input_type == DOT_INPUT_MOUSE)
 			{
 				move_player_with_mouse(app);
 				maybe_activate_shield(app);
@@ -972,9 +972,41 @@ static void open_pause_menu(APP_INSTANCE * app, bool convert)
 	t3f_clear_touch_data();
 	app->game.state = DOT_GAME_STATE_PAUSE_MENU;
 	t3f_reset_gui_input(app->menu[DOT_MENU_PAUSE]);
-	t3f_select_next_gui_element(app->menu[DOT_MENU_PAUSE]);
-	app->controller.axis_y_pressed = false;
+	if(app->input_type == DOT_INPUT_CONTROLLER)
+	{
+		t3f_select_next_gui_element(app->menu[DOT_MENU_PAUSE]);
+		app->controller.axis_y_pressed = false;
+	}
 	dot_enable_mouse_cursor(true);
+}
+
+static void start_turn(void * data, float x, float y, bool peg_mouse, int touch_id, bool reset_mickeys)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int i;
+
+	t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
+	app->game.state = DOT_GAME_STATE_PLAY;
+	app->game.state_tick = 0;
+	app->game.player.ball.active = true;
+	app->game.player.want_shield = true;
+	app->game.player.ball.x = x;
+	app->game.player.ball.y = y;
+	if(peg_mouse)
+	{
+		t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+	}
+	app->game.level_start = false;
+	dot_enable_mouse_cursor(false);
+	if(reset_mickeys)
+	{
+		t3f_get_mouse_mickeys(&i, &i, &i);
+	}
+	if(touch_id >= 0)
+	{
+		t3f_touch[touch_id].pressed = false;
+	}
+	app->controller.button = false;
 }
 
 /* the main game logic function */
@@ -1020,56 +1052,45 @@ void dot_game_logic(void * data)
 			}
 			else
 			{
-				if(app->touch_id == 0 && app->desktop_mode)
+				switch(app->input_type)
 				{
-					if(t3f_touch[app->touch_id].pressed && app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
+					case DOT_INPUT_MOUSE:
 					{
-						t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
-						app->game.state = DOT_GAME_STATE_PLAY;
-						app->game.state_tick = 0;
-						app->game.player.ball.active = true;
-						app->game.player.want_shield = true;
-						app->game.player.ball.x = t3f_mouse_x;
-						app->game.player.ball.y = t3f_mouse_y;
-						app->game.level_start = false;
-						dot_enable_mouse_cursor(false);
-						t3f_get_mouse_mickeys(&i, &i, &i);
-						t3f_touch[app->touch_id].pressed = false;
-					}
-				}
-				else if(app->touch_id >= 0)
-				{
-					if(t3f_touch[app->touch_id].pressed)
-					{
-						t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
-						app->game.state = DOT_GAME_STATE_PLAY;
-						app->game.state_tick = 0;
-						app->game.player.ball.active = true;
-						app->game.player.want_shield = true;
-						app->game.player.ball.x = DOT_GAME_PLAYFIELD_WIDTH / 2;
-						app->game.player.ball.y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
-						if(app->using_mouse)
+						if(app->desktop_mode)
 						{
-							t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
+							if(t3f_touch[0].pressed && app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
+							{
+								start_turn(app, t3f_mouse_x, t3f_mouse_y, false, 0, true);
+							}
 						}
-						app->game.level_start = false;
-						dot_enable_mouse_cursor(false);
-						t3f_get_mouse_mickeys(&i, &i, &i);
-						t3f_touch[app->touch_id].pressed = false;
+						else
+						{
+							if(t3f_touch[0].pressed)
+							{
+								start_turn(app, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, true, 0, true);
+							}
+						}
+						break;
 					}
-				}
-				else if(app->controller.button)
-				{
-					t3f_play_sample(app->sample[DOT_SAMPLE_GO], 1.0, 0.0, 1.0);
-					app->game.state = DOT_GAME_STATE_PLAY;
-					app->game.state_tick = 0;
-					app->game.player.ball.active = true;
-					app->game.player.want_shield = true;
-					app->game.player.ball.x = DOT_GAME_PLAYFIELD_WIDTH / 2;
-					app->game.player.ball.y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
-					app->game.level_start = false;
-					dot_enable_mouse_cursor(false);
-					app->controller.button = false;
+					case DOT_INPUT_TOUCH:
+					{
+						if(app->touch_id > 0)
+						{
+							if(t3f_touch[app->touch_id].pressed)
+							{
+								start_turn(app, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, false, app->touch_id, true);
+							}
+						}
+						break;
+					}
+					case DOT_INPUT_CONTROLLER:
+					{
+						if(app->controller.button)
+						{
+							start_turn(app, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, false, -1, false);
+						}
+						break;
+					}
 				}
 				if(app->game.state == DOT_GAME_STATE_PLAY)
 				{
@@ -1131,7 +1152,7 @@ void dot_game_logic(void * data)
 			dot_enable_mouse_cursor(false);
 			if((app->touch_id == 0 && t3f_touch[app->touch_id].pressed) || t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller.button || app->controller.current_joy_disconnected)
 			{
-				if(app->using_mouse)
+				if(app->input_type == DOT_INPUT_MOUSE)
 				{
 					t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
 					dot_enable_mouse_cursor(true);
@@ -1310,7 +1331,7 @@ void dot_game_render(void * data)
 	float start_y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
 	char * touch_text[2];
 
-	if(app->using_mouse)
+	if(app->input_type == DOT_INPUT_MOUSE)
 	{
 		if(app->desktop_mode)
 		{
@@ -1323,7 +1344,7 @@ void dot_game_render(void * data)
 			touch_text[1] = "Anywhere";
 		}
 	}
-	else if(app->using_controller)
+	else if(app->input_type == DOT_INPUT_CONTROLLER)
 	{
 		touch_text[0] = "Press";
 		touch_text[1] = "Button";

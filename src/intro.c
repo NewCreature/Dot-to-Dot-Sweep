@@ -25,7 +25,7 @@ static void select_last_element(APP_INSTANCE * app)
 
 static void remember_element(APP_INSTANCE * app)
 {
-	if(app->touch_id < 0)
+	if(app->input_type ==  DOT_INPUT_CONTROLLER)
 	{
 		app->previous_element = app->menu[app->current_menu]->hover_element;
 	}
@@ -382,7 +382,7 @@ int dot_menu_proc_pause_resume(void * data, int i, void * pp)
 	else
 	{
 		/* move mouse to player position if playing with mouse */
-		if(app->using_mouse)
+		if(app->input_type == DOT_INPUT_MOUSE)
 		{
 			t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
 			app->mickey_ticks = 3;
@@ -442,14 +442,11 @@ bool dot_intro_process_menu(void * data, T3F_GUI * mp)
 	/* only process GUI using alternate means if default processing
 	   doesn't result in a callback */
 	ret = t3f_process_gui(mp, app);
-	if(!ret)
+	if(!ret && app->input_type == DOT_INPUT_CONTROLLER)
 	{
-		if(app->using_controller)
+		if(mp->hover_element < 0)
 		{
-			if(mp->hover_element < 0)
-			{
-				t3f_select_previous_gui_element(mp);
-			}
+			t3f_select_previous_gui_element(mp);
 		}
 		if(app->controller.axis_y < 0.0 && app->controller.axis_y_pressed)
 		{
@@ -475,7 +472,7 @@ bool dot_intro_process_menu(void * data, T3F_GUI * mp)
 
 	/* reset hover element when using touch, we don't want elements to
 	   pop up in this particular game */
-	else if(app->touch_id > 0)
+	else if(app->input_type == DOT_INPUT_TOUCH)
 	{
 		mp->hover_element = -1;
 	}

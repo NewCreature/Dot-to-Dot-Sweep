@@ -40,10 +40,10 @@ typedef struct
     bool first_run;
 
     /* input state */
-    bool using_controller;
-    bool want_disable_controller;
-    bool using_mouse;
+    int input_type;
+    bool want_controller;
     bool want_mouse;
+    bool want_touch;
     int touch_id;
     float touch_x, touch_y;
     float old_touch_x, old_touch_y;
