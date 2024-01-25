@@ -21,7 +21,7 @@ Standalone Release Checklist
 
 [X]Quitting the game should not bring up the leaderboard.
 
-[ ]Make Android packages.
+[X]Make Android packages.
 
    [X]Fix Android port. It's surely broken after all the changes for the Steam
       release.
@@ -77,7 +77,10 @@ Standalone Release Checklist
    [X]Create 'android_packages' target that builds all Android packages we need
       for distributing a release.
    
-   [ ]Look into possible signature issue.
+   [X]Look into possible signature issue.
+
+      [X]I ended up having to deprecate the old version of the game since I no
+         longer have the original signing key.
 
    [X]Look into '-DDEBUGMODE' flag. Not sure what this is for, but we might
       want to remove it if it could impact performance in the release. We might
@@ -91,6 +94,13 @@ Standalone Release Checklist
       [X]Allegro's 'RelWithDebInfo' build mode compiles source code in release
          mode with logging code set up in certain places where speed isn't a
          concern. We don't need to mess with this for now.
+
+[ ]Prepare Google Play Store release.
+
+   [ ]Make new screenshots for store listing.
+
+      [ ]Reuse Steam screenshots. We should make the phone screenshots vertical
+         and the tablet screenshots horizontal.
 
 [ ]Make non-Steam MacOS package.
 
