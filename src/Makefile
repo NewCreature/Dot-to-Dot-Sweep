@@ -52,6 +52,9 @@ debian_package:
 android_apk:
 	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_apk
 
+android_debug_apk:
+	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_debug_apk
+
 android_aab:
 	$(MAKE) -f ../scripts/makefile.android -I ../scripts android_aab
 

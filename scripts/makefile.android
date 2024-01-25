@@ -22,6 +22,9 @@ endif
 android_apk:
 	make -f ../scripts/makefile.android -I ../scripts build_android_apk
 
+android_debug_apk:
+	make -f ../scripts/makefile.android -I ../scripts build_android_apk CL_CFLAGS="-g -DDEBUGMODE=1" ANDROID_DEBUG_LIBS=true
+
 build_android_aab: build_android_bundle $(ANDROID_PLATFORM_TARGET)
 ifdef ANDROID_SIGNING_SETTINGS
 	$(ANDROID_JAVA_HOME)/bin/jarsigner $(ANDROID_SIGNING_SETTINGS) ../packages/$(APP_PACKAGE_NAME)-android-unsigned.aab $(ANDROID_SIGNING_KEY)
