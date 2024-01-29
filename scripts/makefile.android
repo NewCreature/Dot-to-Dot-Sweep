@@ -9,11 +9,11 @@ prepare_platform:
 
 build_android_apk: build_android $(ANDROID_PLATFORM_TARGET)
 ifdef ANDROID_SIGNING_SETTINGS
-	$(ANDROID_JAVA_HOME)/bin/jarsigner $(ANDROID_SIGNING_SETTINGS) ../packages/$(APP_PACKAGE_NAME)-android-unsigned.apk $(ANDROID_SIGNING_KEY)
-	mv ../packages/$(APP_PACKAGE_NAME)-android-unsigned.apk ../packages/$(APP_PACKAGE_NAME)-android-unaligned.apk
-	rm -f ../packages/$(APP_PACKAGE_NAME)-android.apk
-	$(ANDROID_SDK_ROOT)/build-tools/30.0.3/zipalign -v 4 ../packages/$(APP_PACKAGE_NAME)-android-unaligned.apk ../packages/$(APP_PACKAGE_NAME)-android.apk
-	rm ../packages/$(APP_PACKAGE_NAME)-android-unaligned.apk
+	rm -f ../packages/$(APP_PACKAGE_NAME)-android-aligned.apk
+	$(ANDROID_SDK_ROOT)/build-tools/30.0.3/zipalign -v 4 ../packages/$(APP_PACKAGE_NAME)-android-unsigned.apk ../packages/$(APP_PACKAGE_NAME)-android-aligned.apk
+	rm ../packages/$(APP_PACKAGE_NAME)-android-unsigned.apk
+	$(ANDROID_SIGNING_TOOL) $(ANDROID_SIGNING_SETTINGS) ../packages/$(APP_PACKAGE_NAME)-android-aligned.apk
+	mv ../packages/$(APP_PACKAGE_NAME)-android-aligned.apk ../packages/$(APP_PACKAGE_NAME)-android.apk
 	@echo Generated signed APK for general distribution.
 endif
 	@echo Done.
@@ -27,7 +27,7 @@ android_debug_apk:
 
 build_android_aab: build_android_bundle $(ANDROID_PLATFORM_TARGET)
 ifdef ANDROID_SIGNING_SETTINGS
-	$(ANDROID_JAVA_HOME)/bin/jarsigner $(ANDROID_SIGNING_SETTINGS) ../packages/$(APP_PACKAGE_NAME)-android-unsigned.aab $(ANDROID_SIGNING_KEY)
+	$(ANDROID_SIGNING_TOOL) $(ANDROID_SIGNING_SETTINGS) ../packages/$(APP_PACKAGE_NAME)-android-unsigned.aab
 	mv ../packages/$(APP_PACKAGE_NAME)-android-unsigned.aab ../packages/$(APP_PACKAGE_NAME)-android.aab
 	@echo Generated signed AAB for Play Store distribution.
 else
@@ -62,6 +62,8 @@ edit_project:
 	sed -i '' "s|APP_PACKAGE|$(APP_ANDROID_PACKAGE)|" ../android_temp/app.project/app/build.gradle
 	sed -i '' "s|APP_VERSION|$(APP_VERSION)|" ../android_temp/app.project/app/build.gradle
 	sed -i '' "s|APP_RELEASE|$(APP_RELEASE)|" ../android_temp/app.project/app/build.gradle
+	sed -i '' "s|APP_COMPILE_SDK_VERSION|$(ANDROID_SDK_COMPILE_VERSION)|" ../android_temp/app.project/app/build.gradle
+	sed -i '' "s|APP_TARGET_SDK_VERSION|$(ANDROID_SDK_TARGET_VERSION)|" ../android_temp/app.project/app/build.gradle
 	sed -i '' "s|org.liballeg.app|$(APP_ANDROID_PACKAGE)|" ../android_temp/app.project/app/src/main/java/org/liballeg/app/MainActivity.java
 	sed -i '' "s|org.liballeg.app|$(APP_ANDROID_PACKAGE)|" ../android_temp/app.project/app/src/main/java/org/liballeg/app/EditBoxActivity.java
 
