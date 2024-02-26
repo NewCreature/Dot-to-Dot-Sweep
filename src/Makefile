@@ -116,7 +116,7 @@ data_package:
 	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts data_package
 
 steam_packages:
-	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts steam_packages
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts steam_packages CL_CFLAGS=-DT3F_ENABLE_STEAM_INTEGRATION CL_STEAM_BUILD=1
 
 help:
 	@echo "\nRun 'make' without arguments to build en executable for the current plaform."
