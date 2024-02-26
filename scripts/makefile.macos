@@ -158,4 +158,4 @@ binary_package: mac_package mac_sign_package
 	@echo Successfully built distributable binary package for the current platform.
 
 steam_packages: mac_steam_package
-	@Sucessfully built Steam packages for the current platform.
+	@echo Sucessfully built Steam packages for the current platform.
