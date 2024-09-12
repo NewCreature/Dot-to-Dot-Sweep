@@ -1,3 +1,17 @@
+v1.6
+----
+
+[ ]Upgrade to the latest version of T3F.
+
+[ ]Use padded bitmaps for sprites to alleviate aliasing issues.
+
+[ ]Investigate slowdown when resuming from pause on Steam Deck.
+
+[ ]Use asynchronous object loader for interacting with leaderboards.
+
+[ ]Make standalone release use FLOSS licensing.
+
+
 Standalone Release Checklist
 ----------------------------
 
@@ -95,28 +109,28 @@ Standalone Release Checklist
          mode with logging code set up in certain places where speed isn't a
          concern. We don't need to mess with this for now.
 
-[ ]Prepare Google Play Store release.
+[X]Prepare Google Play Store release.
 
-   [ ]Make new screenshots for store listing.
+   [X]Make new screenshots for store listing.
 
-      [ ]Reuse Steam screenshots. We should make the phone screenshots vertical
+      [X]Reuse Steam screenshots. We should make the phone screenshots vertical
          and the tablet screenshots horizontal.
 
-[ ]Make non-Steam MacOS package.
+[X]Make non-Steam MacOS package.
 
-   [ ]Use same build from Steam release, just without the 'steam.dat' file.
+   [X]Use same build from Steam release, just without the 'steam.dat' file.
 
-[ ]Make non-Steam Linux packages.
+[X]Make non-Steam Linux packages.
 
-   [ ]Use same build from Steam release, just without the 'steam.dat' file.
+   [X]Use same build from Steam release, just without the 'steam.dat' file.
 
-   [ ]Produce 32-bit build.
+   [X]Produce 32-bit build.
 
-      [ ]Update dependencies for 32-bit build.
+      [X]Update dependencies for 32-bit build.
 
-[ ]Make non-Steam Windows package.
+[X]Make non-Steam Windows package.
 
-   [ ]Use same build from Steam release, just without the 'steam.dat' file.
+   [X]Use same build from Steam release, just without the 'steam.dat' file.
 
 
 v1.4.3
