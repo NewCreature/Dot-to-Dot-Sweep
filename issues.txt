@@ -1,9 +1,9 @@
 v1.6
 ----
 
-[ ]Upgrade to the latest version of T3F.
+[X]Upgrade to the latest version of T3F.
 
-[ ]Use padded bitmaps for sprites to alleviate aliasing issues.
+[X]Use padded bitmaps for sprites to alleviate aliasing issues.
 
 [ ]Investigate slowdown when resuming from pause on Steam Deck.
 
