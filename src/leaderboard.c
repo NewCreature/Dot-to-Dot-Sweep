@@ -138,10 +138,10 @@ void dot_leaderboard_logic(void * data)
   {
     for(i = 0; i < T3F_MAX_TOUCHES; i++)
     {
-      if(t3f_touch[i].pressed)
+      if(t3f_touch_pressed(i))
       {
         m = true;
-        t3f_touch[i].pressed = false;
+        t3f_use_touch_press(i);
       }
     }
     if(app->controller.button)
@@ -149,15 +149,15 @@ void dot_leaderboard_logic(void * data)
       m = true;
       app->controller.button = false;
     }
-    if(t3f_key[ALLEGRO_KEY_ESCAPE])
+    if(t3f_key_pressed(ALLEGRO_KEY_ESCAPE))
     {
       m = true;
-      t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+      t3f_use_key_press(ALLEGRO_KEY_ESCAPE);
     }
-    if(t3f_key[ALLEGRO_KEY_BACK])
+    if(t3f_key_pressed(ALLEGRO_KEY_BACK))
     {
       m = true;
-      t3f_key[ALLEGRO_KEY_BACK] = 0;
+      t3f_use_key_press(ALLEGRO_KEY_BACK);
     }
     if(m && app->current_menu == DOT_MENU_LEADERBOARD_2)
     {
@@ -173,15 +173,15 @@ void dot_leaderboard_logic(void * data)
   {
     if(!dot_intro_process_menu(app, app->menu[app->current_menu]))
     {
-      if(t3f_key[ALLEGRO_KEY_ESCAPE])
+      if(t3f_key_pressed(ALLEGRO_KEY_ESCAPE))
       {
         m = true;
-        t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+        t3f_use_key_press(ALLEGRO_KEY_ESCAPE);
       }
-      if(t3f_key[ALLEGRO_KEY_BACK])
+      if(t3f_key_pressed(ALLEGRO_KEY_BACK))
       {
         m = true;
-        t3f_key[ALLEGRO_KEY_BACK] = 0;
+        t3f_use_key_press(ALLEGRO_KEY_BACK);
       }
       if(m && app->current_menu == DOT_MENU_LEADERBOARD_2)
       {
@@ -207,7 +207,7 @@ void dot_leaderboard_render(void * data)
   al_clear_to_color(app->level_color[0]);
   al_hold_bitmap_drawing(true);
   dot_bg_objects_render(data);
-  al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
+  t3f_draw_bitmap(app->bitmap[DOT_BITMAP_BG], t3f_color_white, 0, 0, 0, 0);
   dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, 32, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, "Leaderboard");
   for(i = 0; i < app->leaderboard->entries; i++)
   {
@@ -226,7 +226,7 @@ void dot_leaderboard_render(void * data)
   }
   if(!app->desktop_mode)
   {
-    t3f_render_gui(app->menu[app->current_menu]);
+    t3f_render_gui(app->menu[app->current_menu], 0);
   }
   al_hold_bitmap_drawing(false);
   dot_intro_render_split(data);

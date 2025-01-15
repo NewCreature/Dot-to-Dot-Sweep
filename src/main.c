@@ -18,14 +18,14 @@
 static bool dot_show_touch_hand = false;
 static int dot_screenshot_count = 0;
 
-static ALLEGRO_BITMAP * dot_create_scratch_bitmap(int w, int h)
+static T3F_BITMAP * dot_create_scratch_bitmap(int w, int h)
 {
 	ALLEGRO_STATE old_state;
-	ALLEGRO_BITMAP * bp;
+	T3F_BITMAP * bp;
 
 	al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS);
 	al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR | ALLEGRO_NO_PRESERVE_TEXTURE);
-	bp = al_create_bitmap(w, h);
+	bp = t3f_create_bitmap(w, h, -1, -1, 0);
 	al_restore_state(&old_state);
 
 	return bp;
@@ -40,7 +40,7 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 	{
 		case ALLEGRO_EVENT_DISPLAY_HALT_DRAWING:
 		{
-			al_destroy_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+			t3f_destroy_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
 			t3f_event_handler(event);
 			break;
 		}
@@ -137,8 +137,8 @@ void app_mouse_logic(void * data)
 
 	app->old_touch_x = app->touch_x;
 	app->old_touch_y = app->touch_y;
-	app->touch_x = t3f_mouse_x;
-	app->touch_y = t3f_mouse_y;
+	app->touch_x = t3f_get_mouse_x();
+	app->touch_y = t3f_get_mouse_y();
 }
 
 void app_touch_logic(void * data)
@@ -149,7 +149,7 @@ void app_touch_logic(void * data)
 	app->touch_id = -1;
 	for(i = 1; i < T3F_MAX_TOUCHES; i++)
 	{
-		if(t3f_touch[i].active)
+		if(t3f_touch_active(i))
 		{
 			app->touch_id = i;
 			break;
@@ -159,8 +159,8 @@ void app_touch_logic(void * data)
 	app->old_touch_y = app->touch_y;
 	if(app->touch_id > 0)
 	{
-		app->touch_x = t3f_touch[app->touch_id].x;
-		app->touch_y = t3f_touch[app->touch_id].y;
+		app->touch_x = t3f_get_touch_x(app->touch_id);
+		app->touch_y = t3f_get_touch_y(app->touch_id);
 		if(app->start_touch)
 		{
 			app->old_touch_x = app->touch_x;
@@ -191,10 +191,10 @@ void app_logic(void * data)
 	if(app->demo_file)
 	{
 		/* convert touch data to integer for demo operations */
-		touch_x = t3f_mouse_x;
-		touch_y = t3f_mouse_y;
-		t3f_touch[0].x = touch_x;
-		t3f_touch[0].y = touch_y;
+		touch_x = t3f_get_mouse_x();
+		touch_y = t3f_get_mouse_y();
+//		t3f_touch[0].x = touch_x;
+//		t3f_touch[0].y = touch_y;
 
 		/* load touch data from file if we aren't recording */
 		if(!app->demo_recording)
@@ -202,11 +202,11 @@ void app_logic(void * data)
 			frame = al_fgetc(app->demo_file);
 			if(frame)
 			{
-				t3f_touch[0].active = al_fgetc(app->demo_file);
-				t3f_touch[0].x = al_fread16le(app->demo_file);
-				t3f_touch[0].y = al_fread16le(app->demo_file);
-				t3f_mouse_x = t3f_touch[0].x;
-				t3f_mouse_y = t3f_touch[0].y;
+//				t3f_touch[0].active = al_fgetc(app->demo_file);
+//				t3f_touch[0].x = al_fread16le(app->demo_file);
+//				t3f_touch[0].y = al_fread16le(app->demo_file);
+//				t3f_mouse_x = t3f_touch[0].x;
+//				t3f_mouse_y = t3f_touch[0].y;
 			}
 			else
 			{
@@ -219,23 +219,23 @@ void app_logic(void * data)
 		else
 		{
 			al_fputc(app->demo_file, 1);
-			al_fputc(app->demo_file, t3f_touch[0].active);
+			al_fputc(app->demo_file, t3f_touch_active(0));
 			al_fwrite16le(app->demo_file, touch_x);
 			al_fwrite16le(app->demo_file, touch_y);
 		}
 	}
 
 	/* capture screenshot */
-	if(t3f_key[ALLEGRO_KEY_PRINTSCREEN] || t3f_key[ALLEGRO_KEY_TILDE] || t3f_key[104])
+	if(t3f_key_pressed(ALLEGRO_KEY_PRINTSCREEN) || t3f_key_pressed(ALLEGRO_KEY_TILDE) || t3f_key_pressed(104))
 	{
 		char buf[32];
 
 		sprintf(buf, "screen_%d.png", dot_screenshot_count);
 		al_save_bitmap(buf, al_get_backbuffer(t3f_display));
 		dot_screenshot_count++;
-		t3f_key[ALLEGRO_KEY_PRINTSCREEN] = 0;
-		t3f_key[ALLEGRO_KEY_TILDE] = 0;
-		t3f_key[104] = 0;
+		t3f_use_key_press(ALLEGRO_KEY_PRINTSCREEN);
+		t3f_use_key_press(ALLEGRO_KEY_TILDE);
+		t3f_use_key_press(104);
 	}
 
 	if(app->touch_cooldown_ticks > 0)
@@ -340,15 +340,13 @@ void app_logic(void * data)
 	}
 	if(app->reset_steam_stats)
 	{
-		if(t3f_reset_steam_stats())
+		t3f_reset_steam_stats();
+		for(i = 0; i < app->achievements->entries; i++)
 		{
-			for(i = 0; i < app->achievements->entries; i++)
-			{
-				t3f_update_achievement_progress(app->achievements, i, 0);
-				app->achievements->entry[i].store_state = 0;
-			}
-			app->reset_steam_stats = false;
+			t3f_update_achievement_progress(app->achievements, i, 0);
+			app->achievements->entry[i].store_state = 0;
 		}
+		app->reset_steam_stats = false;
 	}
 	t3f_steam_integration_logic();
 }
@@ -391,18 +389,18 @@ void app_render(void * data)
 	{
 		float ox = 0, oy = 0;
 
-		if(dot_show_touch_hand && t3f_mouse_y >= t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT)
+		if(dot_show_touch_hand && t3f_get_mouse_y() >= t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT)
 		{
 			ox = 12.0;
 			oy = -12.0;
-			t3f_draw_rotated_bitmap(app->bitmap[DOT_BITMAP_HAND], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 92, 24, t3f_mouse_x, t3f_mouse_y, 0, 0, 0);
-			al_draw_rotated_bitmap(t3f_touch[0].active ? app->bitmap[DOT_BITMAP_HAND_DOWN] : app->bitmap[DOT_BITMAP_HAND], 92, 24, t3f_mouse_x + ox, t3f_mouse_y + oy, 0, 0);
+			t3f_draw_rotated_bitmap(app->bitmap[DOT_BITMAP_HAND], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 92, 24, t3f_get_mouse_x(), t3f_get_mouse_y(), 0, 0, 0);
+			al_draw_rotated_bitmap(t3f_touch_active(0) ? app->bitmap[DOT_BITMAP_HAND_DOWN]->bitmap : app->bitmap[DOT_BITMAP_HAND]->bitmap, 92, 24, t3f_get_mouse_x() + ox, t3f_get_mouse_y() + oy, 0, 0);
 		}
 	}
 	al_hold_bitmap_drawing(false);
 }
 
-static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn, int size)
+static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn, int size, int flags)
 {
 	char buf[256];
 	int i;
@@ -410,7 +408,7 @@ static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn, int
 	for(i = size; i >= 1; i--)
 	{
 		sprintf(buf, "data/graphics/%dx/%s", i, fn);
-		t3f_load_resource((void **)&app->bitmap[bitmap], t3f_bitmap_resource_handler_proc, buf, 0, 0, 0);
+		app->bitmap[bitmap] = t3f_load_bitmap(buf, flags, false);
 		if(app->bitmap[bitmap])
 		{
 			return true;
@@ -422,7 +420,7 @@ static bool dot_load_bitmap(APP_INSTANCE * app, int bitmap, const char * fn, int
 
 static bool dot_load_font(APP_INSTANCE * app, int font, const char * fn, int size)
 {
-	t3f_load_resource((void **)&app->font[font], t3f_font_resource_handler_proc, fn, size, 0, 0);
+	app->font[font] = t3f_load_font(fn, T3F_FONT_TYPE_AUTO, size, 0, false);
 	if(!app->font[font])
 	{
 		printf("Failed to load font %d!\n", font);
@@ -482,7 +480,7 @@ static void free_graphics(APP_INSTANCE * app)
 		{
 			if(!t3f_destroy_resource(app->bitmap[i]))
 			{
-				al_destroy_bitmap(app->bitmap[i]);
+				t3f_destroy_bitmap(app->bitmap[i]);
 			}
 			app->bitmap[i] = NULL;
 		}
@@ -538,79 +536,79 @@ static bool load_graphics(APP_INSTANCE * app)
 	}
 
 	/* load graphics set */
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_RED, "ball_red.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_RED, "ball_red.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_GREEN, "ball_green.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_GREEN, "ball_green.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_BLUE, "ball_blue.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_BLUE, "ball_blue.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_PURPLE, "ball_purple.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_PURPLE, "ball_purple.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_YELLOW, "ball_yellow.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_YELLOW, "ball_yellow.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_ORANGE, "ball_orange.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_ORANGE, "ball_orange.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_BLACK, "ball_black.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_BLACK, "ball_black.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_EYES, "ball_eyes.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BALL_EYES, "ball_eyes.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_COMBO, "combo.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_COMBO, "combo.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_PARTICLE, "particle.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_PARTICLE, "particle.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_BG, "emo_bg.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_BG, "emo_bg.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_FG, "emo_fg.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_FG, "emo_fg.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_NORMAL, "emo_normal.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_NORMAL, "emo_normal.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_BLINK, "emo_blink.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_BLINK, "emo_blink.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_WOAH, "emo_woah.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_WOAH, "emo_woah.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_DEAD, "emo_dead.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_EMO_DEAD, "emo_dead.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_TARGET, "target.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_TARGET, "target.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_BG, "bg.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_BG, "bg.png", app->graphics_size_multiplier, 0))
 	{
 		goto fail;
 	}
-	if(!dot_load_bitmap(app, DOT_BITMAP_LOGO, "logo.png", app->graphics_size_multiplier))
+	if(!dot_load_bitmap(app, DOT_BITMAP_LOGO, "logo.png", app->graphics_size_multiplier, 0))
 	{
 		goto fail;
 	}
@@ -629,9 +627,9 @@ static bool load_graphics(APP_INSTANCE * app)
 	}
 	for(i = 0; i < DOT_BITMAP_ATLAS_BOUNDARY; i++)
 	{
-		if(app->bitmap[i])
+		if(app->bitmap[i] && app->bitmap[i]->bitmap)
 		{
-			t3f_add_bitmap_to_atlas(app->atlas, &app->bitmap[i], T3F_ATLAS_SPRITE);
+			t3f_add_bitmap_to_atlas(app->atlas, &app->bitmap[i]->bitmap, T3F_ATLAS_SPRITE);
 		}
 	}
 
@@ -921,11 +919,11 @@ bool app_process_arguments(APP_INSTANCE * app, int argc, char * argv[])
 			}
 			else
 			{
-				if(!dot_load_bitmap(app, DOT_BITMAP_HAND, "hand.png", 1))
+				if(!dot_load_bitmap(app, DOT_BITMAP_HAND, "hand.png", 1, T3F_BITMAP_FLAG_PADDED))
 				{
 					return false;
 				}
-				if(!dot_load_bitmap(app, DOT_BITMAP_HAND_DOWN, "hand_down.png", 1))
+				if(!dot_load_bitmap(app, DOT_BITMAP_HAND_DOWN, "hand_down.png", 1, T3F_BITMAP_FLAG_PADDED))
 				{
 					return false;
 				}
@@ -964,11 +962,11 @@ bool app_process_arguments(APP_INSTANCE * app, int argc, char * argv[])
 			}
 			else
 			{
-				if(!dot_load_bitmap(app, DOT_BITMAP_HAND, "hand.png", 1))
+				if(!dot_load_bitmap(app, DOT_BITMAP_HAND, "hand.png", 1, T3F_BITMAP_FLAG_PADDED))
 				{
 					return false;
 				}
-				if(!dot_load_bitmap(app, DOT_BITMAP_HAND_DOWN, "hand_down.png", 1))
+				if(!dot_load_bitmap(app, DOT_BITMAP_HAND_DOWN, "hand_down.png", 1, T3F_BITMAP_FLAG_PADDED))
 				{
 					return false;
 				}
@@ -1048,7 +1046,7 @@ static bool create_particle_lists(APP_INSTANCE * app)
 	T3F_FONT * font = NULL;;
 	ALLEGRO_BITMAP * scratch = NULL;
 
-	font = t3f_load_resource((void **)&font, t3f_font_resource_handler_proc, "data/fonts/kongtext_1x.ini", 16, 0, 0);
+	font = t3f_load_font("data/fonts/kongtext_1x.ini", T3F_FONT_TYPE_AUTO, 16, 0, false);
 	if(!font)
 	{
 		goto fail;
@@ -1336,7 +1334,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	/* create color tables */
 	for(i = 0; i <= DOT_BITMAP_BALL_BLACK; i++)
 	{
-		app->dot_color[i] = dot_get_ball_color(app->bitmap[i]);
+		app->dot_color[i] = dot_get_ball_color(app->bitmap[i]->bitmap);
 	}
 	app->level_color[0] = DOT_LEVEL_COLOR_0;
 	app->level_color[1] = DOT_LEVEL_COLOR_1;

@@ -166,6 +166,7 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 		{
 			app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, atoi(val));
 		}
+		t3f_clear_touch_state();
 		app->state = DOT_STATE_LEADERBOARD;
 		app->current_menu = DOT_MENU_LEADERBOARD;
 	}
@@ -225,6 +226,7 @@ int dot_menu_proc_privacy(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	remember_element(app);
+	t3f_clear_touch_state();
 	app->current_menu = DOT_MENU_PRIVACY;
 	app->state = DOT_STATE_PRIVACY;
 	return 1;
@@ -336,6 +338,8 @@ int dot_menu_proc_leaderboard_back(void * data, int i, void * pp)
 	t3net_destroy_leaderboard(app->leaderboard);
 	app->leaderboard = NULL;
 	dot_intro_setup(data);
+	t3f_clear_mouse_state();
+	t3f_clear_touch_state();
 	app->state = DOT_STATE_INTRO;
 	app->current_menu = DOT_MENU_MAIN;
 	recall_element(app);
@@ -348,6 +352,8 @@ int dot_menu_proc_privacy_back(void * data, int i, void * pp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
 	dot_intro_setup(data);
+	t3f_clear_mouse_state();
+	t3f_clear_touch_state();
 	app->state = DOT_STATE_INTRO;
 	app->current_menu = DOT_MENU_MAIN;
 	recall_element(app);
@@ -383,7 +389,7 @@ int dot_menu_proc_pause_resume(void * data, int i, void * pp)
 	/* allow touch that resumes game to continue to be used to play */
 	if(app->game.pause_state == DOT_GAME_STATE_START)
 	{
-		t3f_clear_touch_data();
+		t3f_clear_touch_state();
 	}
 	else
 	{
@@ -447,21 +453,21 @@ bool dot_intro_process_menu(void * data, T3F_GUI * mp)
 
 	/* only process GUI using alternate means if default processing
 	   doesn't result in a callback */
-	ret = t3f_process_gui(mp, app);
+	ret = t3f_process_gui(mp, 0, app);
 	if(!ret && app->input_type == DOT_INPUT_CONTROLLER)
 	{
 		if(app->controller.axis_y < 0.0 && app->controller.axis_y_pressed)
 		{
 			t3f_select_previous_gui_element(mp);
-			t3f_key[ALLEGRO_KEY_UP] = 0;
-			t3f_key[ALLEGRO_KEY_W] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_UP);
+			t3f_use_key_press(ALLEGRO_KEY_W);
 			app->controller.axis_y_pressed = false;
 		}
 		if(app->controller.axis_y > 0.0 && app->controller.axis_y_pressed)
 		{
 			t3f_select_next_gui_element(mp);
-			t3f_key[ALLEGRO_KEY_DOWN] = 0;
-			t3f_key[ALLEGRO_KEY_S] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_DOWN);
+			t3f_use_key_press(ALLEGRO_KEY_S);
 			app->controller.axis_y_pressed = false;
 		}
 		if(mp->hover_element < 0)
@@ -636,7 +642,7 @@ void dot_intro_setup(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	t3f_clear_touch_data();
+	t3f_clear_touch_state();
 	app->logo_ox = 0;
 	app->intro_state = DOT_INTRO_STATE_LOGO;
 	app->credits_ox = t3f_virtual_display_width;
@@ -757,7 +763,7 @@ void dot_intro_logic(void * data)
 	app->tick++;
 	if(app->menu_showing)
 	{
-		if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
+		if(t3f_key_pressed(ALLEGRO_KEY_ESCAPE) || t3f_key_pressed(ALLEGRO_KEY_BACK))
 		{
 			if(app->desktop_mode)
 			{
@@ -786,8 +792,8 @@ void dot_intro_logic(void * data)
 					app->current_menu = DOT_MENU_MAIN;
 				}
 			}
-			t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-			t3f_key[ALLEGRO_KEY_BACK] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_ESCAPE);
+			t3f_use_key_press(ALLEGRO_KEY_BACK);
 		}
 		else
 		{
@@ -796,18 +802,19 @@ void dot_intro_logic(void * data)
 	}
 	else
 	{
-		if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
+		if(t3f_key_pressed(ALLEGRO_KEY_ESCAPE) || t3f_key_pressed(ALLEGRO_KEY_BACK))
 		{
 			t3f_exit();
-			t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-			t3f_key[ALLEGRO_KEY_BACK] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_ESCAPE);
+			t3f_use_key_press(ALLEGRO_KEY_BACK);
 		}
 		else
 		{
-			if(app->touch_id >= 0 && t3f_touch[app->touch_id].pressed)
+			if(app->touch_id >= 0 && t3f_touch_pressed(app->touch_id))
 			{
 				m = true;
-				t3f_touch[app->touch_id].pressed = false;
+				t3f_use_mouse_button_press(0);
+				t3f_use_touch_press(app->touch_id);
 			}
 			if(app->controller.button)
 			{
@@ -861,12 +868,12 @@ void dot_intro_render(void * data)
 	al_clear_to_color(app->level_color[0]);
 	al_hold_bitmap_drawing(true);
 	dot_bg_objects_render(data);
-	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
+	t3f_draw_bitmap(app->bitmap[DOT_BITMAP_BG], t3f_color_white, 0, 0, 0, 0);
 	if(!app->desktop_mode || !app->menu_showing)
 	{
-		w = al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]) / app->graphics_size_multiplier;
-		h = al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]) / app->graphics_size_multiplier;
-		al_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_LOGO], 0, 0, al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]), al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]), DOT_GAME_PLAYFIELD_WIDTH / 2 - w / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT / 2 - h / 2, w, h, 0);
+		w = al_get_bitmap_width(app->bitmap[DOT_BITMAP_LOGO]->bitmap) / app->graphics_size_multiplier;
+		h = al_get_bitmap_height(app->bitmap[DOT_BITMAP_LOGO]->bitmap) / app->graphics_size_multiplier;
+		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_LOGO], t3f_color_white, DOT_GAME_PLAYFIELD_WIDTH / 2 - w / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT / 2 - h / 2, 0, w, h, 0);
 		dot_credits_render(data, app->credits_ox);
 		render_copyright_message(data, t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2 - t3f_get_text_width(app->font[DOT_FONT_14], T3F_APP_COPYRIGHT) / 2 + app->logo_ox, DOT_GAME_PLAYFIELD_HEIGHT - t3f_get_font_line_height(app->font[DOT_FONT_16]) * 2, DOT_SHADOW_OX, DOT_SHADOW_OY);
 	}
@@ -875,7 +882,7 @@ void dot_intro_render(void * data)
 	if(app->menu_showing)
 	{
 		al_hold_bitmap_drawing(true);
-		t3f_render_gui(app->menu[app->current_menu]);
+		t3f_render_gui(app->menu[app->current_menu], 0);
 		if(app->entering_name)
 		{
 			if((app->tick / 15) % 2)

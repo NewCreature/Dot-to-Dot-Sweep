@@ -109,18 +109,13 @@ void dot_credits_render(void * data, float ox)
     float pos_y;
     float pos_ox;
     int ball_size = 32;
-    int w, h;
 
 	al_hold_bitmap_drawing(true);
 	dot_bg_objects_render(data);
 	for(i = 0; i < 540 / 32; i++)
 	{
-        w = al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_RED + i % 6]);
-        h = al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_RED + i % 6]);
-		al_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + i % 6], 0, 0, w, h, i * ball_size + 18 + ox, sin((float)(i * 4 + app->tick) / 10.0) * ball_size + ball_size + 12, ball_size, ball_size, 0);
-        w = al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_RED + (i + 3) % 6]);
-        h = al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_RED + (i + 3) % 6]);
-		al_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + (i + 3) % 6], 0, 0, w, h, i * 32 + 18 + ox, cos((float)(i * 4 + app->tick) / 10.0) * 32 + DOT_GAME_PLAYFIELD_HEIGHT - 32 - 32 - 12 - 1, ball_size, ball_size, 0);
+		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + i % 6], t3f_color_white, i * ball_size + 18 + ox, sin((float)(i * 4 + app->tick) / 10.0) * ball_size + ball_size + 12, 0, ball_size, ball_size, 0);
+		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + (i + 3) % 6], t3f_color_white, i * 32 + 18 + ox, cos((float)(i * 4 + app->tick) / 10.0) * 32 + DOT_GAME_PLAYFIELD_HEIGHT - 32 - 32 - 12 - 1, 0, ball_size, ball_size, 0);
     }
     al_hold_bitmap_drawing(false);
 

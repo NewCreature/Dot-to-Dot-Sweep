@@ -31,14 +31,14 @@ void dot_enter_text(char * output, int size)
 	strcpy(dot_initial_entry_text, dot_entry_text);
 	dot_entry_text_max = size;
 	dot_entry_text_pos = strlen(dot_entry_text);
-	t3f_clear_keys();
+	t3f_clear_key_states();
 }
 
 int dot_text_entry_logic(void)
 {
 	char k;
 
-	k = t3f_read_key(0);
+	k = t3f_get_char(0);
 
 	if(k > 0)
 	{
@@ -48,7 +48,7 @@ int dot_text_entry_logic(void)
 			case 0xD:
 			{
 				dot_entry_text[dot_entry_text_pos] = '\0';
-				t3f_key[ALLEGRO_KEY_ENTER] = 0;
+				t3f_use_key_press(ALLEGRO_KEY_ENTER);
 				return 1;
 			}
 

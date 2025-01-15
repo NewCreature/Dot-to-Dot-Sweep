@@ -8,7 +8,7 @@ typedef struct
 	float vx, vy, vz;
 	float gz;
 	float size;
-	ALLEGRO_BITMAP * bp;
+	T3F_BITMAP * bp;
 	ALLEGRO_COLOR color;
 	int life;
 	int start_life;
@@ -16,8 +16,8 @@ typedef struct
 
 } DOT_PARTICLE;
 
-void dot_create_particle(DOT_PARTICLE * pp, float x, float y, float z, float vx, float vy, float vz, float gz, float size, int life, ALLEGRO_BITMAP * bp, ALLEGRO_COLOR color);
+void dot_create_particle(DOT_PARTICLE * pp, float x, float y, float z, float vx, float vy, float vz, float gz, float size, int life, T3F_BITMAP * bp, ALLEGRO_COLOR color);
 void dot_particle_logic(DOT_PARTICLE * pp);
-void dot_particle_render(DOT_PARTICLE * pp, ALLEGRO_BITMAP * particle_bitmap);
+void dot_particle_render(DOT_PARTICLE * pp, T3F_BITMAP * particle_bitmap);
 
 #endif

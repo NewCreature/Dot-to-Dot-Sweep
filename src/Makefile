@@ -82,20 +82,27 @@ mac_universal_bundle:
 mac_bundle:
 	$(MAKE) -f ../scripts/makefile.macos -I ../scripts mac_bundle
 
-iphone_package:
-	$(MAKE) -f ../scripts/makefile.iphone -I ../scripts iphone_package
+ios_bundle:
+	$(MAKE) -f ../scripts/makefile.iphone -I ../scripts ios_bundle
 
 flatpak:
 	$(MAKE) -f ../scripts/makefile.flatpak -I ../scripts flatpak
 
-demo:
-	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts demo
+repackage_root:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts repackage_root
 
-demo_gp:
-	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts demo_gp
+repackage:
+ifdef REPACKAGE_TARGET
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts repackage_$(REPACKAGE_TARGET)
+else
+	@echo Usage: make repackage REPACKAGE_TARGET=target
+endif
+
+windows_icon:
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts ../icons/windows_icon.ico
 
 makeicon:
-	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts ../windows/makeicon
+	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts ../tools/makeicon
 
 reset_config:
 	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts reset_config
@@ -117,6 +124,9 @@ data_package:
 
 steam_packages:
 	$(MAKE) -f ../scripts/makefile.$(SYSTEM) -I ../scripts steam_packages CL_CFLAGS=-DT3F_ENABLE_STEAM_INTEGRATION CL_STEAM_BUILD=1
+
+steam_test:
+	$(MAKE) CL_CFLAGS=-DT3F_ENABLE_STEAM_INTEGRATION CL_STEAM_BUILD=1
 
 help:
 	@echo "\nRun 'make' without arguments to build en executable for the current plaform."

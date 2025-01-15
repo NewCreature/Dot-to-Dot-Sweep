@@ -191,7 +191,7 @@ void dot_game_initialize(void * data, bool demo_seed, int mode)
 	}
 	app->game.tick = 0;
 	app->game.extra_life_tick = 0;
-	t3f_clear_touch_data();
+	t3f_clear_touch_state();
 	compute_bg_color(app);
 	app->state = DOT_STATE_GAME;
 }
@@ -632,7 +632,7 @@ void dot_game_check_player_collisions(void * data)
 					}
 					if(app->touch_id >= 0)
 					{
-						t3f_clear_touch_data();
+						t3f_clear_touch_state();
 					}
 
 					/* change ball color to match the ball that is hit unless it is black */
@@ -707,46 +707,46 @@ static void confine_mouse(APP_INSTANCE * app)
 	bool update = false;
 
 	/* check left edge */
-	if(t3f_mouse_x < app->game.player.ball.r)
+	if(t3f_get_mouse_x() < app->game.player.ball.r)
 	{
-		if(t3f_mouse_x > app->game.player.old_mouse_x)
+		if(t3f_get_mouse_x() > app->game.player.old_mouse_x)
 		{
-			new_x = app->game.player.ball.x + (t3f_mouse_x - app->game.player.old_mouse_x);
+			new_x = app->game.player.ball.x + (t3f_get_mouse_x() - app->game.player.old_mouse_x);
 			update = true;
 		}
 	}
 
 	/* check right edge */
-	else if(t3f_mouse_x + app->game.player.ball.r > DOT_GAME_PLAYFIELD_WIDTH + 0.5)
+	else if(t3f_get_mouse_x() + app->game.player.ball.r > DOT_GAME_PLAYFIELD_WIDTH + 0.5)
 	{
-		if(t3f_mouse_x < app->game.player.old_mouse_x)
+		if(t3f_get_mouse_x() < app->game.player.old_mouse_x)
 		{
-			new_x = app->game.player.ball.x - (app->game.player.old_mouse_x - t3f_mouse_x);
+			new_x = app->game.player.ball.x - (app->game.player.old_mouse_x - t3f_get_mouse_x());
 			update = true;
 		}
 	}
 
 	/* check top edge */
-	if(t3f_mouse_y + 0.5 < app->game.player.ball.r)
+	if(t3f_get_mouse_y() + 0.5 < app->game.player.ball.r)
 	{
-		if(t3f_mouse_y > app->game.player.old_mouse_y)
+		if(t3f_get_mouse_y() > app->game.player.old_mouse_y)
 		{
-			new_y = app->game.player.ball.y + (t3f_mouse_y - app->game.player.old_mouse_y);
+			new_y = app->game.player.ball.y + (t3f_get_mouse_y() - app->game.player.old_mouse_y);
 			update = true;
 		}
 	}
 
 	/* check bottom edge */
-	else if(t3f_mouse_y + app->game.player.ball.r > DOT_GAME_PLAYFIELD_HEIGHT + 0.5)
+	else if(t3f_get_mouse_y() + app->game.player.ball.r > DOT_GAME_PLAYFIELD_HEIGHT + 0.5)
 	{
-		if(t3f_mouse_y < app->game.player.old_mouse_y)
+		if(t3f_get_mouse_y() < app->game.player.old_mouse_y)
 		{
-			new_y = app->game.player.ball.y - (app->game.player.old_mouse_y - t3f_mouse_y);
+			new_y = app->game.player.ball.y - (app->game.player.old_mouse_y - t3f_get_mouse_y());
 			update = true;
 		}
 	}
-	app->game.player.old_mouse_x = t3f_mouse_x;
-	app->game.player.old_mouse_y = t3f_mouse_y;
+	app->game.player.old_mouse_x = t3f_get_mouse_x();
+	app->game.player.old_mouse_y = t3f_get_mouse_y();
 	if(update)
 	{
 		t3f_set_mouse_xy(new_x, new_y);
@@ -969,7 +969,7 @@ static void open_pause_menu(APP_INSTANCE * app, bool convert)
 	{
 		app->game.pause_state = app->game.state;
 	}
-	t3f_clear_touch_data();
+	t3f_clear_touch_state();
 	app->game.state = DOT_GAME_STATE_PAUSE_MENU;
 	t3f_reset_gui_input(app->menu[DOT_MENU_PAUSE]);
 	if(app->input_type == DOT_INPUT_CONTROLLER)
@@ -1004,7 +1004,7 @@ static void start_turn(void * data, float x, float y, bool peg_mouse, int touch_
 	}
 	if(touch_id >= 0)
 	{
-		t3f_touch[touch_id].pressed = false;
+		t3f_use_touch_press(touch_id);
 	}
 	app->controller.button = false;
 }
@@ -1044,11 +1044,11 @@ void dot_game_logic(void * data)
 		case DOT_GAME_STATE_START:
 		{
 			app->game.state_tick++;
-			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
+			if(t3f_key_pressed(ALLEGRO_KEY_ESCAPE) || t3f_key_pressed(ALLEGRO_KEY_BACK))
 			{
 				open_pause_menu(app, false);
-				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-				t3f_key[ALLEGRO_KEY_BACK] = 0;
+				t3f_use_key_press(ALLEGRO_KEY_ESCAPE);
+				t3f_use_key_press(ALLEGRO_KEY_BACK);
 			}
 			else
 			{
@@ -1058,14 +1058,14 @@ void dot_game_logic(void * data)
 					{
 						if(app->desktop_mode)
 						{
-							if(t3f_touch[0].pressed && app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
+							if(t3f_touch_pressed(0) && app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
 							{
-								start_turn(app, t3f_mouse_x, t3f_mouse_y, false, 0, true);
+								start_turn(app, t3f_get_mouse_x(), t3f_get_mouse_y(), false, 0, true);
 							}
 						}
 						else
 						{
-							if(t3f_touch[0].pressed)
+							if(t3f_touch_pressed(0))
 							{
 								start_turn(app, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, true, 0, true);
 							}
@@ -1076,7 +1076,7 @@ void dot_game_logic(void * data)
 					{
 						if(app->touch_id > 0)
 						{
-							if(t3f_touch[app->touch_id].pressed)
+							if(t3f_touch_pressed(app->touch_id))
 							{
 								start_turn(app, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, false, app->touch_id, true);
 							}
@@ -1117,11 +1117,11 @@ void dot_game_logic(void * data)
 				text_color = t3f_color_white;
 			}
 			app->menu[DOT_MENU_PAUSE]->element[0].color = text_color;
-			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
+			if(t3f_key_pressed(ALLEGRO_KEY_ESCAPE) || t3f_key_pressed(ALLEGRO_KEY_BACK))
 			{
 				app->game.state = app->game.pause_state;
-				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-				t3f_key[ALLEGRO_KEY_BACK] = 0;
+				t3f_use_key_press(ALLEGRO_KEY_ESCAPE);
+				t3f_use_key_press(ALLEGRO_KEY_BACK);
 			}
 			else
 			{
@@ -1150,17 +1150,17 @@ void dot_game_logic(void * data)
 		default:
 		{
 			dot_enable_mouse_cursor(false);
-			if((app->touch_id == 0 && t3f_touch[app->touch_id].pressed) || t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || app->controller.button || app->controller.current_joy_disconnected)
+			if((app->touch_id == 0 && t3f_touch_pressed(app->touch_id)) || t3f_key_pressed(ALLEGRO_KEY_ESCAPE) || t3f_key_pressed(ALLEGRO_KEY_BACK) || app->controller.button || app->controller.current_joy_disconnected)
 			{
 				if(app->input_type == DOT_INPUT_MOUSE)
 				{
 					t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
 					dot_enable_mouse_cursor(true);
-					t3f_touch[app->touch_id].pressed = false;
+					t3f_use_touch_press(app->touch_id);
 				}
 				open_pause_menu(app, false);
-				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-				t3f_key[ALLEGRO_KEY_BACK] = 0;
+				t3f_use_key_press(ALLEGRO_KEY_ESCAPE);
+				t3f_use_key_press(ALLEGRO_KEY_BACK);
 				app->controller.button = false;
 			}
 			/* handle shield logic */
@@ -1210,7 +1210,7 @@ void dot_game_logic(void * data)
 						dot_game_create_splash_effect(data, app->game.ball[i].x, app->game.ball[i].y, app->game.ball[i].r, app->dot_color[app->game.ball[i].type]);
 					}
 				}
-				t3f_clear_touch_data();
+				t3f_clear_touch_state();
 				dot_enable_mouse_cursor(true);
 				app->game.old_bg_color = app->game.bg_color;
 				dot_game_setup_level(data, app->game.level + 1);
@@ -1302,7 +1302,7 @@ static void dot_create_touch_start_effect(void * data)
 		al_hold_bitmap_drawing(false);
 	}
 	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM | ALLEGRO_STATE_BLENDER);
-	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]->bitmap);
 	al_identity_transform(&identity);
 	al_use_transform(&identity);
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ONE, ALLEGRO_INVERSE_ALPHA);
@@ -1363,7 +1363,7 @@ void dot_game_render(void * data)
 	al_clear_to_color(app->game.bg_color);
 	al_hold_bitmap_drawing(true);
 	dot_bg_objects_render(data);
-	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
+	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG]->bitmap, 0, 0, 0);
 	if(app->game.combo)
 	{
 		s = app->game.player.ball.r * 2.0 + 128.0 - c * 128.0;
@@ -1403,10 +1403,10 @@ void dot_game_render(void * data)
 	}
 	if(app->game.player.ball.active)
 	{
-		cx = (float)(al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2);
-		cy = (float)(al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]) / 2);
-		ecx = (float)(al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_EYES]) / 2);
-		ecy = (float)(al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_EYES]) / 2);
+		cx = (float)(al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]->bitmap) / 2);
+		cy = (float)(al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type]->bitmap) / 2);
+		ecx = (float)(al_get_bitmap_width(app->bitmap[DOT_BITMAP_BALL_EYES]->bitmap) / 2);
+		ecy = (float)(al_get_bitmap_height(app->bitmap[DOT_BITMAP_BALL_EYES]->bitmap) / 2);
 		if(app->game.state != DOT_GAME_STATE_START)
 		{
 			t3f_draw_scaled_rotated_bitmap(app->bitmap[DOT_BITMAP_BALL_RED + app->game.player.ball.type], t3f_color_white, cx, cy, app->game.player.ball.x, app->game.player.ball.y, app->game.player.ball.z, 0.0, app->game.player.ball.r / cx, app->game.player.ball.r / cy, 0);
@@ -1428,7 +1428,7 @@ void dot_game_render(void * data)
 	{
 		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width + 0.5, t3f_virtual_display_height + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_hold_bitmap_drawing(true);
-		t3f_render_gui(app->menu[DOT_MENU_PAUSE]);
+		t3f_render_gui(app->menu[DOT_MENU_PAUSE], 0);
 	}
 	else if(app->game.state == DOT_GAME_STATE_START)
 	{
@@ -1442,7 +1442,7 @@ void dot_game_render(void * data)
 		{
 			t3f_set_clipping_rectangle(0, 0, DOT_GAME_PLAYFIELD_WIDTH, DOT_GAME_PLAYFIELD_HEIGHT);
 		}
-		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, touch_effect_y, 0.0, DOT_GAME_PLAYFIELD_WIDTH + 0.5, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
+		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, touch_effect_y, 0.0, DOT_GAME_PLAYFIELD_WIDTH + 0.5, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]->bitmap), 0);
 		if(app->desktop_mode)
 		{
 			al_hold_bitmap_drawing(false);

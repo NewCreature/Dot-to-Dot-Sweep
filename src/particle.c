@@ -2,7 +2,7 @@
 #include "t3f/draw.h"
 #include "particle.h"
 
-void dot_create_particle(DOT_PARTICLE * pp, float x, float y, float z, float vx, float vy, float vz, float gz, float size, int life, ALLEGRO_BITMAP * bp, ALLEGRO_COLOR color)
+void dot_create_particle(DOT_PARTICLE * pp, float x, float y, float z, float vx, float vy, float vz, float gz, float size, int life, T3F_BITMAP * bp, ALLEGRO_COLOR color)
 {
 	pp->x = x;
 	pp->y = y;
@@ -36,7 +36,7 @@ void dot_particle_logic(DOT_PARTICLE * pp)
 	}
 }
 
-void dot_particle_render(DOT_PARTICLE * pp, ALLEGRO_BITMAP * particle_bitmap)
+void dot_particle_render(DOT_PARTICLE * pp, T3F_BITMAP * particle_bitmap)
 {
 	float r, g, b, a, ca;
 	ALLEGRO_COLOR c;
@@ -44,5 +44,5 @@ void dot_particle_render(DOT_PARTICLE * pp, ALLEGRO_BITMAP * particle_bitmap)
 	al_unmap_rgba_f(pp->color, &r, &g, &b, &a);
 	ca = a * ((float)pp->life / (float)pp->start_life);
 	c = al_map_rgba_f(r * ca, g * ca, b * ca, ca);
-	t3f_draw_scaled_bitmap(particle_bitmap, c, pp->x - al_get_bitmap_width(particle_bitmap) / 2, pp->y - al_get_bitmap_height(particle_bitmap) / 2, pp->z, pp->size, pp->size, 0);
+	t3f_draw_scaled_bitmap(particle_bitmap, c, pp->x - al_get_bitmap_width(particle_bitmap->bitmap) / 2, pp->y - al_get_bitmap_height(particle_bitmap->bitmap) / 2, pp->z, pp->size, pp->size, 0);
 }

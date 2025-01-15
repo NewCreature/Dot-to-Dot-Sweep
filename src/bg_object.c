@@ -61,7 +61,7 @@ static void dot_create_bg_object_effect(void * data)
 		al_hold_bitmap_drawing(false);
 	}
 	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP | ALLEGRO_STATE_TRANSFORM);
-	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]);
+	al_set_target_bitmap(app->bitmap[DOT_BITMAP_SCRATCH]->bitmap);
 	al_identity_transform(&identity);
 	al_use_transform(&identity);
 	al_set_clipping_rectangle(0, 0, 512, 512);
@@ -83,5 +83,5 @@ void dot_bg_objects_render(void * data)
     APP_INSTANCE * app = (APP_INSTANCE *)data;
 
     dot_create_bg_object_effect(data);
-	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.05), 0, 0, 0.0, DOT_GAME_PLAYFIELD_WIDTH, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]), 0);
+	t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.05), 0, 0, 0.0, DOT_GAME_PLAYFIELD_WIDTH, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]->bitmap), 0);
 }

@@ -43,17 +43,17 @@ void dot_privacy_logic(void * data)
 	{
 		for(i = 0; i < T3F_MAX_TOUCHES; i++)
 		{
-			if(t3f_touch[i].pressed)
+			if(t3f_touch_pressed(i))
 			{
 				m = true;
-				t3f_touch[i].pressed = false;
+				t3f_use_touch_press(i);
 			}
 		}
-		if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || m || app->controller.button)
+		if(t3f_key_pressed(ALLEGRO_KEY_ESCAPE) || t3f_key_pressed(ALLEGRO_KEY_BACK) || m || app->controller.button)
 		{
 			dot_menu_proc_privacy_back(data, 0, NULL);
-			t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-			t3f_key[ALLEGRO_KEY_BACK] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_ESCAPE);
+			t3f_use_key_press(ALLEGRO_KEY_BACK);
 			app->controller.button = false;
 		}
 	}
@@ -61,21 +61,19 @@ void dot_privacy_logic(void * data)
 	{
 		if(!dot_intro_process_menu(app, app->menu[app->current_menu]))
 		{
-			if(t3f_key[ALLEGRO_KEY_ESCAPE])
+			if(t3f_key_pressed(ALLEGRO_KEY_ESCAPE))
 			{
 				m = true;
-				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+				t3f_use_key_press(ALLEGRO_KEY_ESCAPE);
 			}
-			if(t3f_key[ALLEGRO_KEY_BACK])
+			if(t3f_key_pressed(ALLEGRO_KEY_BACK))
 			{
 				m = true;
-				t3f_key[ALLEGRO_KEY_BACK] = 0;
+				t3f_use_key_press(ALLEGRO_KEY_BACK);
 			}
 			if(m)
 			{
 				dot_menu_proc_privacy_back(data, 0, NULL);
-				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-				t3f_key[ALLEGRO_KEY_BACK] = 0;
 				app->controller.button = false;
 			}
 		}
@@ -91,7 +89,7 @@ void dot_privacy_render(void * data)
 	al_clear_to_color(app->level_color[0]);
 	al_hold_bitmap_drawing(true);
 	dot_bg_objects_render(data);
-	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG], 0, 0, 0);
+	t3f_draw_bitmap(app->bitmap[DOT_BITMAP_BG], t3f_color_white, 0, 0, 0, 0);
 	for(i = 0; i < 128; i++)
 	{
 		if(privacy_text[i])
@@ -105,7 +103,7 @@ void dot_privacy_render(void * data)
 	}
 	if(!app->desktop_mode)
 	{
-		t3f_render_gui(app->menu[app->current_menu]);
+		t3f_render_gui(app->menu[app->current_menu], 0);
 	}
 	al_hold_bitmap_drawing(false);
 	dot_intro_render_split(data);

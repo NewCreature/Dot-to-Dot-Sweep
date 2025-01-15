@@ -96,27 +96,27 @@ void dot_read_input(DOT_INPUT_DATA * ip)
   ip->button = false;
 
   /* read keyboard */
-  if(t3f_key[ALLEGRO_KEY_UP] || t3f_key[ALLEGRO_KEY_W])
+  if(t3f_key_held(ALLEGRO_KEY_UP) || t3f_key_held(ALLEGRO_KEY_W))
   {
     ip->axis_y = -1.0;
     ip->axis_y_pressed = true;
   }
-  if(t3f_key[ALLEGRO_KEY_DOWN] || t3f_key[ALLEGRO_KEY_S])
+  if(t3f_key_held(ALLEGRO_KEY_DOWN) || t3f_key_held(ALLEGRO_KEY_S))
   {
     ip->axis_y = 1.0;
     ip->axis_y_pressed = true;
   }
-  if(t3f_key[ALLEGRO_KEY_LEFT] || t3f_key[ALLEGRO_KEY_A])
+  if(t3f_key_held(ALLEGRO_KEY_LEFT) || t3f_key_held(ALLEGRO_KEY_A))
   {
     ip->axis_x = -1.0;
     ip->axis_x_pressed = true;
   }
-  if(t3f_key[ALLEGRO_KEY_RIGHT] || t3f_key[ALLEGRO_KEY_D])
+  if(t3f_key_held(ALLEGRO_KEY_RIGHT) || t3f_key_held(ALLEGRO_KEY_D))
   {
     ip->axis_x = 1.0;
     ip->axis_x_pressed = true;
   }
-  for(i = 0; i < ALLEGRO_KEY_MAX; i++)
+  for(i = 1; i < ALLEGRO_KEY_MAX; i++)
   {
     switch(i)
     {
@@ -141,20 +141,20 @@ void dot_read_input(DOT_INPUT_DATA * ip)
         case ALLEGRO_KEY_LSHIFT:
         case ALLEGRO_KEY_RSHIFT:
         {
-          if(t3f_key[i])
+          if(t3f_key_pressed(i))
           {
             ip->button = true;
-            t3f_key[i] = 0;
+            t3f_use_key_press(i);
           }
           break;
         }
       #endif
       default:
       {
-        if(t3f_key[i])
+        if(t3f_key_pressed(i))
         {
           ip->button = true;
-          t3f_key[i] = 0;
+          t3f_use_key_press(i);
           i = ALLEGRO_KEY_MAX;
         }
         break;
