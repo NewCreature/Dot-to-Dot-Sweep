@@ -9,7 +9,7 @@ v1.6
 
 [ ]Use asynchronous object loader for interacting with leaderboards.
 
-[ ]Make standalone release use FLOSS licensing.
+[X]Make standalone release use FLOSS licensing.
 
 
 Standalone Release Checklist
