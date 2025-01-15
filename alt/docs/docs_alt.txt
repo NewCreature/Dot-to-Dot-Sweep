@@ -1,0 +1,22 @@
+T Cubed Framework Alternate Documentation Info
+----------------------------------------------
+
+For developers using T Cubed Framework to build applications, the build system
+contains mechanisms for repackaging the source code tree with alternate
+documentation.
+
+By default, the 'repackage' target will copy the entire source tree, leaving
+the documentation intact. For some applications it might be desirable to
+provide multiple packages using different licenses. For instance, if your game
+is commercial software but you provide a demo version you want to license under
+an open source license.
+
+You can put the alternative documents in the 'docs_alt' folder and set the
+'APP_REPACKAGE_DOCS' variable to point to the alternate documents and they will
+be copied to the repackaged source tree, overwriting the files in 'docs' if
+they exist. For example:
+
+APP_REPACKAGE_DOCS = ../docs_alt/floss/*
+
+This setting will copy all the files in that folder to the 'docs' folder,
+effectively relicensing the software when building the 'repackage' target.

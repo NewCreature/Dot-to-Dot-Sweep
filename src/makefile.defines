@@ -109,3 +109,28 @@ DEBIAN_DEPENDS = libc6
 DEBIAN_MAINTAINER = Todd\ Cope\ \<todd\@tcubedsoftware.com\>
 DEBIAN_DESCRIPTION = Color\ matching\ arcade\ action.
 DEBIAN_LONG_DESCRIPTION = Dot\ to\ Dot\ Sweep\ is\ an\ arcade-style\ color\ matching\ game.\ Collect\ dots\ that\ match\ your\ color\ while\ avoiding\ all\ other\ dots.\ The\ game\ is\ inspired\ by\ classic\ arcade\ games\ and\ takes\ cues\ from\ modern\ games.\ The\ simple\ gameplay\ mechanics\ coupled\ with\ increasingly\ difficult\ levels\ allows\ players\ of\ all\ skill\ levels\ to\ enjoy\ playing.\ Try\ to\ beat\ your\ personal\ best\ score\ or,\ optionally,\ compete\ for\ the\ top\ spot\ on\ the\ worldwide\ leaderboard.
+
+############################
+# repackaging (demo, etc.) #
+############################
+ifndef APP_REPACKAGE_NAME
+  APP_REPACKAGE_NAME = $(APP_NAME)
+endif
+ifndef APP_REPACKAGE_TITLE
+  APP_REPACKAGE_TITLE = $(APP_TITLE)
+endif
+ifndef APP_REPACKAGE_PACKAGE
+  APP_REPACKAGE_PACKAGE = $(APP_ANDROID_PACKAGE)
+endif
+#APP_REPACKAGE_SRC =
+APP_REPACKAGE_DOCS = ../alt/docs/fe/*
+ifndef APP_REPACKAGE_DIR
+  APP_REPACKAGE_DIR = ../../$(APP_REPACKAGE_NAME)-floss
+endif
+APP_REPACKAGE_DATA = $(APP_REPACKAGE_DIR)/bin/data
+ifndef APP_REPACKAGE_DELETE
+  APP_REPACKAGE_DELETE =
+endif
+
+repackage_fe:
+	$(MAKE) repackage_root APP_REPACKAGE_NAME=$(APP_NAME) APP_REPACKAGE_TITLE=$(APP_TITLE) APP_REPACKAGE_PACKAGE=$(APP_ANDROID_PACKAGE) APP_REPACKAGE_DIR=../../$(APP_NAME)-fe APP_REPACKAGE_DOCS=../alt/docs/fe/*

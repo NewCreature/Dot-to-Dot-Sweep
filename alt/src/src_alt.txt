@@ -1,0 +1,19 @@
+T Cubed Framework Alternate Source Code Info
+--------------------------------------------
+
+For developers using T Cubed Framework to build applications, the build system
+contains mechanisms for repackaging the source code tree with alternate
+source code.
+
+The primary purpose of this is to enable source code trees to contain private
+code that doesn't get packaged into the source code package but is included in
+the alternate source code tree. This might be desirable of your game is using
+proprietary APIs that fall under NDA (Switch port, for instance).
+
+Setting the 'APP_REPACKAGE_SRC' variable informs the build system to copy the
+specified files during repackaging. For example:
+
+APP_REPACKAGE_SRC = ../src_alt/platform.c $(APP_REPACKAGE_DIR)/src
+
+This will copy the 'platform.c' from 'src_alt' to the 'src' folder in the
+repackaged source tree.
