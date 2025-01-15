@@ -970,6 +970,7 @@ static void open_pause_menu(APP_INSTANCE * app, bool convert)
 		app->game.pause_state = app->game.state;
 	}
 	t3f_clear_touch_state();
+	t3f_clear_mouse_state();
 	app->game.state = DOT_GAME_STATE_PAUSE_MENU;
 	t3f_reset_gui_input(app->menu[DOT_MENU_PAUSE]);
 	if(app->input_type == DOT_INPUT_CONTROLLER)
