@@ -449,50 +449,68 @@ void dot_intro_center_menus(void * data)
 bool dot_intro_process_menu(void * data, T3F_GUI * mp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	bool ret;
+	bool ret = false;
 
-	/* only process GUI using alternate means if default processing
-	   doesn't result in a callback */
-	ret = t3f_process_gui(mp, 0, app);
-	if(!ret && app->input_type == DOT_INPUT_CONTROLLER)
+	switch(app->input_type)
 	{
-		if(app->controller.axis_y < 0.0 && app->controller.axis_y_pressed)
+		case DOT_INPUT_MOUSE:
 		{
-			t3f_select_previous_gui_element(mp);
-			t3f_use_key_press(ALLEGRO_KEY_UP);
-			t3f_use_key_press(ALLEGRO_KEY_W);
-			app->controller.axis_y_pressed = false;
+			t3f_select_hover_gui_element(mp, t3f_get_mouse_x(), t3f_get_mouse_y());
+			if(t3f_mouse_button_pressed(0))
+			{
+				if(mp->hover_element >= 0)
+				{
+					t3f_activate_selected_gui_element(mp, app);
+					ret = true;
+				}
+				t3f_use_mouse_button_press(0);
+				t3f_use_touch_press(0);
+			}
+			break;
 		}
-		if(app->controller.axis_y > 0.0 && app->controller.axis_y_pressed)
+		case DOT_INPUT_TOUCH:
 		{
-			t3f_select_next_gui_element(mp);
-			t3f_use_key_press(ALLEGRO_KEY_DOWN);
-			t3f_use_key_press(ALLEGRO_KEY_S);
-			app->controller.axis_y_pressed = false;
+			if(t3f_touch_pressed(1))
+			{
+				t3f_select_hover_gui_element(mp, t3f_get_touch_x(1), t3f_get_touch_y(1));
+				if(mp->hover_element >= 0)
+				{
+					t3f_activate_selected_gui_element(mp, app);
+					ret = true;
+				}
+				mp->hover_element = -1;
+				t3f_use_touch_press(1);
+			}
+			break;
 		}
-		if(mp->hover_element < 0)
+		case DOT_INPUT_CONTROLLER:
 		{
-			t3f_select_previous_gui_element(mp);
+			if(app->controller.axis_y < 0.0 && app->controller.axis_y_pressed)
+			{
+				t3f_select_previous_gui_element(mp);
+				t3f_use_key_press(ALLEGRO_KEY_UP);
+				t3f_use_key_press(ALLEGRO_KEY_W);
+				app->controller.axis_y_pressed = false;
+			}
+			if(app->controller.axis_y > 0.0 && app->controller.axis_y_pressed)
+			{
+				t3f_select_next_gui_element(mp);
+				t3f_use_key_press(ALLEGRO_KEY_DOWN);
+				t3f_use_key_press(ALLEGRO_KEY_S);
+				app->controller.axis_y_pressed = false;
+			}
+			if(mp->hover_element < 0)
+			{
+				t3f_select_previous_gui_element(mp);
+			}
+			if(app->controller.button)
+			{
+				t3f_activate_selected_gui_element(mp, app);
+				app->controller.button = false;
+				ret = true;
+			}
+			break;
 		}
-		if(app->controller.button)
-		{
-			t3f_activate_selected_gui_element(mp, app);
-			app->controller.button = false;
-			ret = true;
-		}
-	}
-
-	/* reset hover element when using touch, we don't want elements to
-	   pop up in this particular game */
-	else if(app->input_type == DOT_INPUT_TOUCH)
-	{
-		mp->hover_element = -1;
-	}
-
-	/* reset hover element if we are in touch cooldown */
-	if(app->touch_cooldown_ticks > 0 && app->input_type != DOT_INPUT_CONTROLLER)
-	{
-		mp->hover_element = -1;
 	}
 
 	return ret;
