@@ -11,8 +11,6 @@ v1.6
 
 [X]Make standalone release use FLOSS licensing.
 
-[ ]Rework default GUI driver so we can use touch and mouse simultaneously.
-
 
 Standalone Release Checklist
 ----------------------------
