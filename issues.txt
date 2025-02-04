@@ -11,6 +11,8 @@ v1.6
 
 [X]Make standalone release use FLOSS licensing.
 
+[ ]Player position jumps around when releasing a touch.
+
 
 Standalone Release Checklist
 ----------------------------
