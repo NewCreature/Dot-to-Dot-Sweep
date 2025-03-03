@@ -1010,6 +1010,85 @@ static void start_turn(void * data, float x, float y, bool peg_mouse, int touch_
 	app->controller.button = false;
 }
 
+void dot_gameplay_logic(void * data)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int colored = 0;
+	int i;
+
+	/* handle shield logic */
+	dot_game_shield_logic(data);
+
+	/* move player */
+	dot_game_move_player(data);
+
+	/* handle ball logic */
+	colored = dot_game_move_balls(data);
+
+	app->game.a_colored_balls_remaining = colored;
+	dot_game_check_player_collisions(data);
+	app->game.a_oops_ticks++;
+
+	app->game.a_bob_and_weave_ticks++;
+	if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_BOB_AND_WEAVE))
+	{
+		if(app->game.a_bob_and_weave_ticks >= 3600)
+		{
+			_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_BOB_AND_WEAVE, 1);
+		}
+	}
+
+	/* move on to next level */
+	if(colored == 0)
+	{
+		if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT))
+		{
+			_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_GETTING_INTO_IT, 1);
+		}
+		if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO))
+		{
+			if(!app->game.a_combo_broken)
+			{
+				_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_FULL_COMBO, 1);
+			}
+		}
+		if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GETTING_GOOD))
+		{
+			if(app->game.a_start_lives == app->game.lives)
+			{
+				_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_GETTING_GOOD, 1);
+			}
+		}
+		if(app->game.combo >= 10)
+		{
+			app->game.emo_tick = 60;
+			app->game.emo_state = DOT_GAME_EMO_STATE_WOAH;
+		}
+		dot_game_accumulate_score(data);
+		for(i = 0; i < app->game.ball_count; i++)
+		{
+			if(app->game.ball[i].active && app->game.ball[i].type == 6)
+			{
+				dot_game_create_splash_effect(data, app->game.ball[i].x, app->game.ball[i].y, app->game.ball[i].r, app->dot_color[app->game.ball[i].type]);
+			}
+		}
+		t3f_clear_touch_state();
+		dot_enable_mouse_cursor(true);
+		app->game.old_bg_color = app->game.bg_color;
+		dot_game_setup_level(data, app->game.level + 1);
+		app->game.bg_color_fade = 0.0;
+		app->game.combo = 0;
+		app->game.shield.active = false;
+		if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_SEE_IT_THROUGH))
+		{
+			if(app->game.level >= 10)
+			{
+				_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_SEE_IT_THROUGH, 1);
+			}
+		}
+	}
+}
+
 /* the main game logic function */
 void dot_game_logic(void * data)
 {
@@ -1164,80 +1243,14 @@ void dot_game_logic(void * data)
 				t3f_use_key_press(ALLEGRO_KEY_BACK);
 				app->controller.button = false;
 			}
-			/* handle shield logic */
-			dot_game_shield_logic(data);
-
-			/* move player */
-			dot_game_move_player(data);
-
-			/* handle ball logic */
-			colored = dot_game_move_balls(data);
-
-			app->game.a_colored_balls_remaining = colored;
-			dot_game_check_player_collisions(data);
-			app->game.a_oops_ticks++;
-
-			/* move on to next level */
-			if(colored == 0)
+			else
 			{
-				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GETTING_INTO_IT))
-				{
-					_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_GETTING_INTO_IT, 1);
-				}
-				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_FULL_COMBO))
-				{
-					if(!app->game.a_combo_broken)
-					{
-						_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_FULL_COMBO, 1);
-					}
-				}
-				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_GETTING_GOOD))
-				{
-					if(app->game.a_start_lives == app->game.lives)
-					{
-						_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_GETTING_GOOD, 1);
-					}
-				}
-				if(app->game.combo >= 10)
-				{
-					app->game.emo_tick = 60;
-					app->game.emo_state = DOT_GAME_EMO_STATE_WOAH;
-				}
-				dot_game_accumulate_score(data);
-				for(i = 0; i < app->game.ball_count; i++)
-				{
-					if(app->game.ball[i].active && app->game.ball[i].type == 6)
-					{
-						dot_game_create_splash_effect(data, app->game.ball[i].x, app->game.ball[i].y, app->game.ball[i].r, app->dot_color[app->game.ball[i].type]);
-					}
-				}
-				t3f_clear_touch_state();
-				dot_enable_mouse_cursor(true);
-				app->game.old_bg_color = app->game.bg_color;
-				dot_game_setup_level(data, app->game.level + 1);
-				app->game.bg_color_fade = 0.0;
-				app->game.combo = 0;
-				app->game.shield.active = false;
-				if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_SEE_IT_THROUGH))
-				{
-					if(app->game.level >= 10)
-					{
-						_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_SEE_IT_THROUGH, 1);
-					}
-				}
+				dot_gameplay_logic(data);
 			}
 			break;
 		}
 	}
 	app->controller.current_joy_disconnected = false;
-	app->game.a_bob_and_weave_ticks++;
-	if(!t3f_achievement_gotten(app->achievements, DOT_ACHIEVEMENT_BOB_AND_WEAVE))
-	{
-		if(app->game.a_bob_and_weave_ticks >= 3600)
-		{
-			_dot_update_achievement_progress(app, DOT_ACHIEVEMENT_BOB_AND_WEAVE, 1);
-		}
-	}
 	app->game.tick++;
 }
 
