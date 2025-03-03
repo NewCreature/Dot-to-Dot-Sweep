@@ -7,6 +7,14 @@ v1.6
 
 [ ]Investigate slowdown when resuming from pause on Steam Deck.
 
+   [ ]For some reason, in Steam Deck game mode, hiding the mouse cursor causes
+      a delay of several frames as soon as the system hides the cursor. This
+      is usually slightly delayed from when the user calls the function to hide
+      the cursor.
+
+      To work around this issue, we'll implement a software cursor mode that
+      we'll enable when the user is playing on Steam Deck in game mode.
+
 [ ]Use asynchronous object loader for interacting with leaderboards.
 
 [X]Make standalone release use FLOSS licensing.
