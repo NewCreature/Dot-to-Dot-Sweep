@@ -1297,6 +1297,10 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		app->on_steam_deck = t3f_steam_deck_mode();
 	}
+	if(app->on_steam_deck)
+	{
+		dot_enable_soft_cursor(true);
+	}
 	if(!dot_initialize_input(&app->controller))
 	{
 		printf("Error initializing input system!\n");
