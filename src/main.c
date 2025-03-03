@@ -397,6 +397,7 @@ void app_render(void * data)
 			al_draw_rotated_bitmap(t3f_touch_active(0) ? app->bitmap[DOT_BITMAP_HAND_DOWN]->bitmap : app->bitmap[DOT_BITMAP_HAND]->bitmap, 92, 24, t3f_get_mouse_x() + ox, t3f_get_mouse_y() + oy, 0, 0);
 		}
 	}
+	dot_render_cursor(app->bitmap[DOT_BITMAP_CURSOR], -2.0, -2.0);
 	al_hold_bitmap_drawing(false);
 }
 
@@ -601,6 +602,10 @@ static bool load_graphics(APP_INSTANCE * app)
 		goto fail;
 	}
 	if(!dot_load_bitmap(app, DOT_BITMAP_TARGET, "target.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
+	{
+		goto fail;
+	}
+	if(!dot_load_bitmap(app, DOT_BITMAP_CURSOR, "cursor.png", app->graphics_size_multiplier, T3F_BITMAP_FLAG_PADDED))
 	{
 		goto fail;
 	}
@@ -1297,10 +1302,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		app->on_steam_deck = t3f_steam_deck_mode();
 	}
-	if(app->on_steam_deck)
-	{
-		dot_enable_soft_cursor(true);
-	}
+	dot_enable_soft_cursor(true);
 	if(!dot_initialize_input(&app->controller))
 	{
 		printf("Error initializing input system!\n");

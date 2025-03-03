@@ -55,10 +55,10 @@ void dot_mouse_cursor_logic(void)
   }
 }
 
-void dot_render_cursor(T3F_BITMAP * bp)
+void dot_render_cursor(T3F_BITMAP * bp, float ox, float oy)
 {
   if(_dot_mouse_soft && _dot_mouse_enabled)
   {
-    t3f_draw_bitmap(bp, t3f_color_white, t3f_get_mouse_x(), t3f_get_mouse_y(), 0.0, 0);
+    t3f_draw_scaled_bitmap(bp, t3f_color_white, t3f_get_mouse_x() + ox, t3f_get_mouse_y() + oy, 0.0, 24.0, 24.0, 0);
   }
 }
