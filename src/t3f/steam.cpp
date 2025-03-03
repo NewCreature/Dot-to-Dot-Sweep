@@ -66,9 +66,33 @@ bool t3f_restart_through_steam(uint32_t app_id)
 
 bool t3f_steam_deck_mode(void)
 {
+  const char * val;
+
+  /* detect user config */
+  val = al_get_config_value(t3f_config, "T3F", "force_deck");
+  if(val)
+  {
+    if(!strcasecmp(val, "false"))
+    {
+      return false;
+    }
+    else if(strcasecmp(val, "true"))
+    {
+      return true;
+    }
+  }
+
+  /* check through API if no user config */
   #ifdef T3F_ENABLE_STEAM_INTEGRATION
-    return SteamAPI_ISteamUtils_IsSteamRunningOnSteamDeck(SteamUtils());
+    if(SteamAPI_ISteamUtils_IsSteamRunningOnSteamDeck(SteamUtils()))
+    {
+      if(SteamAPI_ISteamUtils_IsSteamInBigPictureMode(SteamUtils()))
+      {
+        return true;
+      }
+    }
   #endif
+
   return false;
 }
 
