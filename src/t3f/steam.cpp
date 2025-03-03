@@ -66,8 +66,8 @@ bool t3f_restart_through_steam(uint32_t app_id)
 
 bool t3f_steam_deck_mode(void)
 {
-  #ifdef T3F_EMABLE_STEAM_INTEGRATION
-    return SteamAPI_ISteamUtils_IsSteamRunningOnSteamDeck();
+  #ifdef T3F_ENABLE_STEAM_INTEGRATION
+    return SteamAPI_ISteamUtils_IsSteamRunningOnSteamDeck(SteamUtils());
   #endif
   return false;
 }
