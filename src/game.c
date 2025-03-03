@@ -761,7 +761,6 @@ static void move_player_with_mouse(APP_INSTANCE * app)
 	/* mouse sensitivity set by user so use that value */
 	if(app->mouse_sensitivity > 0.0)
 	{
-		printf("normal\n");
 		mouse_sensitivity = app->mouse_sensitivity;
 	}
 
