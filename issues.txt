@@ -7,6 +7,9 @@ v1.6
 
 [ ]Investigate slowdown when resuming from pause on Steam Deck.
 
+   [ ]When using mouse controls, the player position jumps to the mouse
+      position where the 'Resume' menu item was clicked.
+
 [ ]Use asynchronous object loader for interacting with leaderboards.
 
 [X]Make standalone release use FLOSS licensing.
