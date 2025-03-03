@@ -756,8 +756,21 @@ static void confine_mouse(APP_INSTANCE * app)
 static void move_player_with_mouse(APP_INSTANCE * app)
 {
 	int dx, dy;
+	float mouse_sensitivity = 0.0;
 
-	if(app->mouse_sensitivity <= 0.0)
+	/* mouse sensitivity set by user so use that value */
+	if(app->mouse_sensitivity > 0.0)
+	{
+		printf("normal\n");
+		mouse_sensitivity = app->mouse_sensitivity;
+	}
+
+	/* set 0.667 scale in Steam Deck handheld mode */
+	else if(app->on_steam_deck)
+	{
+		mouse_sensitivity = 0.667;
+	}
+	if(mouse_sensitivity <= 0.0)
 	{
 		confine_mouse(app);
 		update_player_position_mouse(app);
@@ -765,8 +778,8 @@ static void move_player_with_mouse(APP_INSTANCE * app)
 	else
 	{
 		t3f_get_mouse_mickeys(&dx, &dy, NULL);
-		app->game.player.ball.x += ((float)dx / t3f_current_view->scale_x) * app->mouse_sensitivity;
-		app->game.player.ball.y += ((float)dy / t3f_current_view->scale_y) * app->mouse_sensitivity;
+		app->game.player.ball.x += ((float)dx / t3f_current_view->scale_x) * mouse_sensitivity;
+		app->game.player.ball.y += ((float)dy / t3f_current_view->scale_y) * mouse_sensitivity;
 		#ifndef ALLEGRO_MACOSX
 			if(app->game.state == DOT_GAME_STATE_PLAY)
 			{

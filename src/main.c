@@ -1293,6 +1293,10 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	{
 		printf("Steam not running!\n");
 	}
+	else
+	{
+		app->on_steam_deck = t3f_steam_deck_mode();
+	}
 	if(!dot_initialize_input(&app->controller))
 	{
 		printf("Error initializing input system!\n");
