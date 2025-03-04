@@ -12,6 +12,8 @@ v1.6
 
 [ ]'Exit to OS' is selected on main menu when using touch controls.
 
+[ ]Blue line at top of screen on Android.
+
 [X]Upgrade to the latest version of T3F.
 
 [X]Use padded bitmaps for sprites to alleviate aliasing issues.
