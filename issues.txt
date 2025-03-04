@@ -10,6 +10,8 @@ v1.6
    [ ]When selecting 'No' on the 'Play Again?' menu, the 'Privacy' option on
       the menu immediately activated.
 
+[ ]'Exit to OS' is selected on main menu when using touch controls.
+
 [X]Upgrade to the latest version of T3F.
 
 [X]Use padded bitmaps for sprites to alleviate aliasing issues.
