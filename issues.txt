@@ -5,6 +5,11 @@ v1.6
 
 [ ]Update changelog.
 
+[ ]Touch input can bleed through menus.
+
+   [ ]When selecting 'No' on the 'Play Again?' menu, the 'Privacy' option on
+      the menu immediately activated.
+
 [X]Upgrade to the latest version of T3F.
 
 [X]Use padded bitmaps for sprites to alleviate aliasing issues.
