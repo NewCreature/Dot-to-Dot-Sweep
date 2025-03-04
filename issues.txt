@@ -14,6 +14,12 @@ v1.6
 
 [ ]Blue line at top of screen on Android.
 
+   [ ]We might try to make the game fill the screen better. We could try making
+      a view the size of the play area and fill the top of the screen with it.
+      The rest of the screen would just be used as touch pad.
+
+[ ]Dot splat particles should be rendered below overlays.
+
 [X]Upgrade to the latest version of T3F.
 
 [X]Use padded bitmaps for sprites to alleviate aliasing issues.
