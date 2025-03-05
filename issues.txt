@@ -16,7 +16,7 @@ v1.6
 
 [ ]Dot splat particles should be rendered below overlays.
 
-[ ]Menu view is stretched in mobile mode.
+[X]Menu view is stretched in mobile mode.
 
 [X]Upgrade to the latest version of T3F.
 
