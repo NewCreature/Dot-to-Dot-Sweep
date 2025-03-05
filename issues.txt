@@ -16,7 +16,11 @@ v1.6
 
 [ ]Dot splat particles should be rendered below overlays.
 
-[ ]Player position glitches when moving along edges in windowed mode.
+[X]Player position glitches when moving along edges in windowed mode.
+
+   [X]This is caused by an apparent bug in Allegro with high resolution capable
+      apps. When using 'al_set_mouse_pos_xy()' the coordinates are cut in half.
+      Won't fix this for now since the game runs in full screen mode.
 
 [X]Menu view is stretched in mobile mode.
 
