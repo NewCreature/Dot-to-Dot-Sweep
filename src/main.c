@@ -31,6 +31,75 @@ static T3F_BITMAP * dot_create_scratch_bitmap(int w, int h)
 	return bp;
 }
 
+/* create view that fits the entire gameplay area, including the HUD */
+static void _dot_update_main_view(T3F_VIEW * vp)
+{
+	float ox, oy, w, h;
+
+	ox = t3f_default_view->left;
+	oy = t3f_default_view->top;
+	w = t3f_default_view->right - t3f_default_view->left;
+	h = (float)DOT_DISPLAY_GAMEPLAY_HEIGHT * (w / (float)DOT_DISPLAY_GAMEPLAY_WIDTH);
+	vp->virtual_width = DOT_DISPLAY_GAMEPLAY_WIDTH;
+	vp->virtual_height = DOT_DISPLAY_GAMEPLAY_HEIGHT;
+	t3f_adjust_view(vp, ox, oy, w, h, DOT_GAME_PLAYFIELD_WIDTH / 2.0, DOT_GAME_PLAYFIELD_HEIGHT / 2.0, 0);
+}
+
+static void _dot_update_menu_view(T3F_VIEW * vp, T3F_VIEW * main_view, bool mobile)
+{
+	float ox, oy, w, h, s;
+
+	if(mobile)
+	{
+		ox = t3f_default_view->left;
+		oy = main_view->offset_y + main_view->height;
+		w = t3f_default_view->right - t3f_default_view->left;
+		h = t3f_virtual_display_height - oy;
+		s = main_view->width / t3f_default_view->virtual_width;
+		vp->virtual_width = w / s;
+		vp->virtual_height = h / s;
+	}
+	else
+	{
+		ox = 0;
+		oy = 0;
+		w = DOT_DISPLAY_GAMEPLAY_WIDTH;
+		h = DOT_DISPLAY_GAMEPLAY_HEIGHT - (DOT_DISPLAY_GAMEPLAY_HEIGHT - DOT_GAME_PLAYFIELD_HEIGHT);
+		vp->virtual_width = w;
+		vp->virtual_height = h;
+	}
+	t3f_adjust_view(vp, ox, oy, w, h, DOT_GAME_PLAYFIELD_WIDTH / 2.0, DOT_GAME_PLAYFIELD_HEIGHT / 2.0, 0);
+}
+
+static void _dot_update_views(void * data, int w, int h)
+{
+	APP_INSTANCE * app = (APP_INSTANCE *)data;
+	int mobile_flags = 0;
+
+	if(w > h)
+	{
+		app->desktop_mode = true;
+	}
+	else
+	{
+		app->desktop_mode = false;
+	}
+	if((float)w / (float)h < 9.0 / 16.0)
+	{
+		mobile_flags = T3F_FORCE_ASPECT | T3F_FILL_SCREEN;
+	}
+	else
+	{
+		mobile_flags = T3F_FORCE_ASPECT;
+	}
+	t3f_set_view_virtual_dimensions(t3f_default_view, DOT_DISPLAY_WIDTH, DOT_DISPLAY_HEIGHT);
+	t3f_adjust_view(t3f_default_view, 0, 0, w, h, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, app->desktop_mode ? T3F_FORCE_ASPECT : mobile_flags);
+	t3f_select_view(t3f_default_view);
+	_dot_update_main_view(app->main_view);
+	_dot_update_menu_view(app->menu_view, app->main_view, !app->desktop_mode);
+	dot_intro_center_menus(data);
+}
+
 static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 {
 	ALLEGRO_STATE old_state;
@@ -61,17 +130,14 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 			al_get_monitor_info(0, &info);
 			w = info.x2 - info.x1;
 			h = info.y2 - info.y1;
-			if(w > h)
-			{
-				app->desktop_mode = true;
-			}
-			else
-			{
-				app->desktop_mode = false;
-			}
-			t3f_set_gfx_mode(DOT_DISPLAY_WIDTH, DOT_DISPLAY_HEIGHT, t3f_flags | T3F_RESET_DISPLAY);
-			t3f_adjust_view(t3f_current_view, t3f_current_view->offset_x, t3f_current_view->offset_y, t3f_current_view->width, t3f_current_view->height, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, t3f_current_view->flags);
-			dot_intro_center_menus(data);
+//			t3f_set_gfx_mode(DOT_DISPLAY_WIDTH, DOT_DISPLAY_HEIGHT, t3f_flags | T3F_RESET_DISPLAY);
+			_dot_update_views(data, w, h);
+			break;
+		}
+		case ALLEGRO_EVENT_DISPLAY_RESIZE:
+		{
+			t3f_event_handler(event);
+			_dot_update_views(data, event->display.width, event->display.height);
 			break;
 		}
 		case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
@@ -668,67 +734,13 @@ static bool load_graphics(APP_INSTANCE * app)
 	}
 }
 
-/* create view that fits the entire gameplay area, including the HUD */
-static T3F_VIEW * _dot_create_main_view(void)
-{
-	T3F_VIEW * vp;
-	float ox, oy, w, h;
-
-	ox = t3f_default_view->left;
-	oy = t3f_default_view->top;
-	w = t3f_default_view->right - t3f_default_view->left;
-	h = (float)DOT_DISPLAY_GAMEPLAY_HEIGHT * (w / (float)DOT_DISPLAY_GAMEPLAY_WIDTH);
-
-	vp = t3f_create_view(ox, oy, w, h, DOT_DISPLAY_GAMEPLAY_WIDTH / 2.0, DOT_DISPLAY_GAMEPLAY_HEIGHT / 2.0, 0);
-	if(vp)
-	{
-		vp->virtual_width = DOT_DISPLAY_GAMEPLAY_WIDTH;
-		vp->virtual_height = DOT_DISPLAY_GAMEPLAY_HEIGHT;
-	}
-
-	return vp;
-}
-
-static T3F_VIEW * _dot_create_menu_view(T3F_VIEW * main_view, bool mobile)
-{
-	T3F_VIEW * vp;
-	float ox, oy, w, h, s;
-
-	if(mobile)
-	{
-		ox = t3f_default_view->left;
-		oy = main_view->offset_y + main_view->height;
-		w = t3f_default_view->right - t3f_default_view->left;
-		h = t3f_virtual_display_height - oy;
-		s = main_view->width / t3f_default_view->virtual_width;
-
-		vp = t3f_create_view(ox, oy, w, h, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, 0);
-		if(vp)
-		{
-			vp->virtual_width = w / s;
-			vp->virtual_height = h / s;
-		}
-	}
-	else
-	{
-		ox = 0;
-		oy = 0;
-		w = DOT_DISPLAY_GAMEPLAY_WIDTH;
-		h = DOT_DISPLAY_GAMEPLAY_HEIGHT - (DOT_DISPLAY_GAMEPLAY_HEIGHT - DOT_GAME_PLAYFIELD_HEIGHT);
-		vp = t3f_create_view(ox, oy, w, h, w / 2.0, h / 2.0, 0);
-		if(vp)
-		{
-			vp->virtual_width = w;
-			vp->virtual_height = h;
-		}
-	}
-
-	return vp;
-}
-
 bool app_load_data(APP_INSTANCE * app)
 {
 	const char * val;
+
+	#ifdef ALLEGRO_ANDROID
+		t3f_process_events(false);
+	#endif
 
 	/* use manually configured graphics size multiplier if setting found */
 	val = al_get_config_value(t3f_config, "Game Data", "Graphics Size Multiplier");
@@ -758,14 +770,14 @@ bool app_load_data(APP_INSTANCE * app)
 	}
 
 	/* create main view */
-	app->main_view = _dot_create_main_view();
+	app->main_view = t3f_create_view(0, 0, 0, 0, 0, 0, 0);
 	if(!app->main_view)
 	{
 		return false;
 	}
 
 	/* create menu view */
-	app->menu_view = _dot_create_menu_view(app->main_view, !app->desktop_mode);
+	app->menu_view = t3f_create_view(0, 0, 0, 0, 0, 0, 0);
 	if(!app->menu_view)
 	{
 		return false;
@@ -1345,7 +1357,6 @@ static void log_t3net(void)
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
 	int i;
-	int mobile_flags = 0;
 
 	/* detect game type */
 	app->desktop_mode = false;
@@ -1407,7 +1418,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	t3f_set_event_handler(dot_event_handler);
 	if(!(t3f_flags & T3F_USE_FULLSCREEN))
 	{
-		set_optimal_display_size(app);
+//		set_optimal_display_size(app);
 	}
 	#ifdef ALLEGRO_ANDROID
 		t3net_setup(t3f_run_url, al_path_cstr(t3f_temp_path, '/'));
@@ -1420,23 +1431,12 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		return false;
 	}
 
-	/* use 'T3F_FILL_SCREEN' for mobile */
-	if((float)al_get_display_width(t3f_display) / (float)al_get_display_height(t3f_display) < 9.0 / 16.0)
-	{
-		mobile_flags = T3F_FORCE_ASPECT | T3F_FILL_SCREEN;
-	}
-	else
-	{
-		mobile_flags = T3F_FORCE_ASPECT;
-	}
-	t3f_adjust_view(t3f_current_view, t3f_current_view->offset_x, t3f_current_view->offset_y, t3f_current_view->width, t3f_current_view->height, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, app->desktop_mode ? T3F_FORCE_ASPECT : mobile_flags);
-	t3f_select_view(t3f_current_view);
-
 	if(!app_load_data(app))
 	{
 		printf("Failed to load data!\n");
 		return false;
 	}
+	_dot_update_views(app, al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 
 	app_read_config(app);
 	app_read_user_data(app);
