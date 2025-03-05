@@ -632,9 +632,8 @@ bool dot_intro_initialize(void * data)
 	{
 		return false;
 	}
-	t3f_add_gui_text_element(app->menu[DOT_MENU_PAUSE], NULL, "Paused", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, al_map_rgba_f(1.0, 1.0, 0.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-	t3f_add_gui_text_element(app->menu[DOT_MENU_PAUSE], dot_menu_proc_pause_resume, "Resume", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(app->menu[DOT_MENU_PAUSE], dot_menu_proc_pause_quit, "Quit", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 128, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_PAUSE], dot_menu_proc_pause_resume, "Resume", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 0, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(app->menu[DOT_MENU_PAUSE], dot_menu_proc_pause_quit, "Quit", (void **)&app->font[DOT_FONT_32], t3f_virtual_display_width / 2, 64, t3f_color_white, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_set_gui_shadow(app->menu[DOT_MENU_PAUSE], -2, 2);
   	t3f_set_gui_hover_lift(app->menu[DOT_MENU_PAUSE], 2, -2);
 	

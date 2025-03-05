@@ -1320,7 +1320,8 @@ static void dot_create_touch_start_effect(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	ALLEGRO_STATE old_state;
 	ALLEGRO_TRANSFORM identity;
-	float sx = 512.0 / (float)t3f_virtual_display_width;
+	float sx = 512.0 / (float)app->menu_view->virtual_width;
+	float sy = 512.0 / (float)app->menu_view->virtual_height;
 	bool held = al_is_bitmap_drawing_held();
 
 	if(held)
@@ -1335,7 +1336,7 @@ static void dot_create_touch_start_effect(void * data)
 	al_set_clipping_rectangle(0, 0, 512, 512);
 	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 1.0));
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ZERO, ALLEGRO_INVERSE_ALPHA);
-	al_draw_filled_rectangle(DOT_GAME_TOUCH_START_X * sx, DOT_GAME_TOUCH_START_Y, DOT_GAME_TOUCH_END_X * sx, DOT_GAME_TOUCH_END_Y, al_map_rgba_f(1.0, 1.0, 1.0, 1.0));
+	al_draw_filled_rectangle(DOT_GAME_TOUCH_START_X * sx, DOT_GAME_TOUCH_START_Y * sy, DOT_GAME_TOUCH_END_X * sx, DOT_GAME_TOUCH_END_Y * sy, al_map_rgba_f(1.0, 1.0, 1.0, 1.0));
 	al_restore_state(&old_state);
 	al_hold_bitmap_drawing(held);
 	t3f_set_clipping_rectangle(0, 0, 0, 0);
@@ -1352,7 +1353,6 @@ void dot_game_render(void * data)
 	float c = (float)app->game.player.ball.timer / (float)DOT_GAME_COMBO_TIME;
 	float s, r, a;
 	float cx, cy, ecx, ecy;
-	float touch_effect_y = 0;
 	float level_y = 8;
 	float start_y = DOT_GAME_PLAYFIELD_HEIGHT / 2;
 	char * touch_text[2];
@@ -1382,10 +1382,9 @@ void dot_game_render(void * data)
 	}
 	if(!app->desktop_mode)
 	{
-		touch_effect_y = t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT;
-		level_y = DOT_GAME_PLAYFIELD_HEIGHT / 2 - t3f_get_font_line_height(app->font[DOT_FONT_32]) / 2;
-		start_y = t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT / 2;
+		level_y = DOT_GAME_PLAYFIELD_HEIGHT / 2.0 - t3f_get_font_line_height(app->font[DOT_FONT_32]) / 2;
 	}
+	start_y = app->menu_view->virtual_height / 2.0;
 	t3f_select_view(t3f_default_view);
 	al_clear_to_color(app->game.bg_color);
 	t3f_select_view(app->main_view);
@@ -1454,9 +1453,11 @@ void dot_game_render(void * data)
 	al_hold_bitmap_drawing(false);
 	if(app->game.state == DOT_GAME_STATE_PAUSE_MENU)
 	{
-		t3f_select_view(t3f_default_view);
-		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width + 0.5, t3f_virtual_display_height + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+		t3f_select_view(app->main_view);
+		al_draw_filled_rectangle(0.0, 0.0, app->main_view->virtual_width + 0.5, app->main_view->virtual_height + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_hold_bitmap_drawing(true);
+		t3f_select_view(app->main_view);
+		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, level_y, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, "Paused");
 		t3f_select_view(app->menu_view);
 		t3f_render_gui(app->menu[DOT_MENU_PAUSE], 0);
 	}
@@ -1466,13 +1467,14 @@ void dot_game_render(void * data)
 		{
 			al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width, DOT_GAME_PLAYFIELD_HEIGHT + 80, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		}
+		t3f_select_view(app->menu_view);
 		al_hold_bitmap_drawing(true);
 		dot_create_touch_start_effect(data);
 		if(app->desktop_mode)
 		{
 			t3f_set_clipping_rectangle(0, 0, DOT_GAME_PLAYFIELD_WIDTH, DOT_GAME_PLAYFIELD_HEIGHT);
+			t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, 0, 0.0, DOT_GAME_PLAYFIELD_WIDTH + 0.5, app->menu_view->virtual_height, 0);
 		}
-		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, touch_effect_y, 0.0, DOT_GAME_PLAYFIELD_WIDTH + 0.5, al_get_bitmap_height(app->bitmap[DOT_BITMAP_SCRATCH]->bitmap), 0);
 		if(app->desktop_mode)
 		{
 			al_hold_bitmap_drawing(false);
@@ -1482,8 +1484,10 @@ void dot_game_render(void * data)
 		if(app->game.level_start)
 		{
 			sprintf(buf, "Level %d", app->game.level + 1);
+			t3f_select_view(app->main_view);
 			dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, level_y, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, buf);
 		}
+		t3f_select_view(app->menu_view);
 		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, start_y - t3f_get_font_line_height(app->font[DOT_FONT_32]), DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, touch_text[0]);
 		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, start_y, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, touch_text[1]);
 	}
