@@ -204,7 +204,9 @@ void dot_leaderboard_render(void * data)
   char buf[256] = {0};
   ALLEGRO_COLOR text_color;
 
+  t3f_select_view(t3f_default_view);
   al_clear_to_color(app->level_color[0]);
+  t3f_select_view(app->main_view);
   al_hold_bitmap_drawing(true);
   dot_bg_objects_render(data);
   t3f_draw_bitmap(app->bitmap[DOT_BITMAP_BG], t3f_color_white, 0, 0, 0, 0);
@@ -224,10 +226,13 @@ void dot_leaderboard_render(void * data)
     sprintf(buf, "%lu ", dot_leaderboard_unobfuscate_score(app->leaderboard->entry[i]->score));
     dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width - 4, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, T3F_FONT_ALIGN_RIGHT, buf);
   }
-  if(!app->desktop_mode)
-  {
-    t3f_render_gui(app->menu[app->current_menu], 0);
-  }
   al_hold_bitmap_drawing(false);
   dot_intro_render_split(data);
+  if(!app->desktop_mode)
+  {
+    t3f_select_view(app->menu_view);
+    al_hold_bitmap_drawing(true);
+    t3f_render_gui(app->menu[app->current_menu], 0);
+    al_hold_bitmap_drawing(false);
+  }
 }

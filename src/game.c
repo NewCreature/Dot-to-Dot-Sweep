@@ -1386,7 +1386,9 @@ void dot_game_render(void * data)
 		level_y = DOT_GAME_PLAYFIELD_HEIGHT / 2 - t3f_get_font_line_height(app->font[DOT_FONT_32]) / 2;
 		start_y = t3f_virtual_display_height - DOT_GAME_PLAYFIELD_HEIGHT / 2;
 	}
+	t3f_select_view(t3f_default_view);
 	al_clear_to_color(app->game.bg_color);
+	t3f_select_view(app->main_view);
 	al_hold_bitmap_drawing(true);
 	dot_bg_objects_render(data);
 	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG]->bitmap, 0, 0, 0);
@@ -1452,8 +1454,10 @@ void dot_game_render(void * data)
 	al_hold_bitmap_drawing(false);
 	if(app->game.state == DOT_GAME_STATE_PAUSE_MENU)
 	{
+		t3f_select_view(t3f_default_view);
 		al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width + 0.5, t3f_virtual_display_height + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_hold_bitmap_drawing(true);
+		t3f_select_view(app->menu_view);
 		t3f_render_gui(app->menu[DOT_MENU_PAUSE], 0);
 	}
 	else if(app->game.state == DOT_GAME_STATE_START)

@@ -86,7 +86,9 @@ void dot_privacy_render(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	int i;
 
+	t3f_select_view(t3f_default_view);
 	al_clear_to_color(app->level_color[0]);
+	t3f_select_view(app->main_view);
 	al_hold_bitmap_drawing(true);
 	dot_bg_objects_render(data);
 	t3f_draw_bitmap(app->bitmap[DOT_BITMAP_BG], t3f_color_white, 0, 0, 0, 0);
@@ -101,10 +103,13 @@ void dot_privacy_render(void * data)
 			break;
 		}
 	}
-	if(!app->desktop_mode)
-	{
-		t3f_render_gui(app->menu[app->current_menu], 0);
-	}
 	al_hold_bitmap_drawing(false);
 	dot_intro_render_split(data);
+	if(!app->desktop_mode)
+	{
+		t3f_select_view(app->menu_view);
+		al_hold_bitmap_drawing(true);
+		t3f_render_gui(app->menu[app->current_menu], 0);
+		al_hold_bitmap_drawing(false);
+	}
 }

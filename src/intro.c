@@ -423,25 +423,13 @@ int dot_menu_proc_pause_quit(void * data, int i, void * pp)
 void dot_intro_center_menus(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
-	float top, bottom;
 	int i;
-
-	if(app->desktop_mode)
-	{
-		top = 0;
-		bottom = DOT_GAME_PLAYFIELD_HEIGHT;
-	}
-	else
-	{
-		top = (t3f_virtual_display_height / 2 - DOT_GAME_PLAYFIELD_HEIGHT) / 2 + t3f_virtual_display_height / 2;
-		bottom = t3f_virtual_display_height;
-	}
 
 	for(i = 0; i < DOT_MAX_MENUS; i++)
 	{
 		if(app->menu[i])
 		{
-			t3f_center_gui(app->menu[i], top, bottom);
+			t3f_center_gui(app->menu[i], 0, app->menu_view->virtual_height);
 		}
 	}
 }
@@ -451,6 +439,7 @@ bool dot_intro_process_menu(void * data, T3F_GUI * mp)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	bool ret = false;
 
+	t3f_select_input_view(app->menu_view);
 	switch(app->input_type)
 	{
 		case DOT_INPUT_MOUSE:
@@ -883,7 +872,9 @@ void dot_intro_render(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	int w, h;
 
+	t3f_select_view(t3f_default_view);
 	al_clear_to_color(app->level_color[0]);
+	t3f_select_view(app->main_view);
 	al_hold_bitmap_drawing(true);
 	dot_bg_objects_render(data);
 	t3f_draw_bitmap(app->bitmap[DOT_BITMAP_BG], t3f_color_white, 0, 0, 0, 0);
@@ -899,6 +890,7 @@ void dot_intro_render(void * data)
 	dot_intro_render_split(data);
 	if(app->menu_showing)
 	{
+		t3f_select_view(app->menu_view);
 		al_hold_bitmap_drawing(true);
 		t3f_render_gui(app->menu[app->current_menu], 0);
 		if(app->entering_name)

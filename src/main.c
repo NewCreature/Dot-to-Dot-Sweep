@@ -135,6 +135,7 @@ void app_mouse_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
+	t3f_select_input_view(app->main_view);
 	app->old_touch_x = app->touch_x;
 	app->old_touch_y = app->touch_y;
 	app->touch_x = t3f_get_mouse_x();
@@ -146,6 +147,7 @@ void app_touch_logic(void * data)
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 	int i;
 
+	t3f_select_input_view(app->main_view);
 	app->touch_id = -1;
 	for(i = 1; i < T3F_MAX_TOUCHES; i++)
 	{
@@ -504,6 +506,28 @@ static void free_graphics(APP_INSTANCE * app)
 	}
 }
 
+static void _dot_show_load_screen(T3F_FONT * fp, ALLEGRO_COLOR color, const char * message)
+{
+	ALLEGRO_STATE old_state;
+	ALLEGRO_TRANSFORM identity;
+
+	al_store_state(&old_state, ALLEGRO_STATE_TRANSFORM);
+	al_identity_transform(&identity);
+	al_use_transform(&identity);
+	al_set_clipping_rectangle(0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display));
+	al_draw_filled_rectangle(0.0, 0.0, al_get_display_width(t3f_display), al_get_display_height(t3f_display), color);
+	if(fp)
+	{
+		al_draw_filled_rectangle(0.0, 0.0, al_get_display_width(t3f_display), al_get_display_height(t3f_display), al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+	}
+	al_restore_state(&old_state);
+	if(fp && message)
+	{
+		dot_shadow_text(fp, t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.75), t3f_virtual_display_width / 2, t3f_virtual_display_height / 2 - t3f_get_font_line_height(fp) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, T3F_FONT_ALIGN_CENTER, "Loading resources...");
+	}
+	al_flip_display();
+}
+
 static bool load_graphics(APP_INSTANCE * app)
 {
 	char fn_buf[1024];
@@ -516,10 +540,7 @@ static bool load_graphics(APP_INSTANCE * app)
 		printf("Failed to load font %d!\n", DOT_FONT_16);
 		goto fail;
 	}
-	al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width + 0.5, t3f_virtual_display_height + 0.5, DOT_LEVEL_COLOR_0);
-	al_draw_filled_rectangle(0.0, 0.0, t3f_virtual_display_width + 0.5, t3f_virtual_display_height + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
-	dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.75), t3f_virtual_display_width / 2, t3f_virtual_display_height / 2 - t3f_get_font_line_height(app->font[DOT_FONT_16]) / 2, DOT_SHADOW_OX, DOT_SHADOW_OY, T3F_FONT_ALIGN_CENTER, "Loading resources...");
-	al_flip_display();
+	_dot_show_load_screen(app->font[DOT_FONT_16], DOT_LEVEL_COLOR_0, "Loading resources...");
 	if(!dot_load_font(app, DOT_FONT_14, fn_buf, 14))
 	{
 		printf("Failed to load font %d!\n", DOT_FONT_8);
@@ -647,6 +668,63 @@ static bool load_graphics(APP_INSTANCE * app)
 	}
 }
 
+/* create view that fits the entire gameplay area, including the HUD */
+static T3F_VIEW * _dot_create_main_view(void)
+{
+	T3F_VIEW * vp;
+	float ox, oy, w, h;
+
+	ox = t3f_default_view->left;
+	oy = t3f_default_view->top;
+	w = t3f_default_view->right - t3f_default_view->left;
+	h = (float)DOT_DISPLAY_GAMEPLAY_HEIGHT * (w / (float)DOT_DISPLAY_GAMEPLAY_WIDTH);
+
+	vp = t3f_create_view(ox, oy, w, h, DOT_DISPLAY_GAMEPLAY_WIDTH / 2.0, DOT_DISPLAY_GAMEPLAY_HEIGHT / 2.0, 0);
+	if(vp)
+	{
+		vp->virtual_width = DOT_DISPLAY_GAMEPLAY_WIDTH;
+		vp->virtual_height = DOT_DISPLAY_GAMEPLAY_HEIGHT;
+	}
+
+	return vp;
+}
+
+static T3F_VIEW * _dot_create_menu_view(bool mobile)
+{
+	T3F_VIEW * vp;
+	float ox, oy, w, h;
+
+	if(mobile)
+	{
+		ox = t3f_default_view->left;
+		oy = t3f_default_view->top + DOT_DISPLAY_GAMEPLAY_HEIGHT;
+		w = t3f_default_view->right - t3f_default_view->left;
+		h = t3f_virtual_display_height - oy;
+
+		vp = t3f_create_view(ox, oy, w, h, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, 0);
+		if(vp)
+		{
+			vp->virtual_width = DOT_DISPLAY_GAMEPLAY_WIDTH;
+			vp->virtual_height = t3f_default_view->bottom - t3f_default_view->top - DOT_DISPLAY_GAMEPLAY_HEIGHT;
+		}
+	}
+	else
+	{
+		ox = 0;
+		oy = 0;
+		w = DOT_DISPLAY_GAMEPLAY_WIDTH;
+		h = DOT_DISPLAY_GAMEPLAY_HEIGHT - (DOT_DISPLAY_GAMEPLAY_HEIGHT - DOT_GAME_PLAYFIELD_HEIGHT);
+		vp = t3f_create_view(ox, oy, w, h, w / 2.0, h / 2.0, 0);
+		if(vp)
+		{
+			vp->virtual_width = w;
+			vp->virtual_height = h;
+		}
+	}
+
+	return vp;
+}
+
 bool app_load_data(APP_INSTANCE * app)
 {
 	const char * val;
@@ -676,6 +754,20 @@ bool app_load_data(APP_INSTANCE * app)
 	else if(app->graphics_size_multiplier > 5)
 	{
 		app->graphics_size_multiplier = 5;
+	}
+
+	/* create main view */
+	app->main_view = _dot_create_main_view();
+	if(!app->main_view)
+	{
+		return false;
+	}
+
+	/* create menu view */
+	app->menu_view = _dot_create_menu_view(!app->desktop_mode);
+	if(!app->menu_view)
+	{
+		return false;
 	}
 
 	/* load graphics */
@@ -1266,8 +1358,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Error initializing T3F\n");
 		return false;
 	}
-	al_clear_to_color(DOT_LEVEL_COLOR_0);
-	al_flip_display();
+	_dot_show_load_screen(NULL, DOT_LEVEL_COLOR_0, NULL);
 	if(al_get_display_width(t3f_display) > al_get_display_height(t3f_display))
 	{
 		app->desktop_mode = true;
@@ -1326,6 +1417,11 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Failed to generate data for particle effects!\n");
 		return false;
 	}
+
+	/* use 'T3F_FILL_SCREEN' for mobile */
+	t3f_adjust_view(t3f_current_view, t3f_current_view->offset_x, t3f_current_view->offset_y, t3f_current_view->width, t3f_current_view->height, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, app->desktop_mode ? T3F_FORCE_ASPECT : T3F_FORCE_ASPECT | T3F_FILL_SCREEN);
+	t3f_select_view(t3f_current_view);
+
 	if(!app_load_data(app))
 	{
 		printf("Failed to load data!\n");
@@ -1340,9 +1436,6 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Failed to create menu!\n");
 		return false;
 	}
-
-	/* change view focus so 3D effects look right */
-	t3f_adjust_view(t3f_current_view, t3f_current_view->offset_x, t3f_current_view->offset_y, t3f_current_view->width, t3f_current_view->height, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, t3f_current_view->flags);
 
 	/* create color tables */
 	for(i = 0; i <= DOT_BITMAP_BALL_BLACK; i++)
@@ -1397,6 +1490,7 @@ void app_exit(APP_INSTANCE * app)
 		al_fputc(app->demo_file, 0);
 		al_fclose(app->demo_file);
 	}
+	t3f_destroy_view(app->main_view);
 	free_graphics(app);
 	for(i = 0; i < DOT_MAX_SAMPLES; i++)
 	{
