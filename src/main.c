@@ -689,23 +689,24 @@ static T3F_VIEW * _dot_create_main_view(void)
 	return vp;
 }
 
-static T3F_VIEW * _dot_create_menu_view(bool mobile)
+static T3F_VIEW * _dot_create_menu_view(T3F_VIEW * main_view, bool mobile)
 {
 	T3F_VIEW * vp;
-	float ox, oy, w, h;
+	float ox, oy, w, h, s;
 
 	if(mobile)
 	{
 		ox = t3f_default_view->left;
-		oy = t3f_default_view->top + DOT_DISPLAY_GAMEPLAY_HEIGHT;
+		oy = main_view->offset_y + main_view->height;
 		w = t3f_default_view->right - t3f_default_view->left;
 		h = t3f_virtual_display_height - oy;
+		s = main_view->width / t3f_default_view->virtual_width;
 
 		vp = t3f_create_view(ox, oy, w, h, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, 0);
 		if(vp)
 		{
-			vp->virtual_width = DOT_DISPLAY_GAMEPLAY_WIDTH;
-			vp->virtual_height = t3f_default_view->bottom - t3f_default_view->top - DOT_DISPLAY_GAMEPLAY_HEIGHT;
+			vp->virtual_width = w / s;
+			vp->virtual_height = h / s;
 		}
 	}
 	else
@@ -764,7 +765,7 @@ bool app_load_data(APP_INSTANCE * app)
 	}
 
 	/* create menu view */
-	app->menu_view = _dot_create_menu_view(!app->desktop_mode);
+	app->menu_view = _dot_create_menu_view(app->main_view, !app->desktop_mode);
 	if(!app->menu_view)
 	{
 		return false;
@@ -1344,6 +1345,7 @@ static void log_t3net(void)
 bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 {
 	int i;
+	int mobile_flags = 0;
 
 	/* detect game type */
 	app->desktop_mode = false;
@@ -1419,7 +1421,15 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	}
 
 	/* use 'T3F_FILL_SCREEN' for mobile */
-	t3f_adjust_view(t3f_current_view, t3f_current_view->offset_x, t3f_current_view->offset_y, t3f_current_view->width, t3f_current_view->height, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, app->desktop_mode ? T3F_FORCE_ASPECT : T3F_FORCE_ASPECT | T3F_FILL_SCREEN);
+	if((float)al_get_display_width(t3f_display) / (float)al_get_display_height(t3f_display) < 9.0 / 16.0)
+	{
+		mobile_flags = T3F_FORCE_ASPECT | T3F_FILL_SCREEN;
+	}
+	else
+	{
+		mobile_flags = T3F_FORCE_ASPECT;
+	}
+	t3f_adjust_view(t3f_current_view, t3f_current_view->offset_x, t3f_current_view->offset_y, t3f_current_view->width, t3f_current_view->height, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, app->desktop_mode ? T3F_FORCE_ASPECT : mobile_flags);
 	t3f_select_view(t3f_current_view);
 
 	if(!app_load_data(app))
