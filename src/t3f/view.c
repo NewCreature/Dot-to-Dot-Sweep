@@ -102,8 +102,6 @@ static void _t3f_setup_view_transformation_letterbox_fill(T3F_VIEW * view, float
 
 static void _t3f_setup_view_transformation_fillscreen(T3F_VIEW * view, float view_ratio, float virtual_display_ratio)
 {
-	bool letterbox = false;
-
 	if(view->aspect_min > 0.0)
 	{
 		if(view_ratio < view->aspect_min)
@@ -316,7 +314,6 @@ void t3f_select_input_view(T3F_VIEW * vp)
 	float translate_y = 0.0;
 	float scale_x = 1.0;
 	float scale_y = 1.0;
-	int i;
 
 	if(vp->need_update)
 	{
