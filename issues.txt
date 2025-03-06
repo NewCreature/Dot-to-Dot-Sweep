@@ -14,9 +14,6 @@ v1.6
 
 [X]Blue line at top of screen on Android.
 
-   [X]Couldn't fix it, but it is less of an issue with the new screen filling
-      render code.
-
 [ ]Clicking outside the click rectangle causes the gameplay to start as soon as
    the mouse is moved into the rectangle.
 
