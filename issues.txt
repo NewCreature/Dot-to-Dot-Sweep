@@ -3,7 +3,7 @@ v1.6
 
 [ ]Finalize software cursor design.
 
-[ ]Update changelog.
+[X]Update changelog.
 
 [ ]Remove mouse sensitivity Steam Deck override since we found a workaround.
 
