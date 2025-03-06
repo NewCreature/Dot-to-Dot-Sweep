@@ -17,6 +17,9 @@ v1.6
    [X]Couldn't fix it, but it is less of an issue with the new screen filling
       render code.
 
+[ ]Clicking outside the click rectangle causes the gameplay to start as soon as
+   the mouse is moved into the rectangle.
+
 [X]Dot splat particles should be rendered below overlays.
 
 [X]Player position glitches when moving along edges in windowed mode.
