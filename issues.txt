@@ -10,7 +10,7 @@ v1.6
    [ ]When selecting 'No' on the 'Play Again?' menu, the 'Privacy' option on
       the menu immediately activated.
 
-[ ]'Exit to OS' is selected on main menu when using touch controls.
+[X]'Exit to OS' is selected on main menu when using touch controls.
 
 [X]Blue line at top of screen on Android.
 
