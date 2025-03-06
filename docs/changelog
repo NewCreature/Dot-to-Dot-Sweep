@@ -1,3 +1,16 @@
+dot-to-dot-sweep (1.6) stable; urgency=low
+
+  * Improved sprite rendering (fixes shimmering artifacts).
+  * Fixed Android launcher not working.
+  * Upgraded to the latest Steamworks SDK.
+  * Added workarounds for mouse related issues when running the game on Steam
+    Deck.
+  * Polished various aspects of in-game rendering.
+  * Fixed stray line at adge of display on Android.
+  * Polished UI.
+
+ -- Todd Cope <todd@tcubedsoftware.com>  Thu, 06 Mar 2025 02:02:00 +0000
+
 dot-to-dot-sweep (1.5) stable; urgency=low
 
   * Add support for controllers to Android port.
