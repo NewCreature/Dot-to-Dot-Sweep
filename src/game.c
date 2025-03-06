@@ -1150,16 +1150,21 @@ void dot_game_logic(void * data)
 					{
 						if(app->desktop_mode)
 						{
-							if(t3f_touch_pressed(0) && app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
+							if(t3f_touch_pressed(0))
 							{
-								start_turn(app, t3f_get_mouse_x(), t3f_get_mouse_y(), false, 0, true);
+								if(app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
+								{
+									start_turn(app, t3f_get_mouse_x(), t3f_get_mouse_y(), false, 0, true);
+								}
 							}
+							t3f_use_touch_press(0);
 						}
 						else
 						{
 							if(t3f_touch_pressed(0))
 							{
 								start_turn(app, DOT_GAME_PLAYFIELD_WIDTH / 2, DOT_GAME_PLAYFIELD_HEIGHT / 2, true, 0, true);
+								t3f_use_touch_press(0);
 							}
 						}
 						break;
