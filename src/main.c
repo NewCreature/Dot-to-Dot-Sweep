@@ -445,6 +445,7 @@ void app_render(void * data)
 			break;
 		}
 	}
+	t3f_select_view(app->main_view);
 	al_hold_bitmap_drawing(true);
 	qsort(app->point_particle, app->point_particles, sizeof(DOT_PARTICLE *), dot_particle_qsort_helper);
 	for(i = 0; i < app->point_particles; i++)
