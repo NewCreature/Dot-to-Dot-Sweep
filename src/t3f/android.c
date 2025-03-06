@@ -222,9 +222,14 @@ JNI_FUNC(void, MainActivity, nativeOnEditComplete, (JNIEnv *env, jobject obj, js
 		}
 		(*env)->ReleaseStringUTFChars(env, retB, ret);
 		return real_ret;
-}
+	}
 
-#else
+	void _t3f_reset_android_bg_color(void)
+	{
+		_jni_callVoidMethodV(_al_android_get_jnienv(), _al_android_activity_object(), "ResetBackgroundColor", "()V");
+	}
+
+	#else
 
 	void t3f_android_support_helper(void)
 	{
@@ -235,6 +240,10 @@ JNI_FUNC(void, MainActivity, nativeOnEditComplete, (JNIEnv *env, jobject obj, js
 	}
 
 	void t3f_show_soft_keyboard(bool toggle)
+	{
+	}
+
+	void _t3f_reset_android_bg_color(void)
 	{
 	}
 
