@@ -1286,6 +1286,7 @@ void dot_game_render_hud(void * data)
 		al_hold_bitmap_drawing(false);
 	}
 
+	t3f_set_clipping_rectangle(0, 0, 0, 0);
 	al_draw_filled_rectangle(0, DOT_GAME_PLAYFIELD_HEIGHT, 540 + 0.5, DOT_GAME_PLAYFIELD_HEIGHT + 80 + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 	if(app->desktop_mode)
 	{
@@ -1393,6 +1394,7 @@ void dot_game_render(void * data)
 	t3f_select_view(t3f_default_view);
 	al_clear_to_color(app->game.bg_color);
 	t3f_select_view(app->main_view);
+	t3f_set_clipping_rectangle(0, 0, DOT_GAME_PLAYFIELD_WIDTH, DOT_GAME_PLAYFIELD_HEIGHT);
 	al_hold_bitmap_drawing(true);
 	dot_bg_objects_render(data);
 	al_draw_bitmap(app->bitmap[DOT_BITMAP_BG]->bitmap, 0, 0, 0);
@@ -1455,6 +1457,8 @@ void dot_game_render(void * data)
 	{
 		dot_particle_render(app->splat_particle[i], app->bitmap[DOT_BITMAP_PARTICLE]);
 	}
+	al_hold_bitmap_drawing(false);
+	al_hold_bitmap_drawing(true);
 	dot_game_render_hud(data);
 	if((app->game.tick / 6) % 2)
 	{
