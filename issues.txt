@@ -14,7 +14,7 @@ v1.6
 
 [X]Blue line at top of screen on Android.
 
-[ ]Clicking outside the click rectangle causes the gameplay to start as soon as
+[X]Clicking outside the click rectangle causes the gameplay to start as soon as
    the mouse is moved into the rectangle.
 
 [X]Dot splat particles should be rendered below overlays.
