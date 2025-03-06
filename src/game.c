@@ -1483,10 +1483,10 @@ void dot_game_render(void * data)
 		t3f_select_view(app->menu_view);
 		al_hold_bitmap_drawing(true);
 		dot_create_touch_start_effect(data);
+		t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, 0, 0.0, DOT_GAME_PLAYFIELD_WIDTH + 0.5, app->menu_view->virtual_height, 0);
 		if(app->desktop_mode)
 		{
 			t3f_set_clipping_rectangle(0, 0, DOT_GAME_PLAYFIELD_WIDTH, DOT_GAME_PLAYFIELD_HEIGHT);
-			t3f_draw_scaled_bitmap(app->bitmap[DOT_BITMAP_SCRATCH], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0, 0, 0.0, DOT_GAME_PLAYFIELD_WIDTH + 0.5, app->menu_view->virtual_height, 0);
 		}
 		if(app->desktop_mode)
 		{
