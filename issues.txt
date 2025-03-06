@@ -5,6 +5,8 @@ v1.6
 
 [ ]Update changelog.
 
+[ ]Remove mouse sensitivity Steam Deck override since we found a workaround.
+
 [X]'Exit to OS' is selected on main menu when using touch controls.
 
 [X]Blue line at top of screen on Android.
