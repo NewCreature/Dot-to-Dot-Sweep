@@ -39,7 +39,10 @@ static void remember_element(APP_INSTANCE * app)
 
 static void recall_element(APP_INSTANCE * app)
 {
-	app->menu[app->current_menu]->hover_element = app->previous_element;
+	if(app->input_type == DOT_INPUT_CONTROLLER)
+	{
+		app->menu[app->current_menu]->hover_element = app->previous_element;
+	}
 }
 
 static void dot_update_first_run(void)
