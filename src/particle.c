@@ -2,8 +2,9 @@
 #include "t3f/draw.h"
 #include "particle.h"
 
-void dot_create_particle(DOT_PARTICLE * pp, float x, float y, float z, float vx, float vy, float vz, float gz, float size, int life, T3F_BITMAP * bp, ALLEGRO_COLOR color)
+void dot_create_particle(DOT_PARTICLE * pp, int type, float x, float y, float z, float vx, float vy, float vz, float gz, float size, int life, T3F_BITMAP * bp, ALLEGRO_COLOR color)
 {
+	pp->type = type;
 	pp->x = x;
 	pp->y = y;
 	pp->z = z;
@@ -46,3 +47,15 @@ void dot_particle_render(DOT_PARTICLE * pp, T3F_BITMAP * particle_bitmap)
 	c = al_map_rgba_f(r * ca, g * ca, b * ca, ca);
 	t3f_draw_scaled_bitmap(particle_bitmap, c, pp->x - al_get_bitmap_width(particle_bitmap->bitmap) / 2, pp->y - al_get_bitmap_height(particle_bitmap->bitmap) / 2, pp->z, pp->size, pp->size, 0);
 }
+
+int dot_particle_qsort_helper(const void * p1, const void * p2)
+{
+	DOT_PARTICLE ** sp1;
+	DOT_PARTICLE ** sp2;
+
+	sp1 = (DOT_PARTICLE **)p1;
+	sp2 = (DOT_PARTICLE **)p2;
+
+	return (*sp1)->z < (*sp2)->z;
+}
+

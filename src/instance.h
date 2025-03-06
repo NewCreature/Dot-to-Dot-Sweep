@@ -62,8 +62,10 @@ typedef struct
     /* particle effects */
     DOT_PARTICLE particle[DOT_MAX_PARTICLES];
     int current_particle;
-    DOT_PARTICLE * active_particle[DOT_MAX_PARTICLES];
-    int active_particles;
+    DOT_PARTICLE * point_particle[DOT_MAX_PARTICLES];
+    int point_particles;
+    DOT_PARTICLE * splat_particle[DOT_MAX_PARTICLES];
+    int splat_particles;
     DOT_BG_OBJECT bg_object[DOT_MAX_BG_OBJECTS];
     DOT_PARTICLE_LIST number_particle_list[10];
     DOT_PARTICLE_LIST extra_life_particle_list;

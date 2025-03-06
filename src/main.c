@@ -238,17 +238,6 @@ void app_touch_logic(void * data)
 	}
 }
 
-static int particle_qsort_helper(const void * p1, const void * p2)
-{
-	DOT_PARTICLE ** sp1;
-	DOT_PARTICLE ** sp2;
-
-	sp1 = (DOT_PARTICLE **)p1;
-	sp2 = (DOT_PARTICLE **)p2;
-
-	return (*sp1)->z < (*sp2)->z;
-}
-
 void app_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -396,13 +385,22 @@ void app_logic(void * data)
 		}
 	}
 	dot_mouse_cursor_logic();
-	app->active_particles = 0;
+	app->point_particles = 0;
+	app->splat_particles = 0;
 	for(i = 0; i < DOT_MAX_PARTICLES; i++)
 	{
 		if(app->particle[i].active)
 		{
-			app->active_particle[app->active_particles] = &app->particle[i];
-			app->active_particles++;
+			if(app->particle[i].type == 0)
+			{
+				app->point_particle[app->point_particles] = &app->particle[i];
+				app->point_particles++;
+			}
+			else
+			{
+				app->splat_particle[app->splat_particles] = &app->particle[i];
+				app->splat_particles++;
+			}
 		}
 		dot_particle_logic(&app->particle[i]);
 	}
@@ -448,10 +446,10 @@ void app_render(void * data)
 		}
 	}
 	al_hold_bitmap_drawing(true);
-	qsort(app->active_particle, app->active_particles, sizeof(DOT_PARTICLE *), particle_qsort_helper);
-	for(i = 0; i < app->active_particles; i++)
+	qsort(app->point_particle, app->point_particles, sizeof(DOT_PARTICLE *), dot_particle_qsort_helper);
+	for(i = 0; i < app->point_particles; i++)
 	{
-		dot_particle_render(app->active_particle[i], app->bitmap[DOT_BITMAP_PARTICLE]);
+		dot_particle_render(app->point_particle[i], app->bitmap[DOT_BITMAP_PARTICLE]);
 	}
 	if(app->desktop_mode)
 	{
@@ -1418,7 +1416,7 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 	t3f_set_event_handler(dot_event_handler);
 	if(!(t3f_flags & T3F_USE_FULLSCREEN))
 	{
-//		set_optimal_display_size(app);
+		set_optimal_display_size(app);
 	}
 	#ifdef ALLEGRO_ANDROID
 		t3net_setup(t3f_run_url, al_path_cstr(t3f_temp_path, '/'));

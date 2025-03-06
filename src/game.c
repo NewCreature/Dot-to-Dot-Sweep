@@ -314,7 +314,7 @@ static void dot_game_create_score_effect(void * data, float x, float y, int numb
 		cw = t3f_get_text_width(app->font[DOT_FONT_16], cbuf);
 		for(j = 0; j < app->number_particle_list[ni].items; j++)
 		{
-			dot_create_particle(&app->particle[app->current_particle], x + (float)app->number_particle_list[ni].item[j].x + px - ox, y + app->number_particle_list[ni].item[j].y, 0.0, dot_spread_effect_particle(app->number_particle_list[ni].item[j].x + px, w, strlen(buf) * 2.5), dot_spread_effect_particle(app->number_particle_list[ni].item[j].y, t3f_get_font_line_height(app->font[DOT_FONT_16]), 4.0), -10.0, 0.0, 3.0, 45, app->bitmap[DOT_BITMAP_PARTICLE], t3f_color_white);
+			dot_create_particle(&app->particle[app->current_particle], 0, x + (float)app->number_particle_list[ni].item[j].x + px - ox, y + app->number_particle_list[ni].item[j].y, 0.0, dot_spread_effect_particle(app->number_particle_list[ni].item[j].x + px, w, strlen(buf) * 2.5), dot_spread_effect_particle(app->number_particle_list[ni].item[j].y, t3f_get_font_line_height(app->font[DOT_FONT_16]), 4.0), -10.0, 0.0, 3.0, 45, app->bitmap[DOT_BITMAP_PARTICLE], t3f_color_white);
 			app->current_particle++;
 			if(app->current_particle >= DOT_MAX_PARTICLES)
 			{
@@ -339,7 +339,7 @@ static void dot_game_create_extra_life_effect(void * data, float x, float y)
 	px = 0.0;
 	for(j = 0; j < app->extra_life_particle_list.items; j++)
 	{
-		dot_create_particle(&app->particle[app->current_particle], x + (float)app->extra_life_particle_list.item[j].x + px - ox, y + app->extra_life_particle_list.item[j].y, 0.0, dot_spread_effect_particle(app->extra_life_particle_list.item[j].x + px, w, strlen(buf) * 2.5), dot_spread_effect_particle(app->extra_life_particle_list.item[j].y, t3f_get_font_line_height(app->font[DOT_FONT_16]), 4.0), -10.0, 0.0, 3.0, 45, app->bitmap[DOT_BITMAP_PARTICLE], t3f_color_white);
+		dot_create_particle(&app->particle[app->current_particle], 0, x + (float)app->extra_life_particle_list.item[j].x + px - ox, y + app->extra_life_particle_list.item[j].y, 0.0, dot_spread_effect_particle(app->extra_life_particle_list.item[j].x + px, w, strlen(buf) * 2.5), dot_spread_effect_particle(app->extra_life_particle_list.item[j].y, t3f_get_font_line_height(app->font[DOT_FONT_16]), 4.0), -10.0, 0.0, 3.0, 45, app->bitmap[DOT_BITMAP_PARTICLE], t3f_color_white);
 		app->current_particle++;
 		if(app->current_particle >= DOT_MAX_PARTICLES)
 		{
@@ -359,7 +359,7 @@ static void dot_game_create_splash_effect(void * data, float x, float y, float r
 		ga = t3f_drand(&app->rng_state) * ALLEGRO_PI * 2.0;
 		gx = cos(ga) * t3f_drand(&app->rng_state) * r * t3f_drand(&app->rng_state);
 		gy = sin(ga) * t3f_drand(&app->rng_state) * r * t3f_drand(&app->rng_state);
-		dot_create_particle(&app->particle[app->current_particle], x + gx, y + gy, 0.0, cos(ga) * t3f_drand(&app->rng_state), sin(ga) * t3f_drand(&app->rng_state), t3f_drand(&app->rng_state) * -5.0 - 5.0, 0.5, 5.0, 30, app->bitmap[DOT_BITMAP_PARTICLE], color);
+		dot_create_particle(&app->particle[app->current_particle], 1, x + gx, y + gy, 0.0, cos(ga) * t3f_drand(&app->rng_state), sin(ga) * t3f_drand(&app->rng_state), t3f_drand(&app->rng_state) * -5.0 - 5.0, 0.5, 5.0, 30, app->bitmap[DOT_BITMAP_PARTICLE], color);
 		app->current_particle++;
 		if(app->current_particle >= DOT_MAX_PARTICLES)
 		{
@@ -1445,6 +1445,11 @@ void dot_game_render(void * data)
 			dot_shadow_text(app->font[DOT_FONT_16], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), app->game.player.ball.x, app->game.player.ball.y - app->game.player.ball.r - 16.0 - 8.0, DOT_SHADOW_OX, DOT_SHADOW_OY, T3F_FONT_ALIGN_CENTER, buf);
 		}
 	}
+	qsort(app->splat_particle, app->splat_particles, sizeof(DOT_PARTICLE *), dot_particle_qsort_helper);
+	for(i = 0; i < app->splat_particles; i++)
+	{
+		dot_particle_render(app->splat_particle[i], app->bitmap[DOT_BITMAP_PARTICLE]);
+	}
 	dot_game_render_hud(data);
 	if((app->game.tick / 6) % 2)
 	{
@@ -1457,7 +1462,10 @@ void dot_game_render(void * data)
 		al_draw_filled_rectangle(0.0, 0.0, app->main_view->virtual_width + 0.5, app->main_view->virtual_height + 0.5, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_hold_bitmap_drawing(true);
 		t3f_select_view(app->main_view);
-		dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, level_y, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, "Paused");
+		if(!app->desktop_mode)
+		{
+			dot_shadow_text(app->font[DOT_FONT_32], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, level_y, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, "Paused");
+		}
 		t3f_select_view(app->menu_view);
 		t3f_render_gui(app->menu[DOT_MENU_PAUSE], 0);
 	}
