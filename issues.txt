@@ -1,7 +1,7 @@
 v1.6
 ----
 
-[ ]Finalize software cursor design.
+[X]Finalize software cursor design.
 
 [X]Update changelog.
 
