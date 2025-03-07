@@ -5,7 +5,7 @@ v1.6
 
 [X]Update changelog.
 
-[ ]Remove mouse sensitivity Steam Deck override since we found a workaround.
+[X]Remove mouse sensitivity Steam Deck override since we found a workaround.
 
 [ ]Ensure Android version is up to the current Play Store standards.
 
