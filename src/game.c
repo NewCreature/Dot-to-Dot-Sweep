@@ -1144,14 +1144,14 @@ void dot_game_logic(void * data)
 					{
 						if(app->desktop_mode)
 						{
-							if(t3f_touch_pressed(0))
+							if(t3f_mouse_button_pressed(0))
 							{
 								if(app->touch_x >= DOT_GAME_TOUCH_START_X && app->touch_x < DOT_GAME_TOUCH_END_X && app->touch_y >= DOT_GAME_TOUCH_START_Y && app->touch_y < DOT_GAME_TOUCH_END_Y)
 								{
 									start_turn(app, t3f_get_mouse_x(), t3f_get_mouse_y(), false, 0, true);
 								}
 							}
-							t3f_use_touch_press(0);
+							t3f_use_mouse_button_press(0);
 						}
 						else
 						{
@@ -1247,7 +1247,7 @@ void dot_game_logic(void * data)
 				{
 					t3f_set_mouse_xy(app->game.player.ball.x, app->game.player.ball.y);
 					dot_enable_mouse_cursor(true);
-					t3f_use_touch_press(app->touch_id);
+					t3f_use_mouse_button_press(app->touch_id);
 				}
 				open_pause_menu(app, false);
 				t3f_use_key_press(ALLEGRO_KEY_ESCAPE);
