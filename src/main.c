@@ -201,6 +201,7 @@ void app_mouse_logic(void * data)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
+	app->touch_id = 0;
 	t3f_select_input_view(app->main_view);
 	app->old_touch_x = app->touch_x;
 	app->old_touch_y = app->touch_y;
