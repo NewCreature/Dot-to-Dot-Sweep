@@ -763,12 +763,6 @@ static void move_player_with_mouse(APP_INSTANCE * app)
 	{
 		mouse_sensitivity = app->mouse_sensitivity;
 	}
-
-	/* set 0.667 scale in Steam Deck handheld mode */
-	else if(app->on_steam_deck)
-	{
-		mouse_sensitivity = 0.667;
-	}
 	if(mouse_sensitivity <= 0.0)
 	{
 		confine_mouse(app);
