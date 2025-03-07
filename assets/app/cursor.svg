@@ -2,13 +2,16 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="24"
-   height="24"
-   viewBox="0 0 6.3499999 6.35"
+   width="17"
+   height="25"
+   viewBox="0 0 4.4979168 6.6145833"
    version="1.1"
    id="svg1"
    inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
-   sodipodi:docname="software_cursor.svg"
+   sodipodi:docname="cursor.svg"
+   inkscape:export-filename="../../bin/data/graphics/5x/cursor.png"
+   inkscape:export-xdpi="480"
+   inkscape:export-ydpi="480"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,9 +27,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="true"
-     inkscape:zoom="16.771208"
-     inkscape:cx="9.8681027"
-     inkscape:cy="12.700338"
+     inkscape:zoom="23.71807"
+     inkscape:cx="3.4783606"
+     inkscape:cy="16.190188"
      inkscape:window-width="1104"
      inkscape:window-height="619"
      inkscape:window-x="0"
@@ -49,15 +52,58 @@
        visible="true" />
   </sodipodi:namedview>
   <defs
-     id="defs1" />
+     id="defs1">
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Drop Shadow"
+       id="filter20"
+       x="-0.11836333"
+       y="-0.075316463"
+       width="1.2637168"
+       height="1.1678134">
+      <feFlood
+         result="flood"
+         in="SourceGraphic"
+         flood-opacity="0.498039"
+         flood-color="rgb(0,0,0)"
+         id="feFlood19" />
+      <feGaussianBlur
+         result="blur"
+         in="SourceGraphic"
+         stdDeviation="0.100000"
+         id="feGaussianBlur19" />
+      <feOffset
+         result="offset"
+         in="blur"
+         dx="0.100000"
+         dy="0.100000"
+         id="feOffset19" />
+      <feComposite
+         result="comp1"
+         operator="in"
+         in="flood"
+         in2="offset"
+         id="feComposite19" />
+      <feComposite
+         result="comp2"
+         operator="over"
+         in="SourceGraphic"
+         in2="comp1"
+         id="feComposite20" />
+    </filter>
+  </defs>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
-       d="m 0.26458332,6.0854163 0,-5.82083298 L 3.9687499,4.4979164 H 1.8520833 Z"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.396875;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter20)"
+       d="M 0.26458332,6.0854163 V 0.26458332 L 3.9687499,4.4979164 H 1.8520833 Z"
        id="path1"
        sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:#000000;fill-opacity:0.0895522;stroke:none;stroke-width:0.264583;stroke-linecap:round;stroke-linejoin:round"
+       d="M 0.26458332,0.26458332 3.9687497,4.4979163 H 1.8520832 Z"
+       id="path20" />
   </g>
 </svg>
