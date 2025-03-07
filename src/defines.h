@@ -104,7 +104,7 @@
 
 #define DOT_LEADERBOARD_FACTOR         67
 
-#define DOT_TOUCH_COOLDOWN_TICKS       60
+#define DOT_TOUCH_COOLDOWN_TICKS        5
 
 #define DOT_INPUT_NONE                  0
 #define DOT_INPUT_MOUSE                 1

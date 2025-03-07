@@ -152,6 +152,10 @@ static void dot_event_handler(ALLEGRO_EVENT * event, void * data)
 		case ALLEGRO_EVENT_MOUSE_AXES:
 		{
 			t3f_event_handler(event);
+			if(app->touch_cooldown_ticks > 0)
+			{
+				app->touch_cooldown_ticks--;
+			}
 			if(app->touch_cooldown_ticks <= 0)
 			{
 				if(app->input_type != DOT_INPUT_MOUSE)
@@ -294,11 +298,6 @@ void app_logic(void * data)
 		t3f_use_key_press(ALLEGRO_KEY_PRINTSCREEN);
 		t3f_use_key_press(ALLEGRO_KEY_TILDE);
 		t3f_use_key_press(104);
-	}
-
-	if(app->touch_cooldown_ticks > 0)
-	{
-		app->touch_cooldown_ticks--;
 	}
 
 	/* read keyboard and controller state */

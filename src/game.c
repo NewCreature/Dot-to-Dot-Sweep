@@ -1241,7 +1241,7 @@ void dot_game_logic(void * data)
 		default:
 		{
 			dot_enable_mouse_cursor(false);
-			if((app->touch_id == 0 && t3f_touch_pressed(app->touch_id)) || t3f_key_pressed(ALLEGRO_KEY_ESCAPE) || t3f_key_pressed(ALLEGRO_KEY_BACK) || app->controller.button || app->controller.current_joy_disconnected)
+			if(t3f_mouse_button_pressed(0) || t3f_key_pressed(ALLEGRO_KEY_ESCAPE) || t3f_key_pressed(ALLEGRO_KEY_BACK) || app->controller.button || app->controller.current_joy_disconnected)
 			{
 				if(app->input_type == DOT_INPUT_MOUSE)
 				{
