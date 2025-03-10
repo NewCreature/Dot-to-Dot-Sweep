@@ -1,3 +1,10 @@
+dot-to-dot-sweep (1.6.2) stable; urgency=low
+
+  * Fixed crash when handling leaderboard functions on Android if the
+    leaderboard server could not be accessed for some reason.
+
+ -- Todd Cope <todd@tcubedsoftware.com>  Mon, 10 Mar 2025 14:15:38 +0000
+
 dot-to-dot-sweep (1.6.1) stable; urgency=low
 
   * Fixed issue where the game would pause when the player first starts it when
