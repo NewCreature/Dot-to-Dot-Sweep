@@ -1,13 +1,13 @@
 v1.7
 ----
 
-[ ]Finish move to latest version of T3F.
+[X]Finish move to latest version of T3F.
 
-   [ ]Figure out issue with 'dot_shadow_text()' call.
+   [X]Figure out issue with 'dot_shadow_text()' call.
 
-   [ ]Figure out how dead zone was reworked.
+   [X]Figure out how dead zone was reworked.
 
-   [ ]Fix views not working properly (graphics rendered too small).
+   [X]Fix views not working properly (graphics rendered too small).
 
 v1.6
 ----

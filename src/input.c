@@ -28,10 +28,10 @@ void dot_destroy_input(DOT_INPUT_DATA * ip)
 static void remap_controller(T3F_INPUT_HANDLER * input_handler, int device_index, float dead_zone)
 {
   t3f_map_input_for_xbox_controller(input_handler, device_index);
-  input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].dead_zone = dead_zone;
-  input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].dead_zone = dead_zone;
-  input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].dead_zone = dead_zone;
-  input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].dead_zone = dead_zone;
+  input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_X].binding[0].dead_zone = dead_zone;
+  input_handler->element[T3F_GAMEPAD_LEFT_ANALOG_Y].binding[0].dead_zone = dead_zone;
+  input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_X].binding[0].dead_zone = dead_zone;
+  input_handler->element[T3F_GAMEPAD_RIGHT_ANALOG_Y].binding[0].dead_zone = dead_zone;
 }
 
 void dot_handle_joystick_event(DOT_INPUT_DATA * ip, ALLEGRO_EVENT * ep)

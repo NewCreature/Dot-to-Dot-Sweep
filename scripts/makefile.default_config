@@ -11,7 +11,7 @@
 #ifdef CL_STEAM_BUILD
 #  CONFIG_STEAMWORKS_SDK_PATH =
 #  CONFIG_STEAMWORKS_PLATFORM =
-#  CONFIG_STEAMWORKS_CFLAGS =
+#  CONFIG_STEAMWORKS_CFLAGS = -I$(CONFIG_STEAMWORKS_SDK_PATH)/public -DT3F_ENABLE_STEAM_INTEGRATION
 #  CONFIG_STEAMWORKS_LFLAGS =
 #  CONFIG_STEAMWORKS_DEPEND_LIBS =
 #endif
@@ -69,6 +69,15 @@ MACOS_CXX = g++
 ifndef MACOS_CXX_STDLIB
   MACOS_CXX_STDLIB = c++
 endif
+MACOS_CONFIG_CXX_STDLIB_I386 = stdc++
+MACOS_CONFIG_CXX_STDLIB_X86_64 = stdc++
+MACOS_CONFIG_CXX_STDLIB_ARM64 = c++
+MACOS_CONFIG_MIN_VERSION_I386 = 10.6
+MACOS_CONFIG_MIN_VERSION_X86_64 = 10.6
+MACOS_CONFIG_MIN_VERSION_ARM64 = 11.0
+MACOS_CONFIG_SDK_I386 = MacOSX10.13.sdk
+MACOS_CONFIG_SDK_X86_64 = MacOSX10.13.sdk
+MACOS_CONFIG_SDK_ARM64 = MacOSX.sdk
 MACOS_CONFIG_CFLAGS = $(CONFIG_STEAMWORKS_CFLAGS)
 #MACOS_CONFIG_CXXFLAGS =
 MACOS_CONFIG_LFLAGS = $(CONFIG_STEAMWORKS_LFLAGS)
@@ -79,7 +88,7 @@ MACOS_CONFIG_DEPEND_LIBS = $(CONFIG_STEAMWORKS_DEPEND_LIBS)
 #MACOS_CONFIG_APPLE_ID =
 #MACOS_CONFIG_APPLE_ID_PASSWORD =
 #MACOS_CONFIG_APPLE_TEAM_ID =
-MACOS_CONFIG_XCODE_PATH = /Applications/Xcode.app
+MACOS_CONFIG_XCODE_PATH = $(HOME)/Xcode.app
 
 ###################
 # iPhone Settings #
@@ -121,7 +130,7 @@ MSYS_CONFIG_ALLEGRO_SUFFIX = -static
 MSYS_CONFIG_DEPEND_LIBS = -luuid -lkernel32 -lwinmm -lpsapi\
               -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32\
               -ladvapi32 -lws2_32 -lshlwapi -lvorbisfile -lvorbis -lFLAC -logg\
-              -ldumb -lopusfile -lopus -lfreetype -lpng -lz -ljpeg -lwebp -ld3d9 -ldsound -lstdc++ -lssp -lsharpyuv $(CONFIG_STEAMWORKS_DEPEND_LIBS)
+              -ldumb -lopusfile -lopus -lfreetype -lpng -lz -ljpeg -lwebp -ld3d9 -ldsound -lstdc++ -lssp -lsharpyuv -lphysfs $(CONFIG_STEAMWORKS_DEPEND_LIBS)
 
 ##################
 # Linux Settings #

@@ -33,7 +33,7 @@
 	#include "windows.h"
 #endif
 #ifdef T3F_PNG
-	#include "png.h"
+	#include "internal_png.h"
 #endif
 #include "mouse.h"
 #include "keyboard.h"
@@ -494,7 +494,7 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 	if(!(t3f_flags & T3F_NO_DISPLAY))
 	{
 		/* create a default view */
-		t3f_default_view = t3f_create_view(0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display), t3f_virtual_display_width / 2, t3f_virtual_display_height / 2, t3f_flags);
+		t3f_default_view = t3f_create_view(NULL, 0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display), t3f_virtual_display_width / 2, t3f_virtual_display_height / 2, t3f_flags);
 		if(!t3f_default_view)
 		{
 			printf("Failed to create default view!\n");
@@ -1017,15 +1017,16 @@ void t3f_set_event_handler(void (*proc)(ALLEGRO_EVENT * event, void * data))
 
 bool t3f_save_config(void)
 {
-	const ALLEGRO_FILE_INTERFACE * old_interface;
+	ALLEGRO_STATE old_state;
 	bool ret = false;
 
 	if(t3f_config)
 	{
-		old_interface = al_get_new_file_interface();
+		al_store_state(&old_state, ALLEGRO_STATE_NEW_FILE_INTERFACE);
+		al_set_standard_fs_interface();
 		al_set_standard_file_interface();
 		ret = al_save_config_file(t3f_config_filename, t3f_config);
-		al_set_new_file_interface(old_interface);
+		al_restore_state(&old_state);
 	}
 
 	return ret;
@@ -1033,15 +1034,16 @@ bool t3f_save_config(void)
 
 bool t3f_save_user_data(void)
 {
-	const ALLEGRO_FILE_INTERFACE * old_interface;
+	ALLEGRO_STATE old_state;
 	bool ret = false;
 
 	if(t3f_user_data)
 	{
-		old_interface = al_get_new_file_interface();
+		al_store_state(&old_state, ALLEGRO_STATE_NEW_FILE_INTERFACE);
+		al_set_standard_fs_interface();
 		al_set_standard_file_interface();
 		ret = al_save_config_file(t3f_user_data_filename, t3f_user_data);
-		al_set_new_file_interface(old_interface);
+		al_restore_state(&old_state);
 	}
 
 	return ret;
@@ -1427,8 +1429,8 @@ void t3f_finish(void)
 	}
 	if(t3f_flags & T3F_USE_SOUND)
 	{
-		_t3f_clean_up_sound_data();
 		t3f_stop_music();
+		_t3f_clean_up_sound_data();
 	}
 	if(t3f_flags & T3F_USE_KEYBOARD)
 	{

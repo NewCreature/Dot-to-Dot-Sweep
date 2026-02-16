@@ -45,12 +45,20 @@ static void _t3f_destroy_animation_data(T3F_ANIMATION_DATA * ap)
 
 	if(ap)
 	{
-		for(i = 0; i < ap->frames; i++)
+		if(ap->frame_list)
 		{
-			if(ap->frame[i])
+			free(ap->frame_list);
+		}
+		if(ap->frame)
+		{
+			for(i = 0; i < ap->frames; i++)
 			{
-				free(ap->frame[i]);
+				if(ap->frame[i])
+				{
+					free(ap->frame[i]);
+				}
 			}
+			free(ap->frame);
 		}
 		if(!(ap->flags & T3F_ANIMATION_FLAG_EXTERNAL_BITMAPS))
 		{
@@ -80,15 +88,12 @@ static T3F_ANIMATION_DATA * _t3f_create_animation_data(void)
 		goto fail;
 	}
 	memset(ap, 0, sizeof(T3F_ANIMATION_DATA));
-	ap->bitmaps = al_malloc(sizeof(T3F_ANIMATION_BITMAPS));
+	ap->bitmaps = malloc(sizeof(T3F_ANIMATION_BITMAPS));
 	if(!ap->bitmaps)
 	{
 		goto fail;
 	}
-	ap->bitmaps->count = 0;
-	ap->frames = 0;
-	ap->frame_list_total = 0;
-	ap->flags = 0;
+	memset(ap->bitmaps, 0, sizeof(T3F_ANIMATION_BITMAPS));
 
 	return ap;
 
@@ -104,7 +109,7 @@ T3F_ANIMATION * t3f_create_animation(void)
 {
 	T3F_ANIMATION * ap;
 
-	ap = al_malloc(sizeof(T3F_ANIMATION));
+	ap = malloc(sizeof(T3F_ANIMATION));
 	if(!ap)
 	{
 		goto fail;
@@ -147,7 +152,7 @@ T3F_ANIMATION * t3f_clone_animation(T3F_ANIMATION * ap)
 	{
 		for(i = 0; i < ap->data->bitmaps->count; i++)
 		{
-			t3f_clone_resource((void **)&(clone->data->bitmaps->bitmap[i]), ap->data->bitmaps->bitmap[i]);
+			t3f_clone_resource((void **)&(clone->data->bitmaps->bitmap[i]), (void **)&ap->data->bitmaps->bitmap[i]);
 			if(!clone->data->bitmaps->bitmap[i])
 			{
 				printf("failed to clone bitmap\n");
@@ -163,6 +168,7 @@ T3F_ANIMATION * t3f_clone_animation(T3F_ANIMATION * ap)
 			goto fail;
 		}
 	}
+	clone->data->loop_point = ap->data->loop_point;
 	clone->data->flags = ap->data->flags;
 	return clone;
 
@@ -208,16 +214,47 @@ int _t3f_animation_data_build_frame_list(T3F_ANIMATION_DATA * ap)
 {
 	int i, j;
 
+	/* count frames */
 	ap->frame_list_total = 0;
 	for(i = 0; i < ap->frames; i++)
 	{
 		for(j = 0; j < ap->frame[i]->ticks; j++)
 		{
-			ap->frame_list[ap->frame_list_total] = i;
 			ap->frame_list_total++;
 		}
 	}
+
+	/* allocate frame list */
+	if(ap->frame_list)
+	{
+		free(ap->frame_list);
+	}
+	ap->frame_list = NULL;
+	if(ap->frame_list_total > 0)
+	{
+		ap->frame_list = malloc(sizeof(int) * ap->frame_list_total);
+		if(!ap->frame_list)
+		{
+			goto fail;
+		}
+
+		/* build frame list */
+		ap->frame_list_total = 0;
+		for(i = 0; i < ap->frames; i++)
+		{
+			for(j = 0; j < ap->frame[i]->ticks; j++)
+			{
+				ap->frame_list[ap->frame_list_total] = i;
+				ap->frame_list_total++;
+			}
+		}
+	}
 	return 1;
+
+	fail:
+	{
+		return 0;
+	}
 }
 
 static T3F_ANIMATION_DATA * _t3f_load_animation_data_f(ALLEGRO_FILE * fp, const char * fn, int flags)
@@ -246,19 +283,25 @@ static T3F_ANIMATION_DATA * _t3f_load_animation_data_f(ALLEGRO_FILE * fp, const 
 			ap->bitmaps->count = al_fread16le(fp);
 			for(i = 0; i < ap->bitmaps->count; i++)
 			{
-				ap->bitmaps->bitmap[i] = t3f_load_bitmap_f(fp, fn, flags);
+				ap->bitmaps->bitmap[i] = t3f_load_bitmap_f(fp, fn, flags | T3F_BITMAP_FLAG_DIRECT_LOAD);
 				if(!ap->bitmaps->bitmap[i])
 				{
 					goto fail;
 				}
 			}
 			ap->frames = al_fread16le(fp);
+			ap->frame = malloc(sizeof(T3F_ANIMATION_FRAME *) * ap->frames);
+			if(!ap->frame)
+			{
+				goto fail;
+			}
+			memset(ap->frame, 0, sizeof(T3F_ANIMATION_FRAME *) * ap->frames);
 			for(i = 0; i < ap->frames; i++)
 			{
-				ap->frame[i] = al_malloc(sizeof(T3F_ANIMATION_FRAME));
+				ap->frame[i] = malloc(sizeof(T3F_ANIMATION_FRAME));
 				if(!ap->frame[i])
 				{
-					return NULL;
+					goto fail;
 				}
 				ap->frame[i]->bitmap = al_fread16le(fp);
 				ap->frame[i]->x = t3f_fread_float(fp);
@@ -285,12 +328,18 @@ static T3F_ANIMATION_DATA * _t3f_load_animation_data_f(ALLEGRO_FILE * fp, const 
 				}
 			}
 			ap->frames = al_fread16le(fp);
+			ap->frame = malloc(sizeof(T3F_ANIMATION_FRAME *) * ap->frames);
+			if(!ap->frame)
+			{
+				goto fail;
+			}
+			memset(ap->frame, 0, sizeof(T3F_ANIMATION_FRAME *) * ap->frames);
 			for(i = 0; i < ap->frames; i++)
 			{
 				ap->frame[i] = al_malloc(sizeof(T3F_ANIMATION_FRAME));
 				if(!ap->frame[i])
 				{
-					return NULL;
+					goto fail;
 				}
 				memset(ap->frame[i], 0, sizeof(T3F_ANIMATION_FRAME));
 				ap->frame[i]->bitmap = al_fread16le(fp);
@@ -303,6 +352,46 @@ static T3F_ANIMATION_DATA * _t3f_load_animation_data_f(ALLEGRO_FILE * fp, const 
 				ap->frame[i]->ticks = al_fread32le(fp);
 				ap->frame[i]->flags = al_fread32le(fp);
 			}
+			ap->flags = al_fread32le(fp);
+			break;
+		}
+		case 2:
+		{
+			ap->bitmaps->count = al_fread16le(fp);
+			for(i = 0; i < ap->bitmaps->count; i++)
+			{
+				ap->bitmaps->bitmap[i] = t3f_load_bitmap_f(fp, fn, flags);
+				if(!ap->bitmaps->bitmap[i])
+				{
+					goto fail;
+				}
+			}
+			ap->frames = al_fread16le(fp);
+			ap->frame = malloc(sizeof(T3F_ANIMATION_FRAME *) * ap->frames);
+			if(!ap->frame)
+			{
+				goto fail;
+			}
+			memset(ap->frame, 0, sizeof(T3F_ANIMATION_FRAME *) * ap->frames);
+			for(i = 0; i < ap->frames; i++)
+			{
+				ap->frame[i] = al_malloc(sizeof(T3F_ANIMATION_FRAME));
+				if(!ap->frame[i])
+				{
+					goto fail;
+				}
+				memset(ap->frame[i], 0, sizeof(T3F_ANIMATION_FRAME));
+				ap->frame[i]->bitmap = al_fread16le(fp);
+				ap->frame[i]->x = t3f_fread_float(fp);
+				ap->frame[i]->y = t3f_fread_float(fp);
+				ap->frame[i]->z = t3f_fread_float(fp);
+				ap->frame[i]->width = t3f_fread_float(fp);
+				ap->frame[i]->height = t3f_fread_float(fp);
+				ap->frame[i]->angle = t3f_fread_float(fp);
+				ap->frame[i]->ticks = al_fread32le(fp);
+				ap->frame[i]->flags = al_fread32le(fp);
+			}
+			ap->loop_point = al_fread32le(fp);
 			ap->flags = al_fread32le(fp);
 			break;
 		}
@@ -366,38 +455,75 @@ static int _t3f_animation_data_add_bitmap(T3F_ANIMATION_DATA * ap, T3F_BITMAP * 
 
 static int _t3f_animation_data_add_frame(T3F_ANIMATION_DATA * ap, int bitmap, float x, float y, float z, float w, float h, float angle, int ticks, int flags)
 {
-	ap->frame[ap->frames] = al_malloc(sizeof(T3F_ANIMATION_FRAME));
-	if(ap->frame[ap->frames])
+	int i;
+	T3F_ANIMATION_FRAME ** new_frame;
+
+	new_frame = malloc(sizeof(T3F_ANIMATION_FRAME *) * (ap->frames + 1));
+	if(!new_frame)
 	{
-		memset(ap->frame[ap->frames], 0, sizeof(T3F_ANIMATION_FRAME));
-		ap->frame[ap->frames]->bitmap = bitmap;
-		ap->frame[ap->frames]->x = x;
-		ap->frame[ap->frames]->y = y;
-		ap->frame[ap->frames]->z = z;
-		if(w < 0.0)
-		{
-			ap->frame[ap->frames]->width = ap->bitmaps->bitmap[bitmap]->target_width;
-		}
-		else
-		{
-			ap->frame[ap->frames]->width = w;
-		}
-		if(h < 0.0)
-		{
-			ap->frame[ap->frames]->height = ap->bitmaps->bitmap[bitmap]->target_height;
-		}
-		else
-		{
-			ap->frame[ap->frames]->height = h;
-		}
-		ap->frame[ap->frames]->angle = angle;
-		ap->frame[ap->frames]->ticks = ticks;
-		ap->frame[ap->frames]->flags = flags;
-		ap->frames++;
-		_t3f_animation_data_build_frame_list(ap);
-		return 1;
+		goto fail;
 	}
-	return 0;
+	memset(new_frame, 0, sizeof(T3F_ANIMATION_FRAME *) * (ap->frames + 1));
+
+	if(ap->frame)
+	{
+		for(i = 0; i < ap->frames; i++)
+		{
+			new_frame[i] = malloc(sizeof(T3F_ANIMATION_FRAME));
+			if(!new_frame[i])
+			{
+				goto fail;
+			}
+			memcpy(new_frame[i], ap->frame[i], sizeof(T3F_ANIMATION_FRAME));
+		}
+		for(i = 0; i < ap->frames; i++)
+		{
+			if(ap->frame[i])
+			{
+				free(ap->frame[i]);
+			}
+		}
+		free(ap->frame);
+	}
+	ap->frame = new_frame;
+	ap->frame[ap->frames] = malloc(sizeof(T3F_ANIMATION_FRAME));
+	if(!ap->frame[ap->frames])
+	{
+		goto fail;
+	}
+	memset(ap->frame[ap->frames], 0, sizeof(T3F_ANIMATION_FRAME));
+	ap->frame[ap->frames]->bitmap = bitmap;
+	ap->frame[ap->frames]->x = x;
+	ap->frame[ap->frames]->y = y;
+	ap->frame[ap->frames]->z = z;
+	if(w < 0.0)
+	{
+		ap->frame[ap->frames]->width = ap->bitmaps->bitmap[bitmap]->target_width;
+	}
+	else
+	{
+		ap->frame[ap->frames]->width = w;
+	}
+	if(h < 0.0)
+	{
+		ap->frame[ap->frames]->height = ap->bitmaps->bitmap[bitmap]->target_height;
+	}
+	else
+	{
+		ap->frame[ap->frames]->height = h;
+	}
+	ap->frame[ap->frames]->angle = angle;
+	ap->frame[ap->frames]->ticks = ticks > 0 ? ticks : 1;
+	ap->frame[ap->frames]->flags = flags;
+	ap->frames++;
+	_t3f_animation_data_build_frame_list(ap);
+
+	return 1;
+
+	fail:
+	{
+		return 0;
+	}
 }
 
 static T3F_ANIMATION_DATA * _t3f_load_animation_data_from_bitmap(const char * fn, int flags)
@@ -660,6 +786,7 @@ int t3f_save_animation_f(T3F_ANIMATION * ap, ALLEGRO_FILE * fp)
 		al_fwrite32le(fp, ap->data->frame[i]->ticks);
 		al_fwrite32le(fp, ap->data->frame[i]->flags);
 	}
+	al_fwrite32le(fp, ap->data->loop_point);
 	al_fwrite32le(fp, ap->data->flags);
 	return 1;
 }
@@ -748,7 +875,7 @@ int t3f_animation_delete_frame(T3F_ANIMATION * ap, int frame)
 
 	if(frame < ap->data->frames)
 	{
-		al_free(ap->data->frame[frame]);
+		free(ap->data->frame[frame]);
 	}
 	else
 	{
@@ -804,6 +931,8 @@ T3F_BITMAP * t3f_animation_get_bitmap(T3F_ANIMATION * ap, int tick)
 
 T3F_ANIMATION_FRAME * t3f_animation_get_frame(T3F_ANIMATION * ap, int tick)
 {
+	int loop_ticks;
+
 	if(ap->data->frames <= 0)
 	{
 		return NULL;
@@ -814,7 +943,13 @@ T3F_ANIMATION_FRAME * t3f_animation_get_frame(T3F_ANIMATION * ap, int tick)
 	}
 	else
 	{
-		return ap->data->frame[ap->data->frame_list[tick % ap->data->frame_list_total]];
+		loop_ticks = ap->data->frame_list_total - ap->data->loop_point;
+		if(tick >= ap->data->frame_list_total)
+		{
+			tick -= ap->data->loop_point;
+			tick = tick % loop_ticks + ap->data->loop_point;
+		}
+		return ap->data->frame[ap->data->frame_list[tick]];
 	}
 }
 
@@ -823,30 +958,30 @@ static void handle_vh_flip(T3F_ANIMATION_FRAME * base_fp, T3F_ANIMATION_FRAME * 
 	bool vflip = false;
 	bool hflip = false;
 
-	if(fp->flags & ALLEGRO_FLIP_HORIZONTAL && !(flags & ALLEGRO_FLIP_HORIZONTAL))
+	if(fp->flags & T3F_DRAW_H_FLIP && !(flags & T3F_DRAW_H_FLIP))
 	{
 		hflip = true;
 	}
-	else if(flags & ALLEGRO_FLIP_HORIZONTAL && !(fp->flags & ALLEGRO_FLIP_HORIZONTAL))
+	else if(flags & T3F_DRAW_H_FLIP && !(fp->flags & T3F_DRAW_H_FLIP))
 	{
 		hflip = true;
 	}
-	if(fp->flags & ALLEGRO_FLIP_VERTICAL && !(flags & ALLEGRO_FLIP_VERTICAL))
+	if(fp->flags & T3F_DRAW_V_FLIP && !(flags & T3F_DRAW_V_FLIP))
 	{
 		vflip = true;
 	}
-	else if(flags & ALLEGRO_FLIP_VERTICAL && !(fp->flags & ALLEGRO_FLIP_VERTICAL))
+	else if(flags & T3F_DRAW_V_FLIP && !(fp->flags & T3F_DRAW_V_FLIP))
 	{
 		vflip = true;
 	}
 	if(hflip)
 	{
-		*dflags |= ALLEGRO_FLIP_HORIZONTAL;
+		*dflags |= T3F_DRAW_H_FLIP;
 		*fox = -((fp->x + fp->width) - (base_fp->x + base_fp->width)) - (fp->x - base_fp->x);
 	}
 	if(vflip)
 	{
-		*dflags |= ALLEGRO_FLIP_VERTICAL;
+		*dflags |= T3F_DRAW_V_FLIP;
 		*foy = -((fp->y + fp->height) - (base_fp->y + base_fp->height)) - (fp->y - base_fp->y);
 	}
 }
@@ -856,7 +991,7 @@ void t3f_draw_animation(T3F_ANIMATION * ap, ALLEGRO_COLOR color, int tick, float
 	T3F_ANIMATION_FRAME * fp = t3f_animation_get_frame(ap, tick);
 	float fox = 0.0;
 	float foy = 0.0;
-	int dflags = 0;
+	int dflags = flags & ~(T3F_DRAW_H_FLIP | T3F_DRAW_V_FLIP);
 
 	if(fp)
 	{
@@ -884,7 +1019,7 @@ void t3f_draw_rotated_animation(T3F_ANIMATION * ap, ALLEGRO_COLOR color, int tic
 	T3F_ANIMATION_FRAME * fp = t3f_animation_get_frame(ap, tick);
 	float fox = 0.0;
 	float foy = 0.0;
-	int dflags = 0;
+	int dflags = flags & ~(T3F_DRAW_H_FLIP | T3F_DRAW_V_FLIP);
 	if(fp)
 	{
 		handle_vh_flip(ap->data->frame[0], fp, flags, &fox, &foy, &dflags);
@@ -900,7 +1035,7 @@ void t3f_draw_rotated_scaled_animation(T3F_ANIMATION * ap, ALLEGRO_COLOR color, 
 	T3F_ANIMATION_FRAME * fp = t3f_animation_get_frame(ap, tick);
 	float fox = 0.0;
 	float foy = 0.0;
-	int dflags = 0;
+	int dflags = flags & ~(T3F_DRAW_H_FLIP | T3F_DRAW_V_FLIP);
 	if(fp)
 	{
 		handle_vh_flip(ap->data->frame[0], fp, flags, &fox, &foy, &dflags);

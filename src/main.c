@@ -769,14 +769,14 @@ bool app_load_data(APP_INSTANCE * app)
 	}
 
 	/* create main view */
-	app->main_view = t3f_create_view(0, 0, 0, 0, 0, 0, 0);
+	app->main_view = t3f_create_view(t3f_default_view, 0, 0, 0, 0, 0, 0, 0);
 	if(!app->main_view)
 	{
 		return false;
 	}
 
 	/* create menu view */
-	app->menu_view = t3f_create_view(0, 0, 0, 0, 0, 0, 0);
+	app->menu_view = t3f_create_view(t3f_default_view, 0, 0, 0, 0, 0, 0, 0);
 	if(!app->menu_view)
 	{
 		return false;

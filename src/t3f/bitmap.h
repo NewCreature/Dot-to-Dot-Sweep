@@ -8,6 +8,11 @@
 #define T3F_BITMAP_FLAG_PAD_TOP    (1 << 2)
 #define T3F_BITMAP_FLAG_PAD_BOTTOM (1 << 3)
 #define T3F_BITMAP_FLAG_PADDED (T3F_BITMAP_FLAG_PAD_LEFT | T3F_BITMAP_FLAG_PAD_RIGHT | T3F_BITMAP_FLAG_PAD_TOP | T3F_BITMAP_FLAG_PAD_BOTTOM)
+#define T3F_BITMAP_FLAG_DIRECT_LOAD (1 << 4)
+
+#define T3F_DRAW_V_FLIP       ALLEGRO_FLIP_VERTICAL
+#define T3F_DRAW_H_FLIP       ALLEGRO_FLIP_HORIZONTAL
+#define T3F_DRAW_INTEGER_SNAP (1 << 2)
 
 typedef struct
 {
@@ -48,6 +53,7 @@ bool t3f_save_allegro_bitmap_f(ALLEGRO_FILE * fp, ALLEGRO_BITMAP * bp);
 T3F_BITMAP * t3f_create_bitmap(int w, int h, float target_width, float target_height, int flags);
 T3F_BITMAP * t3f_load_bitmap_f(ALLEGRO_FILE * fp, const char * fm, int flags);
 T3F_BITMAP * t3f_load_bitmap(const char * fn, int flags, bool threaded);
+T3F_BITMAP * t3f_clone_bitmap(T3F_BITMAP * bp);
 T3F_BITMAP * t3f_encapsulate_bitmap(ALLEGRO_BITMAP * bp);
 void t3f_reset_bitmap_target_size(T3F_BITMAP * bp);
 void t3f_destroy_bitmap(T3F_BITMAP * bp);
