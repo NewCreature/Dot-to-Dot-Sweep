@@ -1,3 +1,9 @@
+v1.7 Refresh
+------------
+
+[ ]Fix leaderboard scores being displayed incorrectly.
+
+
 v1.7
 ----
 
