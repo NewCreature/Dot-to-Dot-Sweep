@@ -5,7 +5,7 @@
 #include "t3f/rng.h"
 #include "t3f/gui.h"
 #include "t3f/achievements.h"
-#include "t3net/leaderboard.h"
+#include "t3f/extra/t3net/leaderboard.h"
 #include "defines.h"
 #include "game.h"
 #include "particle.h"
@@ -79,7 +79,7 @@ typedef struct
     char user_name[256];
     bool tried_user_name_upload;
     bool upload_scores;
-    T3NET_LEADERBOARD * leaderboard;
+    T3F_LEADERBOARD * leaderboard;
     int leaderboard_tick;
     int leaderboard_spot;
 

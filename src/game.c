@@ -3,7 +3,7 @@
 #include "t3f/sound.h"
 #include "t3f/rng.h"
 #include "t3f/draw.h"
-#include "t3net/leaderboard.h"
+#include "t3f/extra/t3net/leaderboard.h"
 #include "instance.h"
 #include "game.h"
 #include "text.h"
@@ -240,7 +240,7 @@ void dot_game_exit(void * data, bool from_menu)
 		if(!from_menu)
 		{
 			dot_show_message(data, "Downloading leaderboard...");
-			app->leaderboard = t3net_get_leaderboard(app->leaderboard_retrieve_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, app->game.mode == 0 ? "normal" : "easy", "none", 10, 0);
+			app->leaderboard = t3f_get_leaderboard("Game Data", app->game.mode == 0 ? "normal" : "easy", "none", 10, 0, false);
 			if(app->leaderboard)
 			{
 				app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, dot_leaderboard_obfuscate_score(app->game.score));

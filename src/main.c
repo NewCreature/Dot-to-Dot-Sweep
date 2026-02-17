@@ -4,7 +4,8 @@
 #include "t3f/view.h"
 #include "t3f/draw.h"
 #include "t3f/input.h"
-#include "t3net/leaderboard.h"
+#include "t3f/extra/t3net/leaderboard.h"
+#include "t3f/android.h"
 #include "avc/avc.h"
 #include "instance.h"
 #include "intro.h"
@@ -1429,6 +1430,8 @@ bool app_initialize(APP_INSTANCE * app, int argc, char * argv[])
 		printf("Failed to generate data for particle effects!\n");
 		return false;
 	}
+  t3f_initialize_leaderboards("Game Data", "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "https://www.tcubedsoftware.com/scripts/leaderboards/get_user_key.php", "https://www.tcubedsoftware.com/scripts/leaderboards/set_user_name.php", "https://www.tcubedsoftware.com/scripts/leaderboards/update.php", "https://www.tcubedsoftware.com/scripts/leaderboards/query.php");
+  t3f_define_leaderboard_obfuscation('2' + 'd' + 's', DOT_LEADERBOARD_FACTOR);
 
 	if(!app_load_data(app))
 	{
@@ -1517,7 +1520,7 @@ void app_exit(APP_INSTANCE * app)
 	}
 	if(app->leaderboard)
 	{
-		t3net_destroy_leaderboard(app->leaderboard);
+		t3f_destroy_leaderboard(app->leaderboard);
 	}
 	dot_deinitialize_achievements(app);
 	dot_destroy_input(&app->controller);

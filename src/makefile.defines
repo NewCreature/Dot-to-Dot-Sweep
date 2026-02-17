@@ -12,7 +12,7 @@ APP_NAME = dot-to-dot-sweep
 APP_TITLE = Dot\ to\ Dot\ Sweep
 APP_DATA_DIR = $(APP_TITLE)
 APP_VERSION = 1.6.2
-APP_RELEASE = 23
+APP_RELEASE = 26
 APP_PUBLISHER = T\ Cubed\ Software
 APP_COPYRIGHT = Copyright\ (C)\ 2025\ T\ Cubed\ Software.
 APP_ANDROID_PACKAGE = com.tcubedsoftware.dottodotsweep
@@ -20,7 +20,7 @@ APP_ORIENTATION = unspecified
 APP_URL = https://www.tcubedsoftware.com
 APP_STEAM_ID = 2494790
 APP_BG_COLOR = \#FF2F97DA
-APP_OBJECTS = t3net/t3net.o t3net/leaderboard.o avc/avc.o main.o game.o intro.o leaderboard.o text.o particle.o color.o bg_object.o credits.o privacy.o input.o mouse.o
+APP_OBJECTS = t3net/t3net.o t3f/extra/t3net/leaderboard.o avc/avc.o main.o game.o intro.o leaderboard.o text.o particle.o color.o bg_object.o credits.o privacy.o input.o mouse.o
 #APP_LIBS =
 APP_CFLAGS = -O2 -Wall -I.
 APP_CXXFLAGS = -std=c++11

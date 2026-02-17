@@ -27,7 +27,7 @@ bool dot_get_leaderboard_user_key(void * data)
 {
   APP_INSTANCE * app = (APP_INSTANCE *)data;
   const char * val;
-	char * new_val;
+	const char * new_val;
   bool ret = false;
 
   strcpy(app->user_key, "");
@@ -35,7 +35,7 @@ bool dot_get_leaderboard_user_key(void * data)
   if(!val)
   {
     dot_show_message(data, "Retrieving User Key...");
-    new_val = t3net_get_new_leaderboard_user_key(app->leaderboard_get_user_key_url, app->user_name);
+    new_val = t3f_get_leaderboard_user_key("Game Data");
     if(new_val)
     {
       if(strlen(new_val) < 128)
@@ -45,7 +45,6 @@ bool dot_get_leaderboard_user_key(void * data)
         t3f_save_user_data();
         ret = true;
       }
-      free(new_val);
       return ret;
     }
   }
@@ -63,63 +62,18 @@ bool dot_get_leaderboard_user_key(void * data)
 void dot_upload_current_high_score(void * data)
 {
   APP_INSTANCE * app = (APP_INSTANCE *)data;
-	const char * val;
-	const char * val2;
-  unsigned long score;
 
-  if(dot_get_leaderboard_user_key(data))
-  {
-    val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
-    if(val)
-    {
-      val2 = al_get_config_value(t3f_user_data, "Game Data", "High Score Level");
-      if(val2)
-      {
-        score = atoi(val);
-        if(dot_verify_leaderboard_score(score))
-        {
-          if(t3net_upload_score(app->leaderboard_submit_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "normal", "none", app->user_key, score, val2))
-          {
-            al_remove_config_key(t3f_user_data, "Game Data", "Score Uploaded");
-          }
-        }
-        else
-        {
-          al_remove_config_key(t3f_user_data, "Game Data", "Score Uploaded");
-        }
-      }
-    }
-
-    val = al_get_config_value(t3f_user_data, "Game Data", "High Score Easy");
-    if(val)
-    {
-      val2 = al_get_config_value(t3f_user_data, "Game Data", "High Score Level Easy");
-      if(val2)
-      {
-        score = atoi(val);
-        if(dot_verify_leaderboard_score(score))
-        {
-          if(t3net_upload_score(app->leaderboard_submit_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, "easy", "none", app->user_key, score, val2))
-          {
-            al_remove_config_key(t3f_user_data, "Game Data", "Easy Score Uploaded");
-          }
-        }
-        else
-        {
-          al_remove_config_key(t3f_user_data, "Game Data", "Easy Score Uploaded");
-        }
-      }
-    }
-  }
+  t3f_submit_leaderboard_score("Game Data", "normal", "none");
+  t3f_submit_leaderboard_score("Game Data", "easy", "none");
 }
 
-int dot_get_leaderboard_spot(T3NET_LEADERBOARD * lp, const char * name, unsigned long score)
+int dot_get_leaderboard_spot(T3F_LEADERBOARD * lp, const char * name, unsigned long score)
 {
 	int i;
 
-	for(i = 0; i < lp->entries; i++)
+	for(i = 0; i < lp->data->entries; i++)
 	{
-		if(!strcmp(lp->entry[i]-> name, name) && lp->entry[i]->score == score)
+		if(!strcmp(lp->data->entry[i]-> name, name) && lp->data->entry[i]->score == score)
 		{
 			return i;
 		}
@@ -211,7 +165,7 @@ void dot_leaderboard_render(void * data)
   dot_bg_objects_render(data);
   t3f_draw_bitmap(app->bitmap[DOT_BITMAP_BG], t3f_color_white, 0, 0, 0, 0);
   dot_shadow_text(app->font[DOT_FONT_32], t3f_color_white, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width / 2, 32, DOT_SHADOW_OX * 2, DOT_SHADOW_OY * 2, T3F_FONT_ALIGN_CENTER, "Leaderboard");
-  for(i = 0; i < app->leaderboard->entries; i++)
+  for(i = 0; i < app->leaderboard->data->entries; i++)
   {
     if(i == app->leaderboard_spot && (app->tick / 6) % 2)
     {
@@ -221,9 +175,9 @@ void dot_leaderboard_render(void * data)
     {
       text_color = t3f_color_white;
     }
-    sprintf(buf, " %s", app->leaderboard->entry[i]->name);
+    sprintf(buf, " %s", app->leaderboard->data->entry[i]->name);
     dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 4, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buf);
-    sprintf(buf, "%lu ", dot_leaderboard_unobfuscate_score(app->leaderboard->entry[i]->score));
+    sprintf(buf, "%lu ", dot_leaderboard_unobfuscate_score(app->leaderboard->data->entry[i]->score));
     dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width - 4, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, T3F_FONT_ALIGN_RIGHT, buf);
   }
   al_hold_bitmap_drawing(false);

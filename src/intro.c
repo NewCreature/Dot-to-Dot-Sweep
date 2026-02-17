@@ -159,7 +159,7 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 		}
 	}
 	dot_show_message(data, "Downloading leaderboard...");
-	app->leaderboard = t3net_get_leaderboard(app->leaderboard_retrieve_url, "dot_to_dot_sweep", DOT_LEADERBOARD_VERSION, app->game_mode == 0 ? "normal" : "easy", "none", 10, 0);
+	app->leaderboard = t3f_get_leaderboard("Game Data", app->game_mode == 0 ? "normal" : "easy", "none", 10, 0, false);
 	if(app->leaderboard)
 	{
 		remember_element(app);
@@ -338,7 +338,7 @@ int dot_menu_proc_leaderboard_back(void * data, int i, void * pp)
 {
 	APP_INSTANCE * app = (APP_INSTANCE *)data;
 
-	t3net_destroy_leaderboard(app->leaderboard);
+	t3f_destroy_leaderboard(app->leaderboard);
 	app->leaderboard = NULL;
 	dot_intro_setup(data);
 	t3f_clear_mouse_state();
@@ -370,7 +370,7 @@ int dot_menu_proc_leaderboard_main_menu(void * data, int i, void * pp)
 
 	if(app->leaderboard)
 	{
-		t3net_destroy_leaderboard(app->leaderboard);
+		t3f_destroy_leaderboard(app->leaderboard);
 		app->leaderboard = NULL;
 	}
 	dot_intro_setup(data);
@@ -716,7 +716,7 @@ void dot_intro_logic(void * data)
 		t3f_save_user_data();
 		al_stop_timer(t3f_timer);
 		dot_show_message(data, "Synchronizing User Key Data...");
-		if(t3net_update_leaderboard_user_name(app->leaderboard_set_user_name_url, app->user_key, app->user_name))
+		if(t3f_submit_leaderboard_user_name("Game Data"))
 		{
 			al_remove_config_key(t3f_user_data, "Game Data", "User Name Uploaded");
 			t3f_save_user_data();
