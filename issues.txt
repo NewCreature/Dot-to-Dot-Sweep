@@ -3,7 +3,7 @@ v1.7 Refresh
 
 [X]Fix leaderboard scores being displayed incorrectly.
 
-[ ]Migrate old leaderboard data to new system.
+[X]Migrate old leaderboard data to new system.
 
 
 v1.7
