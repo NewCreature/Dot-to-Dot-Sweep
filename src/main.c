@@ -836,6 +836,52 @@ bool app_load_data(APP_INSTANCE * app)
 	return true;
 }
 
+static void _dot_migrate_old_scores(void)
+{
+	const char * val;
+	const char * val2;
+	int score;
+	int level = 0;
+	char buf[256];
+	bool save = false;
+
+	val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
+	if(val)
+	{
+		val2 = al_get_config_value(t3f_user_data, "Game Data", "High Score Level");
+		if(val2)
+		{
+			level = atoi(val2);
+		}
+		score = (atoi(val) - 's' - 'd' - '2') / DOT_LEADERBOARD_FACTOR;
+		sprintf(buf, "%d", level);
+		t3f_store_leaderboard_score("Game Data", "normal", "none", 0, score, buf);
+		al_remove_config_key(t3f_user_data, "Game Data", "High Score");
+		al_remove_config_key(t3f_user_data, "Game Data", "High Score Level");
+		save = true;
+	}
+
+	val = al_get_config_value(t3f_user_data, "Game Data", "High Score Easy");
+	if(val)
+	{
+		val2 = al_get_config_value(t3f_user_data, "Game Data", "High Score Level Easy");
+		if(val2)
+		{
+			level = atoi(val2);
+		}
+		score = (atoi(val) - 's' - 'd' - '2') / DOT_LEADERBOARD_FACTOR;
+		sprintf(buf, "%d", level);
+		t3f_store_leaderboard_score("Game Data", "easy", "none", 0, score, buf);
+		al_remove_config_key(t3f_user_data, "Game Data", "High Score");
+		al_remove_config_key(t3f_user_data, "Game Data", "High Score Level Easy");
+		save = true;
+	}
+	if(save)
+	{
+		t3f_save_user_data();
+	}
+}
+
 /* read user preferences and other data */
 void app_read_user_data(APP_INSTANCE * app)
 {
@@ -853,6 +899,7 @@ void app_read_user_data(APP_INSTANCE * app)
 	}
 
 	/* load high scores */
+	_dot_migrate_old_scores();
 	app->game.high_score[0] = t3f_retrieve_leaderboard_score("Game Data", "normal", "none");
 	if(app->game.high_score[0] < 0)
 	{
