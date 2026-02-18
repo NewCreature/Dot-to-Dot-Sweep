@@ -17,6 +17,7 @@ v1.7
 
    [X]Fix views not working properly (graphics rendered too small).
 
+
 v1.6
 ----
 
