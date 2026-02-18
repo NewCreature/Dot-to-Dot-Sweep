@@ -206,7 +206,8 @@ void dot_game_exit(void * data, bool from_menu)
 	bool upload = false;
 
 	/* determine if we need to upload */
-	t3f_store_leaderboard_score("Game Data", app->game.mode == 0 ? "normal" : "easy", "none", 0, app->game.score, NULL);
+	sprintf(buf, "%d", app->game.level);
+	t3f_store_leaderboard_score("Game Data", app->game.mode == 0 ? "normal" : "easy", "none", 0, app->game.score, buf);
 
 	t3f_save_user_data();
 
