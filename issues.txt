@@ -1,7 +1,7 @@
 v1.7 Refresh
 ------------
 
-[ ]Fix leaderboard scores being displayed incorrectly.
+[X]Fix leaderboard scores being displayed incorrectly.
 
 [ ]Migrate old leaderboard data to new system.
 
