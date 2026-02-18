@@ -5,60 +5,6 @@
 #include "color.h"
 #include "intro.h"
 
-unsigned long dot_leaderboard_obfuscate_score(unsigned long score)
-{
-  return score * DOT_LEADERBOARD_FACTOR + '2' + 'd' + 's';
-}
-
-unsigned long dot_leaderboard_unobfuscate_score(unsigned long score)
-{
-  return (score - 's' - 'd' - '2') / DOT_LEADERBOARD_FACTOR;
-}
-
-bool dot_verify_leaderboard_score(unsigned long score)
-{
-  return !((score - 's' - 'd' - '2') % DOT_LEADERBOARD_FACTOR);
-}
-
-/* Get user key from local storage or grab a new one. If we are able to get a
-   valid key with either method, cache it in APP_INSTANCE->user_key and return
-   true. Otherwise return false. */
-bool dot_get_leaderboard_user_key(void * data)
-{
-  APP_INSTANCE * app = (APP_INSTANCE *)data;
-  const char * val;
-	const char * new_val;
-  bool ret = false;
-
-  strcpy(app->user_key, "");
-  val = al_get_config_value(t3f_user_data, "Game Data", "User Key");
-  if(!val)
-  {
-    dot_show_message(data, "Retrieving User Key...");
-    new_val = t3f_get_leaderboard_user_key("Game Data");
-    if(new_val)
-    {
-      if(strlen(new_val) < 128)
-      {
-        strcpy(app->user_key, new_val);
-        al_set_config_value(t3f_user_data, "Game Data", "User Key", new_val);
-        t3f_save_user_data();
-        ret = true;
-      }
-      return ret;
-    }
-  }
-  else
-  {
-    if(strlen(val) < 128)
-    {
-      strcpy(app->user_key, val);
-      return true;
-    }
-  }
-  return false;
-}
-
 void dot_upload_current_high_score(void * data)
 {
   APP_INSTANCE * app = (APP_INSTANCE *)data;
@@ -177,7 +123,7 @@ void dot_leaderboard_render(void * data)
     }
     sprintf(buf, " %s", app->leaderboard->data->entry[i]->name);
     dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 4, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, 0, buf);
-    sprintf(buf, "%lu ", dot_leaderboard_unobfuscate_score(app->leaderboard->data->entry[i]->score));
+    sprintf(buf, "%lu ", app->leaderboard->data->entry[i]->score);
     dot_shadow_text(app->font[DOT_FONT_16], text_color, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_virtual_display_width - 4, 4 + (i + 3) * 32, DOT_SHADOW_OX, DOT_SHADOW_OY, T3F_FONT_ALIGN_RIGHT, buf);
   }
   al_hold_bitmap_drawing(false);

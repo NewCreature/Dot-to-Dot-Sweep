@@ -148,15 +148,7 @@ int dot_menu_proc_leaderboard(void * data, int i, void * pp)
 	al_stop_timer(t3f_timer);
 	if(app->upload_scores)
 	{
-		if(dot_get_leaderboard_user_key(data))
-		{
-			val = al_get_config_value(t3f_user_data, "Game Data", "Score Uploaded");
-			if(val && !strcmp(val, "false"))
-			{
-				dot_show_message(data, "Uploading current high score...");
-				dot_upload_current_high_score(data);
-			}
-		}
+		dot_upload_current_high_score(data);
 	}
 	dot_show_message(data, "Downloading leaderboard...");
 	app->leaderboard = t3f_get_leaderboard("Game Data", app->game_mode == 0 ? "normal" : "easy", "none", 10, 0, false);
@@ -287,7 +279,6 @@ int dot_menu_proc_upload_yes(void * data, int i, void * pp)
 
 	app->upload_scores = true;
 	al_set_config_value(t3f_user_data, "Game Data", "Upload Scores", "true");
-	dot_get_leaderboard_user_key(data);
 	val = t3f_get_steam_user_display_name();
 	if(val)
 	{

@@ -853,21 +853,13 @@ void app_read_user_data(APP_INSTANCE * app)
 	}
 
 	/* load high scores */
-	val = al_get_config_value(t3f_user_data, "Game Data", "High Score");
-	if(val)
-	{
-		app->game.high_score[0] = dot_leaderboard_unobfuscate_score(atoi(val));
-	}
-	else
+	app->game.high_score[0] = t3f_retrieve_leaderboard_score("Game Data", "normal", "none");
+	if(app->game.high_score[0] < 0)
 	{
 		app->game.high_score[0] = 0;
 	}
-	val = al_get_config_value(t3f_user_data, "Game Data", "High Score Easy");
-	if(val)
-	{
-		app->game.high_score[1] = dot_leaderboard_unobfuscate_score(atoi(val));
-	}
-	else
+	app->game.high_score[1] = t3f_retrieve_leaderboard_score("Game Data", "easy", "none");
+	if(app->game.high_score[1] < 0)
 	{
 		app->game.high_score[1] = 0;
 	}

@@ -206,27 +206,9 @@ void dot_game_exit(void * data, bool from_menu)
 	bool upload = false;
 
 	/* determine if we need to upload */
-	val = al_get_config_value(t3f_user_data, "Game Data", app->game.mode == 0 ? "High Score" : "High Score Easy");
-	if(!val || dot_leaderboard_unobfuscate_score(atoi(val)) < app->game.score)
-	{
-		al_set_config_value(t3f_user_data, "Game Data", app->game.mode == 0 ? "Score Uploaded" : "Easy Score Uploaded", "false");
-		upload = true;
-	}
-	val = al_get_config_value(t3f_user_data, "Game Data", app->game.mode == 0 ? "Score Uploaded" : "Easy Score Uploaded");
-	if(val && !strcmp(val, "false"))
-	{
-		upload = true;
-	}
+	t3f_store_leaderboard_score("Game Data", app->game.mode == 0 ? "normal" : "easy", "none", 0, app->game.score, NULL);
 
-	/* save high score */
-	if(app->game.score >= app->game.high_score[app->game.mode])
-	{
-		sprintf(buf, "%lu", dot_leaderboard_obfuscate_score(app->game.high_score[app->game.mode]));
-		al_set_config_value(t3f_user_data, "Game Data", app->game.mode == 0 ? "High Score" : "High Score Easy", buf);
-		sprintf(buf, "%d", app->game.level + 1);
-		al_set_config_value(t3f_user_data, "Game Data", app->game.mode == 0 ? "High Score Level" : "High Score Level Easy", buf);
-		t3f_save_user_data();
-	}
+	t3f_save_user_data();
 
 	/* upload score */
 	if(app->upload_scores && !app->demo_file && !app->game.cheats_enabled)
@@ -243,7 +225,7 @@ void dot_game_exit(void * data, bool from_menu)
 			app->leaderboard = t3f_get_leaderboard("Game Data", app->game.mode == 0 ? "normal" : "easy", "none", 10, 0, false);
 			if(app->leaderboard)
 			{
-				app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, dot_leaderboard_obfuscate_score(app->game.score));
+				app->leaderboard_spot = dot_get_leaderboard_spot(app->leaderboard, app->user_name, app->game.score);
 			}
 		}
 		al_resume_timer(t3f_timer);
